@@ -91,15 +91,29 @@ namespace library
         }
         
         /**
-         * Frees an allocated memory.
+         * Sets a context switching locker.
          *
-         * @param toggle reference to pointer to global interrupts toggle interface.
+         * The method allows disabling and enabling thread context switching 
+         * when memory is being allocated or freed. Thus, the best way is 
+         * to pass an interface of global interrupt toggling. The parameter type 
+         * is reference to pointer, as when referenced pointer equals to NULL, 
+         * no blocks are happening.
+         *
+         * @param toggle reference to pointer to some controller.
          */      
         virtual void setToggle(::api::Toggle*& toggle)
         {
             data_.toggle = &toggle;
-        }    
-      
+        }            
+        
+        /**
+         * Resets a context switching locker.
+         */
+        virtual void resetToggle()
+        {
+            data_.toggle = NULL;
+        }        
+        
         /**
          * Tests if this object has been constructed.
          *
