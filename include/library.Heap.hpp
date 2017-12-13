@@ -146,9 +146,7 @@ namespace library
          * @param ptr   address of allocated memory block or a null pointer.
          * @param place pointer used as the placement parameter in the matching placement new.
          */
-        void operator delete(void*, void*)
-        {
-        }
+        void operator delete(void*, void*);
   
     private:
     
