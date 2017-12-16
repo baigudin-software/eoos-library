@@ -90,7 +90,7 @@ namespace library
         {
             typedef Object<Alloc>             Parent;
             typedef CircularList<Type,Alloc>  List;
-  	  
+      
         public:
       
             /**
@@ -106,7 +106,8 @@ namespace library
                 illegal_ (list.getReferenceToIllegal()),
                 curs_    (NULL),
                 rindex_  (ILLEGAL_INDEX){
-                this->setConstruct( construct(index) );
+                bool isConstructed = construct(index);
+                this->setConstruct( isConstructed );
             }
           
             /**

@@ -140,7 +140,8 @@ namespace library
         Buffer(int32 count) : Parent(count),
             buf_      (NULL),
             isDelete_ (true){
-            this->setConstruct( construct(count) );
+            bool isConstructed = construct(count);
+            this->setConstruct( isConstructed );
         }
       
         /** 
@@ -155,7 +156,8 @@ namespace library
         Buffer(int32 count, Type* buf) : Parent (count),
             buf_      (buf),
             isDelete_ (false){
-            this->setConstruct( construct(count) );
+            bool isConstructed = construct(count);
+            this->setConstruct( isConstructed );
         }
       
         /** 
@@ -167,7 +169,8 @@ namespace library
         Buffer(int32 count, const Type illegal) : Parent(count, illegal),
             buf_      (NULL),
             isDelete_ (true){
-            this->setConstruct( construct(count) );
+            bool isConstructed = construct(count);
+            this->setConstruct( isConstructed );
         }
       
         /** 
@@ -183,7 +186,8 @@ namespace library
         Buffer(int32 count, const Type illegal, Type* buf) : Parent(count, illegal),
             buf_      (buf),
             isDelete_ (false){
-            this->setConstruct( construct(count) );
+            bool isConstructed = construct(count);
+            this->setConstruct( isConstructed );
         }
       
       

@@ -40,7 +40,8 @@ namespace library
             illegal_ (),
             last_    (NULL),
             count_   (0){
-            this->setConstruct( construct() );
+            bool isConstructed = construct(); 
+            this->setConstruct( isConstructed );
         }
       
         /**
@@ -52,7 +53,8 @@ namespace library
             illegal_ (illegal),
             last_    (NULL),
             count_   (0){
-            this->setConstruct( construct() );
+            bool isConstructed = construct(); 
+            this->setConstruct( isConstructed );
         }
       
         /**
@@ -101,9 +103,14 @@ namespace library
          */  
         virtual void clear()
         {
-            if(!isConstructed()) return;
+            if( not isConstructed() ) return;
+            bool res;
             int32 b = getLength() - 1;
-            for(int32 i=b; i>=0; i--) removeNode( getNodeByIndex(i) ); 
+            for(int32 i=b; i>=0; i--) 
+            {
+                res = removeNode( getNodeByIndex(i) ); 
+                if(res == false) break;
+            }
         }
       
         /**
@@ -196,7 +203,7 @@ namespace library
          */
         virtual Type get(int32 index) const
         {
-            if(!isConstructed()) return illegal_;
+            if( not isConstructed() ) return illegal_;
             Node* node = getNodeByIndex(index);
             return node != NULL ? node->getElement() : illegal_;
         }  
@@ -251,7 +258,7 @@ namespace library
          */
         virtual bool isIllegal(const Type& value) const
         {
-            if(!isConstructed()) return false;
+            if( not isConstructed() ) return false;
             return illegal_ == value ? true : false;
         }
       
@@ -287,11 +294,11 @@ namespace library
          */  
         virtual ::library::Buffer<Type,0,Alloc>* array() const
         {
-            if(!isConstructed()) return NULL;
+            if( not isConstructed() ) return NULL;
             int32 count = getLength();
             if(count == 0) return NULL;
             Buffer<Type,0,Alloc>* buf = new Buffer<Type,0,Alloc>(count, illegal_);
-            if(buf == NULL || !buf->isConstructed())
+            if(buf == NULL || not buf->isConstructed())
             {
                 delete buf;
                 return NULL;
@@ -330,7 +337,7 @@ namespace library
         {
             if(isIndexOutOfBounds(index)) return false;
             Node* node = new Node(element);
-            if(node == NULL || !node->isConstructed())
+            if(node == NULL || not node->isConstructed())
             {
                 delete node;
                 return false;
@@ -374,7 +381,7 @@ namespace library
          */
         Node* getNodeByIndex(int32 index) const
         {
-            if(!isIndex(index)) return NULL;
+            if( not isIndex(index) ) return NULL;
             if(index == getLength() - 1) return last_;
             Node* node = last_->getNext();
             for(int32 i=0; i<index; i++) node = node->getNext();
