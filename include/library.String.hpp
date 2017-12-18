@@ -31,7 +31,8 @@ namespace library
             isConstructed_ (this->getConstruct()),
             string_        (),
             illegal_       (0){
-            this->setConstruct( construct("") );
+            bool isConstructed = construct("");           
+            this->setConstruct( isConstructed );
         }
         
         /** 
@@ -43,7 +44,8 @@ namespace library
             isConstructed_ (this->getConstruct()),        
             string_        (),
             illegal_       (0){
-            this->setConstruct( construct(obj) );
+            bool isConstructed = construct(obj);                       
+            this->setConstruct( isConstructed );
         }
         
         /** 
@@ -55,7 +57,8 @@ namespace library
             isConstructed_ (this->getConstruct()),        
             string_        (),
             illegal_       (0){
-            this->setConstruct( construct(obj) );
+            bool isConstructed = construct(obj);
+            this->setConstruct( isConstructed );
         }
         
         /** 
@@ -67,7 +70,8 @@ namespace library
             isConstructed_ (this->getConstruct()),
             string_        (),
             illegal_       (0){
-            this->setConstruct( construct(data) );
+            bool isConstructed = construct(data);            
+            this->setConstruct( isConstructed );
         }
     
         /**
@@ -87,7 +91,8 @@ namespace library
         {
             if( not isConstructed_ ) return *this;        
             Parent::operator=(*this);
-            this->setConstruct( assign(obj) );
+            bool isConstructed = assign(obj);            
+            this->setConstruct( isConstructed );
             return *this;            
         }
         
@@ -101,7 +106,8 @@ namespace library
         {
             if( not isConstructed_ ) return *this;        
             Parent::operator=(*this);
-            this->setConstruct( assign(obj) );
+            bool isConstructed = assign(obj);                        
+            this->setConstruct( isConstructed );
             return *this;            
         }        
         
@@ -115,7 +121,8 @@ namespace library
         {
             if( not isConstructed_ ) return *this;        
             Parent::operator=(*this);
-            this->setConstruct( assign(data) );
+            bool isConstructed = assign(data);             
+            this->setConstruct( isConstructed );
             return *this;        
         }
         
@@ -129,7 +136,8 @@ namespace library
         {
             if( not isConstructed_ ) return *this;        
             Parent::operator=(*this);
-            this->setConstruct( concatenate(obj) );
+            bool isConstructed = concatenate(obj);            
+            this->setConstruct( isConstructed );
             return *this; 
         }  
         
@@ -143,7 +151,8 @@ namespace library
         {
             if( not isConstructed_ ) return *this;        
             Parent::operator=(*this);
-            this->setConstruct( concatenate(obj) );
+            bool isConstructed = concatenate(obj);              
+            this->setConstruct( isConstructed );
             return *this; 
         }                 
         
@@ -157,7 +166,8 @@ namespace library
         {
             if( not isConstructed_ ) return *this;        
             Parent::operator=(*this);
-            this->setConstruct( concatenate(data) );
+            bool isConstructed = concatenate(data);              
+            this->setConstruct( isConstructed );
             return *this; 
         }         
         
@@ -405,6 +415,7 @@ namespace library
              * Copies a string self string.
              *
              * @param data a sequence of string characters.
+             * @return true if the task has been completed successfully.             
              */
             bool copy(const Char* data)
             {
@@ -431,6 +442,7 @@ namespace library
              * Concatenates two strings.
              *
              * @param data a sequence of string characters.             
+             * @return true if the task has been completed successfully.             
              */
             bool concatenate(const Char* data)
             {
@@ -451,7 +463,7 @@ namespace library
                 }
                 if(data_ == NULL) return false;                
                 len_ = len;
-                concatenate(data_, data);                    
+                concatenate(data_, data);
                 return true;
             }
             
@@ -583,27 +595,25 @@ namespace library
             /** 
              * Copys string to string.
              */
-            static Char* copy(Char* dst, const Char* src)
+            static void copy(Char* dst, const Char* src)
             {
-              if(dst == NULL || src == NULL) return NULL;
+              if(dst == NULL || src == NULL) return;
               Char* d = dst - 1;     
               const Char* s = src  - 1;     
               while(*++d = *++s);
-              return dst;
             }
 
             /** 
              * Concatenates two strings.
              */
-            static Char* concatenate(Char* ptr1, const Char* ptr2)
+            static void concatenate(Char* ptr1, const Char* ptr2)
             {
-              if(ptr1 == NULL || ptr2 == NULL) return NULL;
+              if(ptr1 == NULL || ptr2 == NULL) return;
               Char* p1 = ptr1 - 1;
               const Char* p2 = ptr2 - 1;
               while(*++p1);
               p1--;
               while(*++p1 = *++p2);
-              return ptr1;
             }                                             
         
             /**

@@ -20,7 +20,7 @@ namespace library
     template <class Alloc=::Allocator>
     class Toggle : public ::Object<Alloc>, public ::api::Toggle
     {
-      typedef ::Object<Alloc> Parent;
+        typedef ::Object<Alloc> Parent;
   
     public:
     

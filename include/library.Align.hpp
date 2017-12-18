@@ -107,7 +107,7 @@ namespace library
          * @param ptr  pointer to reserved memory area
          * @return given pointer.
          */
-        void* operator new(size_t size, void* ptr)
+        void* operator new(size_t, void* ptr)
         {
             return ptr;
         }

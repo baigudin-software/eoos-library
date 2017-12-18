@@ -35,7 +35,8 @@ namespace library
         Stack(typename ::api::Stack<Type>::Operation type, int32 count) : Parent(),
             stack_ (count),
             type_  (type){
-            this->setConstruct( construct() );
+            bool isConstructed = construct();
+            this->setConstruct( isConstructed );
         }     
         
         /** 
@@ -48,7 +49,8 @@ namespace library
         Stack(typename ::api::Stack<Type>::Operation type, int32 count, const Type illegal) : Parent(),
             stack_ (count, illegal),
             type_  (type){
-            this->setConstruct( construct() );
+            bool isConstructed = construct();
+            this->setConstruct( isConstructed );
         }    
         
         /** 

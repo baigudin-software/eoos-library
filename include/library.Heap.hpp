@@ -68,8 +68,8 @@ namespace library
          */    
         virtual void* allocate(size_t size, void* ptr)
         {
-            if(!isConstructed()) return NULL;
-            if(ptr != NULL) return ptr;
+            if( not isConstructed() ) return NULL;
+            if( ptr != NULL ) return ptr;
             bool is = disable();
             ptr = firstBlock()->alloc(size);
             enable(is);
@@ -83,8 +83,8 @@ namespace library
          */      
         virtual void free(void* ptr)
         {
-            if(ptr == NULL) return;
-            if(!isConstructed()) return;  
+            if( ptr == NULL ) return;
+            if( not isConstructed() ) return;  
             bool is = disable();
             heapBlock(ptr)->free();
             enable(is);
@@ -146,9 +146,7 @@ namespace library
          * @param ptr   address of allocated memory block or a null pointer.
          * @param place pointer used as the placement parameter in the matching placement new.
          */
-        void operator delete(void*, void*)
-        {
-        }
+        void operator delete(void*, void*);
   
     private:
     
@@ -284,9 +282,9 @@ namespace library
         static void* create(void* ptr)
         {
             // Size of this class has to be multipled to eight
-            if(sizeof(Heap) & 0x7) ptr = NULL;
+            if( sizeof(Heap) & 0x7 ) ptr = NULL;
             // Testing memory for self structure data
-            if(!isMemoryAvailable(ptr, sizeof(Heap))) ptr = NULL;
+            if( not isMemoryAvailable(ptr, sizeof(Heap)) ) ptr = NULL;
             // Memory address has to be aligned to eight
             if(reinterpret_cast<uint32>(ptr) & 0x7) ptr = NULL;
             return ptr;
@@ -509,15 +507,13 @@ namespace library
             
             /**
              * Frees allocated memory by this block.
-             *
-             * @return true if this block is freed.
              */  
-            bool free()
+            void free()
             {
-                if(canDelete() == false) return false;
+                if( not canDelete() ) return;
                 int32 sibling = 0;
-                if(prev_ != NULL && !prev_->isUsed()) sibling |= PREV_FREE;
-                if(next_ != NULL && !next_->isUsed()) sibling |= NEXT_FREE;    
+                if(prev_ != NULL && not prev_->isUsed()) sibling |= PREV_FREE;
+                if(next_ != NULL && not next_->isUsed()) sibling |= NEXT_FREE;    
                 switch(sibling)
                 {
                     case PREV_FREE | NEXT_FREE:
@@ -541,7 +537,6 @@ namespace library
                     default:
                         attr_ &= ~ATTR_USED;
                 }
-                return true;
             }
       
         private:
@@ -553,8 +548,8 @@ namespace library
              */  
             bool canDelete()
             {
-                if(!isMemory()) return false;
-                if(!heap_->isConstructed()) return false;
+                if( not isMemory() ) return false;
+                if( not heap_->isConstructed() ) return false;
                 return true;
             }
             
