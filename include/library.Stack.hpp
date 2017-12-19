@@ -77,7 +77,10 @@ namespace library
          */    
         virtual const Type* getTos()
         {
-            if(!isConstructed()) return NULL;
+            if( not isConstructed() ) 
+            {
+                return NULL;
+            }
             Type* stack = &stack_[0];
             switch(type_)
             {
@@ -170,8 +173,14 @@ namespace library
          */
         bool construct()
         {
-            if(!isConstructed()) return false;
-            if(!stack_.isConstructed()) return false;
+            if( not isConstructed() ) 
+            {
+                return false;
+            }
+            if( not stack_.isConstructed() ) 
+            {
+                return false;
+            }
             #ifdef EOOS_DEBUG
             stack_.fill(0);
             #endif

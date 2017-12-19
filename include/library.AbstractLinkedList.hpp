@@ -103,13 +103,19 @@ namespace library
          */  
         virtual void clear()
         {
-            if( not isConstructed() ) return;
+            if( not isConstructed() ) 
+            {
+                return;
+            }
             bool res;
             int32 b = getLength() - 1;
             for(int32 i=b; i>=0; i--) 
             {
                 res = removeNode( getNodeByIndex(i) ); 
-                if(res == false) break;
+                if(res == false) 
+                {
+                    break;
+                }
             }
         }
       
@@ -203,7 +209,10 @@ namespace library
          */
         virtual Type get(int32 index) const
         {
-            if( not isConstructed() ) return illegal_;
+            if( not isConstructed() ) 
+            {
+                return illegal_;
+            }
             Node* node = getNodeByIndex(index);
             return node != NULL ? node->getElement() : illegal_;
         }  
@@ -247,7 +256,10 @@ namespace library
          */
         virtual void setIllegal(const Type value)
         {
-            if( isConstructed() ) illegal_ = value;
+            if( isConstructed() ) 
+            {
+                illegal_ = value;
+            }
         }
       
         /**
@@ -258,7 +270,10 @@ namespace library
          */
         virtual bool isIllegal(const Type& value) const
         {
-            if( not isConstructed() ) return false;
+            if( not isConstructed() ) 
+            {
+                return false;
+            }
             return illegal_ == value ? true : false;
         }
       
@@ -294,9 +309,15 @@ namespace library
          */  
         virtual ::library::Buffer<Type,0,Alloc>* array() const
         {
-            if( not isConstructed() ) return NULL;
+            if( not isConstructed() ) 
+            {
+                return NULL;
+            }
             int32 count = getLength();
-            if(count == 0) return NULL;
+            if(count == 0) 
+            {
+                return NULL;
+            }
             Buffer<Type,0,Alloc>* buf = new Buffer<Type,0,Alloc>(count, illegal_);
             if(buf == NULL || not buf->isConstructed())
             {
@@ -335,7 +356,10 @@ namespace library
          */
         bool addNode(int32 index, const Type& element)
         {
-            if(isIndexOutOfBounds(index)) return false;
+            if(isIndexOutOfBounds(index)) 
+            {
+                return false;
+            }
             Node* node = new Node(element);
             if(node == NULL || not node->isConstructed())
             {
@@ -357,7 +381,10 @@ namespace library
                     return false;
                 }
                 after->insertAfter(node);
-                if(after == last_) last_ = node;
+                if(after == last_) 
+                {
+                    last_ = node;
+                }
             }
             else
             {
@@ -381,10 +408,19 @@ namespace library
          */
         Node* getNodeByIndex(int32 index) const
         {
-            if( not isIndex(index) ) return NULL;
-            if(index == getLength() - 1) return last_;
+            if( not isIndex(index) ) 
+            {
+                return NULL;
+            }
+            if(index == getLength() - 1) 
+            {
+                return last_;
+            }
             Node* node = last_->getNext();
-            for(int32 i=0; i<index; i++) node = node->getNext();
+            for(int32 i=0; i<index; i++) 
+            {
+                node = node->getNext();
+            }
             return node;
         }
       
@@ -397,11 +433,17 @@ namespace library
         Node* getNodeByElement(const Type& element) const
         {
             int32 len = getLength();
-            if(len == 0) return NULL;
+            if(len == 0) 
+            {
+                return NULL;
+            }
             Node* node = last_->getNext();      
             for(int32 i=0; i<len; i++, node = node->getNext()) 
             {
-                if(element != node->getElement()) continue;
+                if(element != node->getElement()) 
+                {
+                    continue;
+                }
                 return node;
             }
             return NULL;
@@ -415,11 +457,20 @@ namespace library
          */
         bool removeNode(Node* node)
         {
-            if(node == NULL) return false;
+            if(node == NULL) 
+            {
+                return false;
+            }
             if(node == last_) 
             {
-                if(getLength() == 1) last_ = NULL;
-                else last_ = last_->getPrevious();
+                if(getLength() == 1) 
+                {
+                    last_ = NULL;
+                }
+                else
+                {
+                    last_ = last_->getPrevious();
+                }
             }
             delete node;
             count_++;

@@ -94,7 +94,10 @@ namespace library
          */
         virtual Type* getBuffer() const
         {
-            if(!this->isConstructed()) return NULL;
+            if( not this->isConstructed() ) 
+            {
+                return NULL;
+            }
             return buf_;
         }
   
@@ -196,7 +199,10 @@ namespace library
          */
         virtual ~Buffer()
         {
-            if(isDelete_) this->free(buf_);
+            if(isDelete_) 
+            {
+                this->free(buf_);
+            }
         }
       
         /**
@@ -238,7 +244,10 @@ namespace library
          */
         virtual Type* getBuffer() const
         {
-            if(!this->isConstructed()) return NULL;
+            if( not this->isConstructed() )
+            {
+                return NULL;
+            }
             return buf_;
         }
   
@@ -252,10 +261,16 @@ namespace library
          */
         bool construct(int32 count)
         {
-            if(!this->isConstructed()) return false;
+            if( not this->isConstructed() ) 
+            {
+                return false;
+            }
             // If you have a WTF question looking at the next construction, then look
             // at description of 'allocate' template method of 'Object' template class.
-            if(buf_ == NULL) buf_ = this->template allocate<Type*>(count * sizeof(Type));
+            if(buf_ == NULL) 
+            {
+                buf_ = this->template allocate<Type*>(count * sizeof(Type));
+            }
             return buf_ == NULL ? false : true;
         }
       

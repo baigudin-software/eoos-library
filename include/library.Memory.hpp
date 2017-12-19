@@ -115,7 +115,10 @@ namespace library
             {
                 c1 = *str1++;
                 res = c1 - *str2++;
-                if(c1 == 0 || res != 0) break;
+                if(c1 == 0 || res != 0) 
+                {
+                    break;
+                }
             }
             return res;
         }

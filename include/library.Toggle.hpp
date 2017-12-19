@@ -71,7 +71,10 @@ namespace library
          */    
         virtual bool isConstructed() const
         {
-            if(!this->Parent::isConstructed()) return false;
+            if( not this->Parent::isConstructed() ) 
+            {
+                return false;
+            }
             return *toggle_ == NULL ? false : true;
         }
       
@@ -82,7 +85,10 @@ namespace library
          */ 
         virtual bool disable()
         {
-            if(!isConstructed()) return false;    
+            if( not isConstructed()) 
+            {
+                return false;    
+            }
             ::api::Toggle* switcher = *toggle_;
             return switcher->disable();      
         }
@@ -94,7 +100,10 @@ namespace library
          */    
         virtual void enable(bool status)
         {
-            if(!isConstructed()) return;
+            if( not isConstructed() ) 
+            {
+                return;
+            }
             ::api::Toggle* switcher = *toggle_;
             switcher->enable(status);
         }

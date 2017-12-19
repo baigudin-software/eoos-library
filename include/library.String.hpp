@@ -89,7 +89,10 @@ namespace library
          */     
         String& operator=(const ::library::String<Char,Alloc>& obj)
         {
-            if( not isConstructed_ ) return *this;        
+            if( not isConstructed_ ) 
+            {
+                return *this;        
+            }
             Parent::operator=(*this);
             bool isConstructed = assign(obj);            
             this->setConstruct( isConstructed );
@@ -104,7 +107,10 @@ namespace library
          */ 
         String& operator=(const ::api::String<Char>& obj)
         {
-            if( not isConstructed_ ) return *this;        
+            if( not isConstructed_ ) 
+            {
+                return *this;        
+            }
             Parent::operator=(*this);
             bool isConstructed = assign(obj);                        
             this->setConstruct( isConstructed );
@@ -119,7 +125,10 @@ namespace library
          */     
         String& operator=(const Char* data)
         {
-            if( not isConstructed_ ) return *this;        
+            if( not isConstructed_ ) 
+            {
+                return *this;        
+            }
             Parent::operator=(*this);
             bool isConstructed = assign(data);             
             this->setConstruct( isConstructed );
@@ -134,7 +143,10 @@ namespace library
          */     
         String& operator+=(const ::library::String<Char,Alloc>& obj)
         {
-            if( not isConstructed_ ) return *this;        
+            if( not isConstructed_ ) 
+            {
+                return *this;        
+            }
             Parent::operator=(*this);
             bool isConstructed = concatenate(obj);            
             this->setConstruct( isConstructed );
@@ -149,7 +161,10 @@ namespace library
          */
         String& operator+=(const ::api::String<Char>& obj)
         {
-            if( not isConstructed_ ) return *this;        
+            if( not isConstructed_ ) 
+            {
+                return *this;        
+            }
             Parent::operator=(*this);
             bool isConstructed = concatenate(obj);              
             this->setConstruct( isConstructed );
@@ -164,7 +179,10 @@ namespace library
          */     
         String& operator+=(const Char* data)
         {
-            if( not isConstructed_ ) return *this;        
+            if( not isConstructed_ ) 
+            {
+                return *this;        
+            }
             Parent::operator=(*this);
             bool isConstructed = concatenate(data);              
             this->setConstruct( isConstructed );
@@ -191,7 +209,10 @@ namespace library
          */
         virtual int32 compareTo(const ::api::String<Char>& obj) const
         {
-            if( not obj.isConstructed() ) return 1;
+            if( not obj.isConstructed() ) 
+            {
+                return 1;
+            }
             return compareTo( obj.getChar() );
         }
         
@@ -205,8 +226,14 @@ namespace library
          */
         virtual int32 compareTo(const Char* data) const
         {
-            if( not isConstructed_ ) return -1;        
-            if( data == NULL ) return 1;
+            if( not isConstructed_ ) 
+            {
+                return -1;        
+            }
+            if( data == NULL ) 
+            {
+                return 1;
+            }
             return string_.compareTo( data );        
         }
         
@@ -257,7 +284,10 @@ namespace library
          */
         virtual void setIllegal(Char value)
         {
-            if( isConstructed_ ) illegal_ = value;
+            if( isConstructed_ ) 
+            {
+                illegal_ = value;
+            }
         }
         
         /**
@@ -293,7 +323,10 @@ namespace library
          */ 
         bool construct(const ::api::String<Char>& obj)
         {
-            if( not obj.isConstructed() ) return false;            
+            if( not obj.isConstructed() ) 
+            {
+                return false;            
+            }
             return construct( obj.getChar() );
         }        
     
@@ -305,7 +338,10 @@ namespace library
          */
         bool construct(const Char* data)
         {
-            if( not isConstructed_ ) return false;
+            if( not isConstructed_ ) 
+            {
+                return false;
+            }
             return assign(data);
         }
 
@@ -329,7 +365,10 @@ namespace library
          */
         bool assign(const ::api::String<Char>& obj)
         {
-            if( not obj.isConstructed() ) return false;
+            if( not obj.isConstructed() ) 
+            {
+                return false;
+            }
             return assign( obj.getChar() );
         }        
         
@@ -341,7 +380,10 @@ namespace library
          */
         bool assign(const Char* data)
         {
-            if( not isConstructed_ ) return false;        
+            if( not isConstructed_ ) 
+            {
+                return false;        
+            }
             return string_.copy(data);
         }
         
@@ -365,7 +407,10 @@ namespace library
          */
         bool concatenate(const ::api::String<Char>& obj)
         {
-            if( not obj.isConstructed() ) return false;
+            if( not obj.isConstructed() ) 
+            {
+                return false;
+            }
             return concatenate( obj.getChar() );
         }                        
         
@@ -377,7 +422,10 @@ namespace library
          */
         bool concatenate(const Char* data)
         {
-            if( not isConstructed_ ) return false;        
+            if( not isConstructed_ ) 
+            {
+                return false;        
+            }
             return string_.concatenate(data);
         }
         
@@ -419,7 +467,10 @@ namespace library
              */
             bool copy(const Char* data)
             {
-                if(data == NULL) return false;            
+                if(data == NULL) 
+                {
+                    return false;            
+                }
                 int32 len, max;
                 len = getLength(data);
                 if( not isFit(len) ) 
@@ -432,7 +483,10 @@ namespace library
                     data_ = createData(len, max);
                     max_ = max;
                 }
-                if(data_ == NULL) return false;                
+                if(data_ == NULL) 
+                {
+                    return false;                
+                }
                 len_ = len;
                 copy(data_, data);
                 return true;
@@ -446,8 +500,14 @@ namespace library
              */
             bool concatenate(const Char* data)
             {
-                if(data == NULL) return false;            
-                if(data_ == NULL) return false;
+                if(data == NULL) 
+                {
+                    return false;            
+                }
+                if(data_ == NULL) 
+                {
+                    return false;
+                }
                 int32 len, max;
                 len = getLength(data) + len_;          
                 if( not isFit(len) ) 
@@ -461,7 +521,10 @@ namespace library
                     data_ = tmp;
                     max_ = max;                    
                 }
-                if(data_ == NULL) return false;                
+                if(data_ == NULL) 
+                {
+                    return false;                
+                }
                 len_ = len;
                 concatenate(data_, data);
                 return true;
@@ -479,13 +542,19 @@ namespace library
             {
                 int32 val[2];
                 int32 res = len_ - getLength(data);
-                if(res != 0) return res;
+                if(res != 0) 
+                {
+                    return res;
+                }
                 for(int32 i=0; i<len_; i++)
                 {
                     val[0] = data_[i];
                     val[1] = data[i];
                     res = val[0] - val[1];
-                    if(res != 0) break;
+                    if(res != 0) 
+                    {
+                        break;
+                    }
                 }
                 return res;
             }
@@ -542,7 +611,10 @@ namespace library
              */        
             static void deleteData(Char*& data)
             {
-                if(data != NULL) Alloc::free(data);
+                if(data != NULL) 
+                {
+                    Alloc::free(data);
+                }
                 data = NULL;
             }            
             
@@ -556,7 +628,10 @@ namespace library
             {
                 size_t size = static_cast<size_t>(len) * sizeof(Char) + sizeof(Char);
                 // Align size to eight
-                if(size & 0x7) size = (size & ~0x7) + 0x8;
+                if(size & 0x7) 
+                {
+                    size = (size & ~0x7) + 0x8;
+                }
                 return static_cast<int32>(size);
             }
             
@@ -569,7 +644,10 @@ namespace library
             static int32 calculateLength(int32 size)
             {
                 int32 charSize =  static_cast<int32>( sizeof(Char) );
-                if(charSize == 0) return 0;
+                if(charSize == 0) 
+                {
+                    return 0;
+                }
                 int32 len = size / charSize;
                 return len > 1 ? len - 1 : 0;
             }
@@ -582,7 +660,10 @@ namespace library
              */
             static int32 getLength(const Char* data)
             {
-                if(data == NULL) return 0;
+                if(data == NULL) 
+                {
+                    return 0;
+                }
                 int32 len = 0;
                 while( *data != 0 ) 
                 {
@@ -597,7 +678,10 @@ namespace library
              */
             static void copy(Char* dst, const Char* src)
             {
-              if(dst == NULL || src == NULL) return;
+              if(dst == NULL || src == NULL) 
+              {
+                  return;
+              }
               Char* d = dst - 1;     
               const Char* s = src  - 1;     
               while(*++d = *++s);
@@ -608,7 +692,10 @@ namespace library
              */
             static void concatenate(Char* ptr1, const Char* ptr2)
             {
-              if(ptr1 == NULL || ptr2 == NULL) return;
+              if(ptr1 == NULL || ptr2 == NULL) 
+              {
+                  return;
+              }
               Char* p1 = ptr1 - 1;
               const Char* p2 = ptr2 - 1;
               while(*++p1);

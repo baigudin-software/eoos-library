@@ -55,9 +55,15 @@ namespace library
          */
         virtual ::api::ListIterator<Type>* getListIterator(int32 index)
         {
-            if(!this->isConstructed()) return NULL;
+            if( not this->isConstructed() ) 
+            {
+                return NULL;
+            }
             Iterator* iterator = new Iterator(index, *this);
-            if(iterator != NULL && iterator->isConstructed()) return iterator;
+            if(iterator != NULL && iterator->isConstructed()) 
+            {
+                return iterator;
+            }
             delete iterator;
             return NULL;
         }
@@ -133,12 +139,21 @@ namespace library
              */      
             virtual bool add(const Type& element)
             {
-                if(count_.list != count_.self) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
                 Node* last = last_;
-                if(list_.add(getNextIndex(), element) == false) return false;
+                if(list_.add(getNextIndex(), element) == false) 
+                {
+                    return false;
+                }
                 count_.self++;
                 rindex_ = ILLEGAL_INDEX;
-                if(last == NULL) curs_ = last_;
+                if(last == NULL) 
+                {
+                    curs_ = last_;
+                }
                 return true;
             }
           
@@ -150,11 +165,26 @@ namespace library
             virtual bool remove()
             {
                 Node* curs;
-                if(count_.list != count_.self) return false;
-                if(rindex_ == ILLEGAL_INDEX) return false;
-                if(curs_->getIndex() != rindex_) curs = curs_;
-                else curs = curs_->getNext();
-                if(list_.remove(rindex_) == false) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                if(rindex_ == ILLEGAL_INDEX) 
+                {
+                    return false;
+                }
+                if(curs_->getIndex() != rindex_) 
+                {
+                    curs = curs_;
+                }
+                else
+                {
+                    curs = curs_->getNext();
+                }
+                if(list_.remove(rindex_) == false) 
+                {
+                    return false;
+                }
                 count_.self++;
                 rindex_ = ILLEGAL_INDEX;
                 curs_ = last_ != NULL ? curs : NULL;
@@ -168,7 +198,10 @@ namespace library
              */      
             virtual Type getPrevious()
             {
-                if(!hasPrevious()) return illegal_;
+                if( not hasPrevious()) 
+                {
+                    return illegal_;
+                }
                 curs_ = curs_->getPrevious();
                 rindex_ = curs_->index();
                 return curs_->getElement();
@@ -191,8 +224,14 @@ namespace library
              */      
             virtual bool hasPrevious() const
             {
-                if(count_.list != count_.self) return false;
-                if(curs_ == NULL) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                if(curs_ == NULL) 
+                {
+                    return false;
+                }
                 return true;
             }
           
@@ -203,7 +242,10 @@ namespace library
              */      
             virtual Type getNext()
             {
-                if(!hasNext()) return illegal_;
+                if( not hasNext() ) 
+                {
+                    return illegal_;
+                }
                 register Node* node = curs_;
                 curs_ = curs_->getNext();
                 rindex_ = node->getIndex();
@@ -227,8 +269,14 @@ namespace library
              */      
             virtual bool hasNext() const
             {
-                if(count_.list != count_.self) return false;
-                if(curs_ == NULL) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                if(curs_ == NULL) 
+                {
+                    return false;
+                }
                 return true;
             }
           
@@ -274,10 +322,22 @@ namespace library
              */
             bool construct(int32 index)
             {
-                if(!this->isConstructed()) return false;
-                if(!list_.isConstructed()) return false;
-                if(list_.isIndexOutOfBounds(index)) return false;
-                if(index == last_->getIndex() + 1) index = 0;
+                if( not this->isConstructed()) 
+                {
+                    return false;
+                }
+                if( not list_.isConstructed()) 
+                {
+                    return false;
+                }
+                if(list_.isIndexOutOfBounds(index)) 
+                {
+                    return false;
+                }
+                if(index == last_->getIndex() + 1) 
+                {
+                    index = 0;
+                }
                 curs_ = list_.getNodeByIndex(index);
                 return true;
             }

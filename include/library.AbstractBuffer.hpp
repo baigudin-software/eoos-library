@@ -92,8 +92,14 @@ namespace library
          */
         virtual void fill(Type value, int32 index, int32 count)
         {
-            if(!this->isConstructed()) return;
-            if(index >= count_) return;
+            if( not this->isConstructed() ) 
+            {
+                return;
+            }
+            if(index >= count_) 
+            {
+                return;
+            }
             Type* buf = getBuffer();
             int32 max = (index + count <= count_) ? count + index : count_;
             for(int32 i=index; i<max; i++) buf[i] = value;
@@ -171,8 +177,14 @@ namespace library
         Type& operator [](int32 i)
         {
             Type* buf = getBuffer();
-            if(!this->isConstructed() || i >= count_ || buf == NULL) return illegal_;
-            return buf[i];
+            if( not this->isConstructed() || i >= count_ || buf == NULL) 
+            {
+                return illegal_;
+            }
+            else
+            {
+                return buf[i];
+            }
         }    
   
     protected:
@@ -187,13 +199,19 @@ namespace library
          */
         virtual void copy(const AbstractBuffer& buf)
         {
-            if(!this->isConstructed()) return;
+            if( not this->isConstructed() ) 
+            {
+                return;
+            }
             int32 size1 = getLength();
             int32 size2 = buf.getLength();
             int32 size = size1 < size2 ? size1 : size2;
             Type* buf1 = getBuffer();        
             Type* buf2 = buf.getBuffer();
-            for(int32 i=0; i<size; i++) buf1[i] = buf2[i];
+            for(int32 i=0; i<size; i++) 
+            {
+                buf1[i] = buf2[i];
+            }
         }
         
         /**
