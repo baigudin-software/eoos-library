@@ -8,7 +8,7 @@
 #ifndef LIBRARY_STACK_HPP_
 #define LIBRARY_STACK_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "api.Stack.hpp"
 #include "library.Buffer.hpp"
 
@@ -18,11 +18,11 @@ namespace library
      * @param Type  data type of default stack element.
      * @param Alloc heap memory allocator class.
      */ 
-    template <typename Type, class Alloc=::Allocator>
-    class Stack : public ::Object<Alloc>, public ::api::Stack<Type>
+    template <typename Type, class Alloc = Allocator>
+    class Stack : public ::library::Object<Alloc>, public ::api::Stack<Type>
     { 
-        typedef ::Object<Alloc>    Parent;  
-        typedef ::api::Stack<Type> StackIntf;
+        typedef ::library::Object<Alloc>  Parent;  
+        typedef ::api::Stack<Type>        StackIntf;
     
     public:
     

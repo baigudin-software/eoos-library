@@ -25,7 +25,7 @@ namespace library
      * @param COUNT count of buffer elements. 
      * @param Alloc heap memory allocator class.
      */ 
-    template <typename Type, int32 COUNT=0, class Alloc=::Allocator>
+    template <typename Type, int32 COUNT = 0, class Alloc = Allocator>
     class Buffer : public ::library::AbstractBuffer<Type,Alloc>
     {
         typedef ::library::AbstractBuffer<Type,Alloc> Parent;

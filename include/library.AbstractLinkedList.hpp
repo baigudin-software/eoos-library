@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ABSTRACT_LINKED_LIST_HPP_
 #define LIBRARY_ABSTRACT_LINKED_LIST_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "library.Buffer.hpp"
 #include "library.LinkedNode.hpp"
 #include "api.List.hpp"
@@ -21,15 +21,15 @@ namespace library
      * @param Type  data type of container element.
      * @param Alloc heap memory allocator class.
      */
-    template <typename Type, class Alloc=::Allocator>
+    template <typename Type, class Alloc = Allocator>
     class AbstractLinkedList : 
-        public ::Object<Alloc>, 
+        public ::library::Object<Alloc>, 
         public ::api::List<Type>, 
         public ::api::Queue<Type>, 
         public ::api::Iterable<Type>{
   
-        typedef ::Object<Alloc>                Parent;
-        typedef ::library::LinkedNode<Type,Alloc> Node;
+        typedef ::library::Object<Alloc>           Parent;       
+        typedef ::library::LinkedNode<Type,Alloc>  Node;
   
     public:      
   

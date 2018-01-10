@@ -8,7 +8,7 @@
 #ifndef LIBRARY_STRING_HPP_
 #define LIBRARY_STRING_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "api.String.hpp"
 
 namespace library
@@ -17,10 +17,10 @@ namespace library
      * @param Char data type of string characters.
      * @param Alloc heap memory allocator class.
      */
-    template <typename Char, class Alloc=::Allocator>    
-    class String : public Object<Alloc>, public ::api::String<Char>
+    template <typename Char, class Alloc = Allocator>    
+    class String : public ::library::Object<Alloc>, public ::api::String<Char>
     {
-        typedef ::Object<Alloc> Parent;        
+        typedef ::library::Object<Alloc> Parent;        
       
     public:
     

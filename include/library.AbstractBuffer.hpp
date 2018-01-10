@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ABSTRACT_BUFFER_HPP_
 #define LIBRARY_ABSTRACT_BUFFER_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "api.Collection.hpp"
 
 namespace library
@@ -17,10 +17,10 @@ namespace library
      * @param Type  data type of buffer element.
      * @param Alloc heap memory allocator class.
      */ 
-    template <typename Type, class Alloc=::Allocator>
-    class AbstractBuffer : public ::Object<Alloc>, public ::api::Collection<Type>
+    template <typename Type, class Alloc = Allocator>
+    class AbstractBuffer : public ::library::Object<Alloc>, public ::api::Collection<Type>
     {
-        typedef ::Object<Alloc> Parent;
+        typedef ::library::Object<Alloc> Parent;
   
     public:      
   

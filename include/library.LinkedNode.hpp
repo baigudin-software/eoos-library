@@ -8,7 +8,7 @@
 #ifndef LIBRARY_LINKED_NODE_HPP_
 #define LIBRARY_LINKED_NODE_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 
 namespace library
 {  
@@ -16,10 +16,10 @@ namespace library
      * @param Type  data type of element.
      * @param Alloc heap memory allocator class.
      */
-    template <typename Type, class Alloc=::Allocator>
-    class LinkedNode : public ::Object<Alloc>
+    template <typename Type, class Alloc = Allocator>
+    class LinkedNode : public ::library::Object<Alloc>
     {
-        typedef ::Object<Alloc> Parent;  
+        typedef ::library::Object<Alloc> Parent;  
     
     public:
     

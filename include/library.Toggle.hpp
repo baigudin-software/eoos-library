@@ -8,7 +8,7 @@
 #ifndef LIBRARY_TOGGLE_HPP_
 #define LIBRARY_TOGGLE_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "api.Toggle.hpp"
 
 namespace library
@@ -17,10 +17,10 @@ namespace library
      *
      * @param Alloc heap memory allocator class.
      */  
-    template <class Alloc=::Allocator>
-    class Toggle : public ::Object<Alloc>, public ::api::Toggle
+    template <class Alloc = Allocator>
+    class Toggle : public ::library::Object<Alloc>, public ::api::Toggle
     {
-        typedef ::Object<Alloc> Parent;
+        typedef ::library::Object<Alloc> Parent;
   
     public:
     

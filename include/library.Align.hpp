@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ALIGN_HPP_
 #define LIBRARY_ALIGN_HPP_
 
-#include "Object.hpp"
+#include "library.Allocator.hpp"
 
 namespace library
 {
@@ -17,7 +17,7 @@ namespace library
      * @param SIZEOF size of aligning data.
      * @param Alloc  heap memory allocator class.
      */  
-    template <typename Type, int32 SIZEOF=sizeof(Type), class Alloc=::Allocator>
+    template <typename Type, int32 SIZEOF = sizeof(Type), class Alloc = Allocator>
     class Align
     {
       

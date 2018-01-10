@@ -16,7 +16,7 @@ namespace library
      * @param Type  data type of container element.
      * @param Alloc heap memory allocator class.
      */
-    template <typename Type, class Alloc=::Allocator>
+    template <typename Type, class Alloc = Allocator>
     class LinkedList : public ::library::AbstractLinkedList<Type,Alloc>
     {
         typedef ::library::AbstractLinkedList<Type,Alloc>  Parent;
@@ -92,9 +92,9 @@ namespace library
          * For this reason, for fast iteration some tests are skipped.
          * You have to use this class only if it has been constructed.
          */      
-        class Iterator : public ::Object<Alloc>, public ::api::ListIterator<Type>
+        class Iterator : public ::library::Object<Alloc>, public ::api::ListIterator<Type>
         {
-            typedef ::Object<Alloc>                 Parent;
+            typedef ::library::Object<Alloc>           Parent;
             typedef ::library::LinkedList<Type,Alloc>  List;
       
         public:
