@@ -69,11 +69,11 @@ namespace library
          * Tests if this object has been constructed.
          *
          * @return true if object has been constructed successfully.
-         */    
+         */
         virtual bool isConstructed() const
         {
-            return this->Parent::isConstructed();
-        }
+            return this->isConstructed_;
+        }        
         
         /**
          * Inserts new element to the end of this list.
@@ -83,7 +83,7 @@ namespace library
          */      
         virtual bool add(Type element)
         {
-            return isConstructed() ? addNode(getLength(), element) : false;
+            return this->isConstructed_ ? addNode(getLength(), element) : false;
         }
       
         /**
@@ -95,7 +95,7 @@ namespace library
          */
         virtual bool add(int32 index, Type element)
         {
-            return isConstructed() ? addNode(index, element) : false;
+            return this->isConstructed_ ? addNode(index, element) : false;
         }      
       
         /**
@@ -103,7 +103,7 @@ namespace library
          */  
         virtual void clear()
         {
-            if( not isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return;
             }
@@ -157,7 +157,7 @@ namespace library
          */
         virtual bool remove(int32 index)
         {
-            return isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
+            return this->isConstructed_ ? removeNode( getNodeByIndex(index) ) : false;
         }
       
         /**
@@ -168,7 +168,7 @@ namespace library
          */
         virtual bool removeElement(const Type& element)
         {
-            return isConstructed() ? removeNode( getNodeByElement(element) ) : false;
+            return this->isConstructed_ ? removeNode( getNodeByElement(element) ) : false;
         }
       
         /**
@@ -209,7 +209,7 @@ namespace library
          */
         virtual Type get(int32 index) const
         {
-            if( not isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return illegal_;
             }
@@ -256,7 +256,7 @@ namespace library
          */
         virtual void setIllegal(const Type value)
         {
-            if( isConstructed() ) 
+            if( this->isConstructed_ ) 
             {
                 illegal_ = value;
             }
@@ -270,7 +270,7 @@ namespace library
          */
         virtual bool isIllegal(const Type& value) const
         {
-            if( not isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;
             }
@@ -309,7 +309,7 @@ namespace library
          */  
         virtual ::library::Buffer<Type,0,Alloc>* array() const
         {
-            if( not isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return NULL;
             }
@@ -527,7 +527,7 @@ namespace library
          */
         bool construct()
         {
-            return isConstructed();
+            return this->isConstructed_;
         }
       
         /**

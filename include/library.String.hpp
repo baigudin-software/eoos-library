@@ -28,7 +28,6 @@ namespace library
          * Constructor.
          */    
         String() : Parent(),
-            isConstructed_ (this->getConstruct()),
             string_        (),
             illegal_       (0){
             bool isConstructed = construct("");           
@@ -41,7 +40,6 @@ namespace library
          * @param obj a source string object.
          */ 
         String(const ::library::String<Char,Alloc>& obj) : Parent(obj),
-            isConstructed_ (this->getConstruct()),        
             string_        (),
             illegal_       (0){
             bool isConstructed = construct(obj);                       
@@ -54,7 +52,6 @@ namespace library
          * @param obj a source string object interface.
          */ 
         String(const ::api::String<Char>& obj) : Parent(obj),
-            isConstructed_ (this->getConstruct()),        
             string_        (),
             illegal_       (0){
             bool isConstructed = construct(obj);
@@ -67,7 +64,6 @@ namespace library
          * @param data a sequence of string characters.
          */    
         String(const Char* data) : Parent(),
-            isConstructed_ (this->getConstruct()),
             string_        (),
             illegal_       (0){
             bool isConstructed = construct(data);            
@@ -89,7 +85,7 @@ namespace library
          */     
         String& operator=(const ::library::String<Char,Alloc>& obj)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return *this;        
             }
@@ -107,7 +103,7 @@ namespace library
          */ 
         String& operator=(const ::api::String<Char>& obj)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return *this;        
             }
@@ -125,7 +121,7 @@ namespace library
          */     
         String& operator=(const Char* data)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return *this;        
             }
@@ -143,7 +139,7 @@ namespace library
          */     
         String& operator+=(const ::library::String<Char,Alloc>& obj)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return *this;        
             }
@@ -161,7 +157,7 @@ namespace library
          */
         String& operator+=(const ::api::String<Char>& obj)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return *this;        
             }
@@ -179,7 +175,7 @@ namespace library
          */     
         String& operator+=(const Char* data)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return *this;        
             }
@@ -196,7 +192,7 @@ namespace library
          */    
         virtual bool isConstructed() const
         {
-            return isConstructed_;
+            return this->isConstructed_;
         }
         
         /** 
@@ -226,7 +222,7 @@ namespace library
          */
         virtual int32 compareTo(const Char* data) const
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return -1;        
             }
@@ -244,7 +240,7 @@ namespace library
          */
         virtual const Char* getChar() const
         {
-            return isConstructed_ ? string_.getData() : NULL;
+            return this->isConstructed_ ? string_.getData() : NULL;
         }        
         
         /**
@@ -254,7 +250,7 @@ namespace library
          */
         virtual int32 getLength() const
         {
-            return isConstructed_ ? string_.getLength() : 0;
+            return this->isConstructed_ ? string_.getLength() : 0;
         }
        
         /**
@@ -284,7 +280,7 @@ namespace library
          */
         virtual void setIllegal(Char value)
         {
-            if( isConstructed_ ) 
+            if( this->isConstructed_ ) 
             {
                 illegal_ = value;
             }
@@ -338,7 +334,7 @@ namespace library
          */
         bool construct(const Char* data)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;
             }
@@ -380,7 +376,7 @@ namespace library
          */
         bool assign(const Char* data)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;        
             }
@@ -422,17 +418,12 @@ namespace library
          */
         bool concatenate(const Char* data)
         {
-            if( not isConstructed_ ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;        
             }
             return string_.concatenate(data);
         }
-        
-        /** 
-         * The root object constructed flag.
-         */  
-        const bool& isConstructed_;        
 
         /**
          * Number of characters of this string.

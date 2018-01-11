@@ -71,7 +71,7 @@ namespace library
          */    
         virtual bool isConstructed() const
         {
-            if( not this->Parent::isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;
             }

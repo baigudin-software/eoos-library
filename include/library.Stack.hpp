@@ -67,7 +67,7 @@ namespace library
          */
         virtual bool isConstructed() const
         {
-            return this->Parent::isConstructed();
+            return this->isConstructed_;
         }
       
         /** 
@@ -77,7 +77,7 @@ namespace library
          */    
         virtual const Type* getTos()
         {
-            if( not isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return NULL;
             }
@@ -166,14 +166,14 @@ namespace library
       
     private:
   
-        /** 
+        /**
          * Constructor.
          *
-         * @return boolean result.
-         */
+         * @return true if object has been constructed successfully.     
+         */ 
         bool construct()
         {
-            if( not isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;
             }

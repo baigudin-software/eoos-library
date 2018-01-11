@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ALLOCATOR_HPP_
 #define LIBRARY_ALLOCATOR_HPP_
 
-#include "api.Heap.hpp"
+#include "Types.hpp"
 
 namespace library
 {
@@ -31,20 +31,6 @@ namespace library
          * @param ptr address of allocated memory block or a null pointer.
          */      
         static void free(void* ptr);
-        
-        /**
-         * Sets some heap memory.
-         *
-         * @param heap a constructed heap object.
-         */
-        static void setHeap(::api::Heap& heap);
-      
-    private:
-      
-        /**
-         * Pointer to constructed heap memory (no boot).
-         */
-        static ::api::Heap* heap_;  
   
     };
 }

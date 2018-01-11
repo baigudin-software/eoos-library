@@ -55,7 +55,7 @@ namespace library
          */
         virtual ::api::ListIterator<Type>* getListIterator(int32 index)
         {
-            if( not this->isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return NULL;
             }
@@ -128,7 +128,7 @@ namespace library
              */    
             virtual bool isConstructed() const
             {
-                return this->Parent::isConstructed();
+                return this->isConstructed_;
             }      
           
             /**
@@ -325,7 +325,7 @@ namespace library
              */
             bool construct(int32 index)
             {
-                if( not this->Parent::isConstructed() ) 
+                if( not this->isConstructed_ ) 
                 {
                     return false;
                 }

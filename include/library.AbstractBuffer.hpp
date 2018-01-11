@@ -59,9 +59,9 @@ namespace library
          */
         virtual bool isConstructed() const
         {
-            return this->Parent::isConstructed();
-        }
-      
+            return this->isConstructed_;
+        }        
+               
         /**
          * Fills this buffer by given value.
          *
@@ -92,7 +92,7 @@ namespace library
          */
         virtual void fill(Type value, int32 index, int32 count)
         {
-            if( not this->isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return;
             }
@@ -177,7 +177,7 @@ namespace library
         Type& operator [](int32 i)
         {
             Type* buf = getBuffer();
-            if( not this->isConstructed() || i >= count_ || buf == NULL) 
+            if( not this->isConstructed_ || i >= count_ || buf == NULL) 
             {
                 return illegal_;
             }
@@ -199,7 +199,7 @@ namespace library
          */
         virtual void copy(const AbstractBuffer& buf)
         {
-            if( not this->isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return;
             }

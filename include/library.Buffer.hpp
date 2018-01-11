@@ -94,7 +94,7 @@ namespace library
          */
         virtual Type* getBuffer() const
         {
-            if( not this->isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return NULL;
             }
@@ -244,7 +244,7 @@ namespace library
          */
         virtual Type* getBuffer() const
         {
-            if( not this->isConstructed() )
+            if( not this->isConstructed_ )
             {
                 return NULL;
             }
@@ -261,7 +261,7 @@ namespace library
          */
         bool construct(int32 count)
         {
-            if( not this->isConstructed() ) 
+            if( not this->isConstructed_ ) 
             {
                 return false;
             }
