@@ -526,8 +526,8 @@ namespace library
              *
              * @param data a sequence of string characters.
              * @return the value 0 if given string is equal to this string; 
-             *         a value less than 0 if this string is less than given string; 
-             *         a value greater than 0 if this string is greater than given string.
+             *         a value less than 0 if this string is shorter than given string; 
+             *         a value greater than 0 if this string is longer than given string.
              */
             int32 compareTo(const Char* data) const
             {
