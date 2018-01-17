@@ -60,7 +60,7 @@ namespace library
         /** 
          * Gets a string length.
          *
-         * @param str a C-string would be measured.
+         * @param str a character string would be measured.
          * @return a length of the passed string.
          */
         static size_t strlen(const char* str)
@@ -82,7 +82,7 @@ namespace library
          * Copies a string.
          *
          * @param dst a destination array where the content would be copied.
-         * @param src C-string to be copied.
+         * @param src character string to be copied.
          * @return a pointer to the destination string, or NULL if an error has been occurred.
          */
         static char* strcpy(char* dst, const char* src)
@@ -101,8 +101,8 @@ namespace library
         /** 
          * Concatenates strings.
          *
-         * @param dst a destination C-string where the content would be appended.
-         * @param src an appended C-string.
+         * @param dst a destination character string where the content would be appended.
+         * @param src an appended character string.
          * @return a pointer to the destination string, or NULL if an error has been occurred.
          */
         static char* strcat(char* dst, const char* src)
@@ -122,8 +122,8 @@ namespace library
         /** 
          * Compares two strings.
          *
-         * @param str1 C-string to be compared.
-         * @param str2 C-string to be compared.
+         * @param str1 character string to be compared.
+         * @param str2 character string to be compared.
          * @return the value 0 if the string 1 is equal to the string 2; 
          *         a value less than 0 if the string 1 is shorter than the string 2; 
          *         a value greater than 0 if the string 1 is longer than the string 2, 
@@ -149,49 +149,60 @@ namespace library
         }
         
         /** 
-         * Converts integer number to string.
+         * Converts a signed integer number to a string.
+         *
+         * The function converts a signed integer value into a character string using the base parameter, 
+         * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system. 
+         * 
+         * Note that only if a passed value is negative and the base is decimal, the resulting string is preceded 
+         * with a minus sign. In addition, a hexadecimal value will include lower case characters, and 
+         * any strings will not contain any suffixes or prefixes for identifying a numeral system.
          *
          * @param val  a value that would be converted to a string.
-         * @param str  a resulting C-string.
+         * @param str  a resulting character string.
          * @param base a numerical base used to represent the value as a string.
          * @return a pointer to the passed string, or NULL if an error has been occurred.
-         */        
-        static char* itoa(int32 val, char* str, int32 base = 10)
+         */
+        template <typename Type>        
+        static char* itoa(Type val, char* str, int32 base = 10)
         {
-            bool isNegative = val < 0;        
+            static const int32 LENGTH = 33;
+            char temp[LENGTH];        
+            bool isNegative;
             if(str == NULL)
             {
                 return NULL;
             }
             switch(base)
             {
+                case  2:                 
                 case  8:
                 case 16: 
                 {
-                    if(isNegative)
-                    {
-                        return NULL;
-                    }
+                    isNegative = false;
                     break;
                 }
                 case 10:                                
                 {
+                    isNegative = val < 0 ? true : false;                        
                     break;
                 }
                 default: 
                 {
                     return NULL;
                 }
-            }         
-            static const int32 LENGTH = 16;
-            char temp[LENGTH];
-            int32 module = isNegative ? 0 - val : val;            
-            int32 i = LENGTH - 1;
-            temp[i--] = '\0';
-            do
+            }
+            int32 index = LENGTH - 1;            
+            temp[index--] = '\0';
+            Type module = isNegative ? 0 - val : val;
+            if(module < 0)
+            {
+                return NULL;
+            }
+            while(index >= 0)
             { 
                 char ch;
-                int32 digit = module % base;
+                Type digit = module % base;
                 if(base == 16 && digit > 9)
                 {
                     ch = 'a';
@@ -201,17 +212,157 @@ namespace library
                 {
                     ch = '0';                
                 }
-                temp[i--] = static_cast<char>(digit + ch);
+                temp[index--] = static_cast<char>(digit + ch);
                 module = module / base;
+                if(module == 0)
+                {
+                    break;
+                }
             } 
-            while(module != 0);
-            if(isNegative) 
+            if(isNegative && index >= 0) 
             {
-                temp[i--] = '-';
+                temp[index--] = '-';
             }
-            strcpy(str, &temp[++i]);
+            strcpy(str, &temp[++index]);
             return str;
-        }        
+        } 
+        
+        /** 
+         * Converts a string to a 32-bits integer number.
+         *
+         * @param str a character string that would be converted to a number.
+         * @param base a numerical base used to parse the string.         
+         * @return the resulting number.
+         */        
+        static int32 atoi(const char* str, int32 base = 10)
+        {
+            switch(base)
+            {
+                case  2:                 
+                case  8:
+                case 10:
+                case 16: break;
+                default: return 0;
+            }
+
+            int32 res = 0;
+            int32 index = 0;
+            bool isNegative = false;
+            // Look for whitespaces         
+            while( isSpace(str[index]) ) 
+            {
+                index++;
+            }
+            // Test a character if the number is negative for decimal base
+            if(base == 10)
+            {
+                if( str[index] == '-' )
+                {
+                    isNegative = true;
+                    index++;
+                }
+                else if( str[index] == '+' )
+                {
+                    isNegative = false;
+                    index++;
+                }
+            }
+            // Do fast calculation for no hexadecimal base
+            if(base != 16)
+            {
+                while( isDigit(str[index], base) )
+                {
+                    res *= base;
+                    res += static_cast<int32>( str[index++] - '0' );
+                }            
+            }
+            else
+            {
+                char subtrahend;
+                int32 addend;
+                while( isDigit(str[index], base) )
+                {
+                    detectMathOperands(str[index], subtrahend, addend);
+                    res *= base;
+                    res += static_cast<int32>( str[index++] - subtrahend );
+                    res += addend;
+                }            
+            }
+
+            return isNegative ? -1 * res : res;
+        }
+        
+    private:        
+        
+        /** 
+         * Tests if a character is a whitespace character.
+         *
+         * @param ch a character code.
+         * @return true if the character is whitespace.
+         */         
+        static bool isSpace(int32 ch)
+        {
+            return ch == 0x20 || (ch >= 0x09 && ch <= 0x0D) ? true : false;
+        }  
+
+        /** 
+         * Tests if a character is a decimal number.
+         *
+         * @param ch a character code.
+         * @param base a numerical base used to parse the character.         
+         * @return true if the character is a decimal number.
+         */        
+        static bool isDigit(int32 ch, int32 base = 10)
+        {
+            switch(base)
+            {
+                case 2:                 
+                    return ch >= 0x30 && ch <= 0x31 ? true : false;
+                                    
+                case 8:
+                    return ch >= 0x30 && ch <= 0x37 ? true : false;
+                                    
+                case 16: 
+                    return ch >= 0x30 && ch <= 0x39 
+                        || ch >= 0x41 && ch <= 0x46
+                        || ch >= 0x61 && ch <= 0x66 ? true : false;
+                    
+                case 10:                                
+                    return ch >= 0x30 && ch <= 0x39 ? true : false;
+                    
+                default: 
+                    return false;
+            }
+            
+        } 
+        
+        /** 
+         * Detect subtrahend and addend for hex numbers.
+         *
+         * @param testCh    a testing character code.
+         * @param subCh     a resulting subtrahend.
+         * @param subDecade a resulting addend.                  
+         */        
+        static void detectMathOperands(int32 testCh, char& subtrahend, int32& addend)
+        {
+            // Test for uppercase letter
+            if(testCh >= 0x41 && testCh <= 0x46)
+            {
+                subtrahend = 'A';            
+                addend = 10;
+            }
+            // Test for lowercase letter           
+            else if(testCh >= 0x61 && testCh <= 0x66)
+            {
+                subtrahend = 'a';            
+                addend = 10;            
+            }
+            else
+            {
+                subtrahend = '0';            
+                addend = 0;
+            }
+        }                     
   
     };
 }
