@@ -149,82 +149,101 @@ namespace library
         }
         
         /** 
-         * Converts a signed integer number to a string.
+         * Converts a integer number to a string.
          *
-         * The function converts a signed integer value into a character string using the base parameter, 
-         * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system. 
+         * The function converts an integer value into a character string using the base parameter, 
+         * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
          * 
-         * Note that only if a passed value is negative and the base is decimal, the resulting string is preceded 
-         * with a minus sign. In addition, a hexadecimal value will include lower case characters, and 
-         * any strings will not contain any suffixes or prefixes for identifying a numeral system.
+         * Note that only if the base is decimal, a passed number is available to be negative values, 
+         * and the resulting string of these values is preceded with a minus sign. In addition, 
+         * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+         * any suffixes or prefixes for identifying a numeral system.
          *
          * @param val  a value that would be converted to a string.
-         * @param str  a resulting character string.
-         * @param base a numerical base used to represent the value as a string.
-         * @return a pointer to the passed string, or NULL if an error has been occurred.
+         * @param str  a character string for a result of the conversion.
+         * @param base a numerical base used to represent a value as a string.
+         * @return true if the conversion has been completed successfully.
          */
-        template <typename Type>        
-        static char* itoa(Type val, char* str, int32 base = 10)
+        template <typename Type>
+        static bool itoa(Type val, char* str, int32 base = 10)
         {
-            static const int32 LENGTH = 33;
-            char temp[LENGTH];        
-            bool isNegative;
+            static const int32 LENGTH = sizeof(Type) * 8 + 1;        
             if(str == NULL)
             {
-                return NULL;
-            }
-            switch(base)
-            {
-                case  2:                 
-                case  8:
-                case 16: 
-                {
-                    isNegative = false;
-                    break;
-                }
-                case 10:                                
-                {
-                    isNegative = val < 0 ? true : false;                        
-                    break;
-                }
-                default: 
-                {
-                    return NULL;
-                }
-            }
+                return false;
+            }        
+            char temp[LENGTH];        
+            bool isNegative;
+            bool res = true;
             int32 index = LENGTH - 1;            
-            temp[index--] = '\0';
-            Type module = isNegative ? 0 - val : val;
-            if(module < 0)
+            temp[index--] = '\0';            
+            do
             {
-                return NULL;
-            }
-            while(index >= 0)
-            { 
-                char ch;
-                Type digit = module % base;
-                if(base == 16 && digit > 9)
+                // Test for available base
+                switch(base)
                 {
-                    ch = 'a';
-                    digit -= 10;
+                    case  2:
+                    case  8:
+                    case 16:
+                    {
+                        isNegative = false;
+                        break;
+                    }
+                    case 10:                                
+                    {
+                        isNegative = not isPositive(val) ? true : false;
+                        break;
+                    }
+                    default: 
+                    {
+                        res = false;
+                        break;
+                    }
                 }
-                else
-                {
-                    ch = '0';                
-                }
-                temp[index--] = static_cast<char>(digit + ch);
-                module = module / base;
-                if(module == 0)
+                // If the base is not available
+                if(res == false)
                 {
                     break;
                 }
-            } 
-            if(isNegative && index >= 0) 
-            {
-                temp[index--] = '-';
+                // Prepare absolute value
+                Type module = isNegative ? 0 - val : val;
+                if( not isPositive(module) )
+                {
+                    res = false;                
+                    break;
+                }
+                // Do the conversion
+                while(index >= 0)
+                { 
+                    char ch;
+                    Type digit = module % base;
+                    if(base == 16 && digit > 9)
+                    {
+                        ch = 'a';
+                        digit -= 10;
+                    }
+                    else
+                    {
+                        ch = '0';                
+                    }
+                    temp[index--] = static_cast<char>(digit + ch);
+                    module = module / base;
+                    if(module == 0)
+                    {
+                        break;
+                    }
+                } 
+                // Add minus
+                if(isNegative && index >= 0) 
+                {
+                    temp[index--] = '-';
+                }
+                res = true;
             }
+            while(false);
+            // Copy the temp string to the destination string
             strcpy(str, &temp[++index]);
-            return str;
+            return res;
         } 
         
         /** 
@@ -233,8 +252,9 @@ namespace library
          * @param str a character string that would be converted to a number.
          * @param base a numerical base used to parse the string.         
          * @return the resulting number.
-         */        
-        static int32 atoi(const char* str, int32 base = 10)
+         */
+        template <typename Type>         
+        static Type atoi(const char* str, int32 base = 10)
         {
             switch(base)
             {
@@ -245,7 +265,8 @@ namespace library
                 default: return 0;
             }
 
-            int32 res = 0;
+            Type result = 0;
+            Type multiplier = static_cast<Type>(base);
             int32 index = 0;
             bool isNegative = false;
             // Look for whitespaces         
@@ -272,8 +293,8 @@ namespace library
             {
                 while( isDigit(str[index], base) )
                 {
-                    res *= base;
-                    res += static_cast<int32>( str[index++] - '0' );
+                    result *= multiplier;
+                    result += static_cast<Type>( str[index++] - '0' );
                 }            
             }
             else
@@ -283,16 +304,28 @@ namespace library
                 while( isDigit(str[index], base) )
                 {
                     detectMathOperands(str[index], subtrahend, addend);
-                    res *= base;
-                    res += static_cast<int32>( str[index++] - subtrahend );
-                    res += addend;
+                    result *= base;
+                    result += static_cast<Type>( str[index++] - subtrahend );
+                    result += static_cast<Type>( addend );
                 }            
             }
 
-            return isNegative ? -1 * res : res;
+            return isNegative ? -1 * result : result;
         }
         
-    private:        
+    private:   
+    
+        /** 
+         * Test if a value is signed or unsigned.
+         *
+         * @param value a value that would be tested.
+         * @return true if the value has been negative.
+         */
+        template <typename Type>
+        static bool isPositive(Type value)
+        {
+            return value > 0 || value == 0 ? true : false;
+        }
         
         /** 
          * Tests if a character is a whitespace character.
