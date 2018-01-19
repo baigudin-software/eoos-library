@@ -9,7 +9,6 @@
 #define LIBRARY_OBJECT_HPP_
 
 #include "Object.hpp"
-#include "library.Allocator.hpp"
 
 namespace library
 {
