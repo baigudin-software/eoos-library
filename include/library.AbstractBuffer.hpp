@@ -10,6 +10,7 @@
 
 #include "library.Object.hpp"
 #include "api.Collection.hpp"
+#include "api.IllegalValue.hpp"
 
 namespace library
 { 
@@ -18,7 +19,7 @@ namespace library
      * @param Alloc heap memory allocator class.
      */ 
     template <typename Type, class Alloc = Allocator>
-    class AbstractBuffer : public ::library::Object<Alloc>, public ::api::Collection<Type>
+    class AbstractBuffer : public ::library::Object<Alloc>, public ::api::Collection<Type>, public ::api::IllegalValue<Type>
     {
         typedef ::library::Object<Alloc> Parent;
   

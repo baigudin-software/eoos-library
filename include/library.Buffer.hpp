@@ -1,11 +1,11 @@
 /** 
  * Buffer class in static and dynamic specializations.
  *
- * This class has two specializations of the template. 
- * The first one specializes a class with a buffer of elements
- * that is declared as the part of self class data structure.
- * The second one allocates necessary size of a buffer in 
- * dynamic memory.
+ * This class has a primary template and a partial specialization of the template. 
+ * The non-specialized template defines a realization that contains a whole buffer, 
+ * which is defined by a template argument, as data member of the class. 
+ * The specialization allocates necessary memory size for containing the buffer 
+ * in a heap memory.
  * 
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2016, Embedded Team, Sergey Baigudin
@@ -19,7 +19,7 @@
 namespace library
 { 
     /** 
-     * Static buffer class.
+     * Primary template implements the static buffer class.
      *
      * @param Type  data type of buffer element.     
      * @param COUNT count of buffer elements. 
@@ -123,7 +123,7 @@ namespace library
     };
   
     /** 
-     * Dynamic buffer class.
+     * Partial specialization of the template implements the dynamic buffer class.
      *
      * @param Type  data type of buffer element.     
      * @param Alloc heap memory allocator class.
