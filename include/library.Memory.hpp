@@ -58,10 +58,10 @@ namespace library
         }
         
         /** 
-         * Gets a string length.
+         * Returns the length of a passed string .
          *
          * @param str a character string would be measured.
-         * @return a length of the passed string.
+         * @return the length of the passed string.
          */
         static size_t strlen(const char* str)
         {
@@ -79,10 +79,10 @@ namespace library
         }
         
         /** 
-         * Copies a string.
+         * Copies one string to another .
          *
          * @param dst a destination array where the content would be copied.
-         * @param src character string to be copied.
+         * @param src a character string to be copied.
          * @return a pointer to the destination string, or NULL if an error has been occurred.
          */
         static char* strcpy(char* dst, const char* src)
@@ -99,10 +99,10 @@ namespace library
         
         
         /** 
-         * Concatenates strings.
+         * Concatenates two strings.
          *
          * @param dst a destination character string where the content would be appended.
-         * @param src an appended character string.
+         * @param src a character string to be appended.
          * @return a pointer to the destination string, or NULL if an error has been occurred.
          */
         static char* strcat(char* dst, const char* src)
@@ -127,13 +127,13 @@ namespace library
          * @return the value 0 if the string 1 is equal to the string 2; 
          *         a value less than 0 if the string 1 is shorter than the string 2; 
          *         a value greater than 0 if the string 1 is longer than the string 2, 
-         *         or the maximum positive value if an error has been occurred.         
+         *         or the minimum possible value if an error has been occurred.
          */
         static int32 strcmp(const char* str1, const char* str2)
         {
             if(str1 == NULL || str2 == NULL) 
             {
-                return 0x7FFFFFFF;
+                return 0x80000000;
             }        
             int32 ch, res;
             while(true)
