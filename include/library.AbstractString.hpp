@@ -5,8 +5,8 @@
  * @copyright 2017-2018, Embedded Team, Sergey Baigudin
  * @license   http://embedded.team/license/
  */
-#ifndef ABSTRACT_LIBRARY_STRING_HPP_
-#define ABSTRACT_LIBRARY_STRING_HPP_
+#ifndef LIBRARY_ABSTRACT_STRING_HPP_
+#define LIBRARY_ABSTRACT_STRING_HPP_
 
 #include "library.Object.hpp"
 #include "api.String.hpp"
@@ -22,28 +22,23 @@ namespace library
     class AbstractString : public ::library::Object<Alloc>, public ::api::String<Type>
     {
         typedef ::library::Object<Alloc> Parent;
+        struct Contex;
 
     public:
     
         /** 
          * Constructor.
-         *
-         * @param string a character string to be set.         
          */    
-        AbstractString(const Type* string) : Parent(),
-            str_ (NULL),
-            len_ (0),
-            max_ (0){
-            bool isConstructed = construct(string);
-            this->setConstruct( isConstructed );
-        } 
+        AbstractString() : Parent(),
+            context_ (){
+        }     
         
         /**
          * Destructor.
          */
         virtual ~AbstractString()
         {
-            deleteString(str_);
+            deleteString();
         }           
     
         /**
@@ -63,7 +58,7 @@ namespace library
          */
         virtual int32 getLength() const
         {
-            return this->isConstructed_ ? len_ : 0;
+            return this->isConstructed_ ? context_.len : 0;
         }
        
         /**
@@ -88,6 +83,7 @@ namespace library
             {
                 return false;
             }
+            // TODO
             const Type* str = string.getChar();
             bool res = copy( str );
             this->setConstruct( res );
@@ -141,7 +137,7 @@ namespace library
          */
         virtual const Type* getChar() const
         {
-            return str_;
+            return context_.str;
         }
         
     protected:
@@ -151,24 +147,7 @@ namespace library
          *
          * @return a character which means that this string terminated.
          */         
-        virtual Type getTerminatedChar() const = 0;
-             
-    private:
-    
-        /** 
-         * Constructs this object.
-         *
-         * @param str a character string to be set.                  
-         * @return true if object has been constructed successfully.         
-         */ 
-        bool construct(const Type* str)
-        {
-            if( not this->isConstructed_ )
-            {
-                return false;
-            }
-            return copy(str);
-        }
+        virtual Type getTerminator() const = 0;
         
         /** 
          * Copies a passed string into this string.
@@ -178,28 +157,35 @@ namespace library
          */
         bool copy(const Type* str)
         {
+            if( not this->isConstructed_ )
+            {
+                return false;
+            }        
             if(str == NULL) 
             {
                 return false;            
-            }
-            int32 len, max;
-            len = getLength(str);
+            }           
+            int32 len = getLength(str);
+            // If a given string length is more than this max available length
             if( not isFit(len) ) 
             {
-                deleteString(str_);
-                max_ = 0;
+                // Delete this string and its context
+                deleteString();
+                // Create a new temporary string and its context
+                Context context;
+                context.len = len;
+                context.str = createString(context.len, context.max);
+                if(context.str == NULL)
+                {
+                    return false;                
+                }
+                context_ = context;
             }
-            if(str_ == NULL)
+            else
             {
-                str_ = createString(len, max);
-                max_ = max;
+                context_.len = len;
             }
-            if(str_ == NULL) 
-            {
-                return false;                
-            }
-            len_ = len;
-            copy(str_, str);
+            copy(context_.str, str);                                    
             return true;        
         }               
         
@@ -211,29 +197,33 @@ namespace library
          */
         bool concatenate(const Type* str)
         {
-            if(str_ == NULL || str == NULL) 
+            if( not this->isConstructed_ )
+            {
+                return false;
+            }                
+            if(context_.str == NULL || str == NULL) 
             {
                 return false;            
             }
             int32 len, max;
-            len = getLength(str) + len_;          
+            len = getLength(str) + context_.len;          
             if( not isFit(len) ) 
             {
                 Type* tmp = createString(len, max);
                 if(tmp != NULL)
                 {
-                    copy(tmp, str_);
+                    copy(tmp, context_.str);
                 }
-                deleteString(str_);
-                str_ = tmp;
-                max_ = max;                    
+                deleteString();
+                context_.str = tmp;
+                context_.max = max;                    
             }
-            if(str_ == NULL) 
+            if(context_.str == NULL) 
             {
                 return false;                
             }
-            len_ = len;
-            concatenate(str_, str);
+            context_.len = len;
+            concatenate(context_.str, str);
             return true;        
         }
         
@@ -248,19 +238,23 @@ namespace library
          */
         int32 compare(const Type* str) const
         {
-            if(str_ == NULL || str == NULL) 
+            if( not this->isConstructed_ )
+            {
+                return MINIMUM_POSSIBLE_VALUE_OF_INT32;
+            }                
+            if(context_.str == NULL || str == NULL) 
             {
                 return MINIMUM_POSSIBLE_VALUE_OF_INT32;            
             }        
             int32 val[2];
-            int32 res = len_ - getLength(str);
+            int32 res = context_.len - getLength(str);
             if(res != 0) 
             {
                 return res;
             }
-            for(int32 i=0; i<len_; i++)
+            for(int32 i=0; i<context_.len; i++)
             {
-                val[0] = str_[i];
+                val[0] = context_.str[i];
                 val[1] = str[i];
                 res = val[0] - val[1];
                 if(res != 0) 
@@ -269,30 +263,102 @@ namespace library
                 }
             }
             return res;        
-        }            
-    
+        }        
+             
+    private:
+        
         /** 
          * Tests if a passed length fits to this data buffer.
          *
          * @param len a number of string characters.
          * @return true if this length will be fit successfully.
          */        
-        bool isFit(int32 len)
+        bool isFit(int32 len) const
         {
-            return len > max_ ? false : true;
+            return len > context_.max ? false : true;
         }        
+        
+        /** 
+         * Returns a string length.
+         *
+         * @param str a character string would be measured.
+         * @return a length of the passed string.
+         */
+        int32 getLength(const Type* str) const
+        {
+            if(str == NULL) 
+            {
+                return 0;
+            }
+            Type null = getTerminator();            
+            int32 l = 0;
+            while( str[l] != null ) 
+            {
+                l++;
+            }
+            return l;
+        }
+        
+        /** 
+         * Copies a string.
+         *
+         * @param dst a destination array where the content would be copied.
+         * @param src character string to be copied.
+         */
+        void copy(Type* dst, const Type* src) const
+        {
+            if(dst == NULL || src == NULL) 
+            {
+                return;
+            }
+            Type null = getTerminator();
+            int32 i = 0;
+            while( (dst[i] = src[i]) != null )
+            {
+                i++;
+            }
+        }
+
+        /** 
+         * Concatenates two strings.
+         *
+         * @param dst a destination character string where the content would be appended.
+         * @param src an appended character string.
+         */
+        void concatenate(Type* dst, const Type* src) const
+        {
+            if(dst == NULL || src == NULL) 
+            {
+                return;
+            }
+            Type null = getTerminator();
+            int32 d = 0;
+            int32 s = 0;            
+            while( dst[d] != null )
+            {
+                d++;
+            }
+            while( (dst[d] = src[s]) != null )
+            {
+                d++;
+                s++;                
+            }
+        }
         
         /** 
          * Creates a new data buffer for string.
          *
          * @param len a number of string characters.
-         * @param max a returning number of bytes of allocated array.
+         * @param max a setting number to bytes of allocated array.
          * @return a new array for character string.
          */        
-        Type* createString(int32 len, int32& max)
+        Type* createString(int32 len, int32& max) const
         {
+            // Calculate size in byte for the given length
             int32 size = calculateSize(len);
+            // Allocate a new array
             Type* data = reinterpret_cast<Type*>( Alloc::allocate(size) );
+            // Calculate the max length
             max = data != NULL ? calculateLength(size) : 0;
             return data;
         }        
@@ -300,15 +366,18 @@ namespace library
         /** 
          * Deletes an allocated character string.
          *
-         * @param str a character string would be deleted.
+         * @param str a character string would be deleted and set to NULL.
+         * @param max a setting number to zero.
          */        
-        void deleteString(Type*& str)
+        void deleteString()
         {
-            if(str != NULL) 
+            if(context_.str != NULL) 
             {
-                Alloc::free(str);
+                Alloc::free(context_.str);
             }
-            str = NULL;
+            context_.str = NULL;
+            context_.len = 0;            
+            context_.max = 0;
         }            
         
         /** 
@@ -317,7 +386,7 @@ namespace library
          * @param len a number of string characters.
          * @return size in byte for a passed string.
          */
-        int32 calculateSize(int32 len)
+        static int32 calculateSize(int32 len)
         {
             size_t size = static_cast<size_t>(len) * sizeof(Type) + sizeof(Type);
             // Align size to eight
@@ -334,7 +403,7 @@ namespace library
          * @param size size in byte.
          * @return a number of string characters.
          */
-        int32 calculateLength(int32 size)
+        static int32 calculateLength(int32 size)
         {
             int32 charSize =  static_cast<int32>( sizeof(Type) );
             if(charSize == 0) 
@@ -343,95 +412,56 @@ namespace library
             }
             int32 len = size / charSize;
             return len > 1 ? len - 1 : 0;
-        }
-        
-        /** 
-         * Returns a string length.
-         *
-         * @param str a character string would be measured.
-         * @return a length of the passed string.
-         */
-        int32 getLength(const Type* str) const
-        {
-            if(str == NULL) 
-            {
-                return 0;
-            }
-            Type null = getTerminatedChar();            
-            int32 l = 0;
-            while( str[l] != null ) 
-            {
-                l++;
-            }
-            return l;
-        }
-        
-        /** 
-         * Copies a string.
-         *
-         * @param dst a destination array where the content would be copied.
-         * @param src character string to be copied.
-         */
-        void copy(Type* dst, const Type* src)
-        {
-            if(dst == NULL || src == NULL) 
-            {
-                return;
-            }
-            Type null = getTerminatedChar();
-            int32 i = 0;
-            while( (dst[i] = src[i]) != null )
-            {
-                i++;
-            }
-        }
-
-        /** 
-         * Concatenates two strings.
-         *
-         * @param dst a destination character string where the content would be appended.
-         * @param src an appended character string.
-         */
-        void concatenate(Type* dst, const Type* src)
-        {
-            if(dst == NULL || src == NULL) 
-            {
-                return;
-            }
-            Type null = getTerminatedChar();
-            int32 d = 0;
-            int32 s = 0;            
-            while( dst[d] != null )
-            {
-                d++;
-            }
-            while( (dst[d] = src[s]) != null )
-            {
-                d++;
-                s++;                
-            }
-        }
+        }        
         
         /**
          * The minimum possible value of int32 type.
          */
         static const int32 MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0x80000000;                           
-    
-        /**
-         * The first character of this string.
-         */        
-        Type* str_;
-        
-        /**
-         * Current number of characters of this string.
-         */                 
-        int32 len_;        
 
         /**
-         * Max number of characters for this string.
-         */                 
-        int32 max_;    
-    
+         * A contex of this class containing string.
+         */        
+        struct Context
+        {
+            /** 
+             * Constructor.
+             */
+            Context() :
+                str (NULL),
+                len (0),
+                max (0){
+            }
+            
+            /** 
+             * Destructor.
+             */
+           ~Context()
+            {
+            }            
+        
+            /**
+             * The first character of this string.
+             */        
+            Type* str;
+            
+            /**
+             * Current number of characters of this string.
+             */                 
+            int32 len;        
+         
+            /**
+             * Max available number of characters for this string.
+             */                 
+            int32 max; 
+             
+        };
+
+        /**
+         * A contex of this class containing string.
+         */
+        Context context_; 
+
     };
 }
-#endif // ABSTRACT_LIBRARY_STRING_HPP_
+#endif // LIBRARY_ABSTRACT_STRING_HPP_
