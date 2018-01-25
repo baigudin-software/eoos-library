@@ -8,7 +8,7 @@
  * in a heap memory.
  * 
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2016, Embedded Team, Sergey Baigudin
+ * @copyright 2014-2018, Embedded Team, Sergey Baigudin
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_BUFFER_HPP_
@@ -22,10 +22,10 @@ namespace library
      * Primary template implements the static buffer class.
      *
      * @param Type  data type of buffer element.     
-     * @param COUNT count of buffer elements. 
+     * @param COUNT maximum number of buffer elements, or 0 for dynamic allocation. 
      * @param Alloc heap memory allocator class.
      */ 
-    template <typename Type, int32 COUNT = 0, class Alloc = Allocator>
+    template <typename Type, int32 COUNT, class Alloc = Allocator>
     class Buffer : public ::library::AbstractBuffer<Type,Alloc>
     {
         typedef ::library::AbstractBuffer<Type,Alloc> Parent;
@@ -121,6 +121,8 @@ namespace library
         Type* buf_;
       
     };
+    
+    #ifdef NO_STRICT_MISRA_RULES
   
     /** 
      * Partial specialization of the template implements the dynamic buffer class.
@@ -295,5 +297,8 @@ namespace library
         bool isDelete_;
       
     };
+    
+    #endif // NO_STRICT_MISRA_RULES
+    
 }
 #endif // LIBRARY_BUFFER_HPP_
