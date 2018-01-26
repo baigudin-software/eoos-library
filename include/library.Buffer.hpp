@@ -21,11 +21,11 @@ namespace library
     /** 
      * Primary template implements the static buffer class.
      *
-     * @param Type  data type of buffer element.     
-     * @param COUNT maximum number of buffer elements, or 0 for dynamic allocation. 
-     * @param Alloc heap memory allocator class.
+     * @param Type      data type of buffer element.     
+     * @param MAX_COUNT maximum number of buffer elements, or 0 for dynamic allocation. 
+     * @param Alloc     heap memory allocator class.
      */ 
-    template <typename Type, int32 COUNT, class Alloc = Allocator>
+    template <typename Type, int32 MAX_COUNT, class Alloc = Allocator>
     class Buffer : public ::library::AbstractBuffer<Type,Alloc>
     {
         typedef ::library::AbstractBuffer<Type,Alloc> Parent;
@@ -35,7 +35,7 @@ namespace library
         /** 
          * Constructor.
          */    
-        Buffer() : Parent(COUNT),
+        Buffer() : Parent(MAX_COUNT),
             buf_ (arr_){
         }
     
@@ -44,7 +44,7 @@ namespace library
          *
          * @param illegal illegal value.
          */    
-        Buffer(const Type illegal) : Parent(COUNT, illegal),
+        Buffer(const Type illegal) : Parent(MAX_COUNT, illegal),
             buf_ (arr_){
         }
     
@@ -64,7 +64,7 @@ namespace library
          * @param buf reference to source buffer.
          * @return reference to this object.     
          */
-        Buffer& operator =(const Buffer<Type,COUNT,Alloc>& buf)
+        Buffer& operator =(const Buffer<Type,MAX_COUNT,Alloc>& buf)
         {
             this->copy(buf);
             return *this;      
@@ -113,7 +113,7 @@ namespace library
         /**
          * Current array of Type elements.
          */  
-        Type arr_[COUNT];
+        Type arr_[MAX_COUNT];
         
         /**
          * Pointer to current array.

@@ -21,14 +21,18 @@ namespace library
     /**
      * Primary template implements the static string class.
      *
-     * @param Type   data type of string characters.     
-     * @param LENGTH maximum number of string characters, or 0 for dynamic allocation.
-     * @param Alloc  heap memory allocator class.
+     * @param Type       data type of string characters.     
+     * @param MAX_LENGTH maximum number of string characters, or 0 for dynamic allocation.
+     * @param Alloc      heap memory allocator class.
      */
-    template <typename Type, int32 LENGTH, class Alloc = Allocator>    
+    template <typename Type, int32 MAX_LENGTH, class Alloc = Allocator>    
     class AbstractString : public ::library::AbstractBaseString<Type,Alloc>
     {
         typedef ::library::AbstractBaseString<Type,Alloc> Parent;
+        
+        using Parent::copy;
+        using Parent::concatenate;
+        using Parent::compare;         
 
     public:
     
@@ -53,8 +57,7 @@ namespace library
          */
         virtual int32 getLength() const
         {
-            // TODO
-            return 0;
+            return context_.len;
         }        
         
         /**
@@ -68,12 +71,11 @@ namespace library
          */
         virtual const Type* getChar() const
         {
-            // TODO
-            return NULL;
+            return context_.str;
         }
-        
+                
     protected:
-    
+        
         /** 
          * Copies a passed string into this string.
          *
@@ -82,9 +84,32 @@ namespace library
          */
         virtual bool copy(const Type* str)
         {
-            // TODO
-            return false;        
-        }        
+            if( not this->isConstructed_ || str == NULL )
+            {
+                return false;
+            }        
+            int32 len = Parent::getLength(str);
+            // If a given string length is more than this max available length
+            if( not context_.isFit(len) ) 
+            {
+                // Create a new temporary string context
+                Context context;
+                if( not context.allocate(len) )
+                {
+                    return false;                
+                }
+                // Delete this string context
+                context_.free();                
+                // Set new contex                
+                context_.mirror(context);
+            }
+            else
+            {
+                context_.len = len;
+            }
+            Parent::copy(context_.str, str);                                    
+            return true;          
+        }
         
         /** 
          * Concatenates a passed string to this string.             
@@ -94,9 +119,39 @@ namespace library
          */
         virtual bool concatenate(const Type* str)
         {
-            // TODO
-            return false;                
-        }        
+            if( not this->isConstructed_ || str == NULL )
+            {
+                return false;
+            }                
+            // Simply, would copy a given string if the context were freed
+            if( not context_.isAllocated() )
+            {
+                return copy(str);
+            }
+            int32 len = Parent::getLength(str) + context_.len;          
+            // If a length of this string plus a given string is more than this max available length            
+            if( not context_.isFit(len) ) 
+            {
+                // Create a new temporary string context
+                Context context;
+                if( not context.allocate(len) )
+                {
+                    return false;                
+                }
+                // Copy a string of this context to the new contex string
+                Parent::copy(context.str, context_.str);
+                // Delete this string context
+                context_.free();
+                // Set new contex
+                context_.mirror(context);                   
+            }
+            else
+            {
+                context_.len = len;
+            }
+            Parent::concatenate(context_.str, str);
+            return true; 
+        }
         
         /** 
          * Compares this string with a passed string lexicographically.         
@@ -109,9 +164,191 @@ namespace library
          */
         virtual int32 compare(const Type* str) const
         {
-            // TODO
-            return Parent::MINIMUM_POSSIBLE_VALUE_OF_INT32;        
-        }
+            if( not this->isConstructed_ || context_.str == NULL || str == NULL )
+            {
+                return Parent::MINIMUM_POSSIBLE_VALUE_OF_INT32;
+            }                
+            int32 val[2];
+            int32 res = context_.len - Parent::getLength(str);
+            if(res != 0) 
+            {
+                return res;
+            }
+            for(int32 i=0; i<context_.len; i++)
+            {
+                val[0] = context_.str[i];
+                val[1] = str[i];
+                res = val[0] - val[1];
+                if(res != 0) 
+                {
+                    break;
+                }
+            }
+            return res;        
+        }        
+
+    private:
+    
+        /** 
+         * Constructor.
+         *
+         * NOTE: Creating this object based on another object is prohibited. 
+         * The operation is performed by calling the default object constructor 
+         * and the copy interface function after that. This sequence of calls is 
+         * determined because the copy function does not deconstruct the object.
+         *
+         * @param obj a source object.
+         */
+        AbstractString(const AbstractString<Type,MAX_LENGTH,Alloc>& obj);
+        
+        /**
+         * Direct assignment operator.
+         *
+         * The assignment to this object any values of another object is prohibited. 
+         * The operation is performed by calling the copy interface function, 
+         * because it does not deconstruct the object.
+         *
+         * @param obj a source object.
+         * @return this object.     
+         */
+        AbstractString<Type,MAX_LENGTH,Alloc>& operator =(const AbstractString<Type,MAX_LENGTH,Alloc>& obj);    
+    
+        /**
+         * A contex of this class containing string.
+         */        
+        struct Context
+        {
+        
+        public:
+        
+            /**
+             * The first character of this string.
+             */        
+            Type* str;
+            
+            /**
+             * Current number of characters of this string.
+             */                 
+            int32 len;        
+         
+            /**
+             * Max available number of characters for this string.
+             */                 
+            int32 max;         
+        
+            /** 
+             * Constructor.
+             */
+            Context() :
+                str (NULL),
+                len (0),
+                max (0){
+            }
+            
+            /** 
+             * Destructor.
+             */
+           ~Context()
+            {
+            }
+            
+            /**
+             * Mirrors an context to this.
+             *
+             * @param obj a source object.
+             */
+            void mirror(const Context& obj)
+            {
+                // Don't instigate a copy of object buffer to this buffer, 
+                // as the source object always is temporary and 
+                // doesn't have any information in its buffer. 
+                str = obj.str != NULL ? buf_ : NULL;
+                len = obj.len;        
+                max = obj.max;              
+            }            
+            
+            /** 
+             * Allocates this contex.
+             *
+             * @param length a number of string characters.
+             * @return true if the context has been allocated successfully.
+             */
+            bool allocate(int32 length)
+            {
+                if(str != NULL)
+                {
+                    return false;
+                }
+                if(length > MAX_LENGTH)
+                {
+                    return false;
+                }
+                // Set this class variables
+                str = buf_;
+                len = length;                
+                max = MAX_LENGTH;
+                return true;
+            }
+            
+            /** 
+             * Frees this contex.
+             */
+            void free()
+            {
+                str = NULL;
+                len = 0;            
+                max = 0;            
+            }
+            
+            /** 
+             * Test if this contex is allocated.
+             *
+             * @return true if the context has been allocated successfully.
+             */            
+            bool isAllocated()
+            {
+                return str == NULL ? false : true;
+            }
+            
+            /** 
+             * Tests if a passed length fits to this max available length.
+             *
+             * @param len a number of string characters.
+             * @return true if this length will be fit successfully.
+             */        
+            bool isFit(int32 len) const
+            {
+                return len > max ? false : true;
+            }            
+        
+        private:
+        
+            /** 
+             * Constructor.
+             *
+             * @param obj a source object.
+             */
+            Context(const Context& context);
+            
+            /**
+             * Assignment operator.
+             *
+             * @param obj a source object.
+             * @return this object.     
+             */
+            Context& operator =(const Context& obj);            
+            
+            /**
+             * The buffer of characters of this string.
+             */        
+            Type buf_[MAX_LENGTH + 1];                  
+             
+        };
+
+        /**
+         * A contex of this class containing string.
+         */
+        Context context_;
 
     };
     
@@ -139,7 +376,7 @@ namespace library
          */    
         AbstractString() : Parent(), 
             context_ (){
-        }     
+        }   
         
         /**
          * Destructor.
@@ -189,7 +426,7 @@ namespace library
             }        
             int32 len = Parent::getLength(str);
             // If a given string length is more than this max available length
-            if( not isFit(len) ) 
+            if( not context_.isFit(len) ) 
             {
                 // Create a new temporary string context
                 Context context;
@@ -200,7 +437,7 @@ namespace library
                 // Delete this string context
                 context_.free();                
                 // Set new contex                
-                context_ = context;
+                context_.mirror(context);
             }
             else
             {
@@ -218,13 +455,18 @@ namespace library
          */
         virtual bool concatenate(const Type* str)
         {
-            if( not this->isConstructed_ || context_.str == NULL || str == NULL )
+            if( not this->isConstructed_ || str == NULL )
             {
                 return false;
             }                
+            // Simply, would copy a given string if the context were freed
+            if( not context_.isAllocated() )
+            {
+                return copy(str);
+            }
             int32 len = Parent::getLength(str) + context_.len;          
             // If a length of this string plus a given string is more than this max available length            
-            if( not isFit(len) ) 
+            if( not context_.isFit(len) ) 
             {
                 // Create a new temporary string context
                 Context context;
@@ -237,7 +479,7 @@ namespace library
                 // Delete this string context
                 context_.free();
                 // Set new contex
-                context_ = context;                   
+                context_.mirror(context);
             }
             else
             {
@@ -279,20 +521,33 @@ namespace library
                 }
             }
             return res;        
-        }        
-
+        } 
+        
     private:
     
         /** 
-         * Tests if a passed length fits to this data buffer.
+         * Constructor.
          *
-         * @param len a number of string characters.
-         * @return true if this length will be fit successfully.
-         */        
-        bool isFit(int32 len) const
-        {
-            return len > context_.max ? false : true;
-        }    
+         * NOTE: Creating this object based on another object is prohibited. 
+         * The operation is performed by calling the default object constructor 
+         * and the copy interface function after that. This sequence of calls is 
+         * determined because the copy function does not deconstruct the object.
+         *
+         * @param obj a source object.
+         */
+        AbstractString(const AbstractString<Type,0,Alloc>& obj);
+        
+        /**
+         * Direct assignment operator.
+         *
+         * The assignment to this object any values of another object is prohibited. 
+         * The operation is performed by calling the copy interface function, 
+         * because it does not deconstruct the object.
+         *
+         * @param obj a source object.
+         * @return this object.     
+         */
+        AbstractString<Type,0,Alloc>& operator =(const AbstractString<Type,0,Alloc>& obj);
                 
         /**
          * A contex of this class containing string.
@@ -325,13 +580,29 @@ namespace library
                 len (0),
                 max (0){
             }
-            
+                       
             /** 
              * Destructor.
              */
            ~Context()
             {
-            } 
+            }
+            
+            /**
+             * Mirrors an context to this.
+             *
+             * @param obj a source object.
+             */
+            void mirror(const Context& obj)
+            {
+                // Copy an argument pointer value to this pointer value, 
+                // as we know that the source object will be destroyed 
+                // immediately after this function called without deleting 
+                // of the object allocated heap for the array of its characters.
+                str = obj.str;
+                len = obj.len;        
+                max = obj.max;              
+            }             
             
             /** 
              * Allocates this contex.
@@ -373,6 +644,27 @@ namespace library
                     max = 0;            
                 }
             }
+            
+            /** 
+             * Test if this contex is allocated.
+             *
+             * @return true if the context has been allocated successfully.
+             */            
+            bool isAllocated()
+            {
+                return str == NULL ? false : true;
+            }
+            
+            /** 
+             * Tests if a passed length fits to this max available length.
+             *
+             * @param len a number of string characters.
+             * @return true if this length will be fit successfully.
+             */        
+            bool isFit(int32 len) const
+            {
+                return len > max ? false : true;
+            } 
         
         private:
             
@@ -408,14 +700,29 @@ namespace library
                 }
                 int32 len = size / charSize;
                 return len > 1 ? len - 1 : 0;
-            }        
-             
+            }
+            
+            /** 
+             * Constructor.
+             *
+             * @param obj a source object.
+             */
+            Context(const Context& context);
+            
+            /**
+             * Assignment operator.
+             *
+             * @param obj a source object.
+             * @return this object.     
+             */
+            Context& operator =(const Context& obj);             
+            
         };
 
         /**
          * A contex of this class containing string.
          */
-        Context context_;         
+        Context context_;
 
     };
 

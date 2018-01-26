@@ -31,7 +31,7 @@ namespace library
          */    
         AbstractBaseString() : Parent()
         {
-        }     
+        } 
         
         /**
          * Destructor.
@@ -232,6 +232,19 @@ namespace library
          * The minimum possible value of int32 type.
          */
         static const int32 MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0x80000000;        
+        
+    private:
+    
+        /** 
+         * Constructor.
+         *
+         * Creating of the object copy is accessible 
+         * by creating the default object and 
+         * calling the copy interface function.
+         *
+         * @param obj a source object.
+         */
+        AbstractBaseString(const AbstractBaseString<Type,Alloc>& obj);            
         
     };
 }

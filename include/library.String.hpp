@@ -26,11 +26,19 @@ namespace library
         
         /** 
          * Constructor.
-         *
-         * @param string a character string to be set.         
          */    
-        String(const Type* string) : Parent()
+        String() : Parent()
         {
+        }
+        
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.         
+         */    
+        String(const Type* source) : Parent()
+        {
+            this->copy(source);        
         } 
         
         /**
@@ -68,12 +76,19 @@ namespace library
     
         /** 
          * Constructor.
-         *
-         * @param string a character string to be set.         
          */    
-        String(const char* string) : Parent()
+        String() : Parent()
         {
-            this->copy(string);
+        }    
+    
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.         
+         */    
+        String(const char* source) : Parent()
+        {
+            this->copy(source);
         }     
     
     protected:
@@ -106,11 +121,19 @@ namespace library
     
         /** 
          * Constructor.
-         *
-         * @param string a character string to be set.         
          */    
-        String(const Type* string) : Parent()
+        String() : Parent()
         {
+        }    
+    
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.        
+         */    
+        String(const Type* source) : Parent()
+        {
+            this->copy(source);        
         } 
         
         /**
@@ -148,13 +171,112 @@ namespace library
     
         /** 
          * Constructor.
-         *
-         * @param string a character string to be set.         
          */    
-        String(const char* string) : Parent()
+        String() : Parent()
         {
-            this->copy(string);
-        }     
+        }
+        
+        /** 
+         * Constructor.
+         *
+         * @param source a source object.         
+         */             
+        String(const ::library::String<char,0,Alloc>& source) : Parent()       
+        {
+            this->copy(source);        
+        }    
+        
+        /** 
+         * Constructor.
+         *
+         * @param source a source object interface.
+         */             
+        String(const ::api::String<char>& source) : Parent()       
+        {
+            this->copy(source);        
+        }                  
+             
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.
+         */    
+        String(const char* source) : Parent()
+        {
+            this->copy(source);
+        }
+        
+        /**
+         * Direct assignment operator.
+         *
+         * @param source a source object.
+         * @return this object.     
+         */
+        ::library::String<char,0,Alloc>& operator =(const ::library::String<char,0,Alloc>& source)
+        {
+            this->copy(source);
+            return *this;            
+        }
+        
+        /** 
+         * Assignment operator.
+         *
+         * @param source a source object interface.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator =(const ::api::String<char>& source)
+        {
+            this->copy(source);        
+            return *this;        
+        }   
+        
+        /** 
+         * Assignment operator.
+         *
+         * @param source a source character string.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator =(const char* source)
+        {
+            this->copy(source);        
+            return *this;        
+        }             
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source object.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(const ::library::String<char,0,Alloc>& source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source object interface.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(const ::api::String<char>& source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }  
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source character string.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(const char* source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }                    
     
     protected:
 

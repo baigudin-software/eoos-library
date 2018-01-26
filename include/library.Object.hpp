@@ -61,7 +61,7 @@ namespace library
         {
             Parent::operator=(obj);
             return *this;
-        }        
+        }
    
     protected:
         
