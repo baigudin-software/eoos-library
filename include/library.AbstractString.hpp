@@ -48,6 +48,7 @@ namespace library
          */
         virtual ~AbstractString()
         {
+            context_.free();        
         } 
         
         /**

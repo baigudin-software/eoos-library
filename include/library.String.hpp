@@ -9,6 +9,7 @@
 #define LIBRARY_STRING_HPP_
 
 #include "library.AbstractString.hpp"
+#include "library.Memory.hpp"
 
 namespace library
 {
@@ -206,6 +207,48 @@ namespace library
             this->copy(source);
         }
         
+        /** 
+         * Constructor.
+         *
+         * @param value a source numerical value.
+         * @param base a numerical base used to represent a value as a string.         
+         */    
+        String(int32 value) : Parent()
+        {     
+            this->convert<int32>(value, 10);
+        }        
+        
+        /** 
+         * Constructor.
+         *
+         * @param value a source numerical value.
+         * @param base a numerical base used to represent a value as a string.         
+         */    
+        String(int64 value) : Parent()
+        {     
+            this->convert<int64>(value, 10);
+        }
+        
+        /**
+         * Casts to int32 type.
+         *
+         * @return a numerical value.     
+         */        
+        operator int32() const 
+        { 
+            return this->template cast<int32>(10);
+        }        
+        
+        /**
+         * Casts to int64 type.
+         *
+         * @return a numerical value.     
+         */        
+        operator int64() const 
+        { 
+            return this->template cast<int64>(10);
+        }
+        
         /**
          * Direct assignment operator.
          *
@@ -275,8 +318,53 @@ namespace library
         ::library::String<char,0,Alloc>& operator +=(const char* source)
         {
             this->concatenate(source);
-            return *this;   
-        }                    
+            return *this;
+        }
+        
+        /** 
+         * Converts an integer number to this string.
+         *
+         * The function converts an integer value into a character string using the base parameter, 
+         * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+         * 
+         * Mark that only if the base is decimal, a passed number is available to be negative values, 
+         * and the resulting string of these values is preceded with a minus sign. In addition, 
+         * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+         * any suffixes or prefixes for identifying a numeral system.
+         *    
+         * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
+         * if you have to specify the template argument type explicitly.
+         *
+         * @param val  a value that would be converted to this string.
+         * @param base a numerical base used to represent a value as this string.
+         * @return true if the conversion has been completed successfully.
+         */        
+        template <typename I>
+        bool convert(I value, int32 base = 10)
+        {
+            static const int32 LENGTH = sizeof(I) * 8 + 1;           
+            char temp[LENGTH]; 
+            if( not Memory::itoa<I>(value, temp, base) )                    
+            {
+                return false;
+            }
+            return this->copy(temp);
+        }  
+        
+        /** 
+         * Casts this string to an integer number.
+         *
+         * NOTE: You need to use "string.template cast<I>(base);" syntax,
+         * if you have to specify the template argument type explicitly.         
+         *
+         * @param base a numerical base used to parse the string.
+         * @return the resulting number.
+         */        
+        template <typename I>
+        I cast(int32 base = 10) const
+        {
+            return Memory::atoi<I>(this->getChar(), base); 
+        }                                  
     
     protected:
 
@@ -288,8 +376,220 @@ namespace library
         virtual char getTerminator() const
         {
             return '\0';
-        }    
-    };    
+        }
+        
+    private:
+        
+        template <class A> friend bool operator ==(const ::library::String<char,0,A>&, const char*);
+        template <class A> friend bool operator ==(const char*, const ::library::String<char,0,A>&);
+        template <class A> friend bool operator !=(const ::library::String<char,0,A>&, const char*);
+        template <class A> friend bool operator !=(const char*, const ::library::String<char,0,A>&);        
+    };
+    
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    }
+    
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    } 
+    
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    }
+
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    }
+
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source2.compare(source1) == 0 ? true : false;
+    } 
+    
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+    
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    } 
+    
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source2.compare(source1) != 0 ? true : false;
+    }  
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    } 
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }        
 
     #endif // NO_STRICT_MISRA_RULES
     

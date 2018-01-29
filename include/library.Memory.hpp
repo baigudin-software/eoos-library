@@ -149,12 +149,12 @@ namespace library
         }
         
         /** 
-         * Converts a integer number to a string.
+         * Converts an integer number to a string.
          *
          * The function converts an integer value into a character string using the base parameter, 
          * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
          * 
-         * Note that only if the base is decimal, a passed number is available to be negative values, 
+         * Mark that only if the base is decimal, a passed number is available to be negative values, 
          * and the resulting string of these values is preceded with a minus sign. In addition, 
          * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
          * any suffixes or prefixes for identifying a numeral system.
@@ -247,7 +247,7 @@ namespace library
         } 
         
         /** 
-         * Converts a string to a 32-bits integer number.
+         * Converts a string to an integer number.
          *
          * @param str a character string that would be converted to a number.
          * @param base a numerical base used to parse the string.         
@@ -310,7 +310,7 @@ namespace library
                 }            
             }
 
-            return isNegative ? -1 * result : result;
+            return isNegative ? 0 - result : result;
         }
         
     private:   
