@@ -123,17 +123,6 @@ namespace library
             this->convert<int32>(value, 10);
         }        
         
-        /** 
-         * Constructor.
-         *
-         * @param value a source numerical value.
-         * @param base a numerical base used to represent a value as a string.         
-         */    
-        String(int64 value) : Parent()
-        {     
-            this->convert<int64>(value, 10);
-        }
-        
         /**
          * Casts to int32 type.
          *
@@ -143,16 +132,6 @@ namespace library
         { 
             return this->template cast<int32>(10);
         }        
-        
-        /**
-         * Casts to int64 type.
-         *
-         * @return a numerical value.     
-         */        
-        operator int64() const 
-        { 
-            return this->template cast<int64>(10);
-        }
         
         /**
          * Direct assignment operator.
@@ -225,6 +204,19 @@ namespace library
             this->concatenate(source);
             return *this;
         }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param value a source numerical value.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator +=(int32 value)
+        {
+            String string = value;
+            this->concatenate(string);
+            return *this;
+        }        
         
         /** 
          * Converts an integer number to this string.
@@ -608,18 +600,7 @@ namespace library
         {     
             this->convert<int32>(value, 10);
         }        
-        
-        /** 
-         * Constructor.
-         *
-         * @param value a source numerical value.
-         * @param base a numerical base used to represent a value as a string.         
-         */    
-        String(int64 value) : Parent()
-        {     
-            this->convert<int64>(value, 10);
-        }
-        
+
         /**
          * Casts to int32 type.
          *
@@ -629,16 +610,6 @@ namespace library
         { 
             return this->template cast<int32>(10);
         }        
-        
-        /**
-         * Casts to int64 type.
-         *
-         * @return a numerical value.     
-         */        
-        operator int64() const 
-        { 
-            return this->template cast<int64>(10);
-        }
         
         /**
          * Direct assignment operator.
@@ -711,6 +682,19 @@ namespace library
             this->concatenate(source);
             return *this;
         }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param value a source numerical value.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(int32 value)
+        {
+            String string = value;
+            this->concatenate(string);
+            return *this;
+        }        
         
         /** 
          * Converts an integer number to this string.
