@@ -35,7 +35,7 @@ namespace library
          *
          * @param val data value.     
          */
-        Align(Type val)
+        Align(const Type val)
         {
             assignment(val);
         }
@@ -63,7 +63,7 @@ namespace library
          * @param val source data value.
          * @return reference to this object.     
          */
-        Align& operator =(Type val)
+        Align& operator =(const Type val)
         {
             assignment(val);
             return *this;
@@ -88,6 +88,8 @@ namespace library
         {
             return typecast();
         }
+        
+        #ifdef NO_STRICT_MISRA_RULES
       
         /**
          * Operator new.
@@ -121,6 +123,8 @@ namespace library
         {
             Alloc::free(ptr);
         }
+        
+        #endif // NO_STRICT_MISRA_RULES
     
     private:
     
@@ -129,7 +133,7 @@ namespace library
          *
          * @param val source data value.
          */ 
-        inline void assignment(Type val)
+        inline void assignment(const Type val)
         {
             for(int32 i=0; i<SIZE; i++) 
             { 
@@ -189,8 +193,8 @@ namespace library
     template <typename Type> 
     inline bool operator ==(const Align<Type>& obj1, const Align<Type>& obj2)
     {
-        Type t1 = obj1;
-        Type t2 = obj2;
+        const Type t1 = obj1;
+        const Type t2 = obj2;
         return t1 == t2;
     }
   
@@ -204,8 +208,8 @@ namespace library
     template <typename Type> 
     inline bool operator !=(const Align<Type>& obj1, const Align<Type>& obj2)
     {
-        Type t1 = obj1;
-        Type t2 = obj2;
+        const Type t1 = obj1;
+        const Type t2 = obj2;
         return t1 != t2;
     }
 } 

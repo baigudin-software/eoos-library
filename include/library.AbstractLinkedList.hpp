@@ -40,7 +40,7 @@ namespace library
             illegal_ (),
             last_    (NULL),
             count_   (0){
-            bool isConstructed = construct(); 
+            const bool isConstructed = construct(); 
             this->setConstruct( isConstructed );
         }
       
@@ -53,7 +53,7 @@ namespace library
             illegal_ (illegal),
             last_    (NULL),
             count_   (0){
-            bool isConstructed = construct(); 
+            const bool isConstructed = construct(); 
             this->setConstruct( isConstructed );
         }
       
@@ -81,7 +81,7 @@ namespace library
          * @param element inserting element.
          * @return true if element is added.
          */      
-        virtual bool add(Type element)
+        virtual bool add(const Type element)
         {
             return this->isConstructed_ ? addNode(getLength(), element) : false;
         }
@@ -93,7 +93,7 @@ namespace library
          * @param element inserting element.
          * @return true if element is inserted.
          */
-        virtual bool add(int32 index, Type element)
+        virtual bool add(const int32 index, const Type element)
         {
             return this->isConstructed_ ? addNode(index, element) : false;
         }      
@@ -107,8 +107,8 @@ namespace library
             {
                 return;
             }
-            bool res;
-            int32 b = getLength() - 1;
+            const bool res;
+            const int32 b = getLength() - 1;
             for(int32 i=b; i>=0; i--) 
             {
                 res = removeNode( getNodeByIndex(i) ); 
@@ -155,7 +155,7 @@ namespace library
          * @param index   position in this list.
          * @return true if an element is removed successfully.
          */
-        virtual bool remove(int32 index)
+        virtual bool remove(const int32 index)
         {
             return this->isConstructed_ ? removeNode( getNodeByIndex(index) ) : false;
         }
@@ -207,13 +207,13 @@ namespace library
          * @param index position in this list.  
          * @return indexed element of this list.
          */
-        virtual Type get(int32 index) const
+        virtual Type get(const int32 index) const
         {
             if( not this->isConstructed_ ) 
             {
                 return illegal_;
             }
-            Node* node = getNodeByIndex(index);
+            Node* const node = getNodeByIndex(index);
             return node != NULL ? node->getElement() : illegal_;
         }  
       
@@ -285,7 +285,7 @@ namespace library
          */
         virtual int32 getIndexOf(const Type& element) const
         {
-            Node* node = getNodeByElement(element);
+            Node* const node = getNodeByElement(element);
             return node != NULL ? node->getIndex() : -1;
         }
       
@@ -295,7 +295,7 @@ namespace library
          * @param index checking position in this list.
          * @return true if index is present.
          */  
-        virtual bool isIndex(int32 index) const
+        virtual bool isIndex(const int32 index) const
         {
             return (0 <= index && index < getLength()) ? true : false;
         }      
@@ -313,7 +313,7 @@ namespace library
             {
                 return NULL;
             }
-            int32 count = getLength();
+            const int32 count = getLength();
             if(count == 0) 
             {
                 return NULL;
@@ -354,13 +354,13 @@ namespace library
          * @param element inserting element.
          * @return true if element is inserted.
          */
-        bool addNode(int32 index, const Type& element)
+        bool addNode(const int32 index, const Type& element)
         {
             if(isIndexOutOfBounds(index)) 
             {
                 return false;
             }
-            Node* node = new Node(element);
+            Node* const node = new Node(element);
             if(node == NULL || not node->isConstructed())
             {
                 delete node;
@@ -374,7 +374,7 @@ namespace library
             }
             if(index > 0)
             {
-                Node* after = getNodeByIndex(index - 1);
+                Node* const after = getNodeByIndex(index - 1);
                 if(after == NULL)
                 {
                     delete node;
@@ -388,7 +388,7 @@ namespace library
             }
             else
             {
-                Node* before = getNodeByIndex(0);
+                Node* const before = getNodeByIndex(0);
                 if(before == NULL)
                 {
                     delete node;
@@ -406,7 +406,7 @@ namespace library
          * @param index position in this list.  
          * @return pointer to the node of this list.
          */
-        Node* getNodeByIndex(int32 index) const
+        Node* getNodeByIndex(const int32 index) const
         {
             if( not isIndex(index) ) 
             {
@@ -432,7 +432,7 @@ namespace library
          */
         Node* getNodeByElement(const Type& element) const
         {
-            int32 len = getLength();
+            const int32 len = getLength();
             if(len == 0) 
             {
                 return NULL;
@@ -455,7 +455,7 @@ namespace library
          * @param node pointer to node.
          * @return true if a node is removed successfully.
          */
-        bool removeNode(Node* node)
+        bool removeNode(Node* const node)
         {
             if(node == NULL) 
             {
@@ -483,7 +483,7 @@ namespace library
          * @param index checking position in this list.
          * @return true if index is outed.
          */  
-        bool isIndexOutOfBounds(int32 index) const
+        bool isIndexOutOfBounds(const int32 index) const
         {
             return (index < 0 || index > getLength()) ? true : false;
         }

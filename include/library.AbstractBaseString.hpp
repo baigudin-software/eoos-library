@@ -173,7 +173,7 @@ namespace library
             {
                 return 0;
             }
-            Type null = getTerminator();            
+            const Type null = getTerminator();            
             int32 l = 0;
             while( str[l] != null ) 
             {
@@ -188,13 +188,13 @@ namespace library
          * @param dst a destination array where the content would be copied.
          * @param src character string to be copied.
          */
-        void copy(Type* dst, const Type* src) const
+        void copy(Type* const dst, const Type* src) const
         {
             if(dst == NULL || src == NULL) 
             {
                 return;
             }
-            Type null = getTerminator();
+            const Type null = getTerminator();
             int32 i = 0;
             while( (dst[i] = src[i]) != null )
             {
@@ -208,13 +208,13 @@ namespace library
          * @param dst a destination character string where the content would be appended.
          * @param src an appended character string.
          */
-        void concatenate(Type* dst, const Type* src) const
+        void concatenate(Type* const dst, const Type* src) const
         {
             if(dst == NULL || src == NULL) 
             {
                 return;
             }
-            Type null = getTerminator();
+            const Type null = getTerminator();
             int32 d = 0;
             int32 s = 0;            
             while( dst[d] != null )
