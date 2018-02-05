@@ -76,7 +76,7 @@ namespace library
             {
                 return ptr;
             }
-            bool is = disable();
+            const bool is = disable();
             ptr = firstBlock()->alloc(size);
             enable(is);
             return ptr;
@@ -97,7 +97,7 @@ namespace library
             {
                 return;  
             }
-            bool is = disable();
+            const bool is = disable();
             heapBlock(ptr)->free();
             enable(is);
         }
@@ -147,7 +147,7 @@ namespace library
          * @param ptr  aligned to eight memory address.
          * @return address of memory or NULL.
          */
-        void* operator new(size_t, void* ptr)
+        void* operator new(size_t, void* const ptr)
         {
             return create(ptr);
         }
@@ -169,7 +169,7 @@ namespace library
          *
          * @param flag constructed flag.
          */      
-        void setConstruct(bool flag)
+        void setConstruct(const bool flag)
         {
             if(data_.key == HEAP_KEY) 
             {
@@ -199,7 +199,7 @@ namespace library
                 return false;
             }
             // Test memory
-            uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
+            const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
             void*  ptr  = reinterpret_cast<void*>(addr);
             if( not isMemoryAvailable(ptr, data_.size) ) 
             {
@@ -221,7 +221,7 @@ namespace library
             {
                 return false;
             }
-            register ::api::Toggle* toggle = *data_.toggle;
+            ::api::Toggle* const toggle = *data_.toggle;
             return toggle != NULL ? toggle->disable() : false;      
         }
       
@@ -230,13 +230,13 @@ namespace library
          *
          * @param status returned status by disable method.
          */    
-        void enable(bool status)
+        void enable(const bool status)
         {
             if(data_.toggle == NULL) 
             {
                 return;
             }
-            register ::api::Toggle* toggle = *data_.toggle;
+            ::api::Toggle* const toggle = *data_.toggle;
             if(toggle != NULL) 
             {
                 toggle->enable(status);
@@ -250,7 +250,7 @@ namespace library
          */
         HeapBlock* firstBlock()
         {
-            uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
+            const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
             return reinterpret_cast<HeapBlock*>(addr);
         }
         
@@ -259,9 +259,9 @@ namespace library
          *
          * @return pointer to heap block.
          */
-        HeapBlock* heapBlock(void* data)
+        HeapBlock* heapBlock(void* const data)
         {
-            uint32 addr = reinterpret_cast<uint32>(data) - sizeof(HeapBlock);
+            const uint32 addr = reinterpret_cast<uint32>(data) - sizeof(HeapBlock);
             return reinterpret_cast<HeapBlock*>(addr);
         }
         
@@ -274,7 +274,7 @@ namespace library
          * @param size size in byte.
          * @return true if test complete.
          */
-        static bool isMemoryAvailable(void* addr, int64 size)
+        static bool isMemoryAvailable(void* const addr, const int64 size)
         {
             cell mask = -1;
             cell* ptr = reinterpret_cast<cell*>(addr);
@@ -526,7 +526,7 @@ namespace library
              * @param ptr  address of memory.
              * @return address of memory.
              */   
-            void* operator new(size_t, void* ptr)
+            void* operator new(size_t, void* const ptr)
             {
                 // Size of this class has to be multipled to eight
                 if(sizeof(HeapBlock) & 0x7) 
@@ -549,7 +549,7 @@ namespace library
                     return NULL;    
                 }
                 // Align a size to 8 byte boudary
-                if(size & 0x7) 
+                if(size & 0x7 != 0) 
                 {
                     size = (size & ~0x7) + 0x8;
                 }
@@ -689,7 +689,7 @@ namespace library
              */
             void* data()
             {
-                uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock);
+                const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock);
                 return reinterpret_cast<void*>(addr);
             }
             
@@ -698,9 +698,9 @@ namespace library
              *
              * @return pointer to memory.
              */
-            void* next(size_t size)
+            void* next(const size_t size)
             {
-                uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock) + size;
+                const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock) + size;
                 return reinterpret_cast<void*>(addr);
             }
             

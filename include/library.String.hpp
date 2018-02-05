@@ -118,7 +118,7 @@ namespace library
          * @param value a source numerical value.
          * @param base a numerical base used to represent a value as a string.         
          */    
-        String(int32 value) : Parent()
+        String(const int32 value) : Parent()
         {     
             this->convert<int32>(value, 10);
         }        
@@ -211,9 +211,9 @@ namespace library
          * @param value a source numerical value.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator +=(int32 value)
+        ::library::String<char,LENGTH,Alloc>& operator +=(const int32 value)
         {
-            String string = value;
+            const String string = value;
             this->concatenate(string);
             return *this;
         }        
@@ -237,7 +237,7 @@ namespace library
          * @return true if the conversion has been completed successfully.
          */        
         template <typename I>
-        bool convert(I value, int32 base = 10)
+        bool convert(const I value, const int32 base = 10)
         {
             static const int32 MAX_LENGTH = sizeof(I) * 8 + 1;           
             char temp[MAX_LENGTH]; 
@@ -258,7 +258,7 @@ namespace library
          * @return the resulting number.
          */        
         template <typename I>
-        I cast(int32 base = 10) const
+        I cast(const int32 base = 10) const
         {
             return Memory::atoi<I>(this->getChar(), base); 
         }                                  

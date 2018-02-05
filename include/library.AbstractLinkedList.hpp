@@ -107,12 +107,10 @@ namespace library
             {
                 return;
             }
-            const bool res;
             const int32 b = getLength() - 1;
             for(int32 i=b; i>=0; i--) 
             {
-                res = removeNode( getNodeByIndex(i) ); 
-                if(res == false) 
+                if( not removeNode( getNodeByIndex(i) ) ) 
                 {
                     break;
                 }

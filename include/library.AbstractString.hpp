@@ -94,7 +94,7 @@ namespace library
             if( not context_.isFit(len) ) 
             {
                 // Create a new temporary string context
-                const Context context;
+                Context context;
                 if( not context.allocate(len) )
                 {
                     return false;                
@@ -134,7 +134,7 @@ namespace library
             if( not context_.isFit(len) ) 
             {
                 // Create a new temporary string context
-                const Context context;
+                Context context;
                 if( not context.allocate(len) )
                 {
                     return false;                

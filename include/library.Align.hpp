@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ALIGN_HPP_
 #define LIBRARY_ALIGN_HPP_
 
-#include "library.Allocator.hpp"
+#include "Allocator.hpp"
 
 namespace library
 {
@@ -97,7 +97,7 @@ namespace library
          * @param size number of bytes to allocate.
          * @return allocated memory address or a null pointer.
          */
-        void* operator new(size_t size)
+        void* operator new(const size_t size)
         {
             return Alloc::allocate(size);
         }
@@ -109,7 +109,7 @@ namespace library
          * @param ptr  pointer to reserved memory area
          * @return given pointer.
          */
-        void* operator new(size_t, void* ptr)
+        void* operator new(size_t, void* const ptr)
         {
             return ptr;
         }
@@ -119,7 +119,7 @@ namespace library
          *
          * @param ptr address of allocated memory block or a null pointer.
          */
-        void operator delete(void* ptr)
+        void operator delete(void* const ptr)
         {
             Alloc::free(ptr);
         }

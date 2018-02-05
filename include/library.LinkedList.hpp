@@ -53,13 +53,13 @@ namespace library
          * @param index start position in this list.  
          * @return pointer to new list iterator.
          */
-        virtual ::api::ListIterator<Type>* getListIterator(int32 index)
+        virtual ::api::ListIterator<Type>* getListIterator(const int32 index)
         {
             if( not this->isConstructed_ ) 
             {
                 return NULL;
             }
-            Iterator* iterator = new Iterator(index, *this);
+            Iterator* const iterator = new Iterator(index, *this);
             if(iterator != NULL && iterator->isConstructed()) 
             {
                 return iterator;
@@ -105,14 +105,14 @@ namespace library
              * @param index position in this list.
              * @param list  reference to self list.
              */
-            Iterator(int32 index, List& list) :
+            Iterator(const int32 index, List& list) :
                 list_    (list),
                 count_   (list.getReferenceToCount()),
                 last_    (list.getReferenceToLast()),
                 illegal_ (list.getReferenceToIllegal()),
                 curs_    (NULL),
                 rindex_  (ILLEGAL_INDEX){
-                bool isConstructed = construct(index);
+                const bool isConstructed = construct(index);
                 this->setConstruct( isConstructed );
             }
           
@@ -137,7 +137,7 @@ namespace library
              * @param element inserting element.
              * @return true if element is added.
              */      
-            virtual bool add(Type element)
+            virtual bool add(const Type element)
             {
                 if(count_.list != count_.self) 
                 {
@@ -249,7 +249,7 @@ namespace library
                 {
                     return illegal_;
                 }
-                Node* node = curs_;
+                Node* const node = curs_;
                 curs_ = curs_ != last_ ? curs_->getNext() : NULL;
                 rindex_ = node->getIndex();
                 return node->getElement();
@@ -323,7 +323,7 @@ namespace library
              *
              * @param index position in this list.
              */
-            bool construct(int32 index)
+            bool construct(const int32 index)
             {
                 if( not this->isConstructed_ ) 
                 {

@@ -320,23 +320,26 @@ namespace library
              *
              * @param index position in this list.
              */
-            bool construct(const int32 index)
+            bool construct(int32 index)
             {
                 if( not this->isConstructed_ ) 
                 {
                     return false;
                 }
-                if( not list_.isConstructed()) 
+                else if( not list_.isConstructed()) 
                 {
                     return false;
                 }
-                if(list_.isIndexOutOfBounds(index)) 
+                else if(list_.isIndexOutOfBounds(index)) 
                 {
                     return false;
                 }
-                if(index == last_->getIndex() + 1) 
+                else if(index == last_->getIndex() + 1) 
                 {
                     index = 0;
+                }
+                else
+                {
                 }
                 curs_ = list_.getNodeByIndex(index);
                 return true;

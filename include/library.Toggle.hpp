@@ -89,7 +89,7 @@ namespace library
             {
                 return false;    
             }
-            ::api::Toggle* switcher = *toggle_;
+            ::api::Toggle* const switcher = *toggle_;
             return switcher->disable();      
         }
       
@@ -98,13 +98,13 @@ namespace library
          *
          * @param status returned status by disable method.
          */    
-        virtual void enable(bool status)
+        virtual void enable(const bool status)
         {
             if( not isConstructed() ) 
             {
                 return;
             }
-            ::api::Toggle* switcher = *toggle_;
+            ::api::Toggle* const switcher = *toggle_;
             switcher->enable(status);
         }
   

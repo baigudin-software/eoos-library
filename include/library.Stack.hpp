@@ -35,7 +35,7 @@ namespace library
         Stack(typename ::api::Stack<Type>::Operation type, int32 count) : Parent(),
             stack_ (count),
             type_  (type){
-            bool isConstructed = construct();
+            const bool isConstructed = construct();
             this->setConstruct( isConstructed );
         }     
         
@@ -49,7 +49,7 @@ namespace library
         Stack(typename ::api::Stack<Type>::Operation type, int32 count, const Type illegal) : Parent(),
             stack_ (count, illegal),
             type_  (type){
-            bool isConstructed = construct();
+            const bool isConstructed = construct();
             this->setConstruct( isConstructed );
         }    
         
@@ -81,7 +81,7 @@ namespace library
             {
                 return NULL;
             }
-            Type* stack = &stack_[0];
+            Type* const stack = &stack_[0];
             switch(type_)
             {
                 case StackIntf::FD: 

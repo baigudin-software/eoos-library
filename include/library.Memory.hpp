@@ -25,7 +25,7 @@ namespace library
          * @param len a number of bytes to copy.         
          * @return a pointer to the destination array, or NULL if an error has been occurred.         
          */
-        static void* memcpy(void* dst, const void* src, size_t len)
+        static void* memcpy(void* const dst, const void* src, size_t len)
         {
             if(dst == NULL || src == NULL) 
             {
@@ -45,7 +45,7 @@ namespace library
          * @param len a number of bytes to be set to the value.
          * @return a pointer to the destination memory, or NULL if an error has been occurred.         
          */
-        static void* memset(void* dst, cell val, size_t len)
+        static void* memset(void* const dst, const cell val, size_t len)
         {
             if(dst == NULL) 
             {
@@ -85,7 +85,7 @@ namespace library
          * @param src a character string to be copied.
          * @return a pointer to the destination string, or NULL if an error has been occurred.
          */
-        static char* strcpy(char* dst, const char* src)
+        static char* strcpy(char* const dst, const char* src)
         {
             if(dst == NULL || src == NULL) 
             {
@@ -105,7 +105,7 @@ namespace library
          * @param src a character string to be appended.
          * @return a pointer to the destination string, or NULL if an error has been occurred.
          */
-        static char* strcat(char* dst, const char* src)
+        static char* strcat(char* const dst, const char* src)
         {
             if(dst == NULL || src == NULL) 
             {
@@ -165,7 +165,7 @@ namespace library
          * @return true if the conversion has been completed successfully.
          */
         template <typename Type>
-        static bool itoa(Type val, char* str, int32 base = 10)
+        static bool itoa(const Type val, char* str, const int32 base = 10)
         {
             static const int32 LENGTH = sizeof(Type) * 8 + 1;        
             if(str == NULL)
@@ -254,7 +254,7 @@ namespace library
          * @return the resulting number.
          */
         template <typename Type>         
-        static Type atoi(const char* str, int32 base = 10)
+        static Type atoi(const char* str, const int32 base = 10)
         {
             switch(base)
             {
@@ -266,7 +266,7 @@ namespace library
             }
 
             Type result = 0;
-            Type multiplier = static_cast<Type>(base);
+            const Type multiplier = static_cast<Type>(base);
             int32 index = 0;
             bool isNegative = false;
             // Look for whitespaces         
@@ -322,7 +322,7 @@ namespace library
          * @return true if the value has been negative.
          */
         template <typename Type>
-        static bool isPositive(Type value)
+        static bool isPositive(const Type value)
         {
             return value > 0 || value == 0 ? true : false;
         }
@@ -333,7 +333,7 @@ namespace library
          * @param ch a character code.
          * @return true if the character is whitespace.
          */         
-        static bool isSpace(int32 ch)
+        static bool isSpace(const int32 ch)
         {
             return ch == 0x20 || (ch >= 0x09 && ch <= 0x0D) ? true : false;
         }  
@@ -345,7 +345,7 @@ namespace library
          * @param base a numerical base used to parse the character.         
          * @return true if the character is a decimal number.
          */        
-        static bool isDigit(int32 ch, int32 base = 10)
+        static bool isDigit(const int32 ch, const int32 base = 10)
         {
             switch(base)
             {
@@ -376,7 +376,7 @@ namespace library
          * @param subCh     a resulting subtrahend.
          * @param subDecade a resulting addend.                  
          */        
-        static void detectMathOperands(int32 testCh, char& subtrahend, int32& addend)
+        static void detectMathOperands(const int32 testCh, char& subtrahend, int32& addend)
         {
             // Test for uppercase letter
             if(testCh >= 0x41 && testCh <= 0x46)
