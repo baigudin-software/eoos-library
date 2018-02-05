@@ -68,7 +68,7 @@ namespace library
          *
          * @param value filling value.
          */
-        virtual void fill(Type value)
+        virtual void fill(const Type value)
         {
             fill(value, 0, count_);
         }
@@ -79,7 +79,7 @@ namespace library
          * @param value filling value.
          * @param count count of filling elements.
          */
-        virtual void fill(Type value, int32 count)
+        virtual void fill(const Type value, const int32 count)
         {
             fill(value, 0, count);
         }
@@ -91,7 +91,7 @@ namespace library
          * @param index begin index.
          * @param count count of filling elements.
          */
-        virtual void fill(Type value, int32 index, int32 count)
+        virtual void fill(const Type value, const int32 index, const int32 count)
         {
             if( not this->isConstructed_ ) 
             {
@@ -102,7 +102,7 @@ namespace library
                 return;
             }
             Type* buf = getBuffer();
-            int32 max = (index + count <= count_) ? count + index : count_;
+            const int32 max = (index + count <= count_) ? count + index : count_;
             for(int32 i=index; i<max; i++) buf[i] = value;
         }
       
@@ -175,9 +175,9 @@ namespace library
          * @param i an element index.
          * @return an element.
          */
-        Type& operator [](int32 i)
+        Type& operator [](const int32 i)
         {
-            Type* buf = getBuffer();
+            Type* const buf = getBuffer();
             if( not this->isConstructed_ || i >= count_ || buf == NULL) 
             {
                 return illegal_;
@@ -193,7 +193,7 @@ namespace library
         /**
          * Copies buffer to buffer.
          *
-         * If the source buffer	greater than this buffer,
+         * If the source buffer greater than this buffer,
          * then only cropped data of that will be and copied.
          *
          * @param buf reference to source buffer.
@@ -204,11 +204,11 @@ namespace library
             {
                 return;
             }
-            int32 size1 = getLength();
-            int32 size2 = buf.getLength();
-            int32 size = size1 < size2 ? size1 : size2;
-            Type* buf1 = getBuffer();        
-            Type* buf2 = buf.getBuffer();
+            const int32 size1 = getLength();
+            const int32 size2 = buf.getLength();
+            const int32 size = size1 < size2 ? size1 : size2;
+            Type* const buf1 = getBuffer();        
+            Type* const buf2 = buf.getBuffer();
             for(int32 i=0; i<size; i++) 
             {
                 buf1[i] = buf2[i];

@@ -66,7 +66,7 @@ namespace library
          *             as memory address.
          * @return pointer to allocated memory or NULL.
          */    
-        virtual void* allocate(size_t size, void* ptr)
+        virtual void* allocate(const size_t size, void* ptr)
         {
             if( not isConstructed() ) 
             {

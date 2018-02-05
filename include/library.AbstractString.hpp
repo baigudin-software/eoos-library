@@ -89,12 +89,12 @@ namespace library
             {
                 return false;
             }        
-            int32 len = Parent::getLength(str);
+            const int32 len = Parent::getLength(str);
             // If a given string length is more than this max available length
             if( not context_.isFit(len) ) 
             {
                 // Create a new temporary string context
-                Context context;
+                const Context context;
                 if( not context.allocate(len) )
                 {
                     return false;                
@@ -129,12 +129,12 @@ namespace library
             {
                 return copy(str);
             }
-            int32 len = Parent::getLength(str) + context_.len;          
+            const int32 len = Parent::getLength(str) + context_.len;          
             // If a length of this string plus a given string is more than this max available length            
             if( not context_.isFit(len) ) 
             {
                 // Create a new temporary string context
-                Context context;
+                const Context context;
                 if( not context.allocate(len) )
                 {
                     return false;                
@@ -274,7 +274,7 @@ namespace library
              * @param length a number of string characters.
              * @return true if the context has been allocated successfully.
              */
-            bool allocate(int32 length)
+            bool allocate(const int32 length)
             {
                 if(str != NULL)
                 {
@@ -317,7 +317,7 @@ namespace library
              * @param len a number of string characters.
              * @return true if this length will be fit successfully.
              */        
-            bool isFit(int32 len) const
+            bool isFit(const int32 len) const
             {
                 return len > max ? false : true;
             }            
