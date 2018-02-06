@@ -190,11 +190,11 @@ namespace library
                 return false;
             }
             // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
-            if(sizeof(Heap) & 0x7) 
+            if((sizeof(Heap) & 0x7) != 0) 
             {
                 return false;
             }
-            if(sizeof(HeapBlock) & 0x7) 
+            if((sizeof(HeapBlock) & 0x7) != 0) 
             {
                 return false;
             }
@@ -342,7 +342,7 @@ namespace library
         static void* create(void* ptr)
         {
             // Size of this class has to be multipled to eight
-            if( sizeof(Heap) & 0x7 ) 
+            if((sizeof(Heap) & 0x7) != 0) 
             {
                 ptr = NULL;
             }
@@ -433,8 +433,7 @@ namespace library
         /**
          * Heap class aligner aligns that to eight.
          *
-         * Note: if given SIZEOF is already multiple 8, 
-         * the class size will be 8 bytes.
+         * Note: if given SIZEOF is already multiple 8, the class size will be 8 bytes.
          *
          * @param SIZEOF size of Heap class.
          */  
@@ -476,12 +475,12 @@ namespace library
         /**
          * Contains a Virtual Function Table only.
          *
-         * Probably, decision for using this empty class 
-         * is not delicate, but it is working for understanding 
-         * about size of Heap class Virtual Function Table.
+         * Probably, the solution of using this empty class 
+         * is not delicate, but it works for understanding 
+         * about size of a virtual function table of this Heap class.
          *
-         * Note: int64 was used because some compilers can put 64 bit variable 
-         * to aligned 8 memory address. Therefore, size of classes 
+         * Note: this int64 variable of the class is used, because some compilers 
+         * might put 64 bit variable to aligned 8 memory address. Therefore, size of classes 
          * with 32 bit pointer to virtual table and one 64 bit variable is 16 bytes.
          */    
         class VirtualTable : public ::api::Heap{int64 temp;};    
@@ -508,8 +507,7 @@ namespace library
                 next_  (NULL),
                 attr_  (0),
                 size_  (size - sizeof(HeapBlock)),
-                key_   (BLOCK_KEY),
-                temp_  (0xbbbbbbbb){
+                key_   (BLOCK_KEY){
             }
             
             /** 
@@ -528,10 +526,15 @@ namespace library
              */   
             void* operator new(size_t, void* const ptr)
             {
-                // Size of this class has to be multipled to eight
-                if(sizeof(HeapBlock) & 0x7) 
+                // Size of this class must be multipled to eight
+                if((sizeof(HeapBlock) & 0x7) != 0) 
                 {
                     return NULL;
+                }
+                // The passed address must be multipled to eight
+                if((reinterpret_cast<uint32>(ptr) & 0x7) != 0)
+                {
+                    return NULL;                
                 }
                 return ptr;
             }
@@ -549,12 +552,12 @@ namespace library
                     return NULL;    
                 }
                 // Align a size to 8 byte boudary
-                if(size & 0x7 != 0) 
+                if((size & 0x7) != 0) 
                 {
                     size = (size & ~0x7) + 0x8;
                 }
                 HeapBlock* curr = this;
-                while(curr)
+                while(curr != NULL)
                 {
                     if(curr->isUsed())
                     {
@@ -572,10 +575,14 @@ namespace library
                 {
                     return NULL;
                 }
-                // has a need size of memory and new heap block
+                // Has required memory size for data and a new heap block
                 if(curr->size_ >= size + sizeof(HeapBlock))
                 {
                     HeapBlock* next = new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size);
+                    if(next == NULL)
+                    {
+                        return NULL;
+                    }
                     next->next_ = curr->next_;
                     next->prev_ = curr;
                     if(next->next_) 
@@ -722,7 +729,7 @@ namespace library
             /**
              * Heap block definition key.
              */
-            static const int32 BLOCK_KEY = 0x19820401;
+            static const int64 BLOCK_KEY = 0x1982040120150515;
             
             /**
              * Block is used.
@@ -767,13 +774,8 @@ namespace library
             /**
              * Heap block definition key.
              */    
-            int32 key_;
-            
-            /**
-             * Temp aligning value.
-             */    
-            int32 temp_;
-      
+            int64 key_;
+
         };
         
         /**
