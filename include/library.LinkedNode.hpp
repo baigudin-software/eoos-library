@@ -51,6 +51,16 @@ namespace library
             prev_ = this;
             next_ = this;
         }
+        
+        /**
+         * Tests if this object has been constructed.
+         *
+         * @return true if object has been constructed successfully.
+         */
+        virtual bool isConstructed() const
+        {
+            return this->isConstructed_;
+        }        
       
         /**
          * Inserts a new element after this.
