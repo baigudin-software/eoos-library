@@ -8,831 +8,965 @@
 #ifndef LIBRARY_STRING_HPP_
 #define LIBRARY_STRING_HPP_
 
-#include "Object.hpp"
-#include "api.String.hpp"
+#include "library.AbstractString.hpp"
+#include "library.Memory.hpp"
 
 namespace library
 {
-    /** 
-     * @param Char data type of string characters.
-     * @param Alloc heap memory allocator class.
+    /**
+     * Primary template implements the static string class.
+     *
+     * @param Type   data type of string characters.     
+     * @param LENGTH maximum number of string characters, or 0 for dynamic allocation.
+     * @param Alloc  heap memory allocator class.
      */
-    template <typename Char, class Alloc=::Allocator>    
-    class String : public Object<Alloc>, public ::api::String<Char>
+    template <typename Type, int32 LENGTH, class Alloc = Allocator>    
+    class String : public ::library::AbstractString<Type,LENGTH,Alloc>
     {
-        typedef ::Object<Alloc> Parent;        
-      
-    public:
-    
+        typedef ::library::AbstractString<Type,LENGTH,Alloc> Parent;
+        
         /** 
          * Constructor.
          */    
-        String() : Parent(),
-            isConstructed_ (this->getConstruct()),
-            string_        (),
-            illegal_       (0){
-            this->setConstruct( construct("") );
+        String() : Parent()
+        {
         }
         
         /** 
          * Constructor.
          *
-         * @param obj a source string object.
-         */ 
-        String(const ::library::String<Char,Alloc>& obj) : Parent(obj),
-            isConstructed_ (this->getConstruct()),        
-            string_        (),
-            illegal_       (0){
-            this->setConstruct( construct(obj) );
-        }
-        
-        /** 
-         * Constructor.
-         *
-         * @param obj a source string object interface.
-         */ 
-        String(const ::api::String<Char>& obj) : Parent(obj),
-            isConstructed_ (this->getConstruct()),        
-            string_        (),
-            illegal_       (0){
-            this->setConstruct( construct(obj) );
-        }
-        
-        /** 
-         * Constructor.
-         *
-         * @param data a sequence of string characters.
+         * @param source a source character string.         
          */    
-        String(const Char* data) : Parent(),
-            isConstructed_ (this->getConstruct()),
-            string_        (),
-            illegal_       (0){
-            this->setConstruct( construct(data) );
-        }
-    
+        String(const Type* source) : Parent()
+        {
+            this->copy(source);        
+        } 
+        
         /**
          * Destructor.
          */
         virtual ~String()
         {
-        }
-        
-        /** 
-         * Assignment operator.
-         *
-         * @param obj a string object.
-         * @return reference to this object.       
-         */     
-        String& operator=(const ::library::String<Char,Alloc>& obj)
-        {
-            if( not isConstructed_ ) return *this;        
-            Parent::operator=(*this);
-            this->setConstruct( assign(obj) );
-            return *this;            
-        }
-        
-        /** 
-         * Assignment operator.
-         *
-         * @param obj a string object interface.
-         * @return reference to this object.       
-         */ 
-        String& operator=(const ::api::String<Char>& obj)
-        {
-            if( not isConstructed_ ) return *this;        
-            Parent::operator=(*this);
-            this->setConstruct( assign(obj) );
-            return *this;            
-        }        
-        
-        /** 
-         * Assignment operator.
-         *
-         * @param data a sequence of string characters.
-         * @return reference to this object.       
-         */     
-        String& operator=(const Char* data)
-        {
-            if( not isConstructed_ ) return *this;        
-            Parent::operator=(*this);
-            this->setConstruct( assign(data) );
-            return *this;        
-        }
-        
-        /** 
-         * Assignment operator.
-         *
-         * @param obj a string object.
-         * @return reference to this object.       
-         */     
-        String& operator+=(const ::library::String<Char,Alloc>& obj)
-        {
-            if( not isConstructed_ ) return *this;        
-            Parent::operator=(*this);
-            this->setConstruct( concatenate(obj) );
-            return *this; 
-        }  
-        
-        /** 
-         * Assignment operator.
-         *
-         * @param obj a string object interface.
-         * @return reference to this object.       
-         */
-        String& operator+=(const ::api::String<Char>& obj)
-        {
-            if( not isConstructed_ ) return *this;        
-            Parent::operator=(*this);
-            this->setConstruct( concatenate(obj) );
-            return *this; 
-        }                 
-        
-        /** 
-         * Assignment operator.
-         *
-         * @param data a sequence of string characters.
-         * @return reference to this object.       
-         */     
-        String& operator+=(const Char* data)
-        {
-            if( not isConstructed_ ) return *this;        
-            Parent::operator=(*this);
-            this->setConstruct( concatenate(data) );
-            return *this; 
-        }         
+        } 
+
+    protected:
         
         /**
-         * Tests if this object has been constructed.
+         * Returns this string terminated character.
          *
-         * @return true if object has been constructed successfully.
-         */    
-        virtual bool isConstructed() const
+         * @return a character which means that this string terminated.
+         */         
+        virtual Type getTerminator() const
         {
-            return isConstructed_;
+            return Type::TERMINATING_CHARACTER;
         }
+
+    };
         
-        /** 
-         * Compares two strings lexicographically.
-         *
-         * @param obj a string object.
-         * @return the value 0 if given string is equal to this string; 
-         *         a value less than 0 if this string is less than given string; 
-         *         a value greater than 0 if this string is greater than given string.
-         */
-        virtual int32 compareTo(const ::api::String<Char>& obj) const
-        {
-            if( not obj.isConstructed() ) return 1;
-            return compareTo( obj.getChar() );
-        }
-        
-        /** 
-         * Compares two strings lexicographically.
-         *
-         * @param data a sequence of string characters.
-         * @return the value 0 if given string is equal to this string; 
-         *         a value less than 0 if this string is less than given string; 
-         *         a value greater than 0 if this string is greater than given string.
-         */
-        virtual int32 compareTo(const Char* data) const
-        {
-            if( not isConstructed_ ) return -1;        
-            if( data == NULL ) return 1;
-            return string_.compareTo( data );        
-        }
-        
-        /**
-         * Returns pointer to the first char of containing string.
-         *
-         * @param first char of containing string or NULL if no string contained.
-         */
-        virtual const Char* getChar() const
-        {
-            return isConstructed_ ? string_.getData() : NULL;
-        }        
-        
-        /**
-         * Returns a number of elements in this container.
-         *
-         * @return number of elements.
-         */
-        virtual int32 getLength() const
-        {
-            return isConstructed_ ? string_.getLength() : 0;
-        }
-       
-        /**
-         * Tests if this collection has elements.
-         *
-         * @return true if this collection does not contain any elements.
-         */
-        virtual bool isEmpty() const
-        {
-            return getLength() == 0 ? true : false;
-        }
-        
-        /**
-         * Returns illegal element which will be returned as error value.
-         *
-         * @return illegal element.
-         */
-        virtual Char getIllegal() const
-        {
-            return illegal_;
-        }
-        
-        /**
-         * Sets illegal element which will be returned as error value.
-         *
-         * @param value illegal value.
-         */
-        virtual void setIllegal(Char value)
-        {
-            if( isConstructed_ ) illegal_ = value;
-        }
-        
-        /**
-         * Tests if given value is an illegal.
-         *
-         * @param value testing value.
-         * @param true if value is an illegal.
-         */
-        virtual bool isIllegal(const Char& value) const
-        {
-            return illegal_ == value ? true : false;
-        }
-        
-    private:
+    /** 
+     * Char type partial specialization of the static string class.
+     *
+     * @param Alloc heap memory allocator class.
+     */
+    template <int32 LENGTH, class Alloc>        
+    class String<char,LENGTH,Alloc> : public ::library::AbstractString<char,LENGTH,Alloc>
+    {
+        typedef ::library::AbstractString<char,LENGTH,Alloc> Parent;
+
+    public:
     
         /** 
-         * Constructs this object.
-         *
-         * @param obj a source string object.
-         * @return true if object has been constructed successfully.         
-         */ 
-        bool construct(const ::library::String<Char,Alloc>& obj)
+         * Constructor.
+         */    
+        String() : Parent()
         {
-            const ::api::String<Char>& iobj = obj;
-            return construct( iobj );
+        }
+        
+        /** 
+         * Constructor.
+         *
+         * @param source a source object.         
+         */             
+        String(const ::library::String<char,LENGTH,Alloc>& source) : Parent()       
+        {
+            this->copy(source);        
         }    
         
         /** 
-         * Constructs this object.
+         * Constructor.
          *
-         * @param obj a source string object interface.
-         * @return true if object has been constructed successfully.         
-         */ 
-        bool construct(const ::api::String<Char>& obj)
+         * @param source a source object interface.
+         */             
+        String(const ::api::String<char>& source) : Parent()       
         {
-            if( not obj.isConstructed() ) return false;            
-            return construct( obj.getChar() );
+            this->copy(source);        
+        }                  
+             
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.
+         */    
+        String(const char* source) : Parent()
+        {
+            this->copy(source);
+        }
+        
+        /** 
+         * Constructor.
+         *
+         * @param value a source numerical value.
+         * @param base a numerical base used to represent a value as a string.         
+         */    
+        String(const int32 value) : Parent()
+        {     
+            this->convert<int32>(value, 10);
         }        
+        
+        /**
+         * Casts to int32 type.
+         *
+         * @return a numerical value.     
+         */        
+        operator int32() const 
+        { 
+            return this->template cast<int32>(10);
+        }        
+        
+        /**
+         * Direct assignment operator.
+         *
+         * @param source a source object.
+         * @return this object.     
+         */
+        ::library::String<char,LENGTH,Alloc>& operator =(const ::library::String<char,LENGTH,Alloc>& source)
+        {
+            this->copy(source);
+            return *this;            
+        }
+        
+        /** 
+         * Assignment operator.
+         *
+         * @param source a source object interface.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator =(const ::api::String<char>& source)
+        {
+            this->copy(source);        
+            return *this;        
+        }   
+        
+        /** 
+         * Assignment operator.
+         *
+         * @param source a source character string.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator =(const char* source)
+        {
+            this->copy(source);        
+            return *this;        
+        }             
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source object.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator +=(const ::library::String<char,LENGTH,Alloc>& source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source object interface.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator +=(const ::api::String<char>& source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }  
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source character string.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator +=(const char* source)
+        {
+            this->concatenate(source);
+            return *this;
+        }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param value a source numerical value.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,LENGTH,Alloc>& operator +=(const int32 value)
+        {
+            const String string = value;
+            this->concatenate(string);
+            return *this;
+        }        
+        
+        /** 
+         * Converts an integer number to this string.
+         *
+         * The function converts an integer value into a character string using the base parameter, 
+         * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+         * 
+         * Mark that only if the base is decimal, a passed number is available to be negative values, 
+         * and the resulting string of these values is preceded with a minus sign. In addition, 
+         * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+         * any suffixes or prefixes for identifying a numeral system.
+         *    
+         * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
+         * if you have to specify the template argument type explicitly.
+         *
+         * @param val  a value that would be converted to this string.
+         * @param base a numerical base used to represent a value as this string.
+         * @return true if the conversion has been completed successfully.
+         */        
+        template <typename I>
+        bool convert(const I value, const int32 base = 10)
+        {
+            static const int32 MAX_LENGTH = sizeof(I) * 8 + 1;           
+            char temp[MAX_LENGTH]; 
+            if( not Memory::itoa<I>(value, temp, base) )                    
+            {
+                return false;
+            }
+            return this->copy(temp);
+        }  
+        
+        /** 
+         * Casts this string to an integer number.
+         *
+         * NOTE: You need to use "string.template cast<I>(base);" syntax,
+         * if you have to specify the template argument type explicitly.         
+         *
+         * @param base a numerical base used to parse the string.
+         * @return the resulting number.
+         */        
+        template <typename I>
+        I cast(const int32 base = 10) const
+        {
+            return Memory::atoi<I>(this->getChar(), base); 
+        }                                  
     
-        /**
-         * Constructs this object.
-         *
-         * @param data a sequence of string characters.
-         * @return true if object has been constructed successfully.
-         */
-        bool construct(const Char* data)
-        {
-            if( not isConstructed_ ) return false;
-            return assign(data);
-        }
-
-        /** 
-         * Assigns a new string.
-         *
-         * @param obj a source string object.
-         * @return true if the task has been completed successfully.
-         */
-        bool assign(const ::library::String<Char,Alloc>& obj)
-        {
-            const ::api::String<Char>& iobj = obj;        
-            return assign( iobj );
-        }
-        
-        /** 
-         * Assigns a new string.
-         *
-         * @param obj a source string object interface.
-         * @return true if the task has been completed successfully.
-         */
-        bool assign(const ::api::String<Char>& obj)
-        {
-            if( not obj.isConstructed() ) return false;
-            return assign( obj.getChar() );
-        }        
-        
-        /** 
-         * Assigns a new string.
-         *
-         * @param data a sequence of string characters.
-         * @return true if the task has been completed successfully.
-         */
-        bool assign(const Char* data)
-        {
-            if( not isConstructed_ ) return false;        
-            return string_.copy(data);
-        }
-        
-        /** 
-         * Concatenates self string and new string.
-         *
-         * @param obj a source string object.
-         * @return true if the task has been completed successfully.
-         */
-        bool concatenate(const ::library::String<Char,Alloc>& obj)
-        {
-            const ::api::String<Char>& iobj = obj;
-            return concatenate( iobj );
-        }
-        
-        /** 
-         * Concatenates self string and new string.
-         *
-         * @param obj a source string object interface.
-         * @return true if the task has been completed successfully.
-         */
-        bool concatenate(const ::api::String<Char>& obj)
-        {
-            if( not obj.isConstructed() ) return false;
-            return concatenate( obj.getChar() );
-        }                        
-        
-        /** 
-         * Concatenates self string and new string.
-         *
-         * @param str reference to String object.
-         * @return true if the task has been completed successfully.
-         */
-        bool concatenate(const Char* data)
-        {
-            if( not isConstructed_ ) return false;        
-            return string_.concatenate(data);
-        }
-        
-        /** 
-         * The root object constructed flag.
-         */  
-        const bool& isConstructed_;        
+    protected:
 
         /**
-         * Number of characters of this string.
-         */                 
-        class StringData
-        {
-        
-        public:
-        
-            /** 
-             * Constructor.
-             */        
-            StringData() :
-                data_ (NULL),
-                len_ (0),
-                max_ (0){
-            }
-
-            /**
-             * Destructor.
-             */
-           ~StringData()
-            {
-                deleteData(data_);
-            }  
-            
-            /** 
-             * Copies a string self string.
-             *
-             * @param data a sequence of string characters.
-             */
-            bool copy(const Char* data)
-            {
-                if(data == NULL) return false;            
-                int32 len, max;
-                len = getLength(data);
-                if( not isFit(len) ) 
-                {
-                    deleteData(data_);
-                    max_ = 0;
-                }
-                if(data_ == NULL)
-                {
-                    data_ = createData(len, max);
-                    max_ = max;
-                }
-                if(data_ == NULL) return false;                
-                len_ = len;
-                copy(data_, data);
-                return true;
-            } 
-            
-            /** 
-             * Concatenates two strings.
-             *
-             * @param data a sequence of string characters.             
-             */
-            bool concatenate(const Char* data)
-            {
-                if(data == NULL) return false;            
-                if(data_ == NULL) return false;
-                int32 len, max;
-                len = getLength(data) + len_;          
-                if( not isFit(len) ) 
-                {
-                    Char* tmp = createData(len, max);
-                    if(tmp != NULL)
-                    {
-                        copy(tmp, data_);
-                    }
-                    deleteData(data_);
-                    data_ = tmp;
-                    max_ = max;                    
-                }
-                if(data_ == NULL) return false;                
-                len_ = len;
-                concatenate(data_, data);                    
-                return true;
-            }
-            
-            /** 
-             * Compares two strings lexicographically.
-             *
-             * @param data a sequence of string characters.
-             * @return the value 0 if given string is equal to this string; 
-             *         a value less than 0 if this string is less than given string; 
-             *         a value greater than 0 if this string is greater than given string.
-             */
-            int32 compareTo(const Char* data) const
-            {
-                int32 val[2];
-                int32 res = len_ - getLength(data);
-                if(res != 0) return res;
-                for(int32 i=0; i<len_; i++)
-                {
-                    val[0] = data_[i];
-                    val[1] = data[i];
-                    res = val[0] - val[1];
-                    if(res != 0) break;
-                }
-                return res;
-            }
-            
-            /**
-             * Get pointer to data buffer.
-             *
-             * @return pointer to data buffer, or NULL.
-             */
-            const Char* getData() const
-            {
-                return data_;
-            }
-            
-            /**
-             * Gets length of string.
-             *
-             * @return length of string.
-             */
-            int32 getLength() const
-            {
-                return len_;
-            }                                              
-            
-        private:
-        
-            /** 
-             * Tests if given length fits to current data buffer.
-             *
-             * @param len string characters number.
-             * @return true if the length will be fit successfully.
-             */        
-            bool isFit(int32 len)
-            {
-                return len > max_ ? false : true;
-            }        
-        
-            /** 
-             * Creates a new data buffer for string.
-             *
-             * @param len string characters number.
-             * @return the data buffer address.
-             */        
-            static Char* createData(int32 len, int32& max)
-            {
-                int32 size = calculateSize(len);
-                Char* data = reinterpret_cast<Char*>( Alloc::allocate(size) );
-                max = data != NULL ? calculateLength(size) : 0;
-                return data;
-            }        
-            
-            /** 
-             * Deletes the buffer.
-             */        
-            static void deleteData(Char*& data)
-            {
-                if(data != NULL) Alloc::free(data);
-                data = NULL;
-            }            
-            
-            /** 
-             * Returns size in byte of a string length.
-             *
-             * @param length string characters number.
-             * @return size in byte for given string.
-             */
-            static int32 calculateSize(int32 len)
-            {
-                size_t size = static_cast<size_t>(len) * sizeof(Char) + sizeof(Char);
-                // Align size to eight
-                if(size & 0x7) size = (size & ~0x7) + 0x8;
-                return static_cast<int32>(size);
-            }
-            
-            /** 
-             * Returns a string length of size in byte.
-             *
-             * @param size size in byte.
-             * @return characters number.
-             */
-            static int32 calculateLength(int32 size)
-            {
-                int32 charSize =  static_cast<int32>( sizeof(Char) );
-                if(charSize == 0) return 0;
-                int32 len = size / charSize;
-                return len > 1 ? len - 1 : 0;
-            }
-            
-            /** 
-             * Returns a characters number of passed string.
-             *
-             * @param data a sequence of string characters.
-             * @return characters number.
-             */
-            static int32 getLength(const Char* data)
-            {
-                if(data == NULL) return 0;
-                int32 len = 0;
-                while( *data != 0 ) 
-                {
-                    len++;
-                    data++;
-                }
-                return len;
-            }
-            
-            /** 
-             * Copys string to string.
-             */
-            static Char* copy(Char* dst, const Char* src)
-            {
-              if(dst == NULL || src == NULL) return NULL;
-              Char* d = dst - 1;     
-              const Char* s = src  - 1;     
-              while(*++d = *++s);
-              return dst;
-            }
-
-            /** 
-             * Concatenates two strings.
-             */
-            static Char* concatenate(Char* ptr1, const Char* ptr2)
-            {
-              if(ptr1 == NULL || ptr2 == NULL) return NULL;
-              Char* p1 = ptr1 - 1;
-              const Char* p2 = ptr2 - 1;
-              while(*++p1);
-              p1--;
-              while(*++p1 = *++p2);
-              return ptr1;
-            }                                             
-        
-            /**
-             * The first char of containing string.
-             */        
-            Char* data_;
-            
-            /**
-             * Current number of characters of this string.
-             */                 
-            int32 len_;        
-
-            /**
-             * Max number of characters for this string.
-             */                 
-            int32 max_;              
-            
-        } string_;
-
-        /**
-         * Illegal character of this string.
+         * Returns this string terminated character.
+         *
+         * @return a character which means that this string terminated.
          */         
-        Char illegal_;
-
+        virtual char getTerminator() const
+        {
+            return '\0';
+        }
+        
+    private:
+        
+        template <int32 L, class A> friend bool operator ==(const ::library::String<char,L,A>&, const char*);
+        template <int32 L, class A> friend bool operator ==(const char*, const ::library::String<char,L,A>&);
+        template <int32 L, class A> friend bool operator !=(const ::library::String<char,L,A>&, const char*);
+        template <int32 L, class A> friend bool operator !=(const char*, const ::library::String<char,L,A>&);   
     };
     
     /**
-     * Concatenates two strings.
+     * Compares for equality of two strings.
      *
-     * @param obj1 a string 1 object.
-     * @param obj2 a string 2 object.
-     * @return a new string object.
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline ::library::String<Char,Alloc> operator+(const ::library::String<Char,Alloc>& obj1, const ::library::String<Char,Alloc>& obj2)
+    template <int32 LENGTH, class Alloc>
+    inline bool operator ==(const ::library::String<char,LENGTH,Alloc>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
     {
-        String<Char,Alloc> str = obj1;
-        str += obj2;
-        return str;
+        return source1.compare(source2) == 0 ? true : false;
     }
     
     /**
-     * Concatenates two strings.
+     * Compares for equality of two strings.
      *
-     * @param obj1 a string 1 object.
-     * @param obj2 a string 2 object interface.
-     * @return a new string object.
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline ::library::String<Char,Alloc> operator+(const ::library::String<Char,Alloc>& obj1, const ::api::String<Char>& obj2)
+    template <int32 LENGTH, class Alloc>
+    inline bool operator ==(const ::library::String<char,LENGTH,Alloc>& source1, const ::api::String<char>& source2)
     {
-        String<Char,Alloc> str = obj1;
-        str += obj2;
-        return str;
-    }    
-    
-    /**
-     * Concatenates two strings.
-     *
-     * @param obj1 a string 1 object interface.
-     * @param obj2 a string 2 object.
-     * @return a new string object.
-     */
-    template <typename Char, class Alloc>
-    inline ::library::String<Char,Alloc> operator+(const ::api::String<Char>& obj1, const ::library::String<Char,Alloc>& obj2)
-    {
-        String<Char,Alloc> str = obj1;
-        str += obj2;
-        return str;
-    }     
-    
-    /**
-     * Concatenates two strings.
-     *
-     * @param obj a string object.
-     * @param data a sequence of string characters.
-     * @return a new string object.
-     */         
-    template <typename Char, class Alloc>
-    inline ::library::String<Char,Alloc> operator+(const ::library::String<Char,Alloc>& obj, const Char* data)
-    {
-        String<Char,Alloc> str = obj;
-        str += data;
-        return str;
+        return source1.compare(source2) == 0 ? true : false;
     } 
     
     /**
-     * Concatenates two strings.
+     * Compares for equality of two strings.
      *
-     * @param data a sequence of string characters.     
-     * @param obj a string object.
-     * @return a new string object.
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline ::library::String<Char,Alloc> operator+(const Char* data, const ::library::String<Char,Alloc>& obj)
+    template <int32 LENGTH, class Alloc>
+    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
     {
-        String<Char,Alloc> str = data;
-        str += obj;
-        return str;
-    }   
+        return source1.compare(source2) == 0 ? true : false;
+    }
 
     /**
      * Compares for equality of two strings.
      *
-     * @param obj1 a string 1 object.
-     * @param obj2 a string 2 object.
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline bool operator==(const ::library::String<Char,Alloc>& obj1, const ::library::String<Char,Alloc>& obj2)
+    template <int32 LENGTH, class Alloc>
+    inline bool operator ==(const ::library::String<char,LENGTH,Alloc>& source1, const char* source2)
     {
-        return obj1.compareTo(obj2) == 0 ? true : false;
+        return source1.compare(source2) == 0 ? true : false;
     }
-    
+
     /**
      * Compares for equality of two strings.
      *
-     * @param obj1 a string 1 object.
-     * @param obj2 a string 2 object interface.
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline bool operator==(const ::library::String<Char,Alloc>& obj1, const ::api::String<Char>& obj2)
+    template <int32 LENGTH, class Alloc>
+    inline bool operator ==(const char* source1, const ::library::String<char,LENGTH,Alloc>& source2)
     {
-        return obj1.compareTo(obj2) == 0 ? true : false;
-    } 
-    
-    /**
-     * Compares for equality of two strings.
-     *
-     * @param obj1 a string 1 object interface.
-     * @param obj2 a string 2 object.
-     * @return true if strings are equal.
-     */
-    template <typename Char, class Alloc>
-    inline bool operator==(const ::api::String<Char>& obj1, const ::library::String<Char,Alloc>& obj2)
-    {
-        return obj1.compareTo(obj2) == 0 ? true : false;
-    }       
-    
-    /**
-     * Compares for equality of two strings.
-     *
-     * @param obj a string object.
-     * @param data a sequence of string characters.
-     * @return true if strings are equal.
-     */
-    template <typename Char, class Alloc>
-    inline bool operator==(const ::library::String<Char,Alloc>& obj, const Char* data)
-    {
-        return obj.compareTo(data) == 0 ? true : false;
-    }
-    
-    /**
-     * Compares for equality of two strings.
-     *
-     * @param data a sequence of string characters.     
-     * @param obj a string object.
-     * @return true if strings are equal.
-     */
-    template <typename Char, class Alloc>
-    inline bool operator==(const Char* data, const ::library::String<Char,Alloc>& obj)
-    {
-        return obj.compareTo(data) == 0 ? true : false;
-    }    
-    
-    /**
-     * Compares for inequality of two strings.
-     *
-     * @param obj1 a string 1 object.
-     * @param obj2 a string 2 object.
-     * @return true if strings are not equal.
-     */      
-    template <typename Char, class Alloc>
-    inline bool operator!=(const ::library::String<Char,Alloc>& obj1, const ::library::String<Char,Alloc>& obj2)     
-    {
-        return obj1.compareTo(obj2) == 0 ? false : true;
+        return source2.compare(source1) == 0 ? true : false;
     } 
     
     /**
      * Compares for inequality of two strings.
      *
-     * @param obj1 a string 1 object.
-     * @param obj2 a string 2 object interface.
-     * @return true if strings are not equal.
-     */      
-    template <typename Char, class Alloc>
-    inline bool operator!=(const ::library::String<Char,Alloc>& obj1, const ::api::String<Char>& obj2)     
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline bool operator !=(const ::library::String<char,LENGTH,Alloc>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
     {
-        return obj1.compareTo(obj2) == 0 ? false : true;
+        return source1.compare(source2) != 0 ? true : false;
     }
     
     /**
      * Compares for inequality of two strings.
      *
-     * @param obj1 a string 1 object interface.
-     * @param obj2 a string 2 object.
-     * @return true if strings are not equal.
-     */      
-    template <typename Char, class Alloc>
-    inline bool operator!=(const ::api::String<Char>& obj1, const ::library::String<Char,Alloc>& obj2)     
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline bool operator !=(const ::library::String<char,LENGTH,Alloc>& source1, const ::api::String<char>& source2)
     {
-        return obj1.compareTo(obj2) == 0 ? false : true;
+        return source1.compare(source2) != 0 ? true : false;
+    } 
+    
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline bool operator !=(const ::library::String<char,LENGTH,Alloc>& source1, const char* source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline bool operator !=(const char* source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    {
+        return source2.compare(source1) != 0 ? true : false;
+    }  
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline ::library::String<char,LENGTH,Alloc> operator +(const ::library::String<char,LENGTH,Alloc>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    {
+        ::library::String<char,LENGTH,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline ::library::String<char,LENGTH,Alloc> operator +(const ::library::String<char,LENGTH,Alloc>& source1, const ::api::String<char>& source2)
+    {
+        ::library::String<char,LENGTH,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    } 
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline ::library::String<char,LENGTH,Alloc> operator +(const ::api::String<char>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    {
+        ::library::String<char,LENGTH,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline ::library::String<char,LENGTH,Alloc> operator +(const ::library::String<char,LENGTH,Alloc>& source1, const char* source2)
+    {
+        ::library::String<char,LENGTH,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <int32 LENGTH, class Alloc>
+    inline ::library::String<char,LENGTH,Alloc> operator +(const char* source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    {
+        ::library::String<char,LENGTH,Alloc> string( source1 );
+        string += source2;
+        return string;    
     }    
     
+    #ifdef NO_STRICT_MISRA_RULES  
+    
+    /** 
+     * Partial specialization of the template implements the dynamic string class.
+     *
+     * @param Type  data type of string characters.
+     * @param Alloc heap memory allocator class.
+     */
+    template <typename Type, class Alloc>    
+    class String<Type,0,Alloc> : public ::library::AbstractString<Type,0,Alloc>
+    {
+        typedef ::library::AbstractString<Type,0,Alloc> Parent;
+
+    public:
+    
+        /** 
+         * Constructor.
+         */    
+        String() : Parent()
+        {
+        }    
+    
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.        
+         */    
+        String(const Type* source) : Parent()
+        {
+            this->copy(source);        
+        } 
+        
+        /**
+         * Destructor.
+         */
+        virtual ~String()
+        {
+        } 
+        
+    protected:
+        
+        /**
+         * Returns this string terminated character.
+         *
+         * @return a character which means that this string terminated.
+         */         
+        virtual Type getTerminator() const
+        {
+            return Type::TERMINATING_CHARACTER;
+        }                        
+    
+    };
+ 
+    /** 
+     * Char type partial specialization of the dynamic string class.
+     *
+     * @param Alloc heap memory allocator class.
+     */
+    template <class Alloc>        
+    class String<char,0,Alloc> : public ::library::AbstractString<char,0,Alloc>
+    {
+        typedef ::library::AbstractString<char,0,Alloc> Parent;
+
+    public:
+    
+        /** 
+         * Constructor.
+         */    
+        String() : Parent()
+        {
+        }
+        
+        /** 
+         * Constructor.
+         *
+         * @param source a source object.         
+         */             
+        String(const ::library::String<char,0,Alloc>& source) : Parent()       
+        {
+            this->copy(source);        
+        }    
+        
+        /** 
+         * Constructor.
+         *
+         * @param source a source object interface.
+         */             
+        String(const ::api::String<char>& source) : Parent()       
+        {
+            this->copy(source);        
+        }                  
+             
+        /** 
+         * Constructor.
+         *
+         * @param source a source character string.
+         */    
+        String(const char* source) : Parent()
+        {
+            this->copy(source);
+        }
+        
+        /** 
+         * Constructor.
+         *
+         * @param value a source numerical value.
+         * @param base a numerical base used to represent a value as a string.         
+         */    
+        String(int32 value) : Parent()
+        {     
+            this->convert<int32>(value, 10);
+        }        
+
+        /**
+         * Casts to int32 type.
+         *
+         * @return a numerical value.     
+         */        
+        operator int32() const 
+        { 
+            return this->template cast<int32>(10);
+        }        
+        
+        /**
+         * Direct assignment operator.
+         *
+         * @param source a source object.
+         * @return this object.     
+         */
+        ::library::String<char,0,Alloc>& operator =(const ::library::String<char,0,Alloc>& source)
+        {
+            this->copy(source);
+            return *this;            
+        }
+        
+        /** 
+         * Assignment operator.
+         *
+         * @param source a source object interface.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator =(const ::api::String<char>& source)
+        {
+            this->copy(source);        
+            return *this;        
+        }   
+        
+        /** 
+         * Assignment operator.
+         *
+         * @param source a source character string.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator =(const char* source)
+        {
+            this->copy(source);        
+            return *this;        
+        }             
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source object.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(const ::library::String<char,0,Alloc>& source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source object interface.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(const ::api::String<char>& source)
+        {
+            this->concatenate(source);
+            return *this;   
+        }  
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param source a source character string.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(const char* source)
+        {
+            this->concatenate(source);
+            return *this;
+        }
+        
+        /** 
+         * Assignment by sum operator.
+         *
+         * @param value a source numerical value.
+         * @return reference to this object.       
+         */     
+        ::library::String<char,0,Alloc>& operator +=(int32 value)
+        {
+            String string = value;
+            this->concatenate(string);
+            return *this;
+        }        
+        
+        /** 
+         * Converts an integer number to this string.
+         *
+         * The function converts an integer value into a character string using the base parameter, 
+         * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+         * 
+         * Mark that only if the base is decimal, a passed number is available to be negative values, 
+         * and the resulting string of these values is preceded with a minus sign. In addition, 
+         * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+         * any suffixes or prefixes for identifying a numeral system.
+         *    
+         * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
+         * if you have to specify the template argument type explicitly.
+         *
+         * @param val  a value that would be converted to this string.
+         * @param base a numerical base used to represent a value as this string.
+         * @return true if the conversion has been completed successfully.
+         */        
+        template <typename I>
+        bool convert(I value, int32 base = 10)
+        {
+            static const int32 MAX_LENGTH = sizeof(I) * 8 + 1;           
+            char temp[MAX_LENGTH]; 
+            if( not Memory::itoa<I>(value, temp, base) )                    
+            {
+                return false;
+            }
+            return this->copy(temp);
+        }  
+        
+        /** 
+         * Casts this string to an integer number.
+         *
+         * NOTE: You need to use "string.template cast<I>(base);" syntax,
+         * if you have to specify the template argument type explicitly.         
+         *
+         * @param base a numerical base used to parse the string.
+         * @return the resulting number.
+         */        
+        template <typename I>
+        I cast(int32 base = 10) const
+        {
+            return Memory::atoi<I>(this->getChar(), base); 
+        }                                  
+    
+    protected:
+
+        /**
+         * Returns this string terminated character.
+         *
+         * @return a character which means that this string terminated.
+         */         
+        virtual char getTerminator() const
+        {
+            return '\0';
+        }
+        
+    private:
+        
+        template <class A> friend bool operator ==(const ::library::String<char,0,A>&, const char*);
+        template <class A> friend bool operator ==(const char*, const ::library::String<char,0,A>&);
+        template <class A> friend bool operator !=(const ::library::String<char,0,A>&, const char*);
+        template <class A> friend bool operator !=(const char*, const ::library::String<char,0,A>&);        
+    };
+    
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    }
+    
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    } 
+    
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    }
+
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    {
+        return source1.compare(source2) == 0 ? true : false;
+    }
+
+    /**
+     * Compares for equality of two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator ==(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source2.compare(source1) == 0 ? true : false;
+    } 
+    
     /**
      * Compares for inequality of two strings.
      *
-     * @param obj a string object.
-     * @param data a sequence of string characters.
-     * @return true if strings are not equal.
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline bool operator!=(const ::library::String<Char,Alloc>& obj, const Char* data)
+    template <class Alloc>
+    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
     {
-        return obj.compareTo(data) == 0 ? false : true;
+        return source1.compare(source2) != 0 ? true : false;
     }
     
     /**
      * Compares for inequality of two strings.
      *
-     * @param data a sequence of string characters.     
-     * @param obj a string object.
-     * @return true if strings are not equal.
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
      */
-    template <typename Char, class Alloc>
-    inline bool operator!=(const Char* data, const ::library::String<Char,Alloc>& obj)
+    template <class Alloc>
+    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
     {
-        return obj.compareTo(data) == 0 ? false : true;
-    }                 
+        return source1.compare(source2) != 0 ? true : false;
+    } 
+    
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    {
+        return source1.compare(source2) != 0 ? true : false;
+    }
+
+    /**
+     * Compares for inequality of two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline bool operator !=(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        return source2.compare(source1) != 0 ? true : false;
+    }  
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source object interface 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    } 
+    
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object interface 1.
+     * @param source2 a source object 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source object 1.
+     * @param source2 a source character string 2.
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }
+
+    /**
+     * Concatenates two strings.
+     *
+     * @param source1 a source character string 1.
+     * @param source2 a source source object 2. 
+     * @return true if strings are equal.
+     */
+    template <class Alloc>
+    inline ::library::String<char,0,Alloc> operator +(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    {
+        ::library::String<char,0,Alloc> string( source1 );
+        string += source2;
+        return string;    
+    }        
+
+    #endif // NO_STRICT_MISRA_RULES
+    
 }
 #endif // LIBRARY_STRING_HPP_

@@ -16,7 +16,7 @@ namespace library
      * @param Type  data type of container element.
      * @param Alloc heap memory allocator class.
      */  
-    template <typename Type, class Alloc=::Allocator>
+    template <typename Type, class Alloc = Allocator>
     class CircularList : public ::library::AbstractLinkedList<Type,Alloc>
     {
         typedef ::library::AbstractLinkedList<Type,Alloc>  Parent;
@@ -53,11 +53,17 @@ namespace library
          * @param index start position in this list.  
          * @return pointer to new list iterator.
          */
-        virtual ::api::ListIterator<Type>* getListIterator(int32 index)
+        virtual ::api::ListIterator<Type>* getListIterator(const int32 index)
         {
-            if(!this->isConstructed()) return NULL;
-            Iterator* iterator = new Iterator(index, *this);
-            if(iterator != NULL && iterator->isConstructed()) return iterator;
+            if( not this->isConstructed_ ) 
+            {
+                return NULL;
+            }
+            Iterator* const iterator = new Iterator(index, *this);
+            if(iterator != NULL && iterator->isConstructed()) 
+            {
+                return iterator;
+            }
             delete iterator;
             return NULL;
         }
@@ -86,11 +92,11 @@ namespace library
          * For this reason, for fast iteration some tests are skipped.
          * You have to use this class only if it has been constructed.
          */      
-        class Iterator : public Object<Alloc>, public ::api::ListIterator<Type>
+        class Iterator : public ::library::Object<Alloc>, public ::api::ListIterator<Type>
         {
-            typedef Object<Alloc>             Parent;
-            typedef CircularList<Type,Alloc>  List;
-  	  
+            typedef ::library::Object<Alloc>             Parent;
+            typedef ::library::CircularList<Type,Alloc>  List;
+      
         public:
       
             /**
@@ -99,14 +105,15 @@ namespace library
              * @param index position in this list.
              * @param list  reference to self list.
              */
-            Iterator(int32 index, List& list) :
+            Iterator(const int32 index, const List& list) :
                 list_    (list),
                 count_   (list.getReferenceToCount()),
                 last_    (list.getReferenceToLast()),
                 illegal_ (list.getReferenceToIllegal()),
                 curs_    (NULL),
                 rindex_  (ILLEGAL_INDEX){
-                this->setConstruct( construct(index) );
+                const bool isConstructed = construct(index);
+                this->setConstruct( isConstructed );
             }
           
             /**
@@ -121,7 +128,7 @@ namespace library
              */    
             virtual bool isConstructed() const
             {
-                return this->Parent::isConstructed();
+                return this->isConstructed_;
             }      
           
             /**
@@ -132,12 +139,21 @@ namespace library
              */      
             virtual bool add(const Type& element)
             {
-                if(count_.list != count_.self) return false;
-                Node* last = last_;
-                if(list_.add(getNextIndex(), element) == false) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                Node* const last = last_;
+                if(list_.add(getNextIndex(), element) == false) 
+                {
+                    return false;
+                }
                 count_.self++;
                 rindex_ = ILLEGAL_INDEX;
-                if(last == NULL) curs_ = last_;
+                if(last == NULL) 
+                {
+                    curs_ = last_;
+                }
                 return true;
             }
           
@@ -149,11 +165,26 @@ namespace library
             virtual bool remove()
             {
                 Node* curs;
-                if(count_.list != count_.self) return false;
-                if(rindex_ == ILLEGAL_INDEX) return false;
-                if(curs_->getIndex() != rindex_) curs = curs_;
-                else curs = curs_->getNext();
-                if(list_.remove(rindex_) == false) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                if(rindex_ == ILLEGAL_INDEX) 
+                {
+                    return false;
+                }
+                if(curs_->getIndex() != rindex_) 
+                {
+                    curs = curs_;
+                }
+                else
+                {
+                    curs = curs_->getNext();
+                }
+                if(list_.remove(rindex_) == false) 
+                {
+                    return false;
+                }
                 count_.self++;
                 rindex_ = ILLEGAL_INDEX;
                 curs_ = last_ != NULL ? curs : NULL;
@@ -167,7 +198,10 @@ namespace library
              */      
             virtual Type getPrevious()
             {
-                if(!hasPrevious()) return illegal_;
+                if( not hasPrevious()) 
+                {
+                    return illegal_;
+                }
                 curs_ = curs_->getPrevious();
                 rindex_ = curs_->index();
                 return curs_->getElement();
@@ -190,8 +224,14 @@ namespace library
              */      
             virtual bool hasPrevious() const
             {
-                if(count_.list != count_.self) return false;
-                if(curs_ == NULL) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                if(curs_ == NULL) 
+                {
+                    return false;
+                }
                 return true;
             }
           
@@ -202,8 +242,11 @@ namespace library
              */      
             virtual Type getNext()
             {
-                if(!hasNext()) return illegal_;
-                register Node* node = curs_;
+                if( not hasNext() ) 
+                {
+                    return illegal_;
+                }
+                Node* const node = curs_;
                 curs_ = curs_->getNext();
                 rindex_ = node->getIndex();
                 return node->getElement();
@@ -226,8 +269,14 @@ namespace library
              */      
             virtual bool hasNext() const
             {
-                if(count_.list != count_.self) return false;
-                if(curs_ == NULL) return false;
+                if(count_.list != count_.self) 
+                {
+                    return false;
+                }
+                if(curs_ == NULL) 
+                {
+                    return false;
+                }
                 return true;
             }
           
@@ -273,10 +322,25 @@ namespace library
              */
             bool construct(int32 index)
             {
-                if(!this->isConstructed()) return false;
-                if(!list_.isConstructed()) return false;
-                if(list_.isIndexOutOfBounds(index)) return false;
-                if(index == last_->getIndex() + 1) index = 0;
+                if( not this->isConstructed_ ) 
+                {
+                    return false;
+                }
+                else if( not list_.isConstructed()) 
+                {
+                    return false;
+                }
+                else if(list_.isIndexOutOfBounds(index)) 
+                {
+                    return false;
+                }
+                else if(index == last_->getIndex() + 1) 
+                {
+                    index = 0;
+                }
+                else
+                {
+                }
                 curs_ = list_.getNodeByIndex(index);
                 return true;
             }

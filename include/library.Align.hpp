@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ALIGN_HPP_
 #define LIBRARY_ALIGN_HPP_
 
-#include "Object.hpp"
+#include "Allocator.hpp"
 
 namespace library
 {
@@ -17,7 +17,7 @@ namespace library
      * @param SIZEOF size of aligning data.
      * @param Alloc  heap memory allocator class.
      */  
-    template <typename Type, int32 SIZEOF=sizeof(Type), class Alloc=::Allocator>
+    template <typename Type, int32 SIZEOF = sizeof(Type), class Alloc = Allocator>
     class Align
     {
       
@@ -35,7 +35,7 @@ namespace library
          *
          * @param val data value.     
          */
-        Align(Type val)
+        Align(const Type val)
         {
             assignment(val);
         }
@@ -63,7 +63,7 @@ namespace library
          * @param val source data value.
          * @return reference to this object.     
          */
-        Align& operator =(Type val)
+        Align& operator =(const Type val)
         {
             assignment(val);
             return *this;
@@ -88,6 +88,8 @@ namespace library
         {
             return typecast();
         }
+        
+        #ifdef NO_STRICT_MISRA_RULES
       
         /**
          * Operator new.
@@ -95,7 +97,7 @@ namespace library
          * @param size number of bytes to allocate.
          * @return allocated memory address or a null pointer.
          */
-        void* operator new(size_t size)
+        void* operator new(const size_t size)
         {
             return Alloc::allocate(size);
         }
@@ -107,7 +109,7 @@ namespace library
          * @param ptr  pointer to reserved memory area
          * @return given pointer.
          */
-        void* operator new(size_t size, void* ptr)
+        void* operator new(size_t, void* const ptr)
         {
             return ptr;
         }
@@ -117,10 +119,12 @@ namespace library
          *
          * @param ptr address of allocated memory block or a null pointer.
          */
-        void operator delete(void* ptr)
+        void operator delete(void* const ptr)
         {
             Alloc::free(ptr);
         }
+        
+        #endif // NO_STRICT_MISRA_RULES
     
     private:
     
@@ -129,7 +133,7 @@ namespace library
          *
          * @param val source data value.
          */ 
-        inline void assignment(Type val)
+        inline void assignment(const Type val)
         {
             for(int32 i=0; i<SIZE; i++) 
             { 
@@ -189,8 +193,8 @@ namespace library
     template <typename Type> 
     inline bool operator ==(const Align<Type>& obj1, const Align<Type>& obj2)
     {
-        Type t1 = obj1;
-        Type t2 = obj2;
+        const Type t1 = obj1;
+        const Type t2 = obj2;
         return t1 == t2;
     }
   
@@ -204,8 +208,8 @@ namespace library
     template <typename Type> 
     inline bool operator !=(const Align<Type>& obj1, const Align<Type>& obj2)
     {
-        Type t1 = obj1;
-        Type t2 = obj2;
+        const Type t1 = obj1;
+        const Type t2 = obj2;
         return t1 != t2;
     }
 } 

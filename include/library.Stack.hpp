@@ -8,7 +8,7 @@
 #ifndef LIBRARY_STACK_HPP_
 #define LIBRARY_STACK_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "api.Stack.hpp"
 #include "library.Buffer.hpp"
 
@@ -18,11 +18,11 @@ namespace library
      * @param Type  data type of default stack element.
      * @param Alloc heap memory allocator class.
      */ 
-    template <typename Type, class Alloc=::Allocator>
-    class Stack : public ::Object<Alloc>, public ::api::Stack<Type>
+    template <typename Type, class Alloc = Allocator>
+    class Stack : public ::library::Object<Alloc>, public ::api::Stack<Type>
     { 
-        typedef ::Object<Alloc>    Parent;  
-        typedef ::api::Stack<Type> StackIntf;
+        typedef ::library::Object<Alloc>  Parent;  
+        typedef ::api::Stack<Type>        StackIntf;
     
     public:
     
@@ -35,7 +35,8 @@ namespace library
         Stack(typename ::api::Stack<Type>::Operation type, int32 count) : Parent(),
             stack_ (count),
             type_  (type){
-            this->setConstruct( construct() );
+            const bool isConstructed = construct();
+            this->setConstruct( isConstructed );
         }     
         
         /** 
@@ -48,7 +49,8 @@ namespace library
         Stack(typename ::api::Stack<Type>::Operation type, int32 count, const Type illegal) : Parent(),
             stack_ (count, illegal),
             type_  (type){
-            this->setConstruct( construct() );
+            const bool isConstructed = construct();
+            this->setConstruct( isConstructed );
         }    
         
         /** 
@@ -65,7 +67,7 @@ namespace library
          */
         virtual bool isConstructed() const
         {
-            return this->Parent::isConstructed();
+            return this->isConstructed_;
         }
       
         /** 
@@ -75,8 +77,11 @@ namespace library
          */    
         virtual const Type* getTos()
         {
-            if(!isConstructed()) return NULL;
-            Type* stack = &stack_[0];
+            if( not this->isConstructed_ ) 
+            {
+                return NULL;
+            }
+            Type* const stack = &stack_[0];
             switch(type_)
             {
                 case StackIntf::FD: 
@@ -161,15 +166,21 @@ namespace library
       
     private:
   
-        /** 
+        /**
          * Constructor.
          *
-         * @return boolean result.
-         */
+         * @return true if object has been constructed successfully.     
+         */ 
         bool construct()
         {
-            if(!isConstructed()) return false;
-            if(!stack_.isConstructed()) return false;
+            if( not this->isConstructed_ ) 
+            {
+                return false;
+            }
+            if( not stack_.isConstructed() ) 
+            {
+                return false;
+            }
             #ifdef EOOS_DEBUG
             stack_.fill(0);
             #endif

@@ -8,7 +8,7 @@
 #ifndef LIBRARY_TOGGLE_HPP_
 #define LIBRARY_TOGGLE_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "api.Toggle.hpp"
 
 namespace library
@@ -17,10 +17,10 @@ namespace library
      *
      * @param Alloc heap memory allocator class.
      */  
-    template <class Alloc=::Allocator>
-    class Toggle : public ::Object<Alloc>, public ::api::Toggle
+    template <class Alloc = Allocator>
+    class Toggle : public ::library::Object<Alloc>, public ::api::Toggle
     {
-      typedef ::Object<Alloc> Parent;
+        typedef ::library::Object<Alloc> Parent;
   
     public:
     
@@ -71,7 +71,10 @@ namespace library
          */    
         virtual bool isConstructed() const
         {
-            if(!this->Parent::isConstructed()) return false;
+            if( not this->isConstructed_ ) 
+            {
+                return false;
+            }
             return *toggle_ == NULL ? false : true;
         }
       
@@ -82,8 +85,11 @@ namespace library
          */ 
         virtual bool disable()
         {
-            if(!isConstructed()) return false;    
-            ::api::Toggle* switcher = *toggle_;
+            if( not isConstructed()) 
+            {
+                return false;    
+            }
+            ::api::Toggle* const switcher = *toggle_;
             return switcher->disable();      
         }
       
@@ -92,10 +98,13 @@ namespace library
          *
          * @param status returned status by disable method.
          */    
-        virtual void enable(bool status)
+        virtual void enable(const bool status)
         {
-            if(!isConstructed()) return;
-            ::api::Toggle* switcher = *toggle_;
+            if( not isConstructed() ) 
+            {
+                return;
+            }
+            ::api::Toggle* const switcher = *toggle_;
             switcher->enable(status);
         }
   

@@ -8,7 +8,7 @@
 #ifndef LIBRARY_ABSTRACT_LINKED_LIST_HPP_
 #define LIBRARY_ABSTRACT_LINKED_LIST_HPP_
 
-#include "Object.hpp"
+#include "library.Object.hpp"
 #include "library.Buffer.hpp"
 #include "library.LinkedNode.hpp"
 #include "api.List.hpp"
@@ -21,15 +21,15 @@ namespace library
      * @param Type  data type of container element.
      * @param Alloc heap memory allocator class.
      */
-    template <typename Type, class Alloc=::Allocator>
+    template <typename Type, class Alloc = Allocator>
     class AbstractLinkedList : 
-        public ::Object<Alloc>, 
+        public ::library::Object<Alloc>, 
         public ::api::List<Type>, 
         public ::api::Queue<Type>, 
         public ::api::Iterable<Type>{
   
-        typedef ::Object<Alloc>                Parent;
-        typedef ::library::LinkedNode<Type,Alloc> Node;
+        typedef ::library::Object<Alloc>           Parent;       
+        typedef ::library::LinkedNode<Type,Alloc>  Node;
   
     public:      
   
@@ -40,7 +40,8 @@ namespace library
             illegal_ (),
             last_    (NULL),
             count_   (0){
-            this->setConstruct( construct() );
+            const bool isConstructed = construct(); 
+            this->setConstruct( isConstructed );
         }
       
         /**
@@ -52,7 +53,8 @@ namespace library
             illegal_ (illegal),
             last_    (NULL),
             count_   (0){
-            this->setConstruct( construct() );
+            const bool isConstructed = construct(); 
+            this->setConstruct( isConstructed );
         }
       
         /**
@@ -67,11 +69,11 @@ namespace library
          * Tests if this object has been constructed.
          *
          * @return true if object has been constructed successfully.
-         */    
+         */
         virtual bool isConstructed() const
         {
-            return this->Parent::isConstructed();
-        }
+            return this->isConstructed_;
+        }        
         
         /**
          * Inserts new element to the end of this list.
@@ -79,9 +81,9 @@ namespace library
          * @param element inserting element.
          * @return true if element is added.
          */      
-        virtual bool add(Type element)
+        virtual bool add(const Type element)
         {
-            return isConstructed() ? addNode(getLength(), element) : false;
+            return this->isConstructed_ ? addNode(getLength(), element) : false;
         }
       
         /**
@@ -91,9 +93,9 @@ namespace library
          * @param element inserting element.
          * @return true if element is inserted.
          */
-        virtual bool add(int32 index, Type element)
+        virtual bool add(const int32 index, const Type element)
         {
-            return isConstructed() ? addNode(index, element) : false;
+            return this->isConstructed_ ? addNode(index, element) : false;
         }      
       
         /**
@@ -101,9 +103,18 @@ namespace library
          */  
         virtual void clear()
         {
-            if(!isConstructed()) return;
-            int32 b = getLength() - 1;
-            for(int32 i=b; i>=0; i--) removeNode( getNodeByIndex(i) ); 
+            if( not this->isConstructed_ ) 
+            {
+                return;
+            }
+            const int32 b = getLength() - 1;
+            for(int32 i=b; i>=0; i--) 
+            {
+                if( not removeNode( getNodeByIndex(i) ) ) 
+                {
+                    break;
+                }
+            }
         }
       
         /**
@@ -142,9 +153,9 @@ namespace library
          * @param index   position in this list.
          * @return true if an element is removed successfully.
          */
-        virtual bool remove(int32 index)
+        virtual bool remove(const int32 index)
         {
-            return isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
+            return this->isConstructed_ ? removeNode( getNodeByIndex(index) ) : false;
         }
       
         /**
@@ -155,7 +166,7 @@ namespace library
          */
         virtual bool removeElement(const Type& element)
         {
-            return isConstructed() ? removeNode( getNodeByElement(element) ) : false;
+            return this->isConstructed_ ? removeNode( getNodeByElement(element) ) : false;
         }
       
         /**
@@ -194,10 +205,13 @@ namespace library
          * @param index position in this list.  
          * @return indexed element of this list.
          */
-        virtual Type get(int32 index) const
+        virtual Type get(const int32 index) const
         {
-            if(!isConstructed()) return illegal_;
-            Node* node = getNodeByIndex(index);
+            if( not this->isConstructed_ ) 
+            {
+                return illegal_;
+            }
+            Node* const node = getNodeByIndex(index);
             return node != NULL ? node->getElement() : illegal_;
         }  
       
@@ -240,7 +254,10 @@ namespace library
          */
         virtual void setIllegal(const Type value)
         {
-            if( isConstructed() ) illegal_ = value;
+            if( this->isConstructed_ ) 
+            {
+                illegal_ = value;
+            }
         }
       
         /**
@@ -251,7 +268,10 @@ namespace library
          */
         virtual bool isIllegal(const Type& value) const
         {
-            if(!isConstructed()) return false;
+            if( not this->isConstructed_ ) 
+            {
+                return false;
+            }
             return illegal_ == value ? true : false;
         }
       
@@ -263,7 +283,7 @@ namespace library
          */
         virtual int32 getIndexOf(const Type& element) const
         {
-            Node* node = getNodeByElement(element);
+            Node* const node = getNodeByElement(element);
             return node != NULL ? node->getIndex() : -1;
         }
       
@@ -273,7 +293,7 @@ namespace library
          * @param index checking position in this list.
          * @return true if index is present.
          */  
-        virtual bool isIndex(int32 index) const
+        virtual bool isIndex(const int32 index) const
         {
             return (0 <= index && index < getLength()) ? true : false;
         }      
@@ -287,11 +307,17 @@ namespace library
          */  
         virtual ::library::Buffer<Type,0,Alloc>* array() const
         {
-            if(!isConstructed()) return NULL;
-            int32 count = getLength();
-            if(count == 0) return NULL;
+            if( not this->isConstructed_ ) 
+            {
+                return NULL;
+            }
+            const int32 count = getLength();
+            if(count == 0) 
+            {
+                return NULL;
+            }
             Buffer<Type,0,Alloc>* buf = new Buffer<Type,0,Alloc>(count, illegal_);
-            if(buf == NULL || !buf->isConstructed())
+            if(buf == NULL || not buf->isConstructed())
             {
                 delete buf;
                 return NULL;
@@ -326,11 +352,14 @@ namespace library
          * @param element inserting element.
          * @return true if element is inserted.
          */
-        bool addNode(int32 index, const Type& element)
+        bool addNode(const int32 index, const Type& element)
         {
-            if(isIndexOutOfBounds(index)) return false;
-            Node* node = new Node(element);
-            if(node == NULL || !node->isConstructed())
+            if(isIndexOutOfBounds(index)) 
+            {
+                return false;
+            }
+            Node* const node = new Node(element);
+            if(node == NULL || not node->isConstructed())
             {
                 delete node;
                 return false;
@@ -343,18 +372,21 @@ namespace library
             }
             if(index > 0)
             {
-                Node* after = getNodeByIndex(index - 1);
+                Node* const after = getNodeByIndex(index - 1);
                 if(after == NULL)
                 {
                     delete node;
                     return false;
                 }
                 after->insertAfter(node);
-                if(after == last_) last_ = node;
+                if(after == last_) 
+                {
+                    last_ = node;
+                }
             }
             else
             {
-                Node* before = getNodeByIndex(0);
+                Node* const before = getNodeByIndex(0);
                 if(before == NULL)
                 {
                     delete node;
@@ -372,12 +404,21 @@ namespace library
          * @param index position in this list.  
          * @return pointer to the node of this list.
          */
-        Node* getNodeByIndex(int32 index) const
+        Node* getNodeByIndex(const int32 index) const
         {
-            if(!isIndex(index)) return NULL;
-            if(index == getLength() - 1) return last_;
+            if( not isIndex(index) ) 
+            {
+                return NULL;
+            }
+            if(index == getLength() - 1) 
+            {
+                return last_;
+            }
             Node* node = last_->getNext();
-            for(int32 i=0; i<index; i++) node = node->getNext();
+            for(int32 i=0; i<index; i++) 
+            {
+                node = node->getNext();
+            }
             return node;
         }
       
@@ -389,12 +430,18 @@ namespace library
          */
         Node* getNodeByElement(const Type& element) const
         {
-            int32 len = getLength();
-            if(len == 0) return NULL;
+            const int32 len = getLength();
+            if(len == 0) 
+            {
+                return NULL;
+            }
             Node* node = last_->getNext();      
             for(int32 i=0; i<len; i++, node = node->getNext()) 
             {
-                if(element != node->getElement()) continue;
+                if(element != node->getElement()) 
+                {
+                    continue;
+                }
                 return node;
             }
             return NULL;
@@ -406,13 +453,22 @@ namespace library
          * @param node pointer to node.
          * @return true if a node is removed successfully.
          */
-        bool removeNode(Node* node)
+        bool removeNode(Node* const node)
         {
-            if(node == NULL) return false;
+            if(node == NULL) 
+            {
+                return false;
+            }
             if(node == last_) 
             {
-                if(getLength() == 1) last_ = NULL;
-                else last_ = last_->getPrevious();
+                if(getLength() == 1) 
+                {
+                    last_ = NULL;
+                }
+                else
+                {
+                    last_ = last_->getPrevious();
+                }
             }
             delete node;
             count_++;
@@ -425,7 +481,7 @@ namespace library
          * @param index checking position in this list.
          * @return true if index is outed.
          */  
-        bool isIndexOutOfBounds(int32 index) const
+        bool isIndexOutOfBounds(const int32 index) const
         {
             return (index < 0 || index > getLength()) ? true : false;
         }
@@ -469,7 +525,7 @@ namespace library
          */
         bool construct()
         {
-            return isConstructed();
+            return this->isConstructed_;
         }
       
         /**

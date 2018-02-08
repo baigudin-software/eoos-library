@@ -66,11 +66,17 @@ namespace library
          *             as memory address.
          * @return pointer to allocated memory or NULL.
          */    
-        virtual void* allocate(size_t size, void* ptr)
+        virtual void* allocate(const size_t size, void* ptr)
         {
-            if(!isConstructed()) return NULL;
-            if(ptr != NULL) return ptr;
-            bool is = disable();
+            if( not isConstructed() ) 
+            {
+                return NULL;
+            }
+            if( ptr != NULL ) 
+            {
+                return ptr;
+            }
+            const bool is = disable();
             ptr = firstBlock()->alloc(size);
             enable(is);
             return ptr;
@@ -83,9 +89,15 @@ namespace library
          */      
         virtual void free(void* ptr)
         {
-            if(ptr == NULL) return;
-            if(!isConstructed()) return;  
-            bool is = disable();
+            if( ptr == NULL ) 
+            {
+                return;
+            }
+            if( not isConstructed() ) 
+            {
+                return;  
+            }
+            const bool is = disable();
             heapBlock(ptr)->free();
             enable(is);
         }
@@ -135,7 +147,7 @@ namespace library
          * @param ptr  aligned to eight memory address.
          * @return address of memory or NULL.
          */
-        void* operator new(size_t, void* ptr)
+        void* operator new(size_t, void* const ptr)
         {
             return create(ptr);
         }
@@ -146,9 +158,7 @@ namespace library
          * @param ptr   address of allocated memory block or a null pointer.
          * @param place pointer used as the placement parameter in the matching placement new.
          */
-        void operator delete(void*, void*)
-        {
-        }
+        void operator delete(void*, void*);
   
     private:
     
@@ -159,9 +169,12 @@ namespace library
          *
          * @param flag constructed flag.
          */      
-        void setConstruct(bool flag)
+        void setConstruct(const bool flag)
         {
-            if(data_.key == HEAP_KEY) data_.key = flag ? HEAP_KEY : 0;
+            if(data_.key == HEAP_KEY) 
+            {
+                data_.key = flag ? HEAP_KEY : 0;
+            }
         }
         
         /** 
@@ -172,14 +185,26 @@ namespace library
         bool construct()
         {
             // Crop a size to multiple of eight
-            if(sizeof(HeapBlock) + 16 > data_.size) return false;
+            if(sizeof(HeapBlock) + 16 > data_.size) 
+            {
+                return false;
+            }
             // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
-            if(sizeof(Heap) & 0x7) return false;
-            if(sizeof(HeapBlock) & 0x7) return false;
+            if((sizeof(Heap) & 0x7) != 0) 
+            {
+                return false;
+            }
+            if((sizeof(HeapBlock) & 0x7) != 0) 
+            {
+                return false;
+            }
             // Test memory
-            uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
+            const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
             void*  ptr  = reinterpret_cast<void*>(addr);
-            if( !isMemoryAvailable(ptr, data_.size) ) return false;
+            if( not isMemoryAvailable(ptr, data_.size) ) 
+            {
+                return false;
+            }
             // Alloc first heap block
             data_.block = new ( firstBlock() ) HeapBlock(this, data_.size);
             return data_.block != NULL ? true : false;
@@ -192,8 +217,11 @@ namespace library
          */ 
         bool disable()
         {
-            if(data_.toggle == NULL) return false;
-            register ::api::Toggle* toggle = *data_.toggle;
+            if(data_.toggle == NULL) 
+            {
+                return false;
+            }
+            ::api::Toggle* const toggle = *data_.toggle;
             return toggle != NULL ? toggle->disable() : false;      
         }
       
@@ -202,11 +230,17 @@ namespace library
          *
          * @param status returned status by disable method.
          */    
-        void enable(bool status)
+        void enable(const bool status)
         {
-            if(data_.toggle == NULL) return;
-            register ::api::Toggle* toggle = *data_.toggle;
-            if(toggle != NULL) toggle->enable(status);
+            if(data_.toggle == NULL) 
+            {
+                return;
+            }
+            ::api::Toggle* const toggle = *data_.toggle;
+            if(toggle != NULL) 
+            {
+                toggle->enable(status);
+            }
         }
         
         /**
@@ -216,7 +250,7 @@ namespace library
          */
         HeapBlock* firstBlock()
         {
-            uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
+            const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
             return reinterpret_cast<HeapBlock*>(addr);
         }
         
@@ -225,9 +259,9 @@ namespace library
          *
          * @return pointer to heap block.
          */
-        HeapBlock* heapBlock(void* data)
+        HeapBlock* heapBlock(void* const data)
         {
-            uint32 addr = reinterpret_cast<uint32>(data) - sizeof(HeapBlock);
+            const uint32 addr = reinterpret_cast<uint32>(data) - sizeof(HeapBlock);
             return reinterpret_cast<HeapBlock*>(addr);
         }
         
@@ -240,34 +274,58 @@ namespace library
          * @param size size in byte.
          * @return true if test complete.
          */
-        static bool isMemoryAvailable(void* addr, int64 size)
+        static bool isMemoryAvailable(void* const addr, const int64 size)
         {
             cell mask = -1;
             cell* ptr = reinterpret_cast<cell*>(addr);
             // Value test
             for( int64 i=0; i<size; i++) 
+            {
                 ptr[i] = static_cast<cell>(i & mask);
+            }
             for( int64 i=0; i<size; i++) 
+            {
                 if(ptr[i] != static_cast<cell>(i & mask))
+                {
                     return false;
+                }
+            }
             // 0x55 test
             for( int64 i=0; i<size; i++) 
+            {
                 ptr[i] = static_cast<cell>(0x55555555 & mask);
+            }
             for( int64 i=0; i<size; i++) 
+            {
                 if(ptr[i] != static_cast<cell>(0x55555555 & mask))
+                {
                     return false;
+                }
+            }
             // 0xAA test          
             for( int64 i=0; i<size; i++) 
-              ptr[i] = static_cast<cell>(0xaaaaaaaa & mask);
+            {
+                ptr[i] = static_cast<cell>(0xaaaaaaaa & mask);
+            }
             for( int64 i=0; i<size; i++) 
+            {
                 if(ptr[i] != static_cast<cell>(0xaaaaaaaa & mask))
+                {
                     return false;          
+                }
+            }
             // Zero test          
             for( int64 i=0; i<size; i++) 
+            {
                 ptr[i] = 0x00;
+            }
             for( int64 i=0; i<size; i++) 
+            {
                 if(ptr[i] != 0x00)
+                {
                     return false;                  
+                }
+            }
             return true;
         }
       
@@ -284,11 +342,20 @@ namespace library
         static void* create(void* ptr)
         {
             // Size of this class has to be multipled to eight
-            if(sizeof(Heap) & 0x7) ptr = NULL;
+            if((sizeof(Heap) & 0x7) != 0) 
+            {
+                ptr = NULL;
+            }
             // Testing memory for self structure data
-            if(!isMemoryAvailable(ptr, sizeof(Heap))) ptr = NULL;
+            if( not isMemoryAvailable(ptr, sizeof(Heap)) ) 
+            {
+                ptr = NULL;
+            }
             // Memory address has to be aligned to eight
-            if(reinterpret_cast<uint32>(ptr) & 0x7) ptr = NULL;
+            if(reinterpret_cast<uint32>(ptr) & 0x7) 
+            {
+                ptr = NULL;
+            }
             return ptr;
         }
         
@@ -366,8 +433,7 @@ namespace library
         /**
          * Heap class aligner aligns that to eight.
          *
-         * Note: if given SIZEOF is already multiple 8, 
-         * the class size will be 8 bytes.
+         * Note: if given SIZEOF is already multiple 8, the class size will be 8 bytes.
          *
          * @param SIZEOF size of Heap class.
          */  
@@ -409,12 +475,12 @@ namespace library
         /**
          * Contains a Virtual Function Table only.
          *
-         * Probably, decision for using this empty class 
-         * is not delicate, but it is working for understanding 
-         * about size of Heap class Virtual Function Table.
+         * Probably, the solution of using this empty class 
+         * is not delicate, but it works for understanding 
+         * about size of a virtual function table of this Heap class.
          *
-         * Note: int64 was used because some compilers can put 64 bit variable 
-         * to aligned 8 memory address. Therefore, size of classes 
+         * Note: this int64 variable of the class is used, because some compilers 
+         * might put 64 bit variable to aligned 8 memory address. Therefore, size of classes 
          * with 32 bit pointer to virtual table and one 64 bit variable is 16 bytes.
          */    
         class VirtualTable : public ::api::Heap{int64 temp;};    
@@ -441,8 +507,7 @@ namespace library
                 next_  (NULL),
                 attr_  (0),
                 size_  (size - sizeof(HeapBlock)),
-                key_   (BLOCK_KEY),
-                temp_  (0xbbbbbbbb){
+                key_   (BLOCK_KEY){
             }
             
             /** 
@@ -459,10 +524,18 @@ namespace library
              * @param ptr  address of memory.
              * @return address of memory.
              */   
-            void* operator new(size_t, void* ptr)
+            void* operator new(size_t, void* const ptr)
             {
-                // Size of this class has to be multipled to eight
-                if(sizeof(HeapBlock) & 0x7) return NULL;
+                // Size of this class must be multipled to eight
+                if((sizeof(HeapBlock) & 0x7) != 0) 
+                {
+                    return NULL;
+                }
+                // The passed address must be multipled to eight
+                if((reinterpret_cast<uint32>(ptr) & 0x7) != 0)
+                {
+                    return NULL;                
+                }
                 return ptr;
             }
             
@@ -474,11 +547,17 @@ namespace library
              */  
             void* alloc(size_t size)
             {
-                if(size == 0) return NULL;    
+                if(size == 0) 
+                {
+                    return NULL;    
+                }
                 // Align a size to 8 byte boudary
-                if(size & 0x7) size = (size & ~0x7) + 0x8;
+                if((size & 0x7) != 0) 
+                {
+                    size = (size & ~0x7) + 0x8;
+                }
                 HeapBlock* curr = this;
-                while(curr)
+                while(curr != NULL)
                 {
                     if(curr->isUsed())
                     {
@@ -492,14 +571,24 @@ namespace library
                     }
                     break;
                 }
-                if(curr == NULL) return NULL;
-                // has a need size of memory and new heap block
+                if(curr == NULL) 
+                {
+                    return NULL;
+                }
+                // Has required memory size for data and a new heap block
                 if(curr->size_ >= size + sizeof(HeapBlock))
                 {
                     HeapBlock* next = new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size);
+                    if(next == NULL)
+                    {
+                        return NULL;
+                    }
                     next->next_ = curr->next_;
                     next->prev_ = curr;
-                    if(next->next_) next->next_->prev_ = next;        
+                    if(next->next_) 
+                    {
+                        next->next_->prev_ = next;        
+                    }
                     curr->next_ = next;        
                     curr->size_ = size;
                 }
@@ -509,39 +598,55 @@ namespace library
             
             /**
              * Frees allocated memory by this block.
-             *
-             * @return true if this block is freed.
              */  
-            bool free()
+            void free()
             {
-                if(canDelete() == false) return false;
+                if( not canDelete() ) 
+                {
+                    return;
+                }
                 int32 sibling = 0;
-                if(prev_ != NULL && !prev_->isUsed()) sibling |= PREV_FREE;
-                if(next_ != NULL && !next_->isUsed()) sibling |= NEXT_FREE;    
+                if(prev_ != NULL && not prev_->isUsed()) 
+                {
+                    sibling |= PREV_FREE;
+                }
+                if(next_ != NULL && not next_->isUsed()) 
+                {
+                    sibling |= NEXT_FREE;    
+                }
                 switch(sibling)
                 {
                     case PREV_FREE | NEXT_FREE:
                         prev_->size_ += 2 * sizeof(HeapBlock) + size_ + next_->size_;
                         prev_->next_ = next_->next_;
-                        if(prev_->next_ != NULL) prev_->next_->prev_ = prev_;
+                        if(prev_->next_ != NULL) 
+                        {
+                            prev_->next_->prev_ = prev_;
+                        }
                         break;
                         
                     case PREV_FREE:
                         prev_->size_ += sizeof(HeapBlock) + size_;
                         prev_->next_ = next_;
-                        if(next_ != NULL) next_->prev_ = prev_;
+                        if(next_ != NULL) 
+                        {
+                            next_->prev_ = prev_;
+                        }
                         break;
                         
                     case NEXT_FREE:
                         size_ += sizeof(HeapBlock) + next_->size_;
                         next_ = next_->next_;
-                        if(next_ != NULL) next_->prev_ = this;
+                        if(next_ != NULL) 
+                        {
+                            next_->prev_ = this;
+                        }
                         attr_ &= ~ATTR_USED;
                         break;
+
                     default:
                         attr_ &= ~ATTR_USED;
                 }
-                return true;
             }
       
         private:
@@ -553,8 +658,14 @@ namespace library
              */  
             bool canDelete()
             {
-                if(!isMemory()) return false;
-                if(!heap_->isConstructed()) return false;
+                if( not isMemory() ) 
+                {
+                    return false;
+                }
+                if( not heap_->isConstructed() ) 
+                {
+                    return false;
+                }
                 return true;
             }
             
@@ -585,7 +696,7 @@ namespace library
              */
             void* data()
             {
-                uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock);
+                const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock);
                 return reinterpret_cast<void*>(addr);
             }
             
@@ -594,9 +705,9 @@ namespace library
              *
              * @return pointer to memory.
              */
-            void* next(size_t size)
+            void* next(const size_t size)
             {
-                uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock) + size;
+                const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock) + size;
                 return reinterpret_cast<void*>(addr);
             }
             
@@ -618,7 +729,7 @@ namespace library
             /**
              * Heap block definition key.
              */
-            static const int32 BLOCK_KEY = 0x19820401;
+            static const int64 BLOCK_KEY = 0x1982040120150515;
             
             /**
              * Block is used.
@@ -663,13 +774,8 @@ namespace library
             /**
              * Heap block definition key.
              */    
-            int32 key_;
-            
-            /**
-             * Temp aligning value.
-             */    
-            int32 temp_;
-      
+            int64 key_;
+
         };
         
         /**
