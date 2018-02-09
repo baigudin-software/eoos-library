@@ -10,13 +10,13 @@
 #ifndef LIBRARY_HEAP_HPP_
 #define LIBRARY_HEAP_HPP_
 
-#include "api.Heap.hpp"
-#include "api.Toggle.hpp"
+#include "api.SystemHeap.hpp"
 
 namespace library
 {
-    class Heap : public ::api::Heap
+    class Heap : public ::api::SystemHeap
     {
+        typedef ::library::Heap Self;    
       
     public:
     
@@ -28,7 +28,8 @@ namespace library
         Heap(int64 size) :
             data_ (size),
             temp_ (){
-            setConstruct( construct() );
+            const bool isConstructed = construct();
+            setConstruct( isConstructed );            
         }    
       
         /** 
@@ -46,7 +47,8 @@ namespace library
         Heap(int64 size, ::api::Toggle*& toggle) :
             data_  (size, toggle),
             temp_ (){
-            setConstruct( construct() );
+            const bool isConstructed = construct();
+            setConstruct( isConstructed );
         }    
         
         /** 
@@ -55,6 +57,24 @@ namespace library
         virtual ~Heap()
         {
             data_.key = 0;
+        }
+        
+        /**
+         * Tests if this object has been constructed.
+         *
+         * @return true if object has been constructed successfully.
+         */    
+        virtual bool isConstructed() const
+        {
+            if( data_.key != HEAP_KEY )
+            {
+                return false;
+            }
+            if( not getFirstBlock()->isConstructed() )
+            {
+                return false;
+            }            
+            return  true;
         }
       
         /**
@@ -68,7 +88,7 @@ namespace library
          */    
         virtual void* allocate(const size_t size, void* ptr)
         {
-            if( not isConstructed() ) 
+            if( not Self::isConstructed() ) 
             {
                 return NULL;
             }
@@ -77,7 +97,7 @@ namespace library
                 return ptr;
             }
             const bool is = disable();
-            ptr = firstBlock()->alloc(size);
+            ptr = getFirstBlock()->alloc(size);
             enable(is);
             return ptr;
         }
@@ -93,7 +113,7 @@ namespace library
             {
                 return;
             }
-            if( not isConstructed() ) 
+            if( not Self::isConstructed() ) 
             {
                 return;  
             }
@@ -127,16 +147,6 @@ namespace library
         }        
         
         /**
-         * Tests if this object has been constructed.
-         *
-         * @return true if object has been constructed successfully.
-         */    
-        virtual bool isConstructed() const
-        {
-            return data_.key == HEAP_KEY ? true : false;
-        }
-        
-        /**
          * Operator new.
          *
          * Method initiates a building of heap memory
@@ -147,9 +157,19 @@ namespace library
          * @param ptr  aligned to eight memory address.
          * @return address of memory or NULL.
          */
-        void* operator new(size_t, void* const ptr)
+        void* operator new(size_t, const uint32 ptr)
         {
-            return create(ptr);
+            void* address = reinterpret_cast< void* >(ptr);
+            if(address == NULL)
+            {
+                // No class constructor call
+                return NULL;
+            }
+            else
+            {
+                // Create the heap            
+                return create(address);
+            }
         }
       
         /**
@@ -206,7 +226,7 @@ namespace library
                 return false;
             }
             // Alloc first heap block
-            data_.block = new ( firstBlock() ) HeapBlock(this, data_.size);
+            data_.block = new ( getFirstBlock() ) HeapBlock(this, data_.size);
             return data_.block != NULL ? true : false;
         }
         
@@ -248,7 +268,7 @@ namespace library
          *
          * @return pointer to heap block.
          */
-        HeapBlock* firstBlock()
+        HeapBlock* getFirstBlock() const
         {
             const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
             return reinterpret_cast<HeapBlock*>(addr);
@@ -347,6 +367,11 @@ namespace library
                 ptr = NULL;
             }
             // Testing memory for self structure data
+            // 
+            // TODO: copy constructor of the Heap class for
+            // temporary copying the tested memory to that 
+            // class. This way would help to restore original
+            // memory data if the test were failed.
             if( not isMemoryAvailable(ptr, sizeof(Heap)) ) 
             {
                 ptr = NULL;
@@ -518,25 +543,13 @@ namespace library
             }
             
             /**
-             * Operator new.
+             * Tests if this object has been constructed.
              *
-             * @param size unused.
-             * @param ptr  address of memory.
-             * @return address of memory.
-             */   
-            void* operator new(size_t, void* const ptr)
+             * @return true if object has been constructed successfully.
+             */    
+            bool isConstructed() const
             {
-                // Size of this class must be multipled to eight
-                if((sizeof(HeapBlock) & 0x7) != 0) 
-                {
-                    return NULL;
-                }
-                // The passed address must be multipled to eight
-                if((reinterpret_cast<uint32>(ptr) & 0x7) != 0)
-                {
-                    return NULL;                
-                }
-                return ptr;
+                return key_ == BLOCK_KEY ? true : false;
             }
             
             /**
@@ -648,6 +661,28 @@ namespace library
                         attr_ &= ~ATTR_USED;
                 }
             }
+            
+            /**
+             * Operator new.
+             *
+             * @param size unused.
+             * @param ptr  address of memory.
+             * @return address of memory.
+             */   
+            void* operator new(size_t, void* const ptr)
+            {
+                // Size of this class must be multipled to eight
+                if((sizeof(HeapBlock) & 0x7) != 0) 
+                {
+                    return NULL;
+                }
+                // The passed address must be multipled to eight
+                if((reinterpret_cast<uint32>(ptr) & 0x7) != 0)
+                {
+                    return NULL;                
+                }
+                return ptr;
+            }
       
         private:
       
@@ -658,7 +693,7 @@ namespace library
              */  
             bool canDelete()
             {
-                if( not isMemory() ) 
+                if( not isConstructed() ) 
                 {
                     return false;
                 }
@@ -667,16 +702,6 @@ namespace library
                     return false;
                 }
                 return true;
-            }
-            
-            /**
-             * Tests if this memory block is available.
-             *
-             * @return true if memory block is available.
-             */  
-            bool isMemory()
-            {
-                return key_ == BLOCK_KEY ? true : false;
             }
             
             /**
