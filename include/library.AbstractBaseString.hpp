@@ -16,13 +16,13 @@ namespace library
     /**
      * Primary template implementation.
      *
-     * @param Type  data type of string characters.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of string characters.
+     * @param A heap memory allocator class.
      */
-    template <typename Type, class Alloc = Allocator>    
-    class AbstractBaseString : public ::library::Object<Alloc>, public ::api::String<Type>
+    template <typename T, class A = Allocator>    
+    class AbstractBaseString : public ::library::Object<A>, public ::api::String<T>
     {
-        typedef ::library::Object<Alloc> Parent;
+        typedef ::library::Object<A> Parent;
 
     public:
     
@@ -52,7 +52,7 @@ namespace library
          *
          * @return first character of containing string characters, or NULL if no string contained.
          */
-        virtual const Type* getChar() const = 0;                      
+        virtual const T* getChar() const = 0;                      
     
         /**
          * Tests if this object has been constructed.
@@ -80,13 +80,13 @@ namespace library
          * @param string a string object to be copied.         
          * @return true if a passed string has been copied successfully.
          */
-        virtual bool copy(const ::api::String<Type>& string)
+        virtual bool copy(const ::api::String<T>& string)
         {
             if( not this->isConstructed_ || not string.isConstructed() )
             {
                 return false;
             }
-            const Type* str = string.getChar();
+            const T* str = string.getChar();
             return copy(str);
         }        
 
@@ -96,13 +96,13 @@ namespace library
          * @param string a string object to be appended.
          * @return true if a passed string has been appended successfully.          
          */
-        virtual bool concatenate(const ::api::String<Type>& string)
+        virtual bool concatenate(const ::api::String<T>& string)
         {
             if( not this->isConstructed_ || not string.isConstructed() )
             {
                 return false;
             }
-            const Type* str = string.getChar();
+            const T* str = string.getChar();
             return concatenate(str);
         } 
         
@@ -115,13 +115,13 @@ namespace library
          *         a value greater than 0 if this string is greater than a passed string,
          *         or the minimum possible value if an error has been occurred.
          */
-        virtual int32 compare(const ::api::String<Type>& string) const
+        virtual int32 compare(const ::api::String<T>& string) const
         {
             if( not this->isConstructed_ || not string.isConstructed() )
             {
                 return MINIMUM_POSSIBLE_VALUE_OF_INT32;
             }
-            const Type* str = string.getChar();
+            const T* str = string.getChar();
             return compare(str);            
         }
         
@@ -132,7 +132,7 @@ namespace library
          *
          * @return a character which means that this string terminated.
          */         
-        virtual Type getTerminator() const = 0;    
+        virtual T getTerminator() const = 0;    
 
         /** 
          * Copies a passed string into this string.
@@ -140,7 +140,7 @@ namespace library
          * @param str a character string to be copied.
          * @return true if a passed string has been copied successfully.
          */
-        virtual bool copy(const Type* str) = 0;             
+        virtual bool copy(const T* str) = 0;             
 
         /** 
          * Concatenates a passed string to this string.             
@@ -148,7 +148,7 @@ namespace library
          * @param str an character string to be appended.             
          * @return true if a passed string has been appended successfully.          
          */
-        virtual bool concatenate(const Type* str) = 0;
+        virtual bool concatenate(const T* str) = 0;
 
         /** 
          * Compares this string with a passed string lexicographically.         
@@ -159,7 +159,7 @@ namespace library
          *         a value greater than 0 if this string is greater than a passed string,
          *         or the minimum possible value if an error has been occurred.         
          */
-        virtual int32 compare(const Type* str) const = 0;    
+        virtual int32 compare(const T* str) const = 0;    
 
         /** 
          * Returns a string length.
@@ -167,13 +167,13 @@ namespace library
          * @param str a character string would be measured.
          * @return a length of the passed string.
          */
-        int32 getLength(const Type* str) const
+        int32 getLength(const T* str) const
         {
             if(str == NULL) 
             {
                 return 0;
             }
-            const Type null = getTerminator();            
+            const T null = getTerminator();            
             int32 l = 0;
             while( str[l] != null ) 
             {
@@ -188,13 +188,13 @@ namespace library
          * @param dst a destination array where the content would be copied.
          * @param src character string to be copied.
          */
-        void copy(Type* const dst, const Type* src) const
+        void copy(T* const dst, const T* src) const
         {
             if(dst == NULL || src == NULL) 
             {
                 return;
             }
-            const Type null = getTerminator();
+            const T null = getTerminator();
             int32 i = 0;
             while( (dst[i] = src[i]) != null )
             {
@@ -208,13 +208,13 @@ namespace library
          * @param dst a destination character string where the content would be appended.
          * @param src an appended character string.
          */
-        void concatenate(Type* const dst, const Type* src) const
+        void concatenate(T* const dst, const T* src) const
         {
             if(dst == NULL || src == NULL) 
             {
                 return;
             }
-            const Type null = getTerminator();
+            const T null = getTerminator();
             int32 d = 0;
             int32 s = 0;            
             while( dst[d] != null )
@@ -244,7 +244,7 @@ namespace library
          *
          * @param obj a source object.
          */
-        AbstractBaseString(const AbstractBaseString<Type,Alloc>& obj);            
+        AbstractBaseString(const AbstractBaseString<T,A>& obj);            
         
     };
 }

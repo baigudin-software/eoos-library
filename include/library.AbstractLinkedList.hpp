@@ -18,18 +18,18 @@
 namespace library
 {  
     /** 
-     * @param Type  data type of container element.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of container element.
+     * @param A heap memory allocator class.
      */
-    template <typename Type, class Alloc = Allocator>
+    template <typename T, class A = Allocator>
     class AbstractLinkedList : 
-        public ::library::Object<Alloc>, 
-        public ::api::List<Type>, 
-        public ::api::Queue<Type>, 
-        public ::api::Iterable<Type>{
+        public ::library::Object<A>, 
+        public ::api::List<T>, 
+        public ::api::Queue<T>, 
+        public ::api::Iterable<T>{
   
-        typedef ::library::Object<Alloc>           Parent;       
-        typedef ::library::LinkedNode<Type,Alloc>  Node;
+        typedef ::library::Object<A>           Parent;       
+        typedef ::library::LinkedNode<T,A>  Node;
   
     public:      
   
@@ -49,7 +49,7 @@ namespace library
          *
          * @param illegal illegal element.
          */
-        AbstractLinkedList(const Type illegal) : Parent(),
+        AbstractLinkedList(const T illegal) : Parent(),
             illegal_ (illegal),
             last_    (NULL),
             count_   (0){
@@ -81,7 +81,7 @@ namespace library
          * @param element inserting element.
          * @return true if element is added.
          */      
-        virtual bool add(const Type element)
+        virtual bool add(const T element)
         {
             return this->isConstructed_ ? addNode(getLength(), element) : false;
         }
@@ -93,7 +93,7 @@ namespace library
          * @param element inserting element.
          * @return true if element is inserted.
          */
-        virtual bool add(const int32 index, const Type element)
+        virtual bool add(const int32 index, const T element)
         {
             return this->isConstructed_ ? addNode(index, element) : false;
         }      
@@ -164,7 +164,7 @@ namespace library
          * @param element reference to element.
          * @return true if an element is removed successfully.
          */
-        virtual bool removeElement(const Type& element)
+        virtual bool removeElement(const T& element)
         {
             return this->isConstructed_ ? removeNode( getNodeByElement(element) ) : false;
         }
@@ -174,7 +174,7 @@ namespace library
          *
          * @return the head element.
          */
-        virtual Type peek() const
+        virtual T peek() const
         {
             return get(0);
         }
@@ -184,7 +184,7 @@ namespace library
          *
          * @return the first element in this list.
          */
-        virtual Type getFirst() const
+        virtual T getFirst() const
         {
             return get(0);
         }
@@ -194,7 +194,7 @@ namespace library
          *
          * @return the last element in this list.
          */
-        virtual Type getLast() const
+        virtual T getLast() const
         {
             return get( getLength() - 1 );      
         }
@@ -205,7 +205,7 @@ namespace library
          * @param index position in this list.  
          * @return indexed element of this list.
          */
-        virtual Type get(const int32 index) const
+        virtual T get(const int32 index) const
         {
             if( not this->isConstructed_ ) 
             {
@@ -242,7 +242,7 @@ namespace library
          *
          * @return illegal element.
          */
-        virtual Type getIllegal() const
+        virtual const T& getIllegal() const
         {
             return illegal_;
         }
@@ -252,7 +252,7 @@ namespace library
          *
          * @param value illegal value.
          */
-        virtual void setIllegal(const Type value)
+        virtual void setIllegal(const T& value)
         {
             if( this->isConstructed_ ) 
             {
@@ -266,7 +266,7 @@ namespace library
          * @param value testing value.
          * @param true if value is an illegal.
          */
-        virtual bool isIllegal(const Type& value) const
+        virtual bool isIllegal(const T& value) const
         {
             if( not this->isConstructed_ ) 
             {
@@ -281,7 +281,7 @@ namespace library
          * @param element reference to the element.
          * @return index or -1 if this list does not contain the element.
          */
-        virtual int32 getIndexOf(const Type& element) const
+        virtual int32 getIndexOf(const T& element) const
         {
             Node* const node = getNodeByElement(element);
             return node != NULL ? node->getIndex() : -1;
@@ -305,7 +305,7 @@ namespace library
          *
          * @return pointer to reference of elements or NULL if list is empty.
          */  
-        virtual ::library::Buffer<Type,0,Alloc>* array() const
+        virtual ::library::Buffer<T,0,A>* array() const
         {
             if( not this->isConstructed_ ) 
             {
@@ -316,7 +316,7 @@ namespace library
             {
                 return NULL;
             }
-            Buffer<Type,0,Alloc>* buf = new Buffer<Type,0,Alloc>(count, illegal_);
+            Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
             if(buf == NULL || not buf->isConstructed())
             {
                 delete buf;
@@ -336,7 +336,7 @@ namespace library
          *
          * @return pointer to new itererator.
          */
-        virtual ::api::Iterator<Type>* getIterator()
+        virtual ::api::Iterator<T>* getIterator()
         {
             return this->getListIterator(0);
         }
@@ -352,7 +352,7 @@ namespace library
          * @param element inserting element.
          * @return true if element is inserted.
          */
-        bool addNode(const int32 index, const Type& element)
+        bool addNode(const int32 index, const T& element)
         {
             if(isIndexOutOfBounds(index)) 
             {
@@ -428,7 +428,7 @@ namespace library
          * @param element reference to element.  
          * @return pointer to the node of this list.
          */
-        Node* getNodeByElement(const Type& element) const
+        Node* getNodeByElement(const T& element) const
         {
             const int32 len = getLength();
             if(len == 0) 
@@ -511,7 +511,7 @@ namespace library
          *
          * @return data value.
          */  
-        Type& getReferenceToIllegal()
+        T& getReferenceToIllegal()
         {
             return illegal_;
         }
@@ -546,7 +546,7 @@ namespace library
         /**
          * Illegal element of this list.
          */
-        Type illegal_;
+        T illegal_;
         
         /**
          * Last node of this list.

@@ -13,14 +13,14 @@
 namespace library
 {  
     /** 
-     * @param Type  data type of container element.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of container element.
+     * @param A heap memory allocator class.
      */  
-    template <typename Type, class Alloc = Allocator>
-    class CircularList : public ::library::AbstractLinkedList<Type,Alloc>
+    template <typename T, class A = Allocator>
+    class CircularList : public ::library::AbstractLinkedList<T,A>
     {
-        typedef ::library::AbstractLinkedList<Type,Alloc>  Parent;
-        typedef ::library::LinkedNode<Type,Alloc>          Node;
+        typedef ::library::AbstractLinkedList<T,A>  Parent;
+        typedef ::library::LinkedNode<T,A>          Node;
       
     public:      
       
@@ -36,7 +36,7 @@ namespace library
          *
          * @param illegal illegal element.
          */
-        CircularList(const Type illegal) : Parent(illegal)
+        CircularList(const T illegal) : Parent(illegal)
         {
         }
       
@@ -53,7 +53,7 @@ namespace library
          * @param index start position in this list.  
          * @return pointer to new list iterator.
          */
-        virtual ::api::ListIterator<Type>* getListIterator(const int32 index)
+        virtual ::api::ListIterator<T>* getListIterator(const int32 index)
         {
             if( not this->isConstructed_ ) 
             {
@@ -92,10 +92,10 @@ namespace library
          * For this reason, for fast iteration some tests are skipped.
          * You have to use this class only if it has been constructed.
          */      
-        class Iterator : public ::library::Object<Alloc>, public ::api::ListIterator<Type>
+        class Iterator : public ::library::Object<A>, public ::api::ListIterator<T>
         {
-            typedef ::library::Object<Alloc>             Parent;
-            typedef ::library::CircularList<Type,Alloc>  List;
+            typedef ::library::Object<A>             Parent;
+            typedef ::library::CircularList<T,A>  List;
       
         public:
       
@@ -137,7 +137,7 @@ namespace library
              * @param element inserting element.
              * @return true if element is added.
              */      
-            virtual bool add(const Type& element)
+            virtual bool add(const T& element)
             {
                 if(count_.list != count_.self) 
                 {
@@ -196,7 +196,7 @@ namespace library
              *
              * @return reference to element.
              */      
-            virtual Type getPrevious()
+            virtual T getPrevious()
             {
                 if( not hasPrevious()) 
                 {
@@ -240,7 +240,7 @@ namespace library
              *
              * @return reference to element.
              */      
-            virtual Type getNext()
+            virtual T getNext()
             {
                 if( not hasNext() ) 
                 {
@@ -287,7 +287,7 @@ namespace library
              *
              * @return illegal element.
              */
-            virtual Type getIllegal() const
+            virtual const T& getIllegal() const
             {
                 return list_.getIllegal();
             }
@@ -297,7 +297,7 @@ namespace library
              *
              * @param value illegal value.
              */
-            virtual void setIllegal(const Type value)
+            virtual void setIllegal(const T& value)
             {
                 list_.setIllegal(value);
             }
@@ -308,7 +308,7 @@ namespace library
              * @param value testing value.
              * @param true if value is an illegal.
              */
-            virtual bool isIllegal(const Type& value) const
+            virtual bool isIllegal(const T& value) const
             {
                 return list_.isIllegal(value);
             }
@@ -415,7 +415,7 @@ namespace library
             /**
              * Illegal value of the iterator list.
              */
-            Type& illegal_;
+            T& illegal_;
           
             /**
              * Pointer to current node of this iterator.

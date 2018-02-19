@@ -16,14 +16,14 @@ namespace library
     /**
      * Primary template implements the static string class.
      *
-     * @param Type   data type of string characters.     
-     * @param LENGTH maximum number of string characters, or 0 for dynamic allocation.
-     * @param Alloc  heap memory allocator class.
+     * @param T data type of string characters.     
+     * @param L maximum number of string characters, or 0 for dynamic allocation.
+     * @param A heap memory allocator class.
      */
-    template <typename Type, int32 LENGTH, class Alloc = Allocator>    
-    class String : public ::library::AbstractString<Type,LENGTH,Alloc>
+    template <typename T, int32 L, class A = Allocator>    
+    class String : public ::library::AbstractString<T,L,A>
     {
-        typedef ::library::AbstractString<Type,LENGTH,Alloc> Parent;
+        typedef ::library::AbstractString<T,L,A> Parent;
         
         /** 
          * Constructor.
@@ -37,7 +37,7 @@ namespace library
          *
          * @param source a source character string.         
          */    
-        String(const Type* source) : Parent()
+        String(const T* source) : Parent()
         {
             this->copy(source);        
         } 
@@ -56,9 +56,9 @@ namespace library
          *
          * @return a character which means that this string terminated.
          */         
-        virtual Type getTerminator() const
+        virtual T getTerminator() const
         {
-            return Type::TERMINATING_CHARACTER;
+            return T::TERMINATING_CHARACTER;
         }
 
     };
@@ -66,12 +66,12 @@ namespace library
     /** 
      * Char type partial specialization of the static string class.
      *
-     * @param Alloc heap memory allocator class.
+     * @param A heap memory allocator class.
      */
-    template <int32 LENGTH, class Alloc>        
-    class String<char,LENGTH,Alloc> : public ::library::AbstractString<char,LENGTH,Alloc>
+    template <int32 L, class A>        
+    class String<char,L,A> : public ::library::AbstractString<char,L,A>
     {
-        typedef ::library::AbstractString<char,LENGTH,Alloc> Parent;
+        typedef ::library::AbstractString<char,L,A> Parent;
 
     public:
     
@@ -87,7 +87,7 @@ namespace library
          *
          * @param source a source object.         
          */             
-        String(const ::library::String<char,LENGTH,Alloc>& source) : Parent()       
+        String(const ::library::String<char,L,A>& source) : Parent()       
         {
             this->copy(source);        
         }    
@@ -139,7 +139,7 @@ namespace library
          * @param source a source object.
          * @return this object.     
          */
-        ::library::String<char,LENGTH,Alloc>& operator =(const ::library::String<char,LENGTH,Alloc>& source)
+        ::library::String<char,L,A>& operator =(const ::library::String<char,L,A>& source)
         {
             this->copy(source);
             return *this;            
@@ -151,7 +151,7 @@ namespace library
          * @param source a source object interface.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator =(const ::api::String<char>& source)
+        ::library::String<char,L,A>& operator =(const ::api::String<char>& source)
         {
             this->copy(source);        
             return *this;        
@@ -163,7 +163,7 @@ namespace library
          * @param source a source character string.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator =(const char* source)
+        ::library::String<char,L,A>& operator =(const char* source)
         {
             this->copy(source);        
             return *this;        
@@ -175,7 +175,7 @@ namespace library
          * @param source a source object.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator +=(const ::library::String<char,LENGTH,Alloc>& source)
+        ::library::String<char,L,A>& operator +=(const ::library::String<char,L,A>& source)
         {
             this->concatenate(source);
             return *this;   
@@ -187,7 +187,7 @@ namespace library
          * @param source a source object interface.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator +=(const ::api::String<char>& source)
+        ::library::String<char,L,A>& operator +=(const ::api::String<char>& source)
         {
             this->concatenate(source);
             return *this;   
@@ -199,7 +199,7 @@ namespace library
          * @param source a source character string.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator +=(const char* source)
+        ::library::String<char,L,A>& operator +=(const char* source)
         {
             this->concatenate(source);
             return *this;
@@ -211,7 +211,7 @@ namespace library
          * @param value a source numerical value.
          * @return reference to this object.       
          */     
-        ::library::String<char,LENGTH,Alloc>& operator +=(const int32 value)
+        ::library::String<char,L,A>& operator +=(const int32 value)
         {
             const String string = value;
             this->concatenate(string);
@@ -277,10 +277,10 @@ namespace library
         
     private:
         
-        template <int32 L, class A> friend bool operator ==(const ::library::String<char,L,A>&, const char*);
-        template <int32 L, class A> friend bool operator ==(const char*, const ::library::String<char,L,A>&);
-        template <int32 L, class A> friend bool operator !=(const ::library::String<char,L,A>&, const char*);
-        template <int32 L, class A> friend bool operator !=(const char*, const ::library::String<char,L,A>&);   
+        template <int32 L0, class A0> friend bool operator ==(const ::library::String<char,L0,A0>&, const char*);
+        template <int32 L0, class A0> friend bool operator ==(const char*, const ::library::String<char,L0,A0>&);
+        template <int32 L0, class A0> friend bool operator !=(const ::library::String<char,L0,A0>&, const char*);
+        template <int32 L0, class A0> friend bool operator !=(const char*, const ::library::String<char,L0,A0>&);   
     };
     
     /**
@@ -290,8 +290,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator ==(const ::library::String<char,LENGTH,Alloc>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline bool operator ==(const ::library::String<char,L,A>& source1, const ::library::String<char,L,A>& source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     }
@@ -303,8 +303,8 @@ namespace library
      * @param source2 a source object interface 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator ==(const ::library::String<char,LENGTH,Alloc>& source1, const ::api::String<char>& source2)
+    template <int32 L, class A>
+    inline bool operator ==(const ::library::String<char,L,A>& source1, const ::api::String<char>& source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     } 
@@ -316,8 +316,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,L,A>& source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     }
@@ -329,8 +329,8 @@ namespace library
      * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator ==(const ::library::String<char,LENGTH,Alloc>& source1, const char* source2)
+    template <int32 L, class A>
+    inline bool operator ==(const ::library::String<char,L,A>& source1, const char* source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     }
@@ -342,8 +342,8 @@ namespace library
      * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator ==(const char* source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline bool operator ==(const char* source1, const ::library::String<char,L,A>& source2)
     {
         return source2.compare(source1) == 0 ? true : false;
     } 
@@ -355,8 +355,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator !=(const ::library::String<char,LENGTH,Alloc>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline bool operator !=(const ::library::String<char,L,A>& source1, const ::library::String<char,L,A>& source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     }
@@ -368,8 +368,8 @@ namespace library
      * @param source2 a source object interface 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator !=(const ::library::String<char,LENGTH,Alloc>& source1, const ::api::String<char>& source2)
+    template <int32 L, class A>
+    inline bool operator !=(const ::library::String<char,L,A>& source1, const ::api::String<char>& source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     } 
@@ -381,8 +381,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,L,A>& source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     }
@@ -394,8 +394,8 @@ namespace library
      * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator !=(const ::library::String<char,LENGTH,Alloc>& source1, const char* source2)
+    template <int32 L, class A>
+    inline bool operator !=(const ::library::String<char,L,A>& source1, const char* source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     }
@@ -407,8 +407,8 @@ namespace library
      * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline bool operator !=(const char* source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline bool operator !=(const char* source1, const ::library::String<char,L,A>& source2)
     {
         return source2.compare(source1) != 0 ? true : false;
     }  
@@ -420,10 +420,10 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline ::library::String<char,LENGTH,Alloc> operator +(const ::library::String<char,LENGTH,Alloc>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline ::library::String<char,L,A> operator +(const ::library::String<char,L,A>& source1, const ::library::String<char,L,A>& source2)
     {
-        ::library::String<char,LENGTH,Alloc> string( source1 );
+        ::library::String<char,L,A> string( source1 );
         string += source2;
         return string;    
     }
@@ -435,10 +435,10 @@ namespace library
      * @param source2 a source object interface 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline ::library::String<char,LENGTH,Alloc> operator +(const ::library::String<char,LENGTH,Alloc>& source1, const ::api::String<char>& source2)
+    template <int32 L, class A>
+    inline ::library::String<char,L,A> operator +(const ::library::String<char,L,A>& source1, const ::api::String<char>& source2)
     {
-        ::library::String<char,LENGTH,Alloc> string( source1 );
+        ::library::String<char,L,A> string( source1 );
         string += source2;
         return string;    
     } 
@@ -450,10 +450,10 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline ::library::String<char,LENGTH,Alloc> operator +(const ::api::String<char>& source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline ::library::String<char,L,A> operator +(const ::api::String<char>& source1, const ::library::String<char,L,A>& source2)
     {
-        ::library::String<char,LENGTH,Alloc> string( source1 );
+        ::library::String<char,L,A> string( source1 );
         string += source2;
         return string;    
     }
@@ -465,10 +465,10 @@ namespace library
      * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline ::library::String<char,LENGTH,Alloc> operator +(const ::library::String<char,LENGTH,Alloc>& source1, const char* source2)
+    template <int32 L, class A>
+    inline ::library::String<char,L,A> operator +(const ::library::String<char,L,A>& source1, const char* source2)
     {
-        ::library::String<char,LENGTH,Alloc> string( source1 );
+        ::library::String<char,L,A> string( source1 );
         string += source2;
         return string;    
     }
@@ -480,10 +480,10 @@ namespace library
      * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <int32 LENGTH, class Alloc>
-    inline ::library::String<char,LENGTH,Alloc> operator +(const char* source1, const ::library::String<char,LENGTH,Alloc>& source2)
+    template <int32 L, class A>
+    inline ::library::String<char,L,A> operator +(const char* source1, const ::library::String<char,L,A>& source2)
     {
-        ::library::String<char,LENGTH,Alloc> string( source1 );
+        ::library::String<char,L,A> string( source1 );
         string += source2;
         return string;    
     }    
@@ -493,13 +493,13 @@ namespace library
     /** 
      * Partial specialization of the template implements the dynamic string class.
      *
-     * @param Type  data type of string characters.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of string characters.
+     * @param A heap memory allocator class.
      */
-    template <typename Type, class Alloc>    
-    class String<Type,0,Alloc> : public ::library::AbstractString<Type,0,Alloc>
+    template <typename T, class A>    
+    class String<T,0,A> : public ::library::AbstractString<T,0,A>
     {
-        typedef ::library::AbstractString<Type,0,Alloc> Parent;
+        typedef ::library::AbstractString<T,0,A> Parent;
 
     public:
     
@@ -515,7 +515,7 @@ namespace library
          *
          * @param source a source character string.        
          */    
-        String(const Type* source) : Parent()
+        String(const T* source) : Parent()
         {
             this->copy(source);        
         } 
@@ -534,9 +534,9 @@ namespace library
          *
          * @return a character which means that this string terminated.
          */         
-        virtual Type getTerminator() const
+        virtual T getTerminator() const
         {
-            return Type::TERMINATING_CHARACTER;
+            return T::TERMINATING_CHARACTER;
         }                        
     
     };
@@ -544,12 +544,12 @@ namespace library
     /** 
      * Char type partial specialization of the dynamic string class.
      *
-     * @param Alloc heap memory allocator class.
+     * @param A heap memory allocator class.
      */
-    template <class Alloc>        
-    class String<char,0,Alloc> : public ::library::AbstractString<char,0,Alloc>
+    template <class A>        
+    class String<char,0,A> : public ::library::AbstractString<char,0,A>
     {
-        typedef ::library::AbstractString<char,0,Alloc> Parent;
+        typedef ::library::AbstractString<char,0,A> Parent;
 
     public:
     
@@ -565,7 +565,7 @@ namespace library
          *
          * @param source a source object.         
          */             
-        String(const ::library::String<char,0,Alloc>& source) : Parent()       
+        String(const ::library::String<char,0,A>& source) : Parent()       
         {
             this->copy(source);        
         }    
@@ -617,7 +617,7 @@ namespace library
          * @param source a source object.
          * @return this object.     
          */
-        ::library::String<char,0,Alloc>& operator =(const ::library::String<char,0,Alloc>& source)
+        ::library::String<char,0,A>& operator =(const ::library::String<char,0,A>& source)
         {
             this->copy(source);
             return *this;            
@@ -629,7 +629,7 @@ namespace library
          * @param source a source object interface.
          * @return reference to this object.       
          */     
-        ::library::String<char,0,Alloc>& operator =(const ::api::String<char>& source)
+        ::library::String<char,0,A>& operator =(const ::api::String<char>& source)
         {
             this->copy(source);        
             return *this;        
@@ -641,7 +641,7 @@ namespace library
          * @param source a source character string.
          * @return reference to this object.       
          */     
-        ::library::String<char,0,Alloc>& operator =(const char* source)
+        ::library::String<char,0,A>& operator =(const char* source)
         {
             this->copy(source);        
             return *this;        
@@ -653,7 +653,7 @@ namespace library
          * @param source a source object.
          * @return reference to this object.       
          */     
-        ::library::String<char,0,Alloc>& operator +=(const ::library::String<char,0,Alloc>& source)
+        ::library::String<char,0,A>& operator +=(const ::library::String<char,0,A>& source)
         {
             this->concatenate(source);
             return *this;   
@@ -665,7 +665,7 @@ namespace library
          * @param source a source object interface.
          * @return reference to this object.       
          */     
-        ::library::String<char,0,Alloc>& operator +=(const ::api::String<char>& source)
+        ::library::String<char,0,A>& operator +=(const ::api::String<char>& source)
         {
             this->concatenate(source);
             return *this;   
@@ -677,7 +677,7 @@ namespace library
          * @param source a source character string.
          * @return reference to this object.       
          */     
-        ::library::String<char,0,Alloc>& operator +=(const char* source)
+        ::library::String<char,0,A>& operator +=(const char* source)
         {
             this->concatenate(source);
             return *this;
@@ -689,7 +689,7 @@ namespace library
          * @param value a source numerical value.
          * @return reference to this object.       
          */     
-        ::library::String<char,0,Alloc>& operator +=(int32 value)
+        ::library::String<char,0,A>& operator +=(int32 value)
         {
             String string = value;
             this->concatenate(string);
@@ -755,10 +755,10 @@ namespace library
         
     private:
         
-        template <class A> friend bool operator ==(const ::library::String<char,0,A>&, const char*);
-        template <class A> friend bool operator ==(const char*, const ::library::String<char,0,A>&);
-        template <class A> friend bool operator !=(const ::library::String<char,0,A>&, const char*);
-        template <class A> friend bool operator !=(const char*, const ::library::String<char,0,A>&);        
+        template <class A0> friend bool operator ==(const ::library::String<char,0,A0>&, const char*);
+        template <class A0> friend bool operator ==(const char*, const ::library::String<char,0,A0>&);
+        template <class A0> friend bool operator !=(const ::library::String<char,0,A0>&, const char*);
+        template <class A0> friend bool operator !=(const char*, const ::library::String<char,0,A0>&);        
     };
     
     /**
@@ -768,8 +768,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline bool operator ==(const ::library::String<char,0,A>& source1, const ::library::String<char,0,A>& source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     }
@@ -781,8 +781,8 @@ namespace library
      * @param source2 a source object interface 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    template <class A>
+    inline bool operator ==(const ::library::String<char,0,A>& source1, const ::api::String<char>& source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     } 
@@ -794,8 +794,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline bool operator ==(const ::api::String<char>& source1, const ::library::String<char,0,A>& source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     }
@@ -807,8 +807,8 @@ namespace library
      * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator ==(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    template <class A>
+    inline bool operator ==(const ::library::String<char,0,A>& source1, const char* source2)
     {
         return source1.compare(source2) == 0 ? true : false;
     }
@@ -820,8 +820,8 @@ namespace library
      * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator ==(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline bool operator ==(const char* source1, const ::library::String<char,0,A>& source2)
     {
         return source2.compare(source1) == 0 ? true : false;
     } 
@@ -833,8 +833,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline bool operator !=(const ::library::String<char,0,A>& source1, const ::library::String<char,0,A>& source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     }
@@ -846,8 +846,8 @@ namespace library
      * @param source2 a source object interface 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    template <class A>
+    inline bool operator !=(const ::library::String<char,0,A>& source1, const ::api::String<char>& source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     } 
@@ -859,8 +859,8 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline bool operator !=(const ::api::String<char>& source1, const ::library::String<char,0,A>& source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     }
@@ -872,8 +872,8 @@ namespace library
      * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator !=(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    template <class A>
+    inline bool operator !=(const ::library::String<char,0,A>& source1, const char* source2)
     {
         return source1.compare(source2) != 0 ? true : false;
     }
@@ -885,8 +885,8 @@ namespace library
      * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline bool operator !=(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline bool operator !=(const char* source1, const ::library::String<char,0,A>& source2)
     {
         return source2.compare(source1) != 0 ? true : false;
     }  
@@ -898,10 +898,10 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline ::library::String<char,0,A> operator +(const ::library::String<char,0,A>& source1, const ::library::String<char,0,A>& source2)
     {
-        ::library::String<char,0,Alloc> string( source1 );
+        ::library::String<char,0,A> string( source1 );
         string += source2;
         return string;    
     }
@@ -913,10 +913,10 @@ namespace library
      * @param source2 a source object interface 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const ::api::String<char>& source2)
+    template <class A>
+    inline ::library::String<char,0,A> operator +(const ::library::String<char,0,A>& source1, const ::api::String<char>& source2)
     {
-        ::library::String<char,0,Alloc> string( source1 );
+        ::library::String<char,0,A> string( source1 );
         string += source2;
         return string;    
     } 
@@ -928,10 +928,10 @@ namespace library
      * @param source2 a source object 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline ::library::String<char,0,Alloc> operator +(const ::api::String<char>& source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline ::library::String<char,0,A> operator +(const ::api::String<char>& source1, const ::library::String<char,0,A>& source2)
     {
-        ::library::String<char,0,Alloc> string( source1 );
+        ::library::String<char,0,A> string( source1 );
         string += source2;
         return string;    
     }
@@ -943,10 +943,10 @@ namespace library
      * @param source2 a source character string 2.
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline ::library::String<char,0,Alloc> operator +(const ::library::String<char,0,Alloc>& source1, const char* source2)
+    template <class A>
+    inline ::library::String<char,0,A> operator +(const ::library::String<char,0,A>& source1, const char* source2)
     {
-        ::library::String<char,0,Alloc> string( source1 );
+        ::library::String<char,0,A> string( source1 );
         string += source2;
         return string;    
     }
@@ -958,10 +958,10 @@ namespace library
      * @param source2 a source source object 2. 
      * @return true if strings are equal.
      */
-    template <class Alloc>
-    inline ::library::String<char,0,Alloc> operator +(const char* source1, const ::library::String<char,0,Alloc>& source2)
+    template <class A>
+    inline ::library::String<char,0,A> operator +(const char* source1, const ::library::String<char,0,A>& source2)
     {
-        ::library::String<char,0,Alloc> string( source1 );
+        ::library::String<char,0,A> string( source1 );
         string += source2;
         return string;    
     }        

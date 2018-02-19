@@ -15,14 +15,14 @@
 namespace library
 {
     /** 
-     * @param Type  data type of default stack element.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of default stack element.
+     * @param A heap memory allocator class.
      */ 
-    template <typename Type, class Alloc = Allocator>
-    class Stack : public ::library::Object<Alloc>, public ::api::Stack<Type>
+    template <typename T, class A = Allocator>
+    class Stack : public ::library::Object<A>, public ::api::Stack<T>
     { 
-        typedef ::library::Object<Alloc>  Parent;  
-        typedef ::api::Stack<Type>        StackIntf;
+        typedef ::library::Object<A>  Parent;  
+        typedef ::api::Stack<T>       StackIntf;
     
     public:
     
@@ -32,7 +32,7 @@ namespace library
          * @param type  type of this stack.
          * @param count count of buffer elements.
          */    
-        Stack(typename ::api::Stack<Type>::Operation type, int32 count) : Parent(),
+        Stack(typename ::api::Stack<T>::Operation type, int32 count) : Parent(),
             stack_ (count),
             type_  (type){
             const bool isConstructed = construct();
@@ -46,7 +46,7 @@ namespace library
          * @param count   count of buffer elements.
          * @param illegal illegal value.
          */    
-        Stack(typename ::api::Stack<Type>::Operation type, int32 count, const Type illegal) : Parent(),
+        Stack(typename ::api::Stack<T>::Operation type, int32 count, const T illegal) : Parent(),
             stack_ (count, illegal),
             type_  (type){
             const bool isConstructed = construct();
@@ -75,13 +75,13 @@ namespace library
          *
          * @return pointer to TOS.
          */    
-        virtual const Type* getTos()
+        virtual const T* getTos()
         {
             if( not this->isConstructed_ ) 
             {
                 return NULL;
             }
-            Type* const stack = &stack_[0];
+            T* const stack = &stack_[0];
             switch(type_)
             {
                 case StackIntf::FD: 
@@ -106,7 +106,7 @@ namespace library
          *
          * @return the stack operation.
          */    
-        virtual typename ::api::Stack<Type>::Operation getType() const
+        virtual typename ::api::Stack<T>::Operation getType() const
         {
             return type_;
         }
@@ -138,7 +138,7 @@ namespace library
          *
          * @return reference to illegal element.
          */
-        virtual Type getIllegal() const
+        virtual const T& getIllegal() const
         {
             return stack_.getIllegal();
         }
@@ -148,7 +148,7 @@ namespace library
          *
          * @param value illegal value.
          */
-        virtual void setIllegal(const Type value)
+        virtual void setIllegal(const T& value)
         {
             return stack_.setIllegal(value);
         }
@@ -159,7 +159,7 @@ namespace library
          * @param value testing value.
          * @param true if value is an illegal.
          */
-        virtual bool isIllegal(const Type& value) const
+        virtual bool isIllegal(const T& value) const
         {
             return stack_.isIllegal(value);
         }
@@ -205,12 +205,12 @@ namespace library
         /**
          * Stack memory buffer.
          */
-        Buffer<Type,0,Alloc> stack_;
+        Buffer<T,0,A> stack_;
       
         /**
          * Stack type.
          */    
-        const typename ::api::Stack<Type>::Operation type_;
+        const typename ::api::Stack<T>::Operation type_;
   
     };
 }

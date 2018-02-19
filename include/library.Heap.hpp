@@ -171,14 +171,6 @@ namespace library
                 return create(address);
             }
         }
-      
-        /**
-         * Operator delete.
-         *
-         * @param ptr   address of allocated memory block or a null pointer.
-         * @param place pointer used as the placement parameter in the matching placement new.
-         */
-        void operator delete(void*, void*);
   
     private:
     
@@ -411,7 +403,7 @@ namespace library
         {
             return NULL;
         }
-        
+
         /**
          * Operator delete.
          *
@@ -422,43 +414,11 @@ namespace library
         void operator delete(void*)
         {
         }
-        
-        /** 
-         * Operator new.
-         *
-         * @param size number of bytes to allocate.
-         * @return allocated memory address or a null pointer.
-         */  
-        void* operator new[](size_t size);
-        
-        /** 
-         * Operator delete.
-         *
-         * @param ptr address of allocated memory block or a null pointer.
-         */  
-        void operator delete[](void* ptr);
-      
-        /** 
-         * Operator new.
-         *
-         * @param size number of bytes to allocate.
-         * @param ptr  pointer to a memory area to initialize the object
-         * @return allocated memory address or a null pointer.
-         */  
-        void* operator new[](size_t size, void* ptr);
-        
-        /** 
-         * Operator delete.
-         *
-         * @param ptr   address of allocated memory block or a null pointer.
-         * @param place pointer used as the placement parameter in the matching placement new.
-         */  
-        void operator delete[](void* ptr, void* place);
-        
+               
         /**
          * Heap class aligner aligns that to eight.
          *
-         * Note: if given SIZEOF is already multiple 8, the class size will be 8 bytes.
+         * Note: If given SIZEOF is already multiple 8, the class size will be 8 bytes.
          *
          * @param SIZEOF size of Heap class.
          */  
@@ -504,7 +464,7 @@ namespace library
          * is not delicate, but it works for understanding 
          * about size of a virtual function table of this Heap class.
          *
-         * Note: this int64 variable of the class is used, because some compilers 
+         * Note: This int64 variable of the class is used, because some compilers 
          * might put 64 bit variable to aligned 8 memory address. Therefore, size of classes 
          * with 32 bit pointer to virtual table and one 64 bit variable is 16 bytes.
          */    
@@ -750,6 +710,30 @@ namespace library
              * @return reference to this object.       
              */
             HeapBlock& operator =(const HeapBlock&);
+            
+            /**
+             * Operator new.
+             *
+             * Method is defined for blocking operator new.
+             *
+             * @param size number of bytes to allocate.
+             * @return always null pointer.
+             */
+            void* operator new(size_t)
+            {
+                return NULL;
+            }
+
+            /**
+             * Operator delete.
+             *
+             * Method does nothing and is defined for blocking operator delete.
+             *
+             * @param ptr address of allocated memory.
+             */  
+            void operator delete(void*)
+            {
+            }
             
             /**
              * Heap block definition key.

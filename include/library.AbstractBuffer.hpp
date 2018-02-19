@@ -15,13 +15,13 @@
 namespace library
 { 
     /** 
-     * @param Type  data type of buffer element.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of buffer element.
+     * @param A heap memory allocator class.
      */ 
-    template <typename Type, class Alloc = Allocator>
-    class AbstractBuffer : public ::library::Object<Alloc>, public ::api::Collection<Type>, public ::api::IllegalValue<Type>
+    template <typename T, class A = Allocator>
+    class AbstractBuffer : public ::library::Object<A>, public ::api::Collection<T>, public ::api::IllegalValue<T>
     {
-        typedef ::library::Object<Alloc> Parent;
+        typedef ::library::Object<A> Parent;
   
     public:      
   
@@ -30,7 +30,7 @@ namespace library
          *
          * @param count count of buffer elements.
          */    
-        AbstractBuffer(int32 count) : Parent(),
+        explicit AbstractBuffer(int32 count) : Parent(),
             count_   (count),
             illegal_ (){
         }
@@ -41,7 +41,7 @@ namespace library
          * @param count   count of buffer elements.
          * @param illegal illegal value.
          */    
-        AbstractBuffer(int32 count, const Type illegal) : Parent(),
+        AbstractBuffer(int32 count, const T& illegal) : Parent(),
             count_   (count),
             illegal_ (illegal){
         }
@@ -68,7 +68,7 @@ namespace library
          *
          * @param value filling value.
          */
-        virtual void fill(const Type value)
+        virtual void fill(const T& value)
         {
             fill(value, 0, count_);
         }
@@ -79,7 +79,7 @@ namespace library
          * @param value filling value.
          * @param count count of filling elements.
          */
-        virtual void fill(const Type value, const int32 count)
+        virtual void fill(const T& value, const int32 count)
         {
             fill(value, 0, count);
         }
@@ -91,7 +91,7 @@ namespace library
          * @param index begin index.
          * @param count count of filling elements.
          */
-        virtual void fill(const Type value, const int32 index, const int32 count)
+        virtual void fill(const T& value, const int32 index, const int32 count)
         {
             if( not this->isConstructed_ ) 
             {
@@ -101,7 +101,7 @@ namespace library
             {
                 return;
             }
-            Type* buf = getBuffer();
+            T* buf = getBuffer();
             const int32 max = (index + count <= count_) ? count + index : count_;
             for(int32 i=index; i<max; i++) buf[i] = value;
         }
@@ -123,7 +123,7 @@ namespace library
          */
         virtual int32 getSize() const
         {
-            return count_ * sizeof(Type);
+            return count_ * sizeof(T);
         }
         
         /**
@@ -143,7 +143,7 @@ namespace library
          *
          * @return reference to illegal element.
          */
-        virtual Type getIllegal() const
+        virtual const T& getIllegal() const
         {
             return illegal_;
         }
@@ -153,7 +153,7 @@ namespace library
          *
          * @param value illegal value.
          */
-        virtual void setIllegal(const Type value)
+        virtual void setIllegal(const T& value)
         {
             illegal_ = value;
         }
@@ -164,7 +164,7 @@ namespace library
          * @param value testing value.
          * @param true if value is an illegal.
          */
-        virtual bool isIllegal(const Type& value) const
+        virtual bool isIllegal(const T& value) const
         {
             return illegal_ == value ? true : false;
         }
@@ -175,9 +175,9 @@ namespace library
          * @param i an element index.
          * @return an element.
          */
-        Type& operator [](const int32 i)
+        T& operator [](const int32 i)
         {
-            Type* const buf = getBuffer();
+            T* const buf = getBuffer();
             if( not this->isConstructed_ || i >= count_ || buf == NULL) 
             {
                 return illegal_;
@@ -207,8 +207,8 @@ namespace library
             const int32 size1 = getLength();
             const int32 size2 = buf.getLength();
             const int32 size = size1 < size2 ? size1 : size2;
-            Type* const buf1 = getBuffer();        
-            Type* const buf2 = buf.getBuffer();
+            T* const buf1 = getBuffer();        
+            T* const buf2 = buf.getBuffer();
             for(int32 i=0; i<size; i++) 
             {
                 buf1[i] = buf2[i];
@@ -220,7 +220,7 @@ namespace library
          *
          * @return pointer to buffer or NULL.
          */
-        virtual Type* getBuffer() const = 0;
+        virtual T* getBuffer() const = 0;
   
     private:
     
@@ -247,7 +247,7 @@ namespace library
         /**
          * Illegal element of this buffer.
          */
-        Type illegal_;
+        T illegal_;
       
     };
 }

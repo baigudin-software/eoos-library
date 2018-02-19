@@ -15,12 +15,12 @@ namespace library
 {
     /** 
      *
-     * @param Alloc heap memory allocator class.
+     * @param A heap memory allocator class.
      */  
-    template <class Alloc = Allocator>
-    class Toggle : public ::library::Object<Alloc>, public ::api::Toggle
+    template <class A = Allocator>
+    class Toggle : public ::library::Object<A>, public ::api::Toggle
     {
-        typedef ::library::Object<Alloc> Parent;
+        typedef ::library::Object<A> Parent;
   
     public:
     

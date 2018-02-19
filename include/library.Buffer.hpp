@@ -21,21 +21,21 @@ namespace library
     /** 
      * Primary template implements the static buffer class.
      *
-     * @param Type      data type of buffer element.     
-     * @param MAX_COUNT maximum number of buffer elements, or 0 for dynamic allocation. 
-     * @param Alloc     heap memory allocator class.
+     * @param T data type of buffer element.     
+     * @param L maximum number of buffer elements, or 0 for dynamic allocation. 
+     * @param A heap memory allocator class.
      */ 
-    template <typename Type, int32 MAX_COUNT, class Alloc = Allocator>
-    class Buffer : public ::library::AbstractBuffer<Type,Alloc>
+    template <typename T, int32 L, class A = Allocator>
+    class Buffer : public ::library::AbstractBuffer<T,A>
     {
-        typedef ::library::AbstractBuffer<Type,Alloc> Parent;
+        typedef ::library::AbstractBuffer<T,A> Parent;
   
     public:      
   
         /** 
          * Constructor.
          */    
-        Buffer() : Parent(MAX_COUNT),
+        Buffer() : Parent(L),
             buf_ (arr_){
         }
     
@@ -44,7 +44,7 @@ namespace library
          *
          * @param illegal illegal value.
          */    
-        Buffer(const Type illegal) : Parent(MAX_COUNT, illegal),
+        Buffer(const T illegal) : Parent(L, illegal),
             buf_ (arr_){
         }
     
@@ -64,7 +64,7 @@ namespace library
          * @param buf reference to source buffer.
          * @return reference to this object.     
          */
-        Buffer& operator =(const Buffer<Type,MAX_COUNT,Alloc>& buf)
+        Buffer& operator =(const Buffer<T,L,A>& buf)
         {
             this->copy(buf);
             return *this;      
@@ -79,7 +79,7 @@ namespace library
          * @param buf reference to source buffer.
          * @return reference to this object.     
          */
-        Buffer& operator =(const AbstractBuffer<Type,Alloc>& buf)
+        Buffer& operator =(const AbstractBuffer<T,A>& buf)
         {
             this->copy(buf);
             return *this;
@@ -92,7 +92,7 @@ namespace library
          *
          * @return pointer to buffer, or NULL.
          */
-        virtual Type* getBuffer() const
+        virtual T* getBuffer() const
         {
             if( not this->isConstructed_ ) 
             {
@@ -111,14 +111,14 @@ namespace library
         Buffer(const Buffer& obj);
       
         /**
-         * Current array of Type elements.
+         * Current array of T elements.
          */  
-        Type arr_[MAX_COUNT];
+        T arr_[L];
         
         /**
          * Pointer to current array.
          */    
-        Type* buf_;
+        T* buf_;
       
     };
     
@@ -127,13 +127,13 @@ namespace library
     /** 
      * Partial specialization of the template implements the dynamic buffer class.
      *
-     * @param Type  data type of buffer element.     
-     * @param Alloc heap memory allocator class.
+     * @param T data type of buffer element.     
+     * @param A heap memory allocator class.
      */
-    template <typename Type, class Alloc>
-    class Buffer<Type,0,Alloc> : public AbstractBuffer<Type,Alloc>
+    template <typename T, class A>
+    class Buffer<T,0,A> : public AbstractBuffer<T,A>
     {
-        typedef ::library::AbstractBuffer<Type,Alloc> Parent;
+        typedef ::library::AbstractBuffer<T,A> Parent;
   
     public:      
   
@@ -158,7 +158,7 @@ namespace library
          * @param count number of elements.
          * @param buf   pointer to external buffer.
          */    
-        Buffer(int32 count, Type* buf) : Parent (count),
+        Buffer(int32 count, T* buf) : Parent (count),
             buf_      (buf),
             isDelete_ (false){
             const bool isConstructed = construct(count);
@@ -171,7 +171,7 @@ namespace library
          * @param count   count of buffer elements.
          * @param illegal illegal value.
          */    
-        Buffer(int32 count, const Type illegal) : Parent(count, illegal),
+        Buffer(int32 count, const T illegal) : Parent(count, illegal),
             buf_      (NULL),
             isDelete_ (true){
             const bool isConstructed = construct(count);
@@ -188,7 +188,7 @@ namespace library
          * @param illegal illegal value.
          * @param buf     pointer to external buffer.
          */    
-        Buffer(int32 count, const Type illegal, Type* buf) : Parent(count, illegal),
+        Buffer(int32 count, const T illegal, T* buf) : Parent(count, illegal),
             buf_      (buf),
             isDelete_ (false){
             const bool isConstructed = construct(count);
@@ -216,7 +216,7 @@ namespace library
          * @param buf reference to source buffer.
          * @return reference to this object.     
          */
-        Buffer& operator =(const Buffer<Type,0,Alloc>& buf)
+        Buffer& operator =(const Buffer<T,0,A>& buf)
         {
             this->copy(buf);
             return *this;      
@@ -231,7 +231,7 @@ namespace library
          * @param buf reference to source buffer.
          * @return reference to this object.     
          */
-        Buffer& operator =(const AbstractBuffer<Type,Alloc>& buf)
+        Buffer& operator =(const AbstractBuffer<T,A>& buf)
         {
             this->copy(buf);
             return *this;
@@ -244,7 +244,7 @@ namespace library
          *
          * @return pointer to buffer, or NULL.
          */
-        virtual Type* getBuffer() const
+        virtual T* getBuffer() const
         {
             if( not this->isConstructed_ )
             {
@@ -271,7 +271,7 @@ namespace library
             // at description of 'allocate' template method of 'Object' template class.
             if(buf_ == NULL) 
             {
-                buf_ = this->template allocate<Type*>(count * sizeof(Type));
+                buf_ = this->template allocate<T*>(count * sizeof(T));
             }
             return buf_ == NULL ? false : true;
         }
@@ -286,7 +286,7 @@ namespace library
         /**
          * Pointer to external given or self created array.
          */     
-        Type* buf_;
+        T* buf_;
         
         /**
          * Deletet flag.

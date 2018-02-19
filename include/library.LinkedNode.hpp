@@ -13,13 +13,13 @@
 namespace library
 {  
     /** 
-     * @param Type  data type of element.
-     * @param Alloc heap memory allocator class.
+     * @param T data type of element.
+     * @param A heap memory allocator class.
      */
-    template <typename Type, class Alloc = Allocator>
-    class LinkedNode : public ::library::Object<Alloc>
+    template <typename T, class A = Allocator>
+    class LinkedNode : public ::library::Object<A>
     {
-        typedef ::library::Object<Alloc> Parent;  
+        typedef ::library::Object<A> Parent;  
     
     public:
     
@@ -28,7 +28,7 @@ namespace library
          *
          * @param element an user element of this node.
          */
-        LinkedNode(Type element) : Parent(),
+        LinkedNode(T element) : Parent(),
             prev_    (this),
             next_    (this),
             index_   (0),
@@ -70,7 +70,7 @@ namespace library
          *
          * @param node pointer to inserted node.
          */
-        virtual void insertAfter(::library::LinkedNode<Type,Alloc>* node)
+        virtual void insertAfter(::library::LinkedNode<T,A>* node)
         {
             link(node);
             node->index_ = index_;
@@ -90,7 +90,7 @@ namespace library
          *
          * @param node pointer to inserted node.
          */
-        virtual void insertBefore(::library::LinkedNode<Type,Alloc>* node)
+        virtual void insertBefore(::library::LinkedNode<T,A>* node)
         {
             prev_->link(node);
             node->index_ = index_;
@@ -108,7 +108,7 @@ namespace library
          *
          * @return previous element.
          */  
-        virtual ::library::LinkedNode<Type,Alloc>* getPrevious() const
+        virtual ::library::LinkedNode<T,A>* getPrevious() const
         {
             return prev_;
         }
@@ -118,7 +118,7 @@ namespace library
          *
          * @return next element.
          */  
-        virtual ::library::LinkedNode<Type,Alloc>* getNext() const
+        virtual ::library::LinkedNode<T,A>* getNext() const
         {
             return next_;
         }
@@ -128,7 +128,7 @@ namespace library
          *
          * @return next element.
          */  
-        virtual Type getElement() const
+        virtual T getElement() const
         {
             return element_;
         }
@@ -150,7 +150,7 @@ namespace library
          *
          * @param node pointer to linking node.
          */
-        void link(::library::LinkedNode<Type,Alloc>* node)
+        void link(::library::LinkedNode<T,A>* node)
         {
             next_->prev_ = node;
             node->next_ = next_;
@@ -191,7 +191,7 @@ namespace library
         /**
          * Containing element.
          */        
-        Type element_;
+        T element_;
     
     };
 }

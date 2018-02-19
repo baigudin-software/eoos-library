@@ -2,77 +2,88 @@
  * Alignment of simple types to byte boundary of memory.
  * 
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016, Embedded Team, Sergey Baigudin
+ * @copyright 2016-2018, Embedded Team, Sergey Baigudin
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_ALIGN_HPP_
 #define LIBRARY_ALIGN_HPP_
 
-#include "Allocator.hpp"
+#include "library.Allocator.hpp"
 
 namespace library
 {
     /** 
-     * @param Type   type of aligning data.
-     * @param SIZEOF size of aligning data.
-     * @param Alloc  heap memory allocator class.
+     * @param T type of aligning data.
+     * @param S size of aligning data type.
+     * @param A heap memory allocator class.
      */  
-    template <typename Type, int32 SIZEOF = sizeof(Type), class Alloc = Allocator>
+    template <typename T, int32 S = sizeof(T), class A = Allocator>
     class Align
     {
       
     public:
-      
-        /** 
-         * Constructor.
-         */     
-        Align()
-        {
-        }
-      
+           
         /** 
          * Constructor.
          *
-         * @param val data value.     
+         * NOTE: A passed value is copied to an internal data structure
+         * so that the value might be invalidated after the function called.
+         *         
+         * @param value a data value.     
          */
-        Align(const Type val)
+        explicit Align(const T& value)
         {
-            assignment(val);
+            assignment(value);
         }
         
         /**
          * Copy constructor.
          *
-         * @param obj reference to source object.    
+         * @param obj a source object.    
          */
-        Align(const Align& obj)
+        explicit Align(const Align& obj)
         {
             copy(obj);
         }
         
-        /**
-         * Destructor.
-         */    
-       ~Align()
+        /** 
+         * Compares this string with a passed string lexicographically.         
+         *
+         * @param obj a source object.
+         * @return true if this object value equals to a passed object value.
+         */
+        bool equal(const Align& obj) const
         {
-        }
+            for(int32 i=0; i<SIZE; i++) 
+            { 
+                if( val_[i] == obj.val_[i] )
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }        
         
         /**
          * Assignment operator.
+         *         
+         * NOTE: A passed value is copied to an internal data structure
+         * so that the value might be invalidated after the function called.
          *
-         * @param val source data value.
+         * @param value a source data value.
          * @return reference to this object.     
          */
-        Align& operator =(const Type val)
+        Align& operator =(const T& value)
         {
-            assignment(val);
+            assignment(value);
             return *this;
         }
         
         /**
          * Assignment operator.
          *
-         * @param obj reference to source object. 
+         * @param obj a source object. 
          * @return reference to this object.     
          */    
         Align& operator =(const Align& obj)
@@ -82,9 +93,11 @@ namespace library
         }
         
         /**
-         * Conversion operator to type of aligning data.
+         * Casts to the template data type.
+         *
+         * @return a data value.         
          */
-        operator Type() const 
+        operator T() const 
         {
             return typecast();
         }
@@ -99,7 +112,7 @@ namespace library
          */
         void* operator new(const size_t size)
         {
-            return Alloc::allocate(size);
+            return A::allocate(size);
         }
       
         /**
@@ -121,7 +134,7 @@ namespace library
          */
         void operator delete(void* const ptr)
         {
-            Alloc::free(ptr);
+            A::free(ptr);
         }
         
         #endif // NO_STRICT_MISRA_RULES
@@ -131,14 +144,14 @@ namespace library
         /**
          * Assigns given value to self data.
          *
-         * @param val source data value.
+         * @param value source data value.
          */ 
-        inline void assignment(const Type val)
+        void assignment(const T& value)
         {
-            for(int32 i=0; i<SIZE; i++) 
+            for(int32 i = 0; i<SIZE; i++) 
             { 
-                val_[i] = val & 0xff; 
-                val >>= 8; 
+                const T v = value >> 8 * i;
+                val_[i] = static_cast<cell>(v) & 0xff; 
             } 
         }
       
@@ -147,7 +160,7 @@ namespace library
          *
          * @param obj reference to source object.    
          */  
-        inline void copy(const Align& obj)
+        void copy(const Align& obj)
         {
             for(register int32 i=0; i<SIZE; i++) 
             {
@@ -160,13 +173,13 @@ namespace library
          *
          * @return conversed data.     
          */  
-        inline Type typecast() const
+        T typecast() const
         {
-            Type r = 0;
+            T r = 0;
             for(int32 i=SIZE-1; i>=0; i--) 
             { 
                 r <<= 8; 
-                r |= (Type)val_[i] & 0xff; 
+                r |= static_cast<T>(val_[i]) & 0xff; 
             } 
             return r; 
         }
@@ -174,7 +187,7 @@ namespace library
         /**
          * Size of aligning data.
          */
-        static const int32 SIZE = SIZEOF;
+        static const int32 SIZE = S;
       
         /**
          * Array of data bytes.
@@ -190,12 +203,10 @@ namespace library
      * @param obj2 reference to object.
      * @return true if objects are equal.
      */
-    template <typename Type> 
-    inline bool operator ==(const Align<Type>& obj1, const Align<Type>& obj2)
+    template <typename T> 
+    inline bool operator ==(const ::library::Align<T>& obj1, const ::library::Align<T>& obj2)
     {
-        const Type t1 = obj1;
-        const Type t2 = obj2;
-        return t1 == t2;
+        return obj1.equal(obj2) ? true : false;
     }
   
     /**
@@ -205,12 +216,10 @@ namespace library
      * @param obj2 reference to object.
      * @return true if objects are not equal.
      */  
-    template <typename Type> 
-    inline bool operator !=(const Align<Type>& obj1, const Align<Type>& obj2)
+    template <typename T> 
+    inline bool operator !=(const ::library::Align<T>& obj1, const ::library::Align<T>& obj2)
     {
-        const Type t1 = obj1;
-        const Type t2 = obj2;
-        return t1 != t2;
+        return not obj1.equal(obj2) ? true : false;
     }
 } 
 #endif // LIBRARY_ALIGN_HPP_

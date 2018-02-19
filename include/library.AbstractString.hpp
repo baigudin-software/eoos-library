@@ -21,14 +21,14 @@ namespace library
     /**
      * Primary template implements the static string class.
      *
-     * @param Type       data type of string characters.     
-     * @param MAX_LENGTH maximum number of string characters, or 0 for dynamic allocation.
-     * @param Alloc      heap memory allocator class.
+     * @param T data type of string characters.     
+     * @param L maximum number of string characters, or 0 for dynamic allocation.
+     * @param A heap memory allocator class.
      */
-    template <typename Type, int32 MAX_LENGTH, class Alloc = Allocator>    
-    class AbstractString : public ::library::AbstractBaseString<Type,Alloc>
+    template <typename T, int32 L, class A = Allocator>    
+    class AbstractString : public ::library::AbstractBaseString<T,A>
     {
-        typedef ::library::AbstractBaseString<Type,Alloc> Parent;
+        typedef ::library::AbstractBaseString<T,A> Parent;
         
         using Parent::copy;
         using Parent::concatenate;
@@ -70,7 +70,7 @@ namespace library
          *
          * @return first character of containing string characters, or NULL if no string contained.
          */
-        virtual const Type* getChar() const
+        virtual const T* getChar() const
         {
             return context_.str;
         }
@@ -83,7 +83,7 @@ namespace library
          * @param str a character string to be copied.
          * @return true if a passed string has been copied successfully.
          */
-        virtual bool copy(const Type* str)
+        virtual bool copy(const T* str)
         {
             if( not this->isConstructed_ || str == NULL )
             {
@@ -118,7 +118,7 @@ namespace library
          * @param str an character string to be appended.             
          * @return true if a passed string has been appended successfully.          
          */
-        virtual bool concatenate(const Type* str)
+        virtual bool concatenate(const T* str)
         {
             if( not this->isConstructed_ || str == NULL )
             {
@@ -163,7 +163,7 @@ namespace library
          *         a value greater than 0 if this string is greater than a passed string,
          *         or the minimum possible value if an error has been occurred.         
          */
-        virtual int32 compare(const Type* str) const
+        virtual int32 compare(const T* str) const
         {
             if( not this->isConstructed_ || context_.str == NULL || str == NULL )
             {
@@ -200,7 +200,7 @@ namespace library
          *
          * @param obj a source object.
          */
-        AbstractString(const AbstractString<Type,MAX_LENGTH,Alloc>& obj);
+        AbstractString(const AbstractString<T,L,A>& obj);
         
         /**
          * Direct assignment operator.
@@ -212,7 +212,7 @@ namespace library
          * @param obj a source object.
          * @return this object.     
          */
-        AbstractString<Type,MAX_LENGTH,Alloc>& operator =(const AbstractString<Type,MAX_LENGTH,Alloc>& obj);    
+        AbstractString<T,L,A>& operator =(const AbstractString<T,L,A>& obj);    
     
         /**
          * A contex of this class containing string.
@@ -225,7 +225,7 @@ namespace library
             /**
              * The first character of this string.
              */        
-            Type* str;
+            T* str;
             
             /**
              * Current number of characters of this string.
@@ -280,14 +280,14 @@ namespace library
                 {
                     return false;
                 }
-                if(length > MAX_LENGTH)
+                if(length > L)
                 {
                     return false;
                 }
                 // Set this class variables
                 str = buf_;
                 len = length;                
-                max = MAX_LENGTH;
+                max = L;
                 return true;
             }
             
@@ -342,7 +342,7 @@ namespace library
             /**
              * The buffer of characters of this string.
              */        
-            Type buf_[MAX_LENGTH + 1];                  
+            T buf_[L + 1];                  
              
         };
 
@@ -358,13 +358,13 @@ namespace library
     /** 
      * Partial specialization of the template implements the dynamic string class.
      *
-     * @param Type  data type of string characters.     
-     * @param Alloc heap memory allocator class.
+     * @param T data type of string characters.     
+     * @param A heap memory allocator class.
      */
-    template <typename Type, class Alloc>
-    class AbstractString<Type,0,Alloc> : public AbstractBaseString<Type,Alloc>    
+    template <typename T, class A>
+    class AbstractString<T,0,A> : public AbstractBaseString<T,A>    
     {
-        typedef ::library::AbstractBaseString<Type,Alloc> Parent;
+        typedef ::library::AbstractBaseString<T,A> Parent;
 
         using Parent::copy;
         using Parent::concatenate;
@@ -406,7 +406,7 @@ namespace library
          *
          * @return first character of containing string characters, or NULL if no string contained.
          */
-        virtual const Type* getChar() const
+        virtual const T* getChar() const
         {
             return context_.str;
         }
@@ -419,7 +419,7 @@ namespace library
          * @param str a character string to be copied.
          * @return true if a passed string has been copied successfully.
          */
-        virtual bool copy(const Type* str)
+        virtual bool copy(const T* str)
         {
             if( not this->isConstructed_ || str == NULL )
             {
@@ -454,7 +454,7 @@ namespace library
          * @param str an character string to be appended.             
          * @return true if a passed string has been appended successfully.          
          */
-        virtual bool concatenate(const Type* str)
+        virtual bool concatenate(const T* str)
         {
             if( not this->isConstructed_ || str == NULL )
             {
@@ -499,7 +499,7 @@ namespace library
          *         a value greater than 0 if this string is greater than a passed string,
          *         or the minimum possible value if an error has been occurred.         
          */
-        virtual int32 compare(const Type* str) const
+        virtual int32 compare(const T* str) const
         {
             if( not this->isConstructed_ || context_.str == NULL || str == NULL )
             {
@@ -536,7 +536,7 @@ namespace library
          *
          * @param obj a source object.
          */
-        AbstractString(const AbstractString<Type,0,Alloc>& obj);
+        AbstractString(const AbstractString<T,0,A>& obj);
         
         /**
          * Direct assignment operator.
@@ -548,7 +548,7 @@ namespace library
          * @param obj a source object.
          * @return this object.     
          */
-        AbstractString<Type,0,Alloc>& operator =(const AbstractString<Type,0,Alloc>& obj);
+        AbstractString<T,0,A>& operator =(const AbstractString<T,0,A>& obj);
                 
         /**
          * A contex of this class containing string.
@@ -561,7 +561,7 @@ namespace library
             /**
              * The first character of this string.
              */        
-            Type* str;
+            T* str;
             
             /**
              * Current number of characters of this string.
@@ -620,7 +620,7 @@ namespace library
                 // Calculate size in byte for the given length
                 int32 size = calculateSize(length);
                 // Allocate a new array
-                Type* string = reinterpret_cast<Type*>( Alloc::allocate(size) );
+                T* string = reinterpret_cast<T*>( A::allocate(size) );
                 if(string == NULL)
                 {
                     return false;                
@@ -639,7 +639,7 @@ namespace library
             {
                 if(str != NULL) 
                 {
-                    Alloc::free(str);                
+                    A::free(str);                
                     str = NULL;
                     len = 0;            
                     max = 0;            
@@ -677,7 +677,7 @@ namespace library
              */
             static int32 calculateSize(int32 len)
             {
-                size_t size = static_cast<size_t>(len) * sizeof(Type) + sizeof(Type);
+                size_t size = static_cast<size_t>(len) * sizeof(T) + sizeof(T);
                 // Align size to eight
                 if(size & 0x7) 
                 {
@@ -694,7 +694,7 @@ namespace library
              */
             static int32 calculateLength(int32 size)
             {
-                int32 charSize = static_cast<int32>( sizeof(Type) );
+                int32 charSize = static_cast<int32>( sizeof(T) );
                 if(charSize == 0) 
                 {
                     return 0;

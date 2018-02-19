@@ -12,10 +12,10 @@
 
 namespace library
 {
-    template <class Alloc = Allocator>    
-    class Object : public ::Object<Alloc>
+    template <class A = Allocator>    
+    class Object : public ::Object<A>
     {
-        typedef ::Object<Alloc> Parent;        
+        typedef ::Object<A> Parent;        
       
     public:
     

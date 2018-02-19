@@ -8,11 +8,11 @@
 #ifndef LIBRARY_MEMORY_HPP_
 #define LIBRARY_MEMORY_HPP_
 
-#include "Types.hpp"
+#include "api.Constant.hpp"
 
 namespace library
 {
-    class Memory
+    class Memory : public ::api::Constant
     {
       
     public:
