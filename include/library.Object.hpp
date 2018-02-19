@@ -10,66 +10,69 @@
 
 #include "Object.hpp"
 
-namespace library
+namespace global
 {
-    template <class A = Allocator>    
-    class Object : public ::Object<A>
+    namespace library
     {
-        typedef ::Object<A> Parent;        
-      
-    public:
-    
-        /** 
-         * Constructor.
-         */  
-        Object() : Parent(),
-            isConstructed_ (this->getConstruct()){
-        }
-        
-        /** 
-         * Copy constructor.
-         *
-         * @param obj reference to source object.
-         */ 
-        Object(const Object& obj) : Parent(obj),
-            isConstructed_ (this->getConstruct()){
-        }
-        
-        /** 
-         * Copy constructor.
-         *
-         * @param obj reference to source object.
-         */ 
-        Object(const ::api::Object& obj) : Parent(obj),
-            isConstructed_ (this->getConstruct()){
-        }    
-        
-        /** 
-         * Destructor.
-         */    
-        virtual ~Object()
+        template <class A = Allocator>    
+        class Object : public ::global::Object<A>
         {
-        }  
+            typedef ::global::Object<A> Parent;        
         
-        /** 
-         * Assignment operator.
-         *
-         * @param obj reference to source object.
-         * @return reference to this object.   
-         */  
-        Object& operator =(const Object& obj)
-        {
-            Parent::operator=(obj);
-            return *this;
-        }
-   
-    protected:
+        public:
         
-        /** 
-         * The root object constructed flag.
-         */  
-        const bool& isConstructed_;
+            /** 
+            * Constructor.
+            */  
+            Object() : Parent(),
+                isConstructed_ (this->getConstruct()){
+            }
+            
+            /** 
+            * Copy constructor.
+            *
+            * @param obj reference to source object.
+            */ 
+            Object(const Object& obj) : Parent(obj),
+                isConstructed_ (this->getConstruct()){
+            }
+            
+            /** 
+            * Copy constructor.
+            *
+            * @param obj reference to source object.
+            */ 
+            Object(const api::Object& obj) : Parent(obj),
+                isConstructed_ (this->getConstruct()){
+            }    
+            
+            /** 
+            * Destructor.
+            */    
+            virtual ~Object()
+            {
+            }  
+            
+            /** 
+            * Assignment operator.
+            *
+            * @param obj reference to source object.
+            * @return reference to this object.   
+            */  
+            Object& operator =(const Object& obj)
+            {
+                Parent::operator=(obj);
+                return *this;
+            }
     
-    };
+        protected:
+            
+            /** 
+            * The root object constructed flag.
+            */  
+            const bool& isConstructed_;
+        
+        };
+    }
 }
 #endif // LIBRARY_OBJECT_HPP_
