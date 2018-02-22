@@ -20,9 +20,9 @@ namespace global
     namespace library
     {  
         /** 
-        * @param T data type of container element.
-        * @param A heap memory allocator class.
-        */
+         * @param T data type of container element.
+         * @param A heap memory allocator class.
+         */
         template <typename T, class A = Allocator>
         class AbstractLinkedList : 
             public library::Object<A>, 
@@ -36,73 +36,73 @@ namespace global
         public:      
     
             /** 
-            * Constructor.
-            */    
+             * Constructor.
+             */    
             AbstractLinkedList() : Parent(),
                 illegal_ (),
-                last_    (NULL),
+                last_    (this->NULL),
                 count_   (0){
                 const bool isConstructed = construct(); 
                 this->setConstruct( isConstructed );
             }
         
             /**
-            * Constructor.
-            *
-            * @param illegal illegal element.
-            */
+             * Constructor.
+             *
+             * @param illegal illegal element.
+             */
             AbstractLinkedList(const T illegal) : Parent(),
                 illegal_ (illegal),
-                last_    (NULL),
+                last_    (this->NULL),
                 count_   (0){
                 const bool isConstructed = construct(); 
                 this->setConstruct( isConstructed );
             }
         
             /**
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~AbstractLinkedList()
             {
                 clear();
             }
             
             /**
-            * Tests if this object has been constructed.
-            *
-            * @return true if object has been constructed successfully.
-            */
+             * Tests if this object has been constructed.
+             *
+             * @return true if object has been constructed successfully.
+             */
             virtual bool isConstructed() const
             {
                 return this->isConstructed_;
             }        
             
             /**
-            * Inserts new element to the end of this list.
-            *
-            * @param element inserting element.
-            * @return true if element is added.
-            */      
+             * Inserts new element to the end of this list.
+             *
+             * @param element inserting element.
+             * @return true if element is added.
+             */      
             virtual bool add(const T element)
             {
                 return this->isConstructed_ ? addNode(getLength(), element) : false;
             }
         
             /**
-            * Inserts new element to the specified position in this list.
-            *
-            * @param index   position in this list.  
-            * @param element inserting element.
-            * @return true if element is inserted.
-            */
+             * Inserts new element to the specified position in this list.
+             *
+             * @param index   position in this list.  
+             * @param element inserting element.
+             * @return true if element is inserted.
+             */
             virtual bool add(const int32 index, const T element)
             {
                 return this->isConstructed_ ? addNode(index, element) : false;
             }      
         
             /**
-            * Removes all elements from this list.       
-            */  
+             * Removes all elements from this list.       
+             */  
             virtual void clear()
             {
                 if( not this->isConstructed_ ) 
@@ -120,93 +120,93 @@ namespace global
             }
         
             /**
-            * Removes the first element from this list.
-            *
-            * @return true if an element is removed successfully.
-            */
+             * Removes the first element from this list.
+             *
+             * @return true if an element is removed successfully.
+             */
             virtual bool removeFirst()
             {
                 return remove(0);
             }
         
             /**
-            * Removes the last element from this list.
-            *
-            * @return true if an element is removed successfully.
-            */
+             * Removes the last element from this list.
+             *
+             * @return true if an element is removed successfully.
+             */
             virtual bool removeLast()
             {
                 return remove( getLength() - 1 );
             }
         
             /**
-            * Removes the head element of this queue or list.
-            *
-            * @return true if an element is removed successfully.
-            */
+             * Removes the head element of this queue or list.
+             *
+             * @return true if an element is removed successfully.
+             */
             virtual bool remove()
             {
                 return remove(0);
             }
         
             /**
-            * Removes the element at the specified position in this list.
-            *
-            * @param index   position in this list.
-            * @return true if an element is removed successfully.
-            */
+             * Removes the element at the specified position in this list.
+             *
+             * @param index   position in this list.
+             * @return true if an element is removed successfully.
+             */
             virtual bool remove(const int32 index)
             {
                 return this->isConstructed_ ? removeNode( getNodeByIndex(index) ) : false;
             }
         
             /**
-            * Removes the first occurrence of the specified element from this list.
-            *
-            * @param element reference to element.
-            * @return true if an element is removed successfully.
-            */
+             * Removes the first occurrence of the specified element from this list.
+             *
+             * @param element reference to element.
+             * @return true if an element is removed successfully.
+             */
             virtual bool removeElement(const T& element)
             {
                 return this->isConstructed_ ? removeNode( getNodeByElement(element) ) : false;
             }
         
             /**
-            * Examines the head element of this queue (list).
-            *
-            * @return the head element.
-            */
+             * Examines the head element of this queue (list).
+             *
+             * @return the head element.
+             */
             virtual T peek() const
             {
                 return get(0);
             }
         
             /**
-            * Returns the first element in this list.
-            *
-            * @return the first element in this list.
-            */
+             * Returns the first element in this list.
+             *
+             * @return the first element in this list.
+             */
             virtual T getFirst() const
             {
                 return get(0);
             }
         
             /**
-            * Returns the last element in this list.
-            *
-            * @return the last element in this list.
-            */
+             * Returns the last element in this list.
+             *
+             * @return the last element in this list.
+             */
             virtual T getLast() const
             {
                 return get( getLength() - 1 );      
             }
             
             /**
-            * Returns an element from this list by index.
-            *
-            * @param index position in this list.  
-            * @return indexed element of this list.
-            */
+             * Returns an element from this list by index.
+             *
+             * @param index position in this list.  
+             * @return indexed element of this list.
+             */
             virtual T get(const int32 index) const
             {
                 if( not this->isConstructed_ ) 
@@ -214,46 +214,46 @@ namespace global
                     return illegal_;
                 }
                 Node* const node = getNodeByIndex(index);
-                return node != NULL ? node->getElement() : illegal_;
+                return node != this->NULL ? node->getElement() : illegal_;
             }  
         
             /**
-            * Returns a number of elements in this list.
-            *
-            * @return number of elements.
-            */
+             * Returns a number of elements in this list.
+             *
+             * @return number of elements.
+             */
             virtual int32 getLength() const
             {
-                return last_ == NULL ? 0 : last_->getIndex() + 1;
+                return last_ == this->NULL ? 0 : last_->getIndex() + 1;
             }
             
             /**
-            * Tests if this list has elements.
-            *
-            * @return true if this list does not contain any elements.
-            */
+             * Tests if this list has elements.
+             *
+             * @return true if this list does not contain any elements.
+             */
             virtual bool isEmpty() const
             {
-                return last_ == NULL ? true : false;    
+                return last_ == this->NULL ? true : false;    
             }
         
             /**
-            * Returns illegal element which will be returned as error value.
-            *
-            * If illegal value is not set method returns uninitialized variable.
-            *
-            * @return illegal element.
-            */
+             * Returns illegal element which will be returned as error value.
+             *
+             * If illegal value is not set method returns uninitialized variable.
+             *
+             * @return illegal element.
+             */
             virtual const T& getIllegal() const
             {
                 return illegal_;
             }
         
             /**
-            * Sets illegal element which will be returned as error value.
-            *
-            * @param value illegal value.
-            */
+             * Sets illegal element which will be returned as error value.
+             *
+             * @param value illegal value.
+             */
             virtual void setIllegal(const T& value)
             {
                 if( this->isConstructed_ ) 
@@ -263,11 +263,11 @@ namespace global
             }
         
             /**
-            * Tests if given value is an illegal.
-            *
-            * @param value testing value.
-            * @param true if value is an illegal.
-            */
+             * Tests if given value is an illegal.
+             *
+             * @param value testing value.
+             * @param true if value is an illegal.
+             */
             virtual bool isIllegal(const T& value) const
             {
                 if( not this->isConstructed_ ) 
@@ -278,51 +278,51 @@ namespace global
             }
         
             /**
-            * Returns the index of the first occurrence of the specified element in this list.
-            *
-            * @param element reference to the element.
-            * @return index or -1 if this list does not contain the element.
-            */
+             * Returns the index of the first occurrence of the specified element in this list.
+             *
+             * @param element reference to the element.
+             * @return index or -1 if this list does not contain the element.
+             */
             virtual int32 getIndexOf(const T& element) const
             {
                 Node* const node = getNodeByElement(element);
-                return node != NULL ? node->getIndex() : -1;
+                return node != this->NULL ? node->getIndex() : -1;
             }
         
             /**
-            * Tests if given index is available.
-            *
-            * @param index checking position in this list.
-            * @return true if index is present.
-            */  
+             * Tests if given index is available.
+             *
+             * @param index checking position in this list.
+             * @return true if index is present.
+             */  
             virtual bool isIndex(const int32 index) const
             {
                 return (0 <= index && index < getLength()) ? true : false;
             }      
         
             /**
-            * Returns an array of all list links to elements.
-            *
-            * You have to call delete operator for returned value after it have used.
-            *
-            * @return pointer to reference of elements or NULL if list is empty.
-            */  
+             * Returns an array of all list links to elements.
+             *
+             * You have to call delete operator for returned value after it have used.
+             *
+             * @return pointer to reference of elements or NULL if list is empty.
+             */  
             virtual library::Buffer<T,0,A>* array() const
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 const int32 count = getLength();
                 if(count == 0) 
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
-                if(buf == NULL || not buf->isConstructed())
+                if(buf == this->NULL || not buf->isConstructed())
                 {
                     delete buf;
-                    return NULL;
+                    return this->NULL;
                 }
                 Node* node = last_->getNext();
                 for(int32 i=0; i<count; i++) 
@@ -334,10 +334,10 @@ namespace global
             }
         
             /**
-            * Returns an iterator of this list elements.
-            *
-            * @return pointer to new itererator.
-            */
+             * Returns an iterator of this list elements.
+             *
+             * @return pointer to new itererator.
+             */
             virtual api::Iterator<T>* getIterator()
             {
                 return this->getListIterator(0);
@@ -346,14 +346,14 @@ namespace global
         protected:
     
             /**
-            * Inserts new element to the specified position in this list.
-            *
-            * Given element will be copied to self nodes structure by a copy constructor calling.
-            *
-            * @param index   position in this list.  
-            * @param element inserting element.
-            * @return true if element is inserted.
-            */
+             * Inserts new element to the specified position in this list.
+             *
+             * Given element will be copied to self nodes structure by a copy constructor calling.
+             *
+             * @param index   position in this list.  
+             * @param element inserting element.
+             * @return true if element is inserted.
+             */
             bool addNode(const int32 index, const T& element)
             {
                 if(isIndexOutOfBounds(index)) 
@@ -361,12 +361,12 @@ namespace global
                     return false;
                 }
                 Node* const node = new Node(element);
-                if(node == NULL || not node->isConstructed())
+                if(node == this->NULL || not node->isConstructed())
                 {
                     delete node;
                     return false;
                 }
-                if(last_ == NULL) 
+                if(last_ == this->NULL) 
                 {
                     last_ = node;
                     count_++;
@@ -375,7 +375,7 @@ namespace global
                 if(index > 0)
                 {
                     Node* const after = getNodeByIndex(index - 1);
-                    if(after == NULL)
+                    if(after == this->NULL)
                     {
                         delete node;
                         return false;
@@ -389,7 +389,7 @@ namespace global
                 else
                 {
                     Node* const before = getNodeByIndex(0);
-                    if(before == NULL)
+                    if(before == this->NULL)
                     {
                         delete node;
                         return false;
@@ -401,16 +401,16 @@ namespace global
             }      
         
             /**
-            * Returns a node of this list by index.
-            *
-            * @param index position in this list.  
-            * @return pointer to the node of this list.
-            */
+             * Returns a node of this list by index.
+             *
+             * @param index position in this list.  
+             * @return pointer to the node of this list.
+             */
             Node* getNodeByIndex(const int32 index) const
             {
                 if( not isIndex(index) ) 
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 if(index == getLength() - 1) 
                 {
@@ -425,17 +425,17 @@ namespace global
             }
         
             /**
-            * Returns a node of this list by element.
-            *
-            * @param element reference to element.  
-            * @return pointer to the node of this list.
-            */
+             * Returns a node of this list by element.
+             *
+             * @param element reference to element.  
+             * @return pointer to the node of this list.
+             */
             Node* getNodeByElement(const T& element) const
             {
                 const int32 len = getLength();
                 if(len == 0) 
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 Node* node = last_->getNext();      
                 for(int32 i=0; i<len; i++, node = node->getNext()) 
@@ -446,18 +446,18 @@ namespace global
                     }
                     return node;
                 }
-                return NULL;
+                return this->NULL;
             }
         
             /**
-            * Removes a node of this list.
-            *
-            * @param node pointer to node.
-            * @return true if a node is removed successfully.
-            */
+             * Removes a node of this list.
+             *
+             * @param node pointer to node.
+             * @return true if a node is removed successfully.
+             */
             bool removeNode(Node* const node)
             {
-                if(node == NULL) 
+                if(node == this->NULL) 
                 {
                     return false;
                 }
@@ -465,7 +465,7 @@ namespace global
                 {
                     if(getLength() == 1) 
                     {
-                        last_ = NULL;
+                        last_ = this->NULL;
                     }
                     else
                     {
@@ -478,41 +478,41 @@ namespace global
             }
         
             /**
-            * Tests if index is out of this list bounds.
-            *
-            * @param index checking position in this list.
-            * @return true if index is outed.
-            */  
+             * Tests if index is out of this list bounds.
+             *
+             * @param index checking position in this list.
+             * @return true if index is outed.
+             */  
             bool isIndexOutOfBounds(const int32 index) const
             {
                 return (index < 0 || index > getLength()) ? true : false;
             }
         
             /**
-            * Returns reference to self data value.
-            *
-            * @return data value.
-            */  
+             * Returns reference to self data value.
+             *
+             * @return data value.
+             */  
             int32& getReferenceToCount()
             {
                 return count_;
             }
         
             /**
-            * Returns reference to self data value.
-            *
-            * @return data value.
-            */  
+             * Returns reference to self data value.
+             *
+             * @return data value.
+             */  
             Node*& getReferenceToLast()
             {
                 return last_;
             } 
         
             /**
-            * Returns reference to self data value.
-            *
-            * @return data value.
-            */  
+             * Returns reference to self data value.
+             *
+             * @return data value.
+             */  
             T& getReferenceToIllegal()
             {
                 return illegal_;
@@ -521,43 +521,43 @@ namespace global
         private:
         
             /** 
-            * Constructor.
-            *
-            * @return true if object has been constructed successfully.
-            */
+             * Constructor.
+             *
+             * @return true if object has been constructed successfully.
+             */
             bool construct()
             {
                 return this->isConstructed_;
             }
         
             /**
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */
             AbstractLinkedList(const AbstractLinkedList& obj);
         
             /**
-            * Assignment operator.
-            *
-            * @param obj reference to source object.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * @param obj reference to source object.
+             * @return reference to this object.     
+             */
             AbstractLinkedList& operator =(const AbstractLinkedList& obj);
         
             /**
-            * Illegal element of this list.
-            */
+             * Illegal element of this list.
+             */
             T illegal_;
             
             /**
-            * Last node of this list.
-            */
+             * Last node of this list.
+             */
             Node* last_;
             
             /**
-            * Number of changes in this list.
-            */
+             * Number of changes in this list.
+             */
             int32 count_;
     
         };

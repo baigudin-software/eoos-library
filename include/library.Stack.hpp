@@ -17,9 +17,9 @@ namespace global
     namespace library
     {
         /** 
-        * @param T data type of default stack element.
-        * @param A heap memory allocator class.
-        */ 
+         * @param T data type of default stack element.
+         * @param A heap memory allocator class.
+         */ 
         template <typename T, class A = Allocator>
         class Stack : public library::Object<A>, public api::Stack<T>
         { 
@@ -29,11 +29,11 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            *
-            * @param type  type of this stack.
-            * @param count count of buffer elements.
-            */    
+             * Constructor.
+             *
+             * @param type  type of this stack.
+             * @param count count of buffer elements.
+             */    
             Stack(typename api::Stack<T>::Operation type, int32 count) : Parent(),
                 stack_ (count),
                 type_  (type){
@@ -42,12 +42,12 @@ namespace global
             }     
             
             /** 
-            * Constructor.
-            *
-            * @param type  type of this stack.     
-            * @param count   count of buffer elements.
-            * @param illegal illegal value.
-            */    
+             * Constructor.
+             *
+             * @param type  type of this stack.     
+             * @param count   count of buffer elements.
+             * @param illegal illegal value.
+             */    
             Stack(typename api::Stack<T>::Operation type, int32 count, const T illegal) : Parent(),
                 stack_ (count, illegal),
                 type_  (type){
@@ -56,32 +56,32 @@ namespace global
             }    
             
             /** 
-            * Destructor.
-            */    
+             * Destructor.
+             */    
             virtual ~Stack()
             {
             }
             
             /**
-            * Tests if this object has been constructed.
-            *
-            * @return true if object has been constructed successfully.
-            */
+             * Tests if this object has been constructed.
+             *
+             * @return true if object has been constructed successfully.
+             */
             virtual bool isConstructed() const
             {
                 return this->isConstructed_;
             }
         
             /** 
-            * Returns an initial top of stack.
-            *
-            * @return pointer to TOS.
-            */    
+             * Returns an initial top of stack.
+             *
+             * @return pointer to TOS.
+             */    
             virtual const T* getTos()
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 T* const stack = &stack_[0];
                 switch(type_)
@@ -99,68 +99,68 @@ namespace global
                         return &stack[0];
                         
                     default: 
-                        return NULL;  
+                        return this->NULL;  
                 }
             }
             
             /** 
-            * Returns an type of stack operation.
-            *
-            * @return the stack operation.
-            */    
+             * Returns an type of stack operation.
+             *
+             * @return the stack operation.
+             */    
             virtual typename api::Stack<T>::Operation getType() const
             {
                 return type_;
             }
             
             /**
-            * Returns a number of elements.
-            *
-            * @return number of elements.
-            */
+             * Returns a number of elements.
+             *
+             * @return number of elements.
+             */
             virtual int32 getLength() const
             {
                 return stack_.getLength();
             }
         
             /**
-            * Tests if this collection has elements.
-            *
-            * @return true if this collection does not contain any elements.
-            */
+             * Tests if this collection has elements.
+             *
+             * @return true if this collection does not contain any elements.
+             */
             virtual bool isEmpty() const
             {
                 return false;
             }
         
             /**
-            * Returns illegal element which will be returned as error value.
-            *
-            * If illegal value is not set method returns uninitialized variable.
-            *
-            * @return reference to illegal element.
-            */
+             * Returns illegal element which will be returned as error value.
+             *
+             * If illegal value is not set method returns uninitialized variable.
+             *
+             * @return reference to illegal element.
+             */
             virtual const T& getIllegal() const
             {
                 return stack_.getIllegal();
             }
         
             /**
-            * Sets illegal element which will be returned as error value.
-            *
-            * @param value illegal value.
-            */
+             * Sets illegal element which will be returned as error value.
+             *
+             * @param value illegal value.
+             */
             virtual void setIllegal(const T& value)
             {
                 return stack_.setIllegal(value);
             }
         
             /**
-            * Tests if given value is an illegal.
-            *
-            * @param value testing value.
-            * @param true if value is an illegal.
-            */
+             * Tests if given value is an illegal.
+             *
+             * @param value testing value.
+             * @param true if value is an illegal.
+             */
             virtual bool isIllegal(const T& value) const
             {
                 return stack_.isIllegal(value);
@@ -169,10 +169,10 @@ namespace global
         private:
     
             /**
-            * Constructor.
-            *
-            * @return true if object has been constructed successfully.     
-            */ 
+             * Constructor.
+             *
+             * @return true if object has been constructed successfully.     
+             */ 
             bool construct()
             {
                 if( not this->isConstructed_ ) 
@@ -190,28 +190,28 @@ namespace global
             }
         
             /**
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */
             Stack(const Stack& obj);
         
             /**
-            * Assignment operator.
-            *
-            * @param obj reference to source object.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * @param obj reference to source object.
+             * @return reference to this object.     
+             */
             Stack& operator =(const Stack& obj);
         
             /**
-            * Stack memory buffer.
-            */
+             * Stack memory buffer.
+             */
             Buffer<T,0,A> stack_;
         
             /**
-            * Stack type.
-            */    
+             * Stack type.
+             */    
             const typename api::Stack<T>::Operation type_;
     
         };

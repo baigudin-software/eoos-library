@@ -23,10 +23,10 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            *     
-            * @param size total heap size.
-            */    
+             * Constructor.
+             *     
+             * @param size total heap size.
+             */    
             Heap(int64 size) :
                 data_ (size),
                 temp_ (){
@@ -35,17 +35,17 @@ namespace global
             }    
         
             /** 
-            * Constructor.
-            *
-            * Reference to global interrupt interface pointer is used for
-            * a possibility to change a value of that pointer.
-            * Until that pointer is NULL golobal interrupt is not used.
-            * This gives you a possibility to change using golobal interrupts
-            * on fly.   
-            *     
-            * @param size   total heap size.
-            * @param toggle reference to pointer to global interrupts toggle interface.
-            */    
+             * Constructor.
+             *
+             * Reference to global interrupt interface pointer is used for
+             * a possibility to change a value of that pointer.
+             * Until that pointer is NULL golobal interrupt is not used.
+             * This gives you a possibility to change using golobal interrupts
+             * on fly.   
+             *     
+             * @param size   total heap size.
+             * @param toggle reference to pointer to global interrupts toggle interface.
+             */    
             Heap(int64 size, api::Toggle*& toggle) :
                 data_  (size, toggle),
                 temp_ (){
@@ -54,18 +54,18 @@ namespace global
             }    
             
             /** 
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~Heap()
             {
                 data_.key = 0;
             }
             
             /**
-            * Tests if this object has been constructed.
-            *
-            * @return true if object has been constructed successfully.
-            */    
+             * Tests if this object has been constructed.
+             *
+             * @return true if object has been constructed successfully.
+             */    
             virtual bool isConstructed() const
             {
                 if( data_.key != HEAP_KEY )
@@ -80,14 +80,14 @@ namespace global
             }
         
             /**
-            * Allocates memory.
-            *
-            * @param size required memory size in byte.
-            * @param ptr  NULL value becomes to allocate memory, and 
-            *             other given values are simply returned 
-            *             as memory address.
-            * @return pointer to allocated memory or NULL.
-            */    
+             * Allocates memory.
+             *
+             * @param size required memory size in byte.
+             * @param ptr  NULL value becomes to allocate memory, and 
+             *             other given values are simply returned 
+             *             as memory address.
+             * @return pointer to allocated memory or NULL.
+             */    
             virtual void* allocate(const size_t size, void* ptr)
             {
                 if( not Self::isConstructed() ) 
@@ -105,10 +105,10 @@ namespace global
             }
             
             /**
-            * Frees an allocated memory.
-            *
-            * @param ptr pointer to allocated memory.
-            */      
+             * Frees an allocated memory.
+             *
+             * @param ptr pointer to allocated memory.
+             */      
             virtual void free(void* ptr)
             {
                 if( ptr == NULL ) 
@@ -125,40 +125,40 @@ namespace global
             }
             
             /**
-            * Sets a context switching locker.
-            *
-            * The method allows disabling and enabling thread context switching 
-            * when memory is being allocated or freed. Thus, the best way is 
-            * to pass an interface of global interrupt toggling. The parameter type 
-            * is reference to pointer, as when referenced pointer equals to NULL, 
-            * no blocks are happening.
-            *
-            * @param toggle reference to pointer to some controller.
-            */      
+             * Sets a context switching locker.
+             *
+             * The method allows disabling and enabling thread context switching 
+             * when memory is being allocated or freed. Thus, the best way is 
+             * to pass an interface of global interrupt toggling. The parameter type 
+             * is reference to pointer, as when referenced pointer equals to NULL, 
+             * no blocks are happening.
+             *
+             * @param toggle reference to pointer to some controller.
+             */      
             virtual void setToggle(api::Toggle*& toggle)
             {
                 data_.toggle = &toggle;
             }            
             
             /**
-            * Resets a context switching locker.
-            */
+             * Resets a context switching locker.
+             */
             virtual void resetToggle()
             {
                 data_.toggle = NULL;
             }        
             
             /**
-            * Operator new.
-            *
-            * Method initiates a building of heap memory
-            * checks and tests self memory structure data
-            * and leads to call the class constructor.
-            *
-            * @param size unused.
-            * @param ptr  aligned to eight memory address.
-            * @return address of memory or NULL.
-            */
+             * Operator new.
+             *
+             * Method initiates a building of heap memory
+             * checks and tests self memory structure data
+             * and leads to call the class constructor.
+             *
+             * @param size unused.
+             * @param ptr  aligned to eight memory address.
+             * @return address of memory or NULL.
+             */
             void* operator new(size_t, const uint32 ptr)
             {
                 void* address = reinterpret_cast< void* >(ptr);
@@ -179,10 +179,10 @@ namespace global
             class HeapBlock;
         
             /**
-            * Sets the object constructed flag.
-            *
-            * @param flag constructed flag.
-            */      
+             * Sets the object constructed flag.
+             *
+             * @param flag constructed flag.
+             */      
             void setConstruct(const bool flag)
             {
                 if(data_.key == HEAP_KEY) 
@@ -192,10 +192,10 @@ namespace global
             }
             
             /** 
-            * Constructor.
-            *
-            * @return true if object has been constructed successfully.
-            */
+             * Constructor.
+             *
+             * @return true if object has been constructed successfully.
+             */
             bool construct()
             {
                 // Crop a size to multiple of eight
@@ -225,10 +225,10 @@ namespace global
             }
             
             /** 
-            * Disables a controller.
-            *
-            * @return an enable source bit value of a controller before method was called.
-            */ 
+             * Disables a controller.
+             *
+             * @return an enable source bit value of a controller before method was called.
+             */ 
             bool disable()
             {
                 if(data_.toggle == NULL) 
@@ -240,10 +240,10 @@ namespace global
             }
         
             /** 
-            * Enables a controller.
-            *
-            * @param status returned status by disable method.
-            */    
+             * Enables a controller.
+             *
+             * @param status returned status by disable method.
+             */    
             void enable(const bool status)
             {
                 if(data_.toggle == NULL) 
@@ -258,10 +258,10 @@ namespace global
             }
             
             /**
-            * Returns a first heap block address.
-            *
-            * @return pointer to heap block.
-            */
+             * Returns a first heap block address.
+             *
+             * @return pointer to heap block.
+             */
             HeapBlock* getFirstBlock() const
             {
                 const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
@@ -269,10 +269,10 @@ namespace global
             }
             
             /**
-            * Returns a heap block by user data address.
-            *
-            * @return pointer to heap block.
-            */
+             * Returns a heap block by user data address.
+             *
+             * @return pointer to heap block.
+             */
             HeapBlock* heapBlock(void* const data)
             {
                 const uint32 addr = reinterpret_cast<uint32>(data) - sizeof(HeapBlock);
@@ -280,14 +280,14 @@ namespace global
             }
             
             /**
-            * Tests memory.
-            *
-            * TODO: normal type casts should be done.
-            *
-            * @param addr memory address pointer.
-            * @param size size in byte.
-            * @return true if test complete.
-            */
+             * Tests memory.
+             *
+             * TODO: normal type casts should be done.
+             *
+             * @param addr memory address pointer.
+             * @param size size in byte.
+             * @return true if test complete.
+             */
             static bool isMemoryAvailable(void* const addr, const int64 size)
             {
                 cell mask = -1;
@@ -344,15 +344,15 @@ namespace global
             }
         
             /**
-            * Allocates memory for heap.
-            *
-            * Method initiates a building of heap memory
-            * checks and tests self memory structure data
-            * and leads to call the class constructor.
-            *
-            * @param ptr  aligned to eight memory address.
-            * @return address of memory or NULL.
-            */
+             * Allocates memory for heap.
+             *
+             * Method initiates a building of heap memory
+             * checks and tests self memory structure data
+             * and leads to call the class constructor.
+             *
+             * @param ptr  aligned to eight memory address.
+             * @return address of memory or NULL.
+             */
             static void* create(void* ptr)
             {
                 // Size of this class has to be multipled to eight
@@ -379,51 +379,51 @@ namespace global
             }
             
             /** 
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */ 
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */ 
             Heap(const Heap& obj);
             
             /**
-            * Assignment operator.
-            *
-            * @param src reference to source object.
-            * @return reference to this object.     
-            */    
+             * Assignment operator.
+             *
+             * @param src reference to source object.
+             * @return reference to this object.     
+             */    
             Heap& operator =(const Heap&);
             
             /**
-            * Operator new.
-            *
-            * Method is defined for blocking operator new.
-            *
-            * @param size number of bytes to allocate.
-            * @return always null pointer.
-            */
+             * Operator new.
+             *
+             * Method is defined for blocking operator new.
+             *
+             * @param size number of bytes to allocate.
+             * @return always null pointer.
+             */
             void* operator new(size_t)
             {
                 return NULL;
             }
     
             /**
-            * Operator delete.
-            *
-            * Method does nothing and is defined for blocking operator delete.
-            *
-            * @param ptr address of allocated memory.
-            */  
+             * Operator delete.
+             *
+             * Method does nothing and is defined for blocking operator delete.
+             *
+             * @param ptr address of allocated memory.
+             */  
             void operator delete(void*)
             {
             }
                 
             /**
-            * Heap class aligner aligns that to eight.
-            *
-            * Note: If given SIZEOF is already multiple 8, the class size will be 8 bytes.
-            *
-            * @param SIZEOF size of Heap class.
-            */  
+             * Heap class aligner aligns that to eight.
+             *
+             * Note: If given SIZEOF is already multiple 8, the class size will be 8 bytes.
+             *
+             * @param SIZEOF size of Heap class.
+             */  
             template <int32 SIZEOF>
             struct Aligner
             {
@@ -431,8 +431,8 @@ namespace global
             public:
             
                 /** 
-                * Constructor.
-                */
+                 * Constructor.
+                 */
                 Aligner()
                 {
                     #ifdef EOOS_DEBUG
@@ -441,53 +441,53 @@ namespace global
                 }
                 
                 /** 
-                * Destructor.
-                */
-            ~Aligner(){}       
+                 * Destructor.
+                 */
+               ~Aligner(){}       
             
             private:
             
                 /**
-                * Aligning data size.
-                */
+                 * Aligning data size.
+                 */
                 static const int32 SIZE = (SIZEOF & ~0x7) + 0x8 - SIZEOF;
                 
                 /**
-                * Temp array.
-                */      
+                 * Temp array.
+                 */      
                 cell val_[SIZE];
         
             };
             
             /**
-            * Contains a Virtual Function Table only.
-            *
-            * Probably, the solution of using this empty class 
-            * is not delicate, but it works for understanding 
-            * about size of a virtual function table of this Heap class.
-            *
-            * Note: This int64 variable of the class is used, because some compilers 
-            * might put 64 bit variable to aligned 8 memory address. Therefore, size of classes 
-            * with 32 bit pointer to virtual table and one 64 bit variable is 16 bytes.
-            */    
+             * Contains a Virtual Function Table only.
+             *
+             * Probably, the solution of using this empty class 
+             * is not delicate, but it works for understanding 
+             * about size of a virtual function table of this Heap class.
+             *
+             * Note: This int64 variable of the class is used, because some compilers 
+             * might put 64 bit variable to aligned 8 memory address. Therefore, size of classes 
+             * with 32 bit pointer to virtual table and one 64 bit variable is 16 bytes.
+             */    
             class VirtualTable : public api::Heap{int64 temp;};    
             
             /** 
-            * Heap memory block.
-            *
-            * The class data has to be aligned to 8.
-            */    
+             * Heap memory block.
+             *
+             * The class data has to be aligned to 8.
+             */    
             class HeapBlock    
             {
         
             public:
         
                 /** 
-                * Constructor.
-                *
-                * @param heap pointer to heap class.
-                * @param size size of byte given to this new block.
-                */    
+                 * Constructor.
+                 *
+                 * @param heap pointer to heap class.
+                 * @param size size of byte given to this new block.
+                 */    
                 HeapBlock(api::Heap* heap, int64 size) :
                     heap_  (heap),
                     prev_  (NULL),
@@ -498,28 +498,28 @@ namespace global
                 }
                 
                 /** 
-                * Destructor.
-                */
-            ~HeapBlock()
+                 * Destructor.
+                 */
+               ~HeapBlock()
                 {
                 }
                 
                 /**
-                * Tests if this object has been constructed.
-                *
-                * @return true if object has been constructed successfully.
-                */    
+                 * Tests if this object has been constructed.
+                 *
+                 * @return true if object has been constructed successfully.
+                 */    
                 bool isConstructed() const
                 {
                     return key_ == BLOCK_KEY ? true : false;
                 }
                 
                 /**
-                * Allocates a memory block.
-                *
-                * @param size size in byte.
-                * @return pointer to an allocated memory.
-                */  
+                 * Allocates a memory block.
+                 *
+                 * @param size size in byte.
+                 * @return pointer to an allocated memory.
+                 */  
                 void* alloc(size_t size)
                 {
                     if(size == 0) 
@@ -572,8 +572,8 @@ namespace global
                 }
                 
                 /**
-                * Frees allocated memory by this block.
-                */  
+                 * Frees allocated memory by this block.
+                 */  
                 void free()
                 {
                     if( not canDelete() ) 
@@ -625,12 +625,12 @@ namespace global
                 }
                 
                 /**
-                * Operator new.
-                *
-                * @param size unused.
-                * @param ptr  address of memory.
-                * @return address of memory.
-                */   
+                 * Operator new.
+                 *
+                 * @param size unused.
+                 * @param ptr  address of memory.
+                 * @return address of memory.
+                 */   
                 void* operator new(size_t, void* const ptr)
                 {
                     // Size of this class must be multipled to eight
@@ -649,10 +649,10 @@ namespace global
             private:
         
                 /**
-                * Tests if this memory block is available for deleting.
-                *
-                * @return true if it may be deleted.
-                */  
+                 * Tests if this memory block is available for deleting.
+                 *
+                 * @return true if it may be deleted.
+                 */  
                 bool canDelete()
                 {
                     if( not isConstructed() ) 
@@ -667,20 +667,20 @@ namespace global
                 }
                 
                 /**
-                * Tests if this memory block is available.
-                *
-                * @return true if memory block is available.
-                */  
+                 * Tests if this memory block is available.
+                 *
+                 * @return true if memory block is available.
+                 */  
                 bool isUsed()
                 {
                     return (attr_ & ATTR_USED) != 0 ? true : false;
                 }
                 
                 /**
-                * Returns an address to data of this block.
-                *
-                * @return pointer to memory.
-                */
+                 * Returns an address to data of this block.
+                 *
+                 * @return pointer to memory.
+                 */
                 void* data()
                 {
                     const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock);
@@ -688,10 +688,10 @@ namespace global
                 }
                 
                 /**
-                * Returns an address to next block.
-                *
-                * @return pointer to memory.
-                */
+                 * Returns an address to next block.
+                 *
+                 * @return pointer to memory.
+                 */
                 void* next(const size_t size)
                 {
                     const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock) + size;
@@ -699,110 +699,110 @@ namespace global
                 }
                 
                 /**
-                * Copy constructor.
-                *
-                * @param obj reference to source object.
-                */
+                 * Copy constructor.
+                 *
+                 * @param obj reference to source object.
+                 */
                 HeapBlock(const HeapBlock& obj);
                 
                 /**
-                * Assignment operator.
-                *
-                * @param src reference to source object.
-                * @return reference to this object.       
-                */
+                 * Assignment operator.
+                 *
+                 * @param src reference to source object.
+                 * @return reference to this object.       
+                 */
                 HeapBlock& operator =(const HeapBlock&);
                 
                 /**
-                * Operator new.
-                *
-                * Method is defined for blocking operator new.
-                *
-                * @param size number of bytes to allocate.
-                * @return always null pointer.
-                */
+                 * Operator new.
+                 *
+                 * Method is defined for blocking operator new.
+                 *
+                 * @param size number of bytes to allocate.
+                 * @return always null pointer.
+                 */
                 void* operator new(size_t)
                 {
                     return NULL;
                 }
     
                 /**
-                * Operator delete.
-                *
-                * Method does nothing and is defined for blocking operator delete.
-                *
-                * @param ptr address of allocated memory.
-                */  
+                 * Operator delete.
+                 *
+                 * Method does nothing and is defined for blocking operator delete.
+                 *
+                 * @param ptr address of allocated memory.
+                 */  
                 void operator delete(void*)
                 {
                 }
                 
                 /**
-                * Heap block definition key.
-                */
+                 * Heap block definition key.
+                 */
                 static const int64 BLOCK_KEY = 0x1982040120150515;
                 
                 /**
-                * Block is used.
-                */
+                 * Block is used.
+                 */
                 static const int32 ATTR_USED = 0x00000001;
                 
                 /**
-                * Next block is free.
-                */    
+                 * Next block is free.
+                 */    
                 static const int32 NEXT_FREE = 0x00000001;
                 
                 /**
-                * Previous block is free.
-                */    
+                 * Previous block is free.
+                 */    
                 static const int32 PREV_FREE = 0x00000002;
                 
                 /**
-                * Heap page of this block.
-                */    
+                 * Heap page of this block.
+                 */    
                 api::Heap* heap_;
                 
                 /**
-                * Next block.
-                */
+                 * Next block.
+                 */
                 HeapBlock* prev_;
                 
                 /**
-                * Previous block.
-                */    
+                 * Previous block.
+                 */    
                 HeapBlock* next_;
                 
                 /**
-                * Attributes of this block.
-                */    
+                 * Attributes of this block.
+                 */    
                 int32 attr_;
                 
                 /**
-                * Size in byte of this block.
-                */    
+                 * Size in byte of this block.
+                 */    
                 int64 size_;
                 
                 /**
-                * Heap block definition key.
-                */    
+                 * Heap block definition key.
+                 */    
                 int64 key_;
     
             };
             
             /**
-            * Heap data.
-            *
-            * This structure is needed for aligning heap data or otherwise 
-            * this Heap class can not de aligned because it is incompleted.
-            */
+             * Heap data.
+             *
+             * This structure is needed for aligning heap data or otherwise 
+             * this Heap class can not de aligned because it is incompleted.
+             */
             struct HeapData
             {
                 /** 
-                * Constructor.
-                *
-                * @param ikey  heap key constant.       
-                * @param isize total heap size.
-                */
+                 * Constructor.
+                 *
+                 * @param ikey  heap key constant.       
+                 * @param isize total heap size.
+                 */
                 HeapData(int64 isize) :
                     block  (NULL),
                     toggle (NULL),
@@ -811,12 +811,12 @@ namespace global
                 }
             
                 /** 
-                * Constructor.
-                *
-                * @param ikey    heap key constant.       
-                * @param i1size  total heap size.
-                * @param itoggle reference to pointer to global interrupts interface.       
-                */
+                 * Constructor.
+                 *
+                 * @param ikey    heap key constant.       
+                 * @param i1size  total heap size.
+                 * @param itoggle reference to pointer to global interrupts interface.       
+                 */
                 HeapData(int64 isize, api::Toggle*& itoggle) :
                     block  (NULL),
                     toggle (&itoggle),
@@ -825,72 +825,72 @@ namespace global
                 }
                 
                 /** 
-                * Destructor.
-                */
-            ~HeapData(){}       
+                 * Destructor.
+                 */
+               ~HeapData(){}       
                 
                 /**
-                * First memory block of heap page memory.
-                */
+                 * First memory block of heap page memory.
+                 */
                 HeapBlock* block;
             
                 /**
-                * Threads switching off key.
-                *
-                * This interface controls a global thread switch off key
-                * by toggle interface. That interface has to disable
-                * a changing thread context. The most useful case is to give
-                * a global interrupts toggle interface.
-                */
+                 * Threads switching off key.
+                 *
+                 * This interface controls a global thread switch off key
+                 * by toggle interface. That interface has to disable
+                 * a changing thread context. The most useful case is to give
+                 * a global interrupts toggle interface.
+                 */
                 api::Toggle** toggle;       
             
                 /**
-                * Actual size of heap.
-                */
+                 * Actual size of heap.
+                 */
                 int64 size;
             
                 /**
-                * Heap page memory definition key.
-                */
+                 * Heap page memory definition key.
+                 */
                 int32 key;
             
             private:
         
                 /**
-                * Copy constructor.
-                *
-                * @param obj reference to source object.
-                */
+                 * Copy constructor.
+                 *
+                 * @param obj reference to source object.
+                 */
                 HeapData(const HeapData& obj);
             
                 /**
-                * Assignment operator.
-                *
-                * @param obj reference to source object.
-                * @return reference to this object.       
-                */
+                 * Assignment operator.
+                 *
+                 * @param obj reference to source object.
+                 * @return reference to this object.       
+                 */
                 HeapData& operator =(const HeapData& obj);
         
             };    
             
             /**
-            * Size of this Heap class without aligned data.
-            */    
+             * Size of this Heap class without aligned data.
+             */    
             static const int32 SIZEOF_HEAP = sizeof(HeapData) + sizeof(VirtualTable) - sizeof(int64);        
             
             /**
-            * Heap page memory definition key.
-            */
+             * Heap page memory definition key.
+             */
             static const int32 HEAP_KEY = 0x19811019;
             
             /**
-            * Data of this heap.
-            */    
+             * Data of this heap.
+             */    
             HeapData data_;    
             
             /**
-            * Aligning data.
-            */        
+             * Aligning data.
+             */        
             Aligner<SIZEOF_HEAP> temp_;  
     
         };

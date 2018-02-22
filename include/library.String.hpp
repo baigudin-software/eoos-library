@@ -16,37 +16,37 @@ namespace global
     namespace library
     {
         /**
-        * Primary template implements the static string class.
-        *
-        * @param T data type of string characters.     
-        * @param L maximum number of string characters, or 0 for dynamic allocation.
-        * @param A heap memory allocator class.
-        */
+         * Primary template implements the static string class.
+         *
+         * @param T data type of string characters.     
+         * @param L maximum number of string characters, or 0 for dynamic allocation.
+         * @param A heap memory allocator class.
+         */
         template <typename T, int32 L, class A = Allocator>    
         class String : public library::AbstractString<T,L,A>
         {
             typedef library::AbstractString<T,L,A> Parent;
             
             /** 
-            * Constructor.
-            */    
+             * Constructor.
+             */    
             String() : Parent()
             {
             }
             
             /** 
-            * Constructor.
-            *
-            * @param source a source character string.         
-            */    
+             * Constructor.
+             *
+             * @param source a source character string.         
+             */    
             String(const T* source) : Parent()
             {
                 this->copy(source);        
             } 
             
             /**
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~String()
             {
             } 
@@ -54,10 +54,10 @@ namespace global
         protected:
             
             /**
-            * Returns this string terminated character.
-            *
-            * @return a character which means that this string terminated.
-            */         
+             * Returns this string terminated character.
+             *
+             * @return a character which means that this string terminated.
+             */         
             virtual T getTerminator() const
             {
                 return T::TERMINATING_CHARACTER;
@@ -66,10 +66,10 @@ namespace global
         };
             
         /** 
-        * Char type partial specialization of the static string class.
-        *
-        * @param A heap memory allocator class.
-        */
+         * Char type partial specialization of the static string class.
+         *
+         * @param A heap memory allocator class.
+         */
         template <int32 L, class A>        
         class String<char,L,A> : public library::AbstractString<char,L,A>
         {
@@ -78,69 +78,69 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            */    
+             * Constructor.
+             */    
             String() : Parent()
             {
             }
             
             /** 
-            * Constructor.
-            *
-            * @param source a source object.         
-            */             
+             * Constructor.
+             *
+             * @param source a source object.         
+             */             
             String(const library::String<char,L,A>& source) : Parent()       
             {
                 this->copy(source);        
             }    
             
             /** 
-            * Constructor.
-            *
-            * @param source a source object interface.
-            */             
+             * Constructor.
+             *
+             * @param source a source object interface.
+             */             
             String(const api::String<char>& source) : Parent()       
             {
                 this->copy(source);        
             }                  
                 
             /** 
-            * Constructor.
-            *
-            * @param source a source character string.
-            */    
+             * Constructor.
+             *
+             * @param source a source character string.
+             */    
             String(const char* source) : Parent()
             {
                 this->copy(source);
             }
             
             /** 
-            * Constructor.
-            *
-            * @param value a source numerical value.
-            * @param base a numerical base used to represent a value as a string.         
-            */    
+             * Constructor.
+             *
+             * @param value a source numerical value.
+             * @param base a numerical base used to represent a value as a string.         
+             */    
             String(const int32 value) : Parent()
             {     
                 this->convert<int32>(value, 10);
             }        
             
             /**
-            * Casts to int32 type.
-            *
-            * @return a numerical value.     
-            */        
+             * Casts to int32 type.
+             *
+             * @return a numerical value.     
+             */        
             operator int32() const 
             { 
                 return this->template cast<int32>(10);
             }        
             
             /**
-            * Direct assignment operator.
-            *
-            * @param source a source object.
-            * @return this object.     
-            */
+             * Direct assignment operator.
+             *
+             * @param source a source object.
+             * @return this object.     
+             */
             library::String<char,L,A>& operator =(const library::String<char,L,A>& source)
             {
                 this->copy(source);
@@ -148,11 +148,11 @@ namespace global
             }
             
             /** 
-            * Assignment operator.
-            *
-            * @param source a source object interface.
-            * @return reference to this object.       
-            */     
+             * Assignment operator.
+             *
+             * @param source a source object interface.
+             * @return reference to this object.       
+             */     
             library::String<char,L,A>& operator =(const api::String<char>& source)
             {
                 this->copy(source);        
@@ -160,11 +160,11 @@ namespace global
             }   
             
             /** 
-            * Assignment operator.
-            *
-            * @param source a source character string.
-            * @return reference to this object.       
-            */     
+             * Assignment operator.
+             *
+             * @param source a source character string.
+             * @return reference to this object.       
+             */     
             library::String<char,L,A>& operator =(const char* source)
             {
                 this->copy(source);        
@@ -172,11 +172,11 @@ namespace global
             }             
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param source a source object.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param source a source object.
+             * @return reference to this object.       
+             */     
             library::String<char,L,A>& operator +=(const library::String<char,L,A>& source)
             {
                 this->concatenate(source);
@@ -184,11 +184,11 @@ namespace global
             }
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param source a source object interface.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param source a source object interface.
+             * @return reference to this object.       
+             */     
             library::String<char,L,A>& operator +=(const api::String<char>& source)
             {
                 this->concatenate(source);
@@ -196,11 +196,11 @@ namespace global
             }  
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param source a source character string.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param source a source character string.
+             * @return reference to this object.       
+             */     
             library::String<char,L,A>& operator +=(const char* source)
             {
                 this->concatenate(source);
@@ -208,11 +208,11 @@ namespace global
             }
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param value a source numerical value.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param value a source numerical value.
+             * @return reference to this object.       
+             */     
             library::String<char,L,A>& operator +=(const int32 value)
             {
                 const String string = value;
@@ -221,23 +221,23 @@ namespace global
             }        
             
             /** 
-            * Converts an integer number to this string.
-            *
-            * The function converts an integer value into a character string using the base parameter, 
-            * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
-            * 
-            * Mark that only if the base is decimal, a passed number is available to be negative values, 
-            * and the resulting string of these values is preceded with a minus sign. In addition, 
-            * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
-            * any suffixes or prefixes for identifying a numeral system.
-            *    
-            * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
-            * if you have to specify the template argument type explicitly.
-            *
-            * @param val  a value that would be converted to this string.
-            * @param base a numerical base used to represent a value as this string.
-            * @return true if the conversion has been completed successfully.
-            */        
+             * Converts an integer number to this string.
+             *
+             * The function converts an integer value into a character string using the base parameter, 
+             * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+             * 
+             * Mark that only if the base is decimal, a passed number is available to be negative values, 
+             * and the resulting string of these values is preceded with a minus sign. In addition, 
+             * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+             * any suffixes or prefixes for identifying a numeral system.
+             *    
+             * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
+             * if you have to specify the template argument type explicitly.
+             *
+             * @param val  a value that would be converted to this string.
+             * @param base a numerical base used to represent a value as this string.
+             * @return true if the conversion has been completed successfully.
+             */        
             template <typename I>
             bool convert(const I value, const int32 base = 10)
             {
@@ -251,14 +251,14 @@ namespace global
             }  
             
             /** 
-            * Casts this string to an integer number.
-            *
-            * NOTE: You need to use "string.template cast<I>(base);" syntax,
-            * if you have to specify the template argument type explicitly.         
-            *
-            * @param base a numerical base used to parse the string.
-            * @return the resulting number.
-            */        
+             * Casts this string to an integer number.
+             *
+             * NOTE: You need to use "string.template cast<I>(base);" syntax,
+             * if you have to specify the template argument type explicitly.         
+             *
+             * @param base a numerical base used to parse the string.
+             * @return the resulting number.
+             */        
             template <typename I>
             I cast(const int32 base = 10) const
             {
@@ -268,10 +268,10 @@ namespace global
         protected:
     
             /**
-            * Returns this string terminated character.
-            *
-            * @return a character which means that this string terminated.
-            */         
+             * Returns this string terminated character.
+             *
+             * @return a character which means that this string terminated.
+             */         
             virtual char getTerminator() const
             {
                 return '\0';
@@ -286,12 +286,12 @@ namespace global
         };
         
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator ==(const library::String<char,L,A>& source1, const library::String<char,L,A>& source2)
         {
@@ -299,12 +299,12 @@ namespace global
         }
         
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object interface 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object interface 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator ==(const library::String<char,L,A>& source1, const api::String<char>& source2)
         {
@@ -312,12 +312,12 @@ namespace global
         } 
         
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object interface 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object interface 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator ==(const api::String<char>& source1, const library::String<char,L,A>& source2)
         {
@@ -325,12 +325,12 @@ namespace global
         }
     
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source character string 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source character string 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator ==(const library::String<char,L,A>& source1, const char* source2)
         {
@@ -338,12 +338,12 @@ namespace global
         }
     
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source character string 1.
-        * @param source2 a source source object 2. 
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source character string 1.
+         * @param source2 a source source object 2. 
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator ==(const char* source1, const library::String<char,L,A>& source2)
         {
@@ -351,12 +351,12 @@ namespace global
         } 
         
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator !=(const library::String<char,L,A>& source1, const library::String<char,L,A>& source2)
         {
@@ -364,12 +364,12 @@ namespace global
         }
         
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object interface 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object interface 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator !=(const library::String<char,L,A>& source1, const api::String<char>& source2)
         {
@@ -377,12 +377,12 @@ namespace global
         } 
         
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object interface 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object interface 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator !=(const api::String<char>& source1, const library::String<char,L,A>& source2)
         {
@@ -390,12 +390,12 @@ namespace global
         }
     
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source character string 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source character string 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator !=(const library::String<char,L,A>& source1, const char* source2)
         {
@@ -403,12 +403,12 @@ namespace global
         }
     
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source character string 1.
-        * @param source2 a source source object 2. 
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source character string 1.
+         * @param source2 a source source object 2. 
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline bool operator !=(const char* source1, const library::String<char,L,A>& source2)
         {
@@ -416,12 +416,12 @@ namespace global
         }  
         
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline library::String<char,L,A> operator +(const library::String<char,L,A>& source1, const library::String<char,L,A>& source2)
         {
@@ -431,12 +431,12 @@ namespace global
         }
         
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object interface 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object interface 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline library::String<char,L,A> operator +(const library::String<char,L,A>& source1, const api::String<char>& source2)
         {
@@ -446,12 +446,12 @@ namespace global
         } 
         
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object interface 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object interface 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline library::String<char,L,A> operator +(const api::String<char>& source1, const library::String<char,L,A>& source2)
         {
@@ -461,12 +461,12 @@ namespace global
         }
     
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source character string 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source character string 2.
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline library::String<char,L,A> operator +(const library::String<char,L,A>& source1, const char* source2)
         {
@@ -476,12 +476,12 @@ namespace global
         }
     
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source character string 1.
-        * @param source2 a source source object 2. 
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source character string 1.
+         * @param source2 a source source object 2. 
+         * @return true if strings are equal.
+         */
         template <int32 L, class A>
         inline library::String<char,L,A> operator +(const char* source1, const library::String<char,L,A>& source2)
         {
@@ -493,11 +493,11 @@ namespace global
         #ifdef NO_STRICT_MISRA_RULES  
         
         /** 
-        * Partial specialization of the template implements the dynamic string class.
-        *
-        * @param T data type of string characters.
-        * @param A heap memory allocator class.
-        */
+         * Partial specialization of the template implements the dynamic string class.
+         *
+         * @param T data type of string characters.
+         * @param A heap memory allocator class.
+         */
         template <typename T, class A>    
         class String<T,0,A> : public library::AbstractString<T,0,A>
         {
@@ -506,25 +506,25 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            */    
+             * Constructor.
+             */    
             String() : Parent()
             {
             }    
         
             /** 
-            * Constructor.
-            *
-            * @param source a source character string.        
-            */    
+             * Constructor.
+             *
+             * @param source a source character string.        
+             */    
             String(const T* source) : Parent()
             {
                 this->copy(source);        
             } 
             
             /**
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~String()
             {
             } 
@@ -532,10 +532,10 @@ namespace global
         protected:
             
             /**
-            * Returns this string terminated character.
-            *
-            * @return a character which means that this string terminated.
-            */         
+             * Returns this string terminated character.
+             *
+             * @return a character which means that this string terminated.
+             */         
             virtual T getTerminator() const
             {
                 return T::TERMINATING_CHARACTER;
@@ -544,10 +544,10 @@ namespace global
         };
     
         /** 
-        * Char type partial specialization of the dynamic string class.
-        *
-        * @param A heap memory allocator class.
-        */
+         * Char type partial specialization of the dynamic string class.
+         *
+         * @param A heap memory allocator class.
+         */
         template <class A>        
         class String<char,0,A> : public library::AbstractString<char,0,A>
         {
@@ -556,69 +556,69 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            */    
+             * Constructor.
+             */    
             String() : Parent()
             {
             }
             
             /** 
-            * Constructor.
-            *
-            * @param source a source object.         
-            */             
+             * Constructor.
+             *
+             * @param source a source object.         
+             */             
             String(const library::String<char,0,A>& source) : Parent()       
             {
                 this->copy(source);        
             }    
             
             /** 
-            * Constructor.
-            *
-            * @param source a source object interface.
-            */             
+             * Constructor.
+             *
+             * @param source a source object interface.
+             */             
             String(const api::String<char>& source) : Parent()       
             {
                 this->copy(source);        
             }                  
                 
             /** 
-            * Constructor.
-            *
-            * @param source a source character string.
-            */    
+             * Constructor.
+             *
+             * @param source a source character string.
+             */    
             String(const char* source) : Parent()
             {
                 this->copy(source);
             }
             
             /** 
-            * Constructor.
-            *
-            * @param value a source numerical value.
-            * @param base a numerical base used to represent a value as a string.         
-            */    
+             * Constructor.
+             *
+             * @param value a source numerical value.
+             * @param base a numerical base used to represent a value as a string.         
+             */    
             String(int32 value) : Parent()
             {     
                 this->convert<int32>(value, 10);
             }        
     
             /**
-            * Casts to int32 type.
-            *
-            * @return a numerical value.     
-            */        
+             * Casts to int32 type.
+             *
+             * @return a numerical value.     
+             */        
             operator int32() const 
             { 
                 return this->template cast<int32>(10);
             }        
             
             /**
-            * Direct assignment operator.
-            *
-            * @param source a source object.
-            * @return this object.     
-            */
+             * Direct assignment operator.
+             *
+             * @param source a source object.
+             * @return this object.     
+             */
             library::String<char,0,A>& operator =(const library::String<char,0,A>& source)
             {
                 this->copy(source);
@@ -626,11 +626,11 @@ namespace global
             }
             
             /** 
-            * Assignment operator.
-            *
-            * @param source a source object interface.
-            * @return reference to this object.       
-            */     
+             * Assignment operator.
+             *
+             * @param source a source object interface.
+             * @return reference to this object.       
+             */     
             library::String<char,0,A>& operator =(const api::String<char>& source)
             {
                 this->copy(source);        
@@ -638,11 +638,11 @@ namespace global
             }   
             
             /** 
-            * Assignment operator.
-            *
-            * @param source a source character string.
-            * @return reference to this object.       
-            */     
+             * Assignment operator.
+             *
+             * @param source a source character string.
+             * @return reference to this object.       
+             */     
             library::String<char,0,A>& operator =(const char* source)
             {
                 this->copy(source);        
@@ -650,11 +650,11 @@ namespace global
             }             
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param source a source object.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param source a source object.
+             * @return reference to this object.       
+             */     
             library::String<char,0,A>& operator +=(const library::String<char,0,A>& source)
             {
                 this->concatenate(source);
@@ -662,11 +662,11 @@ namespace global
             }
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param source a source object interface.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param source a source object interface.
+             * @return reference to this object.       
+             */     
             library::String<char,0,A>& operator +=(const api::String<char>& source)
             {
                 this->concatenate(source);
@@ -674,11 +674,11 @@ namespace global
             }  
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param source a source character string.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param source a source character string.
+             * @return reference to this object.       
+             */     
             library::String<char,0,A>& operator +=(const char* source)
             {
                 this->concatenate(source);
@@ -686,11 +686,11 @@ namespace global
             }
             
             /** 
-            * Assignment by sum operator.
-            *
-            * @param value a source numerical value.
-            * @return reference to this object.       
-            */     
+             * Assignment by sum operator.
+             *
+             * @param value a source numerical value.
+             * @return reference to this object.       
+             */     
             library::String<char,0,A>& operator +=(int32 value)
             {
                 String string = value;
@@ -699,23 +699,23 @@ namespace global
             }        
             
             /** 
-            * Converts an integer number to this string.
-            *
-            * The function converts an integer value into a character string using the base parameter, 
-            * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
-            * 
-            * Mark that only if the base is decimal, a passed number is available to be negative values, 
-            * and the resulting string of these values is preceded with a minus sign. In addition, 
-            * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
-            * any suffixes or prefixes for identifying a numeral system.
-            *    
-            * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
-            * if you have to specify the template argument type explicitly.
-            *
-            * @param val  a value that would be converted to this string.
-            * @param base a numerical base used to represent a value as this string.
-            * @return true if the conversion has been completed successfully.
-            */        
+             * Converts an integer number to this string.
+             *
+             * The function converts an integer value into a character string using the base parameter, 
+             * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+             * 
+             * Mark that only if the base is decimal, a passed number is available to be negative values, 
+             * and the resulting string of these values is preceded with a minus sign. In addition, 
+             * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+             * any suffixes or prefixes for identifying a numeral system.
+             *    
+             * NOTE: You need to use "string.template convert<I>(value, base);" syntax, 
+             * if you have to specify the template argument type explicitly.
+             *
+             * @param val  a value that would be converted to this string.
+             * @param base a numerical base used to represent a value as this string.
+             * @return true if the conversion has been completed successfully.
+             */        
             template <typename I>
             bool convert(I value, int32 base = 10)
             {
@@ -729,14 +729,14 @@ namespace global
             }  
             
             /** 
-            * Casts this string to an integer number.
-            *
-            * NOTE: You need to use "string.template cast<I>(base);" syntax,
-            * if you have to specify the template argument type explicitly.         
-            *
-            * @param base a numerical base used to parse the string.
-            * @return the resulting number.
-            */        
+             * Casts this string to an integer number.
+             *
+             * NOTE: You need to use "string.template cast<I>(base);" syntax,
+             * if you have to specify the template argument type explicitly.         
+             *
+             * @param base a numerical base used to parse the string.
+             * @return the resulting number.
+             */        
             template <typename I>
             I cast(int32 base = 10) const
             {
@@ -746,10 +746,10 @@ namespace global
         protected:
     
             /**
-            * Returns this string terminated character.
-            *
-            * @return a character which means that this string terminated.
-            */         
+             * Returns this string terminated character.
+             *
+             * @return a character which means that this string terminated.
+             */         
             virtual char getTerminator() const
             {
                 return '\0';
@@ -764,12 +764,12 @@ namespace global
         };
         
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator ==(const library::String<char,0,A>& source1, const library::String<char,0,A>& source2)
         {
@@ -777,12 +777,12 @@ namespace global
         }
         
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object interface 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object interface 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator ==(const library::String<char,0,A>& source1, const api::String<char>& source2)
         {
@@ -790,12 +790,12 @@ namespace global
         } 
         
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object interface 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object interface 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator ==(const api::String<char>& source1, const library::String<char,0,A>& source2)
         {
@@ -803,12 +803,12 @@ namespace global
         }
     
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source character string 2.
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source character string 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator ==(const library::String<char,0,A>& source1, const char* source2)
         {
@@ -816,12 +816,12 @@ namespace global
         }
     
         /**
-        * Compares for equality of two strings.
-        *
-        * @param source1 a source character string 1.
-        * @param source2 a source source object 2. 
-        * @return true if strings are equal.
-        */
+         * Compares for equality of two strings.
+         *
+         * @param source1 a source character string 1.
+         * @param source2 a source source object 2. 
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator ==(const char* source1, const library::String<char,0,A>& source2)
         {
@@ -829,12 +829,12 @@ namespace global
         } 
         
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator !=(const library::String<char,0,A>& source1, const library::String<char,0,A>& source2)
         {
@@ -842,12 +842,12 @@ namespace global
         }
         
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object interface 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object interface 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator !=(const library::String<char,0,A>& source1, const api::String<char>& source2)
         {
@@ -855,12 +855,12 @@ namespace global
         } 
         
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object interface 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object interface 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator !=(const api::String<char>& source1, const library::String<char,0,A>& source2)
         {
@@ -868,12 +868,12 @@ namespace global
         }
     
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source character string 2.
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source character string 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator !=(const library::String<char,0,A>& source1, const char* source2)
         {
@@ -881,12 +881,12 @@ namespace global
         }
     
         /**
-        * Compares for inequality of two strings.
-        *
-        * @param source1 a source character string 1.
-        * @param source2 a source source object 2. 
-        * @return true if strings are equal.
-        */
+         * Compares for inequality of two strings.
+         *
+         * @param source1 a source character string 1.
+         * @param source2 a source source object 2. 
+         * @return true if strings are equal.
+         */
         template <class A>
         inline bool operator !=(const char* source1, const library::String<char,0,A>& source2)
         {
@@ -894,12 +894,12 @@ namespace global
         }  
         
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline library::String<char,0,A> operator +(const library::String<char,0,A>& source1, const library::String<char,0,A>& source2)
         {
@@ -909,12 +909,12 @@ namespace global
         }
         
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source object interface 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source object interface 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline library::String<char,0,A> operator +(const library::String<char,0,A>& source1, const api::String<char>& source2)
         {
@@ -924,12 +924,12 @@ namespace global
         } 
         
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object interface 1.
-        * @param source2 a source object 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object interface 1.
+         * @param source2 a source object 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline library::String<char,0,A> operator +(const api::String<char>& source1, const library::String<char,0,A>& source2)
         {
@@ -939,12 +939,12 @@ namespace global
         }
     
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source object 1.
-        * @param source2 a source character string 2.
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source object 1.
+         * @param source2 a source character string 2.
+         * @return true if strings are equal.
+         */
         template <class A>
         inline library::String<char,0,A> operator +(const library::String<char,0,A>& source1, const char* source2)
         {
@@ -954,12 +954,12 @@ namespace global
         }
     
         /**
-        * Concatenates two strings.
-        *
-        * @param source1 a source character string 1.
-        * @param source2 a source source object 2. 
-        * @return true if strings are equal.
-        */
+         * Concatenates two strings.
+         *
+         * @param source1 a source character string 1.
+         * @param source2 a source source object 2. 
+         * @return true if strings are equal.
+         */
         template <class A>
         inline library::String<char,0,A> operator +(const char* source1, const library::String<char,0,A>& source2)
         {

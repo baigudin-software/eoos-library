@@ -16,9 +16,9 @@ namespace global
     namespace library
     {
         /** 
-        *
-        * @param A heap memory allocator class.
-        */  
+         *
+         * @param A heap memory allocator class.
+         */  
         template <class A = Allocator>
         class Toggle : public library::Object<A>, public api::Toggle
         {
@@ -27,50 +27,50 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            *
-            * Default constructor is used for creating 
-            * the object which will switch nothing.
-            */
+             * Constructor.
+             *
+             * Default constructor is used for creating 
+             * the object which will switch nothing.
+             */
             Toggle() : Parent(),
                 pointer_ (NULL),      
                 toggle_  (&pointer_){
             }  
         
             /** 
-            * Constructor.
-            *
-            * @param sw reference to toggle interface for controlling its.
-            */
+             * Constructor.
+             *
+             * @param sw reference to toggle interface for controlling its.
+             */
             Toggle(api::Toggle& sw) : Parent(),
                 pointer_ (&sw),      
                 toggle_  (&pointer_){
             }
             
             /** 
-            * Constructor.
-            *
-            * Until the referenced pointer equals NULL the Toggle will not switch
-            * given controller. This feature is the most important when a controller
-            * might be used before it is initialized.
-            *
-            * @param sw reference to pointer of toggle interface for controlling its.
-            */
+             * Constructor.
+             *
+             * Until the referenced pointer equals NULL the Toggle will not switch
+             * given controller. This feature is the most important when a controller
+             * might be used before it is initialized.
+             *
+             * @param sw reference to pointer of toggle interface for controlling its.
+             */
             Toggle(api::Toggle*& sw) : Parent(),
                 pointer_ (NULL),    
                 toggle_  (&sw){
             }
         
             /** 
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~Toggle(){}
             
             /**
-            * Tests if this object has been constructed.
-            *
-            * @return true if object has been constructed successfully.
-            */    
+             * Tests if this object has been constructed.
+             *
+             * @return true if object has been constructed successfully.
+             */    
             virtual bool isConstructed() const
             {
                 if( not this->isConstructed_ ) 
@@ -81,10 +81,10 @@ namespace global
             }
         
             /** 
-            * Disables a controller.
-            *
-            * @return an enable source bit value of a controller before method was called.
-            */ 
+             * Disables a controller.
+             *
+             * @return an enable source bit value of a controller before method was called.
+             */ 
             virtual bool disable()
             {
                 if( not isConstructed()) 
@@ -96,10 +96,10 @@ namespace global
             }
         
             /** 
-            * Enables a controller.
-            *
-            * @param status returned status by disable method.
-            */    
+             * Enables a controller.
+             *
+             * @param status returned status by disable method.
+             */    
             virtual void enable(const bool status)
             {
                 if( not isConstructed() ) 
@@ -113,27 +113,27 @@ namespace global
         private:
     
             /**
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */
             Toggle(const Toggle& obj);
         
             /**
-            * Assignment operator.
-            *
-            * @param obj reference to source object.
-            */
+             * Assignment operator.
+             *
+             * @param obj reference to source object.
+             */
             Toggle& operator =(const Toggle& obj);
         
             /**
-            * Pointer to always existent interface.
-            */
+             * Pointer to always existent interface.
+             */
             api::Toggle* pointer_;  
             
             /**
-            * Pointer to pointer to maybe existent interface.
-            */
+             * Pointer to pointer to maybe existent interface.
+             */
             api::Toggle** toggle_;
     
         };

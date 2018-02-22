@@ -20,13 +20,13 @@ namespace global
         public:
         
             /** 
-            * Copies a block of memory.
-            *
-            * @param dst a destination array where the content would be copied.
-            * @param src a source array to be copied.
-            * @param len a number of bytes to copy.         
-            * @return a pointer to the destination array, or NULL if an error has been occurred.         
-            */
+             * Copies a block of memory.
+             *
+             * @param dst a destination array where the content would be copied.
+             * @param src a source array to be copied.
+             * @param len a number of bytes to copy.         
+             * @return a pointer to the destination array, or NULL if an error has been occurred.         
+             */
             static void* memcpy(void* const dst, const void* src, size_t len)
             {
                 if(dst == NULL || src == NULL) 
@@ -40,13 +40,13 @@ namespace global
             }
             
             /** 
-            * Fills a block of memory.
-            *
-            * @param dst a destination block of memory would be filled.
-            * @param val a value to be set.
-            * @param len a number of bytes to be set to the value.
-            * @return a pointer to the destination memory, or NULL if an error has been occurred.         
-            */
+             * Fills a block of memory.
+             *
+             * @param dst a destination block of memory would be filled.
+             * @param val a value to be set.
+             * @param len a number of bytes to be set to the value.
+             * @return a pointer to the destination memory, or NULL if an error has been occurred.         
+             */
             static void* memset(void* const dst, const cell val, size_t len)
             {
                 if(dst == NULL) 
@@ -60,11 +60,11 @@ namespace global
             }
             
             /** 
-            * Returns the length of a passed string .
-            *
-            * @param str a character string would be measured.
-            * @return the length of the passed string.
-            */
+             * Returns the length of a passed string .
+             *
+             * @param str a character string would be measured.
+             * @return the length of the passed string.
+             */
             static size_t strlen(const char* str)
             {
                 if(str == NULL)
@@ -81,12 +81,12 @@ namespace global
             }
             
             /** 
-            * Copies one string to another .
-            *
-            * @param dst a destination array where the content would be copied.
-            * @param src a character string to be copied.
-            * @return a pointer to the destination string, or NULL if an error has been occurred.
-            */
+             * Copies one string to another .
+             *
+             * @param dst a destination array where the content would be copied.
+             * @param src a character string to be copied.
+             * @return a pointer to the destination string, or NULL if an error has been occurred.
+             */
             static char* strcpy(char* const dst, const char* src)
             {
                 if(dst == NULL || src == NULL) 
@@ -101,12 +101,12 @@ namespace global
             
             
             /** 
-            * Concatenates two strings.
-            *
-            * @param dst a destination character string where the content would be appended.
-            * @param src a character string to be appended.
-            * @return a pointer to the destination string, or NULL if an error has been occurred.
-            */
+             * Concatenates two strings.
+             *
+             * @param dst a destination character string where the content would be appended.
+             * @param src a character string to be appended.
+             * @return a pointer to the destination string, or NULL if an error has been occurred.
+             */
             static char* strcat(char* const dst, const char* src)
             {
                 if(dst == NULL || src == NULL) 
@@ -122,15 +122,15 @@ namespace global
             }
             
             /** 
-            * Compares two strings.
-            *
-            * @param str1 character string to be compared.
-            * @param str2 character string to be compared.
-            * @return the value 0 if the string 1 is equal to the string 2; 
-            *         a value less than 0 if the string 1 is shorter than the string 2; 
-            *         a value greater than 0 if the string 1 is longer than the string 2, 
-            *         or the minimum possible value if an error has been occurred.
-            */
+             * Compares two strings.
+             *
+             * @param str1 character string to be compared.
+             * @param str2 character string to be compared.
+             * @return the value 0 if the string 1 is equal to the string 2; 
+             *         a value less than 0 if the string 1 is shorter than the string 2; 
+             *         a value greater than 0 if the string 1 is longer than the string 2, 
+             *         or the minimum possible value if an error has been occurred.
+             */
             static int32 strcmp(const char* str1, const char* str2)
             {
                 if(str1 == NULL || str2 == NULL) 
@@ -151,21 +151,21 @@ namespace global
             }
             
             /** 
-            * Converts an integer number to a string.
-            *
-            * The function converts an integer value into a character string using the base parameter, 
-            * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
-            * 
-            * Mark that only if the base is decimal, a passed number is available to be negative values, 
-            * and the resulting string of these values is preceded with a minus sign. In addition, 
-            * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
-            * any suffixes or prefixes for identifying a numeral system.
-            *
-            * @param val  a value that would be converted to a string.
-            * @param str  a character string for a result of the conversion.
-            * @param base a numerical base used to represent a value as a string.
-            * @return true if the conversion has been completed successfully.
-            */
+             * Converts an integer number to a string.
+             *
+             * The function converts an integer value into a character string using the base parameter, 
+             * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+             * 
+             * Mark that only if the base is decimal, a passed number is available to be negative values, 
+             * and the resulting string of these values is preceded with a minus sign. In addition, 
+             * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+             * any suffixes or prefixes for identifying a numeral system.
+             *
+             * @param val  a value that would be converted to a string.
+             * @param str  a character string for a result of the conversion.
+             * @param base a numerical base used to represent a value as a string.
+             * @return true if the conversion has been completed successfully.
+             */
             template <typename Type>
             static bool itoa(const Type val, char* str, const int32 base = 10)
             {
@@ -249,12 +249,12 @@ namespace global
             } 
             
             /** 
-            * Converts a string to an integer number.
-            *
-            * @param str a character string that would be converted to a number.
-            * @param base a numerical base used to parse the string.         
-            * @return the resulting number.
-            */
+             * Converts a string to an integer number.
+             *
+             * @param str a character string that would be converted to a number.
+             * @param base a numerical base used to parse the string.         
+             * @return the resulting number.
+             */
             template <typename Type>         
             static Type atoi(const char* str, const int32 base = 10)
             {
@@ -318,11 +318,11 @@ namespace global
         private:   
         
             /** 
-            * Test if a value is signed or unsigned.
-            *
-            * @param value a value that would be tested.
-            * @return true if the value has been negative.
-            */
+             * Test if a value is signed or unsigned.
+             *
+             * @param value a value that would be tested.
+             * @return true if the value has been negative.
+             */
             template <typename Type>
             static bool isPositive(const Type value)
             {
@@ -330,23 +330,23 @@ namespace global
             }
             
             /** 
-            * Tests if a character is a whitespace character.
-            *
-            * @param ch a character code.
-            * @return true if the character is whitespace.
-            */         
+             * Tests if a character is a whitespace character.
+             *
+             * @param ch a character code.
+             * @return true if the character is whitespace.
+             */         
             static bool isSpace(const int32 ch)
             {
                 return ch == 0x20 || (ch >= 0x09 && ch <= 0x0D) ? true : false;
             }  
     
             /** 
-            * Tests if a character is a decimal number.
-            *
-            * @param ch a character code.
-            * @param base a numerical base used to parse the character.         
-            * @return true if the character is a decimal number.
-            */        
+             * Tests if a character is a decimal number.
+             *
+             * @param ch a character code.
+             * @param base a numerical base used to parse the character.         
+             * @return true if the character is a decimal number.
+             */        
             static bool isDigit(const int32 ch, const int32 base = 10)
             {
                 switch(base)
@@ -372,12 +372,12 @@ namespace global
             } 
             
             /** 
-            * Detect subtrahend and addend for hex numbers.
-            *
-            * @param testCh    a testing character code.
-            * @param subCh     a resulting subtrahend.
-            * @param subDecade a resulting addend.                  
-            */        
+             * Detect subtrahend and addend for hex numbers.
+             *
+             * @param testCh    a testing character code.
+             * @param subCh     a resulting subtrahend.
+             * @param subDecade a resulting addend.                  
+             */        
             static void detectMathOperands(const int32 testCh, char& subtrahend, int32& addend)
             {
                 // Test for uppercase letter

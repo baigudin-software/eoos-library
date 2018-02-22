@@ -21,12 +21,12 @@ namespace global
     namespace library
     { 
         /** 
-        * Primary template implements the static buffer class.
-        *
-        * @param T data type of buffer element.     
-        * @param L maximum number of buffer elements, or 0 for dynamic allocation. 
-        * @param A heap memory allocator class.
-        */ 
+         * Primary template implements the static buffer class.
+         *
+         * @param T data type of buffer element.     
+         * @param L maximum number of buffer elements, or 0 for dynamic allocation. 
+         * @param A heap memory allocator class.
+         */ 
         template <typename T, int32 L, class A = Allocator>
         class Buffer : public library::AbstractBuffer<T,A>
         {
@@ -35,37 +35,37 @@ namespace global
         public:      
     
             /** 
-            * Constructor.
-            */    
+             * Constructor.
+             */    
             Buffer() : Parent(L),
                 buf_ (arr_){
             }
         
             /** 
-            * Constructor.
-            *
-            * @param illegal illegal value.
-            */    
+             * Constructor.
+             *
+             * @param illegal illegal value.
+             */    
             Buffer(const T illegal) : Parent(L, illegal),
                 buf_ (arr_){
             }
         
             /**
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~Buffer()
             {
             }
         
             /**
-            * Assignment operator.
-            *
-            * If the source buffer is greater than this buffer,
-            * only cropped data of that will be copied.
-            *
-            * @param buf reference to source buffer.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf reference to source buffer.
+             * @return reference to this object.     
+             */
             Buffer& operator =(const Buffer<T,L,A>& buf)
             {
                 this->copy(buf);
@@ -73,14 +73,14 @@ namespace global
             }
         
             /**
-            * Assignment operator.
-            *
-            * If the source buffer is greater than this buffer,
-            * only cropped data of that will be copied.
-            *
-            * @param buf reference to source buffer.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf reference to source buffer.
+             * @return reference to this object.     
+             */
             Buffer& operator =(const AbstractBuffer<T,A>& buf)
             {
                 this->copy(buf);
@@ -90,15 +90,15 @@ namespace global
         protected: 
     
             /**
-            * Returns a pointer to the fist buffer element.
-            *
-            * @return pointer to buffer, or NULL.
-            */
+             * Returns a pointer to the fist buffer element.
+             *
+             * @return pointer to buffer, or NULL.
+             */
             virtual T* getBuffer() const
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 return buf_;
             }
@@ -106,20 +106,20 @@ namespace global
         private: 
     
             /**
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */
             Buffer(const Buffer& obj);
         
             /**
-            * Current array of T elements.
-            */  
+             * Current array of T elements.
+             */  
             T arr_[L];
             
             /**
-            * Pointer to current array.
-            */    
+             * Pointer to current array.
+             */    
             T* buf_;
         
         };
@@ -127,11 +127,11 @@ namespace global
         #ifdef NO_STRICT_MISRA_RULES
     
         /** 
-        * Partial specialization of the template implements the dynamic buffer class.
-        *
-        * @param T data type of buffer element.     
-        * @param A heap memory allocator class.
-        */
+         * Partial specialization of the template implements the dynamic buffer class.
+         *
+         * @param T data type of buffer element.     
+         * @param A heap memory allocator class.
+         */
         template <typename T, class A>
         class Buffer<T,0,A> : public AbstractBuffer<T,A>
         {
@@ -140,26 +140,26 @@ namespace global
         public:      
     
             /** 
-            * Constructor.
-            *
-            * @param count count of buffer elements.
-            */    
+             * Constructor.
+             *
+             * @param count count of buffer elements.
+             */    
             Buffer(int32 count) : Parent(count),
-                buf_      (NULL),
+                buf_      (this->NULL),
                 isDelete_ (true){
                 const bool isConstructed = construct(count);
                 this->setConstruct( isConstructed );
             }
         
             /** 
-            * Constructor.
-            *
-            * NOTE: Given external buffer has to exist until this object is being lived,
-            * and will NOT be deleted when the buffer is being deleted.
-            *
-            * @param count number of elements.
-            * @param buf   pointer to external buffer.
-            */    
+             * Constructor.
+             *
+             * NOTE: Given external buffer has to exist until this object is being lived,
+             * and will NOT be deleted when the buffer is being deleted.
+             *
+             * @param count number of elements.
+             * @param buf   pointer to external buffer.
+             */    
             Buffer(int32 count, T* buf) : Parent (count),
                 buf_      (buf),
                 isDelete_ (false){
@@ -168,28 +168,28 @@ namespace global
             }
         
             /** 
-            * Constructor.
-            *
-            * @param count   count of buffer elements.
-            * @param illegal illegal value.
-            */    
+             * Constructor.
+             *
+             * @param count   count of buffer elements.
+             * @param illegal illegal value.
+             */    
             Buffer(int32 count, const T illegal) : Parent(count, illegal),
-                buf_      (NULL),
+                buf_      (this->NULL),
                 isDelete_ (true){
                 const bool isConstructed = construct(count);
                 this->setConstruct( isConstructed );
             }
         
             /** 
-            * Constructor.
-            *
-            * NOTE: Given external buffer has to exist until this object is being lived,
-            * and will NOT be deleted when the buffer is being deleted.     
-            *
-            * @param count   number of elements.
-            * @param illegal illegal value.
-            * @param buf     pointer to external buffer.
-            */    
+             * Constructor.
+             *
+             * NOTE: Given external buffer has to exist until this object is being lived,
+             * and will NOT be deleted when the buffer is being deleted.     
+             *
+             * @param count   number of elements.
+             * @param illegal illegal value.
+             * @param buf     pointer to external buffer.
+             */    
             Buffer(int32 count, const T illegal, T* buf) : Parent(count, illegal),
                 buf_      (buf),
                 isDelete_ (false){
@@ -199,8 +199,8 @@ namespace global
         
         
             /**
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~Buffer()
             {
                 if(isDelete_) 
@@ -210,14 +210,14 @@ namespace global
             }
         
             /**
-            * Assignment operator.
-            *
-            * If the source buffer is greater than this buffer,
-            * only cropped data of that will be copied.
-            *
-            * @param buf reference to source buffer.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf reference to source buffer.
+             * @return reference to this object.     
+             */
             Buffer& operator =(const Buffer<T,0,A>& buf)
             {
                 this->copy(buf);
@@ -225,14 +225,14 @@ namespace global
             }
         
             /**
-            * Assignment operator.
-            *
-            * If the source buffer is greater than this buffer,
-            * only cropped data of that will be copied.
-            *
-            * @param buf reference to source buffer.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf reference to source buffer.
+             * @return reference to this object.     
+             */
             Buffer& operator =(const AbstractBuffer<T,A>& buf)
             {
                 this->copy(buf);
@@ -242,15 +242,15 @@ namespace global
         protected: 
     
             /**
-            * Returns a pointer to the fist buffer element.
-            *
-            * @return pointer to buffer, or NULL.
-            */
+             * Returns a pointer to the fist buffer element.
+             *
+             * @return pointer to buffer, or NULL.
+             */
             virtual T* getBuffer() const
             {
                 if( not this->isConstructed_ )
                 {
-                    return NULL;
+                    return this->NULL;
                 }
                 return buf_;
             }
@@ -258,11 +258,11 @@ namespace global
         private: 
     
             /** 
-            * Constructor.
-            *
-            * @param count count of buffer elements.
-            * @return boolean result.
-            */
+             * Constructor.
+             *
+             * @param count count of buffer elements.
+             * @return boolean result.
+             */
             bool construct(const int32 count)
             {
                 if( not this->isConstructed_ ) 
@@ -271,31 +271,31 @@ namespace global
                 }
                 // If you have a WTF question looking at the next construction, then look
                 // at description of 'allocate' template method of 'Object' template class.
-                if(buf_ == NULL) 
+                if(buf_ == this->NULL) 
                 {
                     buf_ = this->template allocate<T*>(count * sizeof(T));
                 }
-                return buf_ == NULL ? false : true;
+                return buf_ == this->NULL ? false : true;
             }
         
             /**
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */
             Buffer(const Buffer& obj);
         
             /**
-            * Pointer to external given or self created array.
-            */     
+             * Pointer to external given or self created array.
+             */     
             T* buf_;
             
             /**
-            * Deletet flag.
-            *
-            * Is set to true for self created array or 
-            * set to false for external given array.
-            */        
+             * Deletet flag.
+             *
+             * Is set to true for self created array or 
+             * set to false for external given array.
+             */        
             bool isDelete_;
         
         };

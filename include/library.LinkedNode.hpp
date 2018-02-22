@@ -15,9 +15,9 @@ namespace global
     namespace library
     {  
         /** 
-        * @param T data type of element.
-        * @param A heap memory allocator class.
-        */
+         * @param T data type of element.
+         * @param A heap memory allocator class.
+         */
         template <typename T, class A = Allocator>
         class LinkedNode : public library::Object<A>
         {
@@ -26,10 +26,10 @@ namespace global
         public:
         
             /**
-            * Constructor.
-            *
-            * @param element an user element of this node.
-            */
+             * Constructor.
+             *
+             * @param element an user element of this node.
+             */
             LinkedNode(T element) : Parent(),
                 prev_    (this),
                 next_    (this),
@@ -38,8 +38,8 @@ namespace global
             }
         
             /**
-            * Destructor.
-            */
+             * Destructor.
+             */
             virtual ~LinkedNode()
             {
                 LinkedNode* node = this->next_;
@@ -55,23 +55,23 @@ namespace global
             }
             
             /**
-            * Tests if this object has been constructed.
-            *
-            * @return true if object has been constructed successfully.
-            */
+             * Tests if this object has been constructed.
+             *
+             * @return true if object has been constructed successfully.
+             */
             virtual bool isConstructed() const
             {
                 return this->isConstructed_;
             }        
         
             /**
-            * Inserts a new element after this.
-            *
-            * Method links a node after this and reindexes
-            * chain of nodes starts from given node.
-            *
-            * @param node pointer to inserted node.
-            */
+             * Inserts a new element after this.
+             *
+             * Method links a node after this and reindexes
+             * chain of nodes starts from given node.
+             *
+             * @param node pointer to inserted node.
+             */
             virtual void insertAfter(library::LinkedNode<T,A>* node)
             {
                 link(node);
@@ -85,13 +85,13 @@ namespace global
             }
         
             /**
-            * Inserts a new element after this.
-            *
-            * Method links a node before this and reindexes
-            * chain of nodes starts from this node.
-            *
-            * @param node pointer to inserted node.
-            */
+             * Inserts a new element after this.
+             *
+             * Method links a node before this and reindexes
+             * chain of nodes starts from this node.
+             *
+             * @param node pointer to inserted node.
+             */
             virtual void insertBefore(library::LinkedNode<T,A>* node)
             {
                 prev_->link(node);
@@ -106,40 +106,40 @@ namespace global
             }
         
             /**
-            * Returns previous element.
-            *
-            * @return previous element.
-            */  
+             * Returns previous element.
+             *
+             * @return previous element.
+             */  
             virtual library::LinkedNode<T,A>* getPrevious() const
             {
                 return prev_;
             }
             
             /**
-            * Returns next element.
-            *
-            * @return next element.
-            */  
+             * Returns next element.
+             *
+             * @return next element.
+             */  
             virtual library::LinkedNode<T,A>* getNext() const
             {
                 return next_;
             }
         
             /**
-            * Returns the element.
-            *
-            * @return next element.
-            */  
+             * Returns the element.
+             *
+             * @return next element.
+             */  
             virtual T getElement() const
             {
                 return element_;
             }
         
             /**
-            * Returns the element index.
-            *
-            * @return element index.
-            */  
+             * Returns the element index.
+             *
+             * @return element index.
+             */  
             virtual int32 getIndex() const
             {
                 return index_;
@@ -148,10 +148,10 @@ namespace global
         private:
         
             /**
-            * Links a given node after this.
-            *
-            * @param node pointer to linking node.
-            */
+             * Links a given node after this.
+             *
+             * @param node pointer to linking node.
+             */
             void link(library::LinkedNode<T,A>* node)
             {
                 next_->prev_ = node;
@@ -161,38 +161,38 @@ namespace global
             }
         
             /**
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */
             LinkedNode(const LinkedNode& obj);
         
             /**
-            * Assignment operator.
-            *
-            * @param obj reference to source object.
-            * @return reference to this object.     
-            */
+             * Assignment operator.
+             *
+             * @param obj reference to source object.
+             * @return reference to this object.     
+             */
             LinkedNode& operator =(const LinkedNode& obj);
         
             /**
-            * Previous node.
-            */
+             * Previous node.
+             */
             LinkedNode* prev_;
             
             /**
-            * Next node.
-            */    
+             * Next node.
+             */    
             LinkedNode* next_;
             
             /**
-            * Index of the node.
-            */
+             * Index of the node.
+             */
             int32 index_;
             
             /**
-            * Containing element.
-            */        
+             * Containing element.
+             */        
             T element_;
         
         };

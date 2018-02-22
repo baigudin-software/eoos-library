@@ -22,43 +22,43 @@ namespace global
         public:
         
             /** 
-            * Constructor.
-            */  
+             * Constructor.
+             */  
             Object() : Parent(),
                 isConstructed_ (this->getConstruct()){
             }
             
             /** 
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */ 
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */ 
             Object(const Object& obj) : Parent(obj),
                 isConstructed_ (this->getConstruct()){
             }
             
             /** 
-            * Copy constructor.
-            *
-            * @param obj reference to source object.
-            */ 
+             * Copy constructor.
+             *
+             * @param obj reference to source object.
+             */ 
             Object(const api::Object& obj) : Parent(obj),
                 isConstructed_ (this->getConstruct()){
             }    
             
             /** 
-            * Destructor.
-            */    
+             * Destructor.
+             */    
             virtual ~Object()
             {
             }  
             
             /** 
-            * Assignment operator.
-            *
-            * @param obj reference to source object.
-            * @return reference to this object.   
-            */  
+             * Assignment operator.
+             *
+             * @param obj reference to source object.
+             * @return reference to this object.   
+             */  
             Object& operator =(const Object& obj)
             {
                 Parent::operator=(obj);
@@ -68,8 +68,8 @@ namespace global
         protected:
             
             /** 
-            * The root object constructed flag.
-            */  
+             * The root object constructed flag.
+             */  
             const bool& isConstructed_;
         
         };
