@@ -87,7 +87,7 @@ namespace global
              */
             virtual bool copy(const T* str)
             {
-                if( not this->isConstructed_ || str == this->NULL )
+                if( not this->isConstructed_ || str == NULL )
                 {
                     return false;
                 }        
@@ -122,7 +122,7 @@ namespace global
              */
             virtual bool concatenate(const T* str)
             {
-                if( not this->isConstructed_ || str == this->NULL )
+                if( not this->isConstructed_ || str == NULL )
                 {
                     return false;
                 }                
@@ -167,7 +167,7 @@ namespace global
              */
             virtual int32 compare(const T* str) const
             {
-                if( not this->isConstructed_ || context_.str == this->NULL || str == this->NULL )
+                if( not this->isConstructed_ || context_.str == NULL || str == NULL )
                 {
                     return Parent::MINIMUM_POSSIBLE_VALUE_OF_INT32;
                 }                
@@ -219,7 +219,7 @@ namespace global
             /**
              * A contex of this class containing string.
              */        
-            struct Context : public api::Constant
+            struct Context
             {
             
             public:
@@ -423,7 +423,7 @@ namespace global
              */
             virtual bool copy(const T* str)
             {
-                if( not this->isConstructed_ || str == this->NULL )
+                if( not this->isConstructed_ || str == NULL )
                 {
                     return false;
                 }        
@@ -458,7 +458,7 @@ namespace global
              */
             virtual bool concatenate(const T* str)
             {
-                if( not this->isConstructed_ || str == this->NULL )
+                if( not this->isConstructed_ || str == NULL )
                 {
                     return false;
                 }                
@@ -503,7 +503,7 @@ namespace global
              */
             virtual int32 compare(const T* str) const
             {
-                if( not this->isConstructed_ || context_.str == this->NULL || str == this->NULL )
+                if( not this->isConstructed_ || context_.str == NULL || str == NULL )
                 {
                     return Parent::MINIMUM_POSSIBLE_VALUE_OF_INT32;
                 }                
@@ -555,7 +555,7 @@ namespace global
             /**
              * A contex of this class containing string.
              */        
-            struct Context : public api::Constant
+            struct Context
             {
             
             public:
@@ -615,7 +615,7 @@ namespace global
                  */
                 bool allocate(int32 length)
                 {
-                    if(str != this->NULL)
+                    if(str != NULL)
                     {
                         return false;
                     }
@@ -623,7 +623,7 @@ namespace global
                     int32 size = calculateSize(length);
                     // Allocate a new array
                     T* string = reinterpret_cast<T*>( A::allocate(size) );
-                    if(string == this->NULL)
+                    if(string == NULL)
                     {
                         return false;                
                     }          
@@ -639,10 +639,10 @@ namespace global
                  */
                 void free()
                 {
-                    if(str != this->NULL) 
+                    if(str != NULL) 
                     {
                         A::free(str);                
-                        str = this->NULL;
+                        str = NULL;
                         len = 0;            
                         max = 0;            
                     }
@@ -655,7 +655,7 @@ namespace global
                  */            
                 bool isAllocated()
                 {
-                    return str == this->NULL ? false : true;
+                    return str == NULL ? false : true;
                 }
                 
                 /** 

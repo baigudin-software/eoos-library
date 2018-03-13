@@ -14,64 +14,20 @@ namespace global
 {
     namespace library
     {
+        /** 
+         * @param A - heap memory allocator class.
+         */     
         template <class A = Allocator>    
         class Object : public ::global::Object<A>
         {
-            typedef ::global::Object<A> Parent;        
         
-        public:
-        
-            /** 
-             * Constructor.
-             */  
-            Object() : Parent(),
-                isConstructed_ (this->getConstruct()){
-            }
-            
-            /** 
-             * Copy constructor.
-             *
-             * @param obj reference to source object.
-             */ 
-            Object(const Object& obj) : Parent(obj),
-                isConstructed_ (this->getConstruct()){
-            }
-            
-            /** 
-             * Copy constructor.
-             *
-             * @param obj reference to source object.
-             */ 
-            Object(const api::Object& obj) : Parent(obj),
-                isConstructed_ (this->getConstruct()){
-            }    
+        public: 
             
             /** 
              * Destructor.
              */    
-            virtual ~Object()
-            {
-            }  
-            
-            /** 
-             * Assignment operator.
-             *
-             * @param obj reference to source object.
-             * @return reference to this object.   
-             */  
-            Object& operator =(const Object& obj)
-            {
-                Parent::operator=(obj);
-                return *this;
-            }
-    
-        protected:
-            
-            /** 
-             * The root object constructed flag.
-             */  
-            const bool& isConstructed_;
-        
+            virtual ~Object(){}  
+
         };
     }
 }

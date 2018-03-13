@@ -8,13 +8,13 @@
 #ifndef LIBRARY_MEMORY_HPP_
 #define LIBRARY_MEMORY_HPP_
 
-#include "api.Constant.hpp"
+#include "Types.hpp"
 
 namespace global
 {
     namespace library
     {
-        class Memory : public api::Constant
+        class Memory
         {
         
         public:

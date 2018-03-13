@@ -171,7 +171,7 @@ namespace global
              */
             int32 getLength(const T* str) const
             {
-                if(str == this->NULL) 
+                if(str == NULL) 
                 {
                     return 0;
                 }
@@ -192,7 +192,7 @@ namespace global
              */
             void copy(T* const dst, const T* src) const
             {
-                if(dst == this->NULL || src == this->NULL) 
+                if(dst == NULL || src == NULL) 
                 {
                     return;
                 }
@@ -212,7 +212,7 @@ namespace global
              */
             void concatenate(T* const dst, const T* src) const
             {
-                if(dst == this->NULL || src == this->NULL)
+                if(dst == NULL || src == NULL)
                 {
                     return;
                 }

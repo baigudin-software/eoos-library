@@ -740,7 +740,7 @@ namespace global
                 /**
                  * Heap block definition key.
                  */
-                static const int64 BLOCK_KEY = 0x1982040120150515;
+                static const int64 BLOCK_KEY = 0x1982040120150515L;
                 
                 /**
                  * Block is used.

@@ -30,7 +30,7 @@ namespace global
             public api::Queue<T>, 
             public api::Iterable<T>{
     
-            typedef library::Object<A>           Parent;       
+            typedef library::Object<A>        Parent;       
             typedef library::LinkedNode<T,A>  Node;
     
         public:      
@@ -40,7 +40,7 @@ namespace global
              */    
             AbstractLinkedList() : Parent(),
                 illegal_ (),
-                last_    (this->NULL),
+                last_    (NULL),
                 count_   (0){
                 const bool isConstructed = construct(); 
                 this->setConstruct( isConstructed );
@@ -53,7 +53,7 @@ namespace global
              */
             AbstractLinkedList(const T illegal) : Parent(),
                 illegal_ (illegal),
-                last_    (this->NULL),
+                last_    (NULL),
                 count_   (0){
                 const bool isConstructed = construct(); 
                 this->setConstruct( isConstructed );
@@ -214,7 +214,7 @@ namespace global
                     return illegal_;
                 }
                 Node* const node = getNodeByIndex(index);
-                return node != this->NULL ? node->getElement() : illegal_;
+                return node != NULL ? node->getElement() : illegal_;
             }  
         
             /**
@@ -224,7 +224,7 @@ namespace global
              */
             virtual int32 getLength() const
             {
-                return last_ == this->NULL ? 0 : last_->getIndex() + 1;
+                return last_ == NULL ? 0 : last_->getIndex() + 1;
             }
             
             /**
@@ -234,7 +234,7 @@ namespace global
              */
             virtual bool isEmpty() const
             {
-                return last_ == this->NULL ? true : false;    
+                return last_ == NULL ? true : false;    
             }
         
             /**
@@ -286,7 +286,7 @@ namespace global
             virtual int32 getIndexOf(const T& element) const
             {
                 Node* const node = getNodeByElement(element);
-                return node != this->NULL ? node->getIndex() : -1;
+                return node != NULL ? node->getIndex() : -1;
             }
         
             /**
@@ -311,18 +311,18 @@ namespace global
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 const int32 count = getLength();
                 if(count == 0) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
-                if(buf == this->NULL || not buf->isConstructed())
+                if(buf == NULL || not buf->isConstructed())
                 {
                     delete buf;
-                    return this->NULL;
+                    return NULL;
                 }
                 Node* node = last_->getNext();
                 for(int32 i=0; i<count; i++) 
@@ -361,12 +361,12 @@ namespace global
                     return false;
                 }
                 Node* const node = new Node(element);
-                if(node == this->NULL || not node->isConstructed())
+                if(node == NULL || not node->isConstructed())
                 {
                     delete node;
                     return false;
                 }
-                if(last_ == this->NULL) 
+                if(last_ == NULL) 
                 {
                     last_ = node;
                     count_++;
@@ -375,7 +375,7 @@ namespace global
                 if(index > 0)
                 {
                     Node* const after = getNodeByIndex(index - 1);
-                    if(after == this->NULL)
+                    if(after == NULL)
                     {
                         delete node;
                         return false;
@@ -389,7 +389,7 @@ namespace global
                 else
                 {
                     Node* const before = getNodeByIndex(0);
-                    if(before == this->NULL)
+                    if(before == NULL)
                     {
                         delete node;
                         return false;
@@ -410,7 +410,7 @@ namespace global
             {
                 if( not isIndex(index) ) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 if(index == getLength() - 1) 
                 {
@@ -435,7 +435,7 @@ namespace global
                 const int32 len = getLength();
                 if(len == 0) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 Node* node = last_->getNext();      
                 for(int32 i=0; i<len; i++, node = node->getNext()) 
@@ -446,7 +446,7 @@ namespace global
                     }
                     return node;
                 }
-                return this->NULL;
+                return NULL;
             }
         
             /**
@@ -457,7 +457,7 @@ namespace global
              */
             bool removeNode(Node* const node)
             {
-                if(node == this->NULL) 
+                if(node == NULL) 
                 {
                     return false;
                 }
@@ -465,7 +465,7 @@ namespace global
                 {
                     if(getLength() == 1) 
                     {
-                        last_ = this->NULL;
+                        last_ = NULL;
                     }
                     else
                     {

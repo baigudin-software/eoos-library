@@ -59,15 +59,15 @@ namespace global
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 Iterator* const iterator = new Iterator(index, *this);
-                if(iterator != this->NULL && iterator->isConstructed()) 
+                if(iterator != NULL && iterator->isConstructed()) 
                 {
                     return iterator;
                 }
                 delete iterator;
-                return this->NULL;
+                return NULL;
             }
         
         private:
@@ -112,7 +112,7 @@ namespace global
                     count_   (list.getReferenceToCount()),
                     last_    (list.getReferenceToLast()),
                     illegal_ (list.getReferenceToIllegal()),
-                    curs_    (this->NULL),
+                    curs_    (NULL),
                     rindex_  (ILLEGAL_INDEX){
                     const bool isConstructed = construct(index);
                     this->setConstruct( isConstructed );
@@ -152,7 +152,7 @@ namespace global
                     }
                     count_.self++;
                     rindex_ = ILLEGAL_INDEX;
-                    if(last == this->NULL) 
+                    if(last == NULL) 
                     {
                         curs_ = last_;
                     }
@@ -189,7 +189,7 @@ namespace global
                     }
                     count_.self++;
                     rindex_ = ILLEGAL_INDEX;
-                    curs_ = last_ != this->NULL ? curs : this->NULL;
+                    curs_ = last_ != NULL ? curs : NULL;
                     return true;
                 }
             
@@ -198,7 +198,7 @@ namespace global
                  *
                  * @return reference to element.
                  */      
-                virtual T getPrevious()
+                virtual const T& getPrevious() const
                 {
                     if( not hasPrevious()) 
                     {
@@ -230,7 +230,7 @@ namespace global
                     {
                         return false;
                     }
-                    if(curs_ == this->NULL) 
+                    if(curs_ == NULL) 
                     {
                         return false;
                     }
@@ -242,7 +242,7 @@ namespace global
                  *
                  * @return reference to element.
                  */      
-                virtual T getNext()
+                virtual const T& getNext() const
                 {
                     if( not hasNext() ) 
                     {
@@ -275,7 +275,7 @@ namespace global
                     {
                         return false;
                     }
-                    if(curs_ == this->NULL) 
+                    if(curs_ == NULL) 
                     {
                         return false;
                     }

@@ -28,9 +28,13 @@ namespace global
             /**
              * Constructor.
              *
+             * NOTE: A passed element will be copied to the internal data
+             * structure by calling a copy constructor so that the element 
+             * might be invalidated after the function called.
+             *
              * @param element an user element of this node.
              */
-            LinkedNode(T element) : Parent(),
+            LinkedNode(const T& element) : Parent(),
                 prev_    (this),
                 next_    (this),
                 index_   (0),
@@ -130,7 +134,7 @@ namespace global
              *
              * @return next element.
              */  
-            virtual T getElement() const
+            virtual const T& getElement() const
             {
                 return element_;
             }

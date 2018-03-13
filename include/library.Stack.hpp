@@ -81,7 +81,7 @@ namespace global
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 T* const stack = &stack_[0];
                 switch(type_)
@@ -99,7 +99,7 @@ namespace global
                         return &stack[0];
                         
                     default: 
-                        return this->NULL;  
+                        return NULL;  
                 }
             }
             

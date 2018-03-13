@@ -59,15 +59,15 @@ namespace global
             {
                 if( not this->isConstructed_ ) 
                 {
-                    return this->NULL;
+                    return NULL;
                 }
                 Iterator* const iterator = new Iterator(index, *this);
-                if(iterator != this->NULL && iterator->isConstructed()) 
+                if(iterator != NULL && iterator->isConstructed()) 
                 {
                     return iterator;
                 }
                 delete iterator;
-                return this->NULL;
+                return NULL;
             }
     
         private:
@@ -112,7 +112,7 @@ namespace global
                     count_   (list.getReferenceToCount()),
                     last_    (list.getReferenceToLast()),
                     illegal_ (list.getReferenceToIllegal()),
-                    curs_    (this->NULL),
+                    curs_    (NULL),
                     rindex_  (ILLEGAL_INDEX){
                     const bool isConstructed = construct(index);
                     this->setConstruct( isConstructed );
@@ -139,7 +139,7 @@ namespace global
                  * @param element inserting element.
                  * @return true if element is added.
                  */      
-                virtual bool add(const T element)
+                virtual bool add(const T& element)
                 {
                     if(count_.list != count_.self) 
                     {
@@ -176,7 +176,7 @@ namespace global
                     }
                     else
                     {
-                        curs = curs_ != last_ ? curs_->getNext() : this->NULL;
+                        curs = curs_ != last_ ? curs_->getNext() : NULL;
                     }
                     if(list_.remove(rindex_) == false) 
                     {
@@ -193,13 +193,13 @@ namespace global
                  *
                  * @return reference to element.
                  */      
-                virtual T getPrevious()
+                virtual const T& getPrevious() const
                 {
                     if( not hasPrevious() ) 
                     {
                         return illegal_;
                     }
-                    curs_ = curs_ == this->NULL ? last_ : curs_->getPrevious();
+                    curs_ = curs_ == NULL ? last_ : curs_->getPrevious();
                     rindex_ = curs_->getIndex();
                     return curs_->getElement();
                 }
@@ -215,7 +215,7 @@ namespace global
                     {
                         return -1;
                     }
-                    return curs_ == this->NULL ? last_->getIndex() : curs_->getPrevious()->getIndex();
+                    return curs_ == NULL ? last_->getIndex() : curs_->getPrevious()->getIndex();
                 }
             
                 /**
@@ -229,7 +229,7 @@ namespace global
                     {
                         return false;
                     }
-                    if(last_ == this->NULL) 
+                    if(last_ == NULL) 
                     {
                         return false;
                     }
@@ -245,14 +245,14 @@ namespace global
                  *
                  * @return reference to element.
                  */      
-                virtual T getNext()
+                virtual const T& getNext() const
                 {
                     if( not hasNext() ) 
                     {
                         return illegal_;
                     }
                     Node* const node = curs_;
-                    curs_ = curs_ != last_ ? curs_->getNext() : this->NULL;
+                    curs_ = curs_ != last_ ? curs_->getNext() : NULL;
                     rindex_ = node->getIndex();
                     return node->getElement();
                 }
@@ -278,7 +278,7 @@ namespace global
                     {
                         return false;
                     }
-                    if(curs_ == this->NULL)
+                    if(curs_ == NULL)
                     {
                         return false;
                     }
