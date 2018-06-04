@@ -2,7 +2,7 @@
  * Toggle of toggle interface.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2017, Embedded Team, Sergey Baigudin
+ * @copyright 2016-2018, Embedded Team, Sergey Baigudin
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_TOGGLE_HPP_
@@ -16,6 +16,7 @@ namespace global
     namespace library
     {
         /** 
+         * Primary template implementation.
          *
          * @param A heap memory allocator class.
          */  

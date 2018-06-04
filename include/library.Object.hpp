@@ -15,6 +15,8 @@ namespace global
     namespace library
     {
         /** 
+         * Primary template implementation.
+         *
          * @param A - heap memory allocator class.
          */     
         template <class A = Allocator>    

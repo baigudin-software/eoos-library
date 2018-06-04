@@ -15,6 +15,8 @@ namespace global
     namespace library
     {  
         /** 
+         * Primary template implementation.
+         *
          * @param T data type of element.
          * @param A heap memory allocator class.
          */
