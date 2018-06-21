@@ -48,7 +48,7 @@ namespace global
              *
              * @param illegal - an illegal value.
              */    
-            Buffer(const T& illegal) : Parent(L, illegal),
+            explicit Buffer(const T& illegal) : Parent(L, illegal),
                 buf_ (arr_){
             }
         
@@ -98,16 +98,7 @@ namespace global
              */
             virtual T* getBuffer() const
             {
-                T* buf;
-                if( not Parent::isConstructed() ) 
-                {
-                    buf = NULL;
-                }
-                else
-                {
-                    buf = buf_;
-                }
-                return buf;
+                return buf_;
             }
     
         private: 
@@ -126,6 +117,8 @@ namespace global
             
             /**
              * Pointer to current array.
+             *
+             * NOTE: The variable has been defined only for giving the getBuffer member function to be constant. 
              */    
             T* buf_;
         
@@ -142,7 +135,7 @@ namespace global
         template <typename T, class A>
         class Buffer<T,0,A> : public AbstractBuffer<T,A>
         {
-            typedef library::AbstractBuffer<T,A> ParentSp1;
+            typedef library::AbstractBuffer<T,A> ParentSpec1;
     
         public:      
     
@@ -151,7 +144,7 @@ namespace global
              *
              * @param length - count of buffer elements.
              */    
-            Buffer(int32 length) : ParentSp1(length),
+            explicit Buffer(int32 length) : ParentSpec1(length),
                 buf_       (NULL),
                 isDeleted_ (true){
                 const bool isConstructed = construct(length);
@@ -166,7 +159,7 @@ namespace global
              * @param length  - count of buffer elements.
              * @param illegal - illegal value.
              */    
-            Buffer(int32 length, const T& illegal) : ParentSp1(length, illegal),
+            Buffer(int32 length, const T& illegal) : ParentSpec1(length, illegal),
                 buf_       (NULL),
                 isDeleted_ (true){
                 const bool isConstructed = construct(length);
@@ -181,7 +174,7 @@ namespace global
              * @param length - number of elements.
              * @param buf    - pointer to external buffer.
              */    
-            Buffer(int32 length, T* buf) : ParentSp1(length),
+            Buffer(int32 length, T* buf) : ParentSpec1(length),
                 buf_       (buf),
                 isDeleted_ (false){
                 const bool isConstructed = construct(length);
@@ -198,7 +191,7 @@ namespace global
              * @param buf     - pointer to external buffer.            
              * @param illegal - illegal value.
              */    
-            Buffer(int32 length, T* buf, const T& illegal) : ParentSp1(length, illegal),
+            Buffer(int32 length, T* buf, const T& illegal) : ParentSpec1(length, illegal),
                 buf_       (buf),
                 isDeleted_ (false){
                 const bool isConstructed = construct(length);
@@ -257,7 +250,7 @@ namespace global
             virtual T* getBuffer() const
             {
                 T* buf;
-                if( not ParentSp1::isConstructed() ) 
+                if( not ParentSpec1::isConstructed() ) 
                 {
                     buf = NULL;
                 }
@@ -279,7 +272,7 @@ namespace global
             bool construct(const size_t length)
             {
                 bool res;
-                if( ParentSp1::isConstructed() ) 
+                if( ParentSpec1::isConstructed() ) 
                 {
                     if(buf_ == NULL) 
                     {

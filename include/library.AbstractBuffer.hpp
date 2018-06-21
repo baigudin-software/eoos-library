@@ -67,7 +67,7 @@ namespace global
              */
             virtual bool isConstructed() const
             {
-                return this->getConstruct();
+                return Parent::getConstruct();
             }        
                 
             /**
@@ -130,7 +130,7 @@ namespace global
              */
             void fill(const T& value)
             {
-                fill(value, 0, length_);
+                fill(value, length_);
             }
             
             /**
@@ -149,24 +149,21 @@ namespace global
              *
              * @param value - filling value.
              * @param index - begin index.
-             * @param length - count of filling elements.
+             * @param count - count of filling elements.
              */
-            void fill(const T& value, const int32 index, const int32 length)
+            void fill(const T& value, const int32 index, const int32 count)
             {
-                if( not Self::isConstructed() ) 
+                const bool hasIndex = index < length_;
+                if( Self::isConstructed() && hasIndex ) 
                 {
-                    return;
-                }
-                if(index >= length_) 
-                {
-                    return;
-                }
-                T* buf = getBuffer();
-                const int32 max = (index + length <= length_) ? length + index : length_;
-                for(int32 i=index; i<max; i++) 
-                {
-                    buf[i] = value;
-                }
+                    T* const buf = getBuffer();
+                    const int32 length = index + count;
+                    const int32 max = ( length <= length_ ) ? length : length_;
+                    for(int32 i=index; i<max; i++) 
+                    {
+                        buf[i] = value;
+                    }
+                }                
             }            
             
             /**
@@ -177,15 +174,17 @@ namespace global
              */
             T& operator [](const int32 index)
             {
+                T* value;
                 T* const buf = getBuffer();
-                if( not Self::isConstructed() || index >= length_ || buf == NULL) 
+                if( not Self::isConstructed() || (index >= length_) || (buf == NULL) ) 
                 {
-                    return illegal_;
+                    value = &illegal_;
                 }
                 else
                 {
-                    return buf[index];
+                    value = &buf[index];
                 }
+                return *value;
             }    
     
         protected:
