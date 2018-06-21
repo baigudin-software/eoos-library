@@ -16,289 +16,302 @@
 
 #include "library.AbstractBuffer.hpp"
 
-namespace library
-{ 
-    /** 
-     * Primary template implements the static buffer class.
-     *
-     * @param Type      data type of buffer element.     
-     * @param MAX_COUNT maximum number of buffer elements, or 0 for dynamic allocation. 
-     * @param Alloc     heap memory allocator class.
-     */ 
-    template <typename Type, int32 MAX_COUNT, class Alloc = Allocator>
-    class Buffer : public ::library::AbstractBuffer<Type,Alloc>
-    {
-        typedef ::library::AbstractBuffer<Type,Alloc> Parent;
-  
-    public:      
-  
+namespace global
+{
+    namespace library
+    { 
         /** 
-         * Constructor.
-         */    
-        Buffer() : Parent(MAX_COUNT),
-            buf_ (arr_){
-        }
-    
-        /** 
-         * Constructor.
+         * Primary template implements the static buffer class.
          *
-         * @param illegal illegal value.
-         */    
-        Buffer(const Type illegal) : Parent(MAX_COUNT, illegal),
-            buf_ (arr_){
-        }
-    
-        /**
-         * Destructor.
-         */
-        virtual ~Buffer()
+         * @param T - data type of buffer element.     
+         * @param L - maximum number of buffer elements, or 0 for dynamic allocation. 
+         * @param A - heap memory allocator class.
+         */ 
+        template <typename T, int32 L, class A = Allocator>
+        class Buffer : public library::AbstractBuffer<T,A>
         {
-        }
+            typedef library::AbstractBuffer<T,A> Parent;
     
-        /**
-         * Assignment operator.
-         *
-         * If the source buffer is greater than this buffer,
-         * only cropped data of that will be copied.
-         *
-         * @param buf reference to source buffer.
-         * @return reference to this object.     
-         */
-        Buffer& operator =(const Buffer<Type,MAX_COUNT,Alloc>& buf)
-        {
-            this->copy(buf);
-            return *this;      
-        }
+        public:      
     
-        /**
-         * Assignment operator.
-         *
-         * If the source buffer is greater than this buffer,
-         * only cropped data of that will be copied.
-         *
-         * @param buf reference to source buffer.
-         * @return reference to this object.     
-         */
-        Buffer& operator =(const AbstractBuffer<Type,Alloc>& buf)
-        {
-            this->copy(buf);
-            return *this;
-        }
-  
-    protected: 
-  
-        /**
-         * Returns a pointer to the fist buffer element.
-         *
-         * @return pointer to buffer, or NULL.
-         */
-        virtual Type* getBuffer() const
-        {
-            if( not this->isConstructed_ ) 
-            {
-                return NULL;
+            /** 
+             * Constructor.
+             */    
+            Buffer() : Parent(L),
+                buf_ (arr_){                
             }
-            return buf_;
-        }
-  
-    private: 
-  
-        /**
-         * Copy constructor.
-         *
-         * @param obj reference to source object.
-         */
-        Buffer(const Buffer& obj);
-      
-        /**
-         * Current array of Type elements.
-         */  
-        Type arr_[MAX_COUNT];
         
-        /**
-         * Pointer to current array.
-         */    
-        Type* buf_;
-      
-    };
-    
-    #ifdef NO_STRICT_MISRA_RULES
-  
-    /** 
-     * Partial specialization of the template implements the dynamic buffer class.
-     *
-     * @param Type  data type of buffer element.     
-     * @param Alloc heap memory allocator class.
-     */
-    template <typename Type, class Alloc>
-    class Buffer<Type,0,Alloc> : public AbstractBuffer<Type,Alloc>
-    {
-        typedef ::library::AbstractBuffer<Type,Alloc> Parent;
-  
-    public:      
-  
-        /** 
-         * Constructor.
-         *
-         * @param count count of buffer elements.
-         */    
-        Buffer(int32 count) : Parent(count),
-            buf_      (NULL),
-            isDelete_ (true){
-            const bool isConstructed = construct(count);
-            this->setConstruct( isConstructed );
-        }
-      
-        /** 
-         * Constructor.
-         *
-         * NOTE: Given external buffer has to exist until this object is being lived,
-         * and will NOT be deleted when the buffer is being deleted.
-         *
-         * @param count number of elements.
-         * @param buf   pointer to external buffer.
-         */    
-        Buffer(int32 count, Type* buf) : Parent (count),
-            buf_      (buf),
-            isDelete_ (false){
-            const bool isConstructed = construct(count);
-            this->setConstruct( isConstructed );
-        }
-      
-        /** 
-         * Constructor.
-         *
-         * @param count   count of buffer elements.
-         * @param illegal illegal value.
-         */    
-        Buffer(int32 count, const Type illegal) : Parent(count, illegal),
-            buf_      (NULL),
-            isDelete_ (true){
-            const bool isConstructed = construct(count);
-            this->setConstruct( isConstructed );
-        }
-      
-        /** 
-         * Constructor.
-         *
-         * NOTE: Given external buffer has to exist until this object is being lived,
-         * and will NOT be deleted when the buffer is being deleted.     
-         *
-         * @param count   number of elements.
-         * @param illegal illegal value.
-         * @param buf     pointer to external buffer.
-         */    
-        Buffer(int32 count, const Type illegal, Type* buf) : Parent(count, illegal),
-            buf_      (buf),
-            isDelete_ (false){
-            const bool isConstructed = construct(count);
-            this->setConstruct( isConstructed );
-        }
-      
-      
-        /**
-         * Destructor.
-         */
-        virtual ~Buffer()
-        {
-            if(isDelete_) 
-            {
-                this->free(buf_);
+            /** 
+             * Constructor.
+             *
+             * NOTE: A passed illegal element will be copied to an internal data of the class
+             *
+             * @param illegal - an illegal value.
+             */    
+            explicit Buffer(const T& illegal) : Parent(L, illegal),
+                buf_ (arr_){
             }
-        }
-      
-        /**
-         * Assignment operator.
-         *
-         * If the source buffer is greater than this buffer,
-         * only cropped data of that will be copied.
-         *
-         * @param buf reference to source buffer.
-         * @return reference to this object.     
-         */
-        Buffer& operator =(const Buffer<Type,0,Alloc>& buf)
-        {
-            this->copy(buf);
-            return *this;      
-        }
-      
-        /**
-         * Assignment operator.
-         *
-         * If the source buffer is greater than this buffer,
-         * only cropped data of that will be copied.
-         *
-         * @param buf reference to source buffer.
-         * @return reference to this object.     
-         */
-        Buffer& operator =(const AbstractBuffer<Type,Alloc>& buf)
-        {
-            this->copy(buf);
-            return *this;
-        }
-  
-    protected: 
-  
-        /**
-         * Returns a pointer to the fist buffer element.
-         *
-         * @return pointer to buffer, or NULL.
-         */
-        virtual Type* getBuffer() const
-        {
-            if( not this->isConstructed_ )
-            {
-                return NULL;
-            }
-            return buf_;
-        }
-  
-    private: 
-  
-        /** 
-         * Constructor.
-         *
-         * @param count count of buffer elements.
-         * @return boolean result.
-         */
-        bool construct(const int32 count)
-        {
-            if( not this->isConstructed_ ) 
-            {
-                return false;
-            }
-            // If you have a WTF question looking at the next construction, then look
-            // at description of 'allocate' template method of 'Object' template class.
-            if(buf_ == NULL) 
-            {
-                buf_ = this->template allocate<Type*>(count * sizeof(Type));
-            }
-            return buf_ == NULL ? false : true;
-        }
-      
-        /**
-         * Copy constructor.
-         *
-         * @param obj reference to source object.
-         */
-        Buffer(const Buffer& obj);
-      
-        /**
-         * Pointer to external given or self created array.
-         */     
-        Type* buf_;
         
-        /**
-         * Deletet flag.
+            /**
+             * Destructor.
+             */
+            virtual ~Buffer()
+            {
+            }
+        
+            /**
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf - reference to source buffer.
+             * @return reference to this object.     
+             */
+            Buffer& operator =(const Buffer<T,L,A>& buf)
+            {
+                this->copy(buf);
+                return *this;      
+            }
+        
+            /**
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf - reference to source buffer.
+             * @return reference to this object.     
+             */
+            Buffer& operator =(const AbstractBuffer<T,A>& buf)
+            {
+                this->copy(buf);
+                return *this;
+            }
+    
+        protected: 
+    
+            /**
+             * Returns a pointer to the fist buffer element.
+             *
+             * @return pointer to buffer, or NULL.
+             */
+            virtual T* getBuffer() const
+            {
+                return buf_;
+            }
+    
+        private: 
+    
+            /**
+             * Copy constructor.
+             *
+             * @param obj - reference to source object.
+             */
+            Buffer(const Buffer& obj);
+        
+            /**
+             * Current array of T elements.
+             */  
+            T arr_[L];
+            
+            /**
+             * Pointer to current array.
+             *
+             * NOTE: The variable has been defined only for giving the getBuffer member function to be constant. 
+             */    
+            T* buf_;
+        
+        };
+        
+        #ifdef NO_STRICT_MISRA_RULES
+    
+        /** 
+         * Partial specialization of the template implements the dynamic buffer class.
          *
-         * Is set to true for self created array or 
-         * set to false for external given array.
-         */        
-        bool isDelete_;
-      
-    };
+         * @param T - data type of buffer element.
+         * @param A - heap memory allocator class.
+         */
+        template <typename T, class A>
+        class Buffer<T,0,A> : public AbstractBuffer<T,A>
+        {
+            typedef library::AbstractBuffer<T,A> ParentSpec1;
     
-    #endif // NO_STRICT_MISRA_RULES
+        public:      
     
+            /** 
+             * Constructor.
+             *
+             * @param length - count of buffer elements.
+             */    
+            explicit Buffer(int32 length) : ParentSpec1(length),
+                buf_       (NULL),
+                isDeleted_ (true){
+                const bool isConstructed = construct(length);
+                this->setConstruct( isConstructed );
+            }
+
+            /** 
+             * Constructor.
+             *
+             * NOTE: A passed illegal element will be copied to an internal data of the class
+             *
+             * @param length  - count of buffer elements.
+             * @param illegal - illegal value.
+             */    
+            Buffer(int32 length, const T& illegal) : ParentSpec1(length, illegal),
+                buf_       (NULL),
+                isDeleted_ (true){
+                const bool isConstructed = construct(length);
+                this->setConstruct( isConstructed );
+            }            
+        
+            /** 
+             * Constructor.
+             *
+             * NOTE: Given external buffer has to exist until this object is alive.
+             *
+             * @param length - number of elements.
+             * @param buf    - pointer to external buffer.
+             */    
+            Buffer(int32 length, T* buf) : ParentSpec1(length),
+                buf_       (buf),
+                isDeleted_ (false){
+                const bool isConstructed = construct(length);
+                this->setConstruct( isConstructed );
+            }
+        
+            /** 
+             * Constructor.
+             *
+             * NOTE 1: Given external buffer has to exist until this object is alive.
+             * NOTE 2: A passed illegal element will be copied to an internal data of the class.
+             *
+             * @param length  - number of elements.
+             * @param buf     - pointer to external buffer.            
+             * @param illegal - illegal value.
+             */    
+            Buffer(int32 length, T* buf, const T& illegal) : ParentSpec1(length, illegal),
+                buf_       (buf),
+                isDeleted_ (false){
+                const bool isConstructed = construct(length);
+                this->setConstruct( isConstructed );
+            }
+        
+        
+            /**
+             * Destructor.
+             */
+            virtual ~Buffer()
+            {
+                if( isDeleted_ == true ) 
+                {
+                    A::free(buf_);
+                }
+            }
+        
+            /**
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf - reference to source buffer.
+             * @return reference to this object.     
+             */
+            Buffer& operator =(const Buffer<T,0,A>& buf)
+            {
+                this->copy(buf);
+                return *this;      
+            }
+        
+            /**
+             * Assignment operator.
+             *
+             * If the source buffer is greater than this buffer,
+             * only cropped data of that will be copied.
+             *
+             * @param buf - reference to source buffer.
+             * @return reference to this object.     
+             */
+            Buffer& operator =(const AbstractBuffer<T,A>& buf)
+            {
+                this->copy(buf);
+                return *this;
+            }
+    
+        protected: 
+    
+            /**
+             * Returns a pointer to the fist buffer element.
+             *
+             * @return pointer to buffer, or NULL.
+             */
+            virtual T* getBuffer() const
+            {
+                T* buf;
+                if( not ParentSpec1::isConstructed() ) 
+                {
+                    buf = NULL;
+                }
+                else
+                {
+                    buf = buf_;
+                }
+                return buf;                
+            }
+    
+        private: 
+    
+            /** 
+             * Constructor.
+             *
+             * @param length - count of buffer elements.
+             * @return boolean result.
+             */
+            bool construct(const size_t length)
+            {
+                bool res;
+                if( ParentSpec1::isConstructed() ) 
+                {
+                    if(buf_ == NULL) 
+                    {
+                        void* const addr = A::allocate(length * (sizeof(T)));
+                        buf_ = reinterpret_cast<T*>( addr );
+                    }
+                    res = buf_ != NULL;
+                }
+                else
+                {
+                    res = NULL;
+                }
+                return res;
+            }
+        
+            /**
+             * Copy constructor.
+             *
+             * @param obj - reference to source object.
+             */
+            Buffer(const Buffer& obj);
+        
+            /**
+             * Pointer to external given or self created array.
+             */     
+            T* buf_;
+            
+            /**
+             * Deletet flag.
+             *
+             * Is set to true for self created array or 
+             * set to false for external given array.
+             */        
+            bool isDeleted_;
+        
+        };
+        
+        #endif // NO_STRICT_MISRA_RULES
+        
+    }
 }
 #endif // LIBRARY_BUFFER_HPP_
