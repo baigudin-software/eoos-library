@@ -166,10 +166,10 @@ namespace global
              * @param base a numerical base used to represent a value as a string.
              * @return true if the conversion has been completed successfully.
              */
-            template <typename Type>
-            static bool itoa(const Type val, char* str, const int32 base = 10)
+            template <typename T>
+            static bool itoa(const T val, char* str, const int32 base = 10)
             {
-                static const int32 LENGTH = sizeof(Type) * 8 + 1;        
+                const int32 LENGTH = sizeof(T) * 8 + 1;        
                 if(str == NULL)
                 {
                     return false;
@@ -208,7 +208,7 @@ namespace global
                         break;
                     }
                     // Prepare absolute value
-                    Type module = isNegative ? 0 - val : val;
+                    T module = isNegative ? 0 - val : val;
                     if( not isPositive(module) )
                     {
                         res = false;                
@@ -218,7 +218,7 @@ namespace global
                     while(index >= 0)
                     { 
                         char ch;
-                        Type digit = module % base;
+                        T digit = module % base;
                         if(base == 16 && digit > 9)
                         {
                             ch = 'a';
@@ -255,8 +255,8 @@ namespace global
              * @param base a numerical base used to parse the string.         
              * @return the resulting number.
              */
-            template <typename Type>         
-            static Type atoi(const char* str, const int32 base = 10)
+            template <typename T>         
+            static T atoi(const char* str, const int32 base = 10)
             {
                 switch(base)
                 {
@@ -267,8 +267,8 @@ namespace global
                     default: return 0;
                 }
     
-                Type result = 0;
-                const Type multiplier = static_cast<Type>(base);
+                T result = 0;
+                const T multiplier = static_cast<T>(base);
                 int32 index = 0;
                 bool isNegative = false;
                 // Look for whitespaces         
@@ -296,7 +296,7 @@ namespace global
                     while( isDigit(str[index], base) )
                     {
                         result *= multiplier;
-                        result += static_cast<Type>( str[index++] - '0' );
+                        result += static_cast<T>( str[index++] - '0' );
                     }            
                 }
                 else
@@ -307,8 +307,8 @@ namespace global
                     {
                         detectMathOperands(str[index], subtrahend, addend);
                         result *= base;
-                        result += static_cast<Type>( str[index++] - subtrahend );
-                        result += static_cast<Type>( addend );
+                        result += static_cast<T>( str[index++] - subtrahend );
+                        result += static_cast<T>( addend );
                     }            
                 }
     
@@ -323,8 +323,8 @@ namespace global
              * @param value a value that would be tested.
              * @return true if the value has been negative.
              */
-            template <typename Type>
-            static bool isPositive(const Type value)
+            template <typename T>
+            static bool isPositive(const T value)
             {
                 return value > 0 || value == 0 ? true : false;
             }
