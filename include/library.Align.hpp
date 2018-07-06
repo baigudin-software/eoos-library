@@ -46,7 +46,7 @@ namespace global
              *         
              * @param value a data value.     
              */
-            explicit Align(const T& value)
+            Align(const T& value)
             {
                 assignment(value);
             }
@@ -56,7 +56,7 @@ namespace global
              *
              * @param obj a source object.    
              */
-            explicit Align(const Align& obj)
+            Align(const Align& obj)
             {
                 copy(obj);
             }

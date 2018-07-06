@@ -48,7 +48,7 @@ namespace global
              *
              * @param illegal - an illegal value.
              */    
-            explicit Buffer(const T& illegal) : Parent(L, illegal),
+            Buffer(const T& illegal) : Parent(L, illegal),
                 buf_ (arr_){
             }
         
@@ -144,7 +144,7 @@ namespace global
              *
              * @param length - count of buffer elements.
              */    
-            explicit Buffer(int32 length) : ParentSpec1(length),
+            explicit Buffer(int32 const length) : ParentSpec1(length),
                 buf_       (NULL),
                 isDeleted_ (true){
                 const bool isConstructed = construct(length);
@@ -159,7 +159,7 @@ namespace global
              * @param length  - count of buffer elements.
              * @param illegal - illegal value.
              */    
-            Buffer(int32 length, const T& illegal) : ParentSpec1(length, illegal),
+            Buffer(int32 const length, const T& illegal) : ParentSpec1(length, illegal),
                 buf_       (NULL),
                 isDeleted_ (true){
                 const bool isConstructed = construct(length);
@@ -174,7 +174,7 @@ namespace global
              * @param length - number of elements.
              * @param buf    - pointer to external buffer.
              */    
-            Buffer(int32 length, T* buf) : ParentSpec1(length),
+            Buffer(int32 const length, T*  const buf) : ParentSpec1(length),
                 buf_       (buf),
                 isDeleted_ (false){
                 const bool isConstructed = construct(length);
@@ -191,7 +191,7 @@ namespace global
              * @param buf     - pointer to external buffer.            
              * @param illegal - illegal value.
              */    
-            Buffer(int32 length, T* buf, const T& illegal) : ParentSpec1(length, illegal),
+            Buffer(int32 const length, T* const buf, const T& illegal) : ParentSpec1(length, illegal),
                 buf_       (buf),
                 isDeleted_ (false){
                 const bool isConstructed = construct(length);
@@ -269,7 +269,7 @@ namespace global
              * @param length - count of buffer elements.
              * @return boolean result.
              */
-            bool construct(const size_t length)
+            bool construct(size_t const length)
             {
                 bool res;
                 if( ParentSpec1::isConstructed() ) 
@@ -283,7 +283,7 @@ namespace global
                 }
                 else
                 {
-                    res = NULL;
+                    res = false;
                 }
                 return res;
             }

@@ -22,13 +22,23 @@ namespace global
         template <class A = Allocator>    
         class Object : public ::global::Object<A>
         {
+            typedef ::global::Object<Allocator> Parent;        
         
-        public: 
+        public:
+        
+            /** 
+             * Constructor.
+             */  
+            Object() : Parent()
+            {
+            }         
             
             /** 
              * Destructor.
              */    
-            virtual ~Object(){}  
+            virtual ~Object()
+            {
+            }  
 
         };
     }

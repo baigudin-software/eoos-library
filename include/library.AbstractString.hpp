@@ -23,14 +23,15 @@ namespace global
         /**
          * Primary template implements the static string class.
          *
-         * @param T data type of string characters.     
-         * @param L maximum number of string characters, or 0 for dynamic allocation.
-         * @param A heap memory allocator class.
+         * @param T - a data type of string characters.     
+         * @param L - a maximum number of string characters, or 0 for dynamic allocation.
+         * @param A - a heap memory allocator class.
          */
         template <typename T, int32 L, class A = Allocator>    
         class AbstractString : public library::AbstractBaseString<T,A>
         {
-            typedef library::AbstractBaseString<T,A> Parent;
+            typedef library::AbstractString<T,L,A>    Self;        
+            typedef library::AbstractBaseString<T,A>  Parent;
             
             using Parent::copy;
             using Parent::concatenate;
@@ -41,8 +42,8 @@ namespace global
             /** 
              * Constructor.
              */    
-            AbstractString() : Parent()
-            {
+            AbstractString() : Parent(), 
+                context_ (){
             }     
             
             /**
@@ -85,33 +86,44 @@ namespace global
              * @param str a character string to be copied.
              * @return true if a passed string has been copied successfully.
              */
-            virtual bool copy(const T* str)
+            virtual bool copy(const T* const str)
             {
-                if( not this->isConstructed_ || str == NULL )
+                bool res;
+                if( Parent::isConstructed() && str != NULL )
                 {
-                    return false;
-                }        
-                const int32 len = Parent::getLength(str);
-                // If a given string length is more than this max available length
-                if( not context_.isFit(len) ) 
-                {
-                    // Create a new temporary string context
-                    Context context;
-                    if( not context.allocate(len) )
+                    int32 const len = Parent::getLength(str);
+                    res = true;                    
+                    // If a given string length is more than this max available length
+                    if( not context_.isFit(len) ) 
                     {
-                        return false;                
+                        // Create a new temporary string context
+                        Context context;
+                        if( context.allocate(len) )
+                        {
+                            // Delete this string context
+                            context_.free();
+                            // Set new contex                
+                            context_.mirror(context);
+                        }
+                        else
+                        {
+                            res = false;
+                        }
                     }
-                    // Delete this string context
-                    context_.free();                
-                    // Set new contex                
-                    context_.mirror(context);
+                    else
+                    {
+                        context_.len = len;
+                    }
+                    if(res == true)
+                    {
+                        Parent::copy(context_.str, str);         
+                    }
                 }
                 else
                 {
-                    context_.len = len;
+                    res = false;
                 }
-                Parent::copy(context_.str, str);                                    
-                return true;          
+                return res;
             }
             
             /** 
@@ -120,9 +132,9 @@ namespace global
              * @param str an character string to be appended.             
              * @return true if a passed string has been appended successfully.          
              */
-            virtual bool concatenate(const T* str)
+            virtual bool concatenate(const T* const str)
             {
-                if( not this->isConstructed_ || str == NULL )
+                if( not Parent::isConstructed() || str == NULL )
                 {
                     return false;
                 }                
@@ -131,7 +143,7 @@ namespace global
                 {
                     return copy(str);
                 }
-                const int32 len = Parent::getLength(str) + context_.len;          
+                int32 const len = Parent::getLength(str) + context_.len;          
                 // If a length of this string plus a given string is more than this max available length            
                 if( not context_.isFit(len) ) 
                 {
@@ -165,9 +177,9 @@ namespace global
              *         a value greater than 0 if this string is greater than a passed string,
              *         or the minimum possible value if an error has been occurred.         
              */
-            virtual int32 compare(const T* str) const
+            virtual int32 compare(const T* const str) const
             {
-                if( not this->isConstructed_ || context_.str == NULL || str == NULL )
+                if( not Parent::isConstructed() || context_.str == NULL || str == NULL )
                 {
                     return Parent::MINIMUM_POSSIBLE_VALUE_OF_INT32;
                 }                
@@ -276,7 +288,7 @@ namespace global
                  * @param length a number of string characters.
                  * @return true if the context has been allocated successfully.
                  */
-                bool allocate(const int32 length)
+                bool allocate(int32 const length)
                 {
                     if(str != NULL)
                     {
@@ -396,7 +408,7 @@ namespace global
              */
             virtual int32 getLength() const
             {
-                return this->isConstructed_ ? context_.len : 0;
+                return Parent::isConstructed() ? context_.len : 0;
             }        
             
             /**
@@ -421,33 +433,44 @@ namespace global
              * @param str a character string to be copied.
              * @return true if a passed string has been copied successfully.
              */
-            virtual bool copy(const T* str)
+            virtual bool copy(const T* const str)
             {
-                if( not this->isConstructed_ || str == NULL )
+                bool res;
+                if( Parent::isConstructed() && str != NULL )
                 {
-                    return false;
-                }        
-                int32 len = Parent::getLength(str);
-                // If a given string length is more than this max available length
-                if( not context_.isFit(len) ) 
-                {
-                    // Create a new temporary string context
-                    Context context;
-                    if( not context.allocate(len) )
+                    int32 const len = Parent::getLength(str);
+                    res = true;                    
+                    // If a given string length is more than this max available length
+                    if( not context_.isFit(len) ) 
                     {
-                        return false;                
+                        // Create a new temporary string context
+                        Context context;
+                        if( context.allocate(len) )
+                        {
+                            // Delete this string context
+                            context_.free();
+                            // Set new contex                
+                            context_.mirror(context);
+                        }
+                        else
+                        {
+                            res = false;
+                        }
                     }
-                    // Delete this string context
-                    context_.free();                
-                    // Set new contex                
-                    context_.mirror(context);
+                    else
+                    {
+                        context_.len = len;
+                    }
+                    if(res == true)
+                    {
+                        Parent::copy(context_.str, str);         
+                    }
                 }
                 else
                 {
-                    context_.len = len;
+                    res = false;
                 }
-                Parent::copy(context_.str, str);                                    
-                return true;        
+                return res;
             }
             
             /** 
@@ -456,9 +479,9 @@ namespace global
              * @param str an character string to be appended.             
              * @return true if a passed string has been appended successfully.          
              */
-            virtual bool concatenate(const T* str)
+            virtual bool concatenate(const T* const str)
             {
-                if( not this->isConstructed_ || str == NULL )
+                if( not Parent::isConstructed() || str == NULL )
                 {
                     return false;
                 }                
@@ -467,7 +490,7 @@ namespace global
                 {
                     return copy(str);
                 }
-                int32 len = Parent::getLength(str) + context_.len;          
+                int32 const len = Parent::getLength(str) + context_.len;          
                 // If a length of this string plus a given string is more than this max available length            
                 if( not context_.isFit(len) ) 
                 {
@@ -501,9 +524,9 @@ namespace global
              *         a value greater than 0 if this string is greater than a passed string,
              *         or the minimum possible value if an error has been occurred.         
              */
-            virtual int32 compare(const T* str) const
+            virtual int32 compare(const T* const str) const
             {
-                if( not this->isConstructed_ || context_.str == NULL || str == NULL )
+                if( not Parent::isConstructed() || context_.str == NULL || str == NULL )
                 {
                     return Parent::MINIMUM_POSSIBLE_VALUE_OF_INT32;
                 }                
@@ -613,7 +636,7 @@ namespace global
                  * @param length a number of string characters.
                  * @return true if the context has been allocated successfully.
                  */
-                bool allocate(int32 length)
+                bool allocate(int32 const length)
                 {
                     if(str != NULL)
                     {

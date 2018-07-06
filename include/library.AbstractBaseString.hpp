@@ -18,13 +18,14 @@ namespace global
         /**
          * Primary template implementation.
          *
-         * @param T data type of string characters.
-         * @param A heap memory allocator class.
+         * @param T - a data type of string characters.
+         * @param A - a heap memory allocator class.
          */
         template <typename T, class A = Allocator>    
         class AbstractBaseString : public library::Object<A>, public api::String<T>
         {
-            typedef library::Object<A> Parent;
+            typedef library::AbstractBaseString<T,A>  Self;
+            typedef library::Object<A>                Parent;            
     
         public:
         
@@ -63,7 +64,7 @@ namespace global
              */    
             virtual bool isConstructed() const
             {
-                return this->isConstructed_;
+                return Parent::getConstruct();
             }
             
             /**
@@ -73,45 +74,55 @@ namespace global
              */
             virtual bool isEmpty() const
             {
-                return getLength() == 0 ? true : false;
+                return ( getLength() == 0 ) ? true : false;
             }
             
             /** 
              * Copies a passed string into this string.
              *
-             * @param string a string object to be copied.         
+             * @param string - a string object to be copied.         
              * @return true if a passed string has been copied successfully.
              */
             virtual bool copy(const api::String<T>& string)
             {
-                if( not this->isConstructed_ || not string.isConstructed() )
+                bool res;            
+                if( not Self::isConstructed() || not string.isConstructed() )
                 {
-                    return false;
+                    res = false;
                 }
-                const T* str = string.getChar();
-                return copy(str);
+                else
+                {
+                    const T* const str = string.getChar();
+                    res = copy(str);
+                }
+                return res;
             }        
     
             /** 
              * Concatenates a passed string to this string.             
              *
-             * @param string a string object to be appended.
+             * @param string - a string object to be appended.
              * @return true if a passed string has been appended successfully.          
              */
             virtual bool concatenate(const api::String<T>& string)
             {
-                if( not this->isConstructed_ || not string.isConstructed() )
+                bool res;            
+                if( not Self::isConstructed() || not string.isConstructed() )
                 {
-                    return false;
+                    res = false;
                 }
-                const T* str = string.getChar();
-                return concatenate(str);
+                else
+                {
+                    const T* const str = string.getChar();
+                    res = concatenate(str);
+                }
+                return res;
             } 
             
             /** 
              * Compares this string with a passed string lexicographically.         
              *
-             * @param string a string object to be compared.
+             * @param string - a string object to be compared.
              * @return the value 0 if a passed string is equal to this string; 
              *         a value less than 0 if this string is less than a passed string; 
              *         a value greater than 0 if this string is greater than a passed string,
@@ -119,12 +130,17 @@ namespace global
              */
             virtual int32 compare(const api::String<T>& string) const
             {
-                if( not this->isConstructed_ || not string.isConstructed() )
+                int32 res;
+                if( not Self::isConstructed() || not string.isConstructed() )
                 {
-                    return MINIMUM_POSSIBLE_VALUE_OF_INT32;
+                    res = MINIMUM_POSSIBLE_VALUE_OF_INT32;
                 }
-                const T* str = string.getChar();
-                return compare(str);            
+                else
+                {
+                    const T* const str = string.getChar();
+                    res = compare(str);            
+                }
+                return res;
             }
             
         protected:
@@ -139,7 +155,7 @@ namespace global
             /** 
              * Copies a passed string into this string.
              *
-             * @param str a character string to be copied.
+             * @param str - a character string to be copied.
              * @return true if a passed string has been copied successfully.
              */
             virtual bool copy(const T* str) = 0;             
@@ -147,7 +163,7 @@ namespace global
             /** 
              * Concatenates a passed string to this string.             
              *
-             * @param str an character string to be appended.             
+             * @param str - a character string to be appended.             
              * @return true if a passed string has been appended successfully.          
              */
             virtual bool concatenate(const T* str) = 0;
@@ -155,7 +171,7 @@ namespace global
             /** 
              * Compares this string with a passed string lexicographically.         
              *
-             * @param str a character string to be compared.
+             * @param str - a character string to be compared.
              * @return the value 0 if a passed string is equal to this string; 
              *         a value less than 0 if this string is less than a passed string; 
              *         a value greater than 0 if this string is greater than a passed string,
@@ -166,20 +182,19 @@ namespace global
             /** 
              * Returns a string length.
              *
-             * @param str a character string would be measured.
+             * @param str - a character string would be measured.
              * @return a length of the passed string.
              */
-            int32 getLength(const T* str) const
+            int32 getLength(const T* const str) const
             {
-                if(str == NULL) 
+                int32 l = 0;            
+                if(str != NULL) 
                 {
-                    return 0;
-                }
-                const T null = getTerminator();            
-                int32 l = 0;
-                while( str[l] != null ) 
-                {
-                    l++;
+                    T const null = getTerminator();            
+                    while( str[l] != null ) 
+                    {
+                        l++;
+                    }
                 }
                 return l;
             }
@@ -187,46 +202,44 @@ namespace global
             /** 
              * Copies a string.
              *
-             * @param dst a destination array where the content would be copied.
-             * @param src character string to be copied.
+             * @param dst - a destination array where the content would be copied.
+             * @param src - a character string to be copied.
              */
-            void copy(T* const dst, const T* src) const
+            void copy(T* const dst, const T* const src) const
             {
-                if(dst == NULL || src == NULL) 
+                if(dst != NULL && src != NULL) 
                 {
-                    return;
-                }
-                const T null = getTerminator();
-                int32 i = 0;
-                while( (dst[i] = src[i]) != null )
-                {
-                    i++;
+                    T const null = getTerminator();
+                    int32 i = 0;
+                    while( (dst[i] = src[i]) != null )
+                    {
+                        i++;
+                    }
                 }
             }
     
             /** 
              * Concatenates two strings.
              *
-             * @param dst a destination character string where the content would be appended.
-             * @param src an appended character string.
+             * @param dst - a destination character string where the content would be appended.
+             * @param src - an appended character string.
              */
-            void concatenate(T* const dst, const T* src) const
+            void concatenate(T* const dst, const T* const src) const
             {
-                if(dst == NULL || src == NULL)
+                if(dst != NULL && src != NULL)
                 {
-                    return;
-                }
-                const T null = getTerminator();
-                int32 d = 0;
-                int32 s = 0;            
-                while( dst[d] != null )
-                {
-                    d++;
-                }
-                while( (dst[d] = src[s]) != null )
-                {
-                    d++;
-                    s++;                
+                    T const null = getTerminator();
+                    int32 d = 0;
+                    int32 s = 0;            
+                    while( dst[d] != null )
+                    {
+                        d++;
+                    }
+                    while( (dst[d] = src[s]) != null )
+                    {
+                        d++;
+                        s++;                
+                    }
                 }
             }
             
@@ -244,7 +257,7 @@ namespace global
              * by creating the default object and 
              * calling the copy interface function.
              *
-             * @param obj a source object.
+             * @param obj - a source object.
              */
             AbstractBaseString(const AbstractBaseString<T,A>& obj);            
             
