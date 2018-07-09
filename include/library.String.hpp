@@ -75,8 +75,8 @@ namespace global
         template <int32 L, class A>        
         class String<char,L,A> : public library::AbstractString<char,L,A>
         {
-            typedef library::String<char,L,A>         Self;        
-            typedef library::AbstractString<char,L,A> Parent;
+            typedef library::String<char,L,A>           Self;        
+            typedef library::AbstractString<char,L,A>   Parent;
     
         public:
         
@@ -245,8 +245,7 @@ namespace global
             bool convert(I const value, int32 const base = 10)
             {
                 bool res;
-                int32 const MAX_LENGTH = sizeof(I) * 8 + 1;           
-                char temp[MAX_LENGTH];                
+                char temp[sizeof(I) * 8 + 1];
                 if( not Memory::itoa<I>(value, temp, base) )                    
                 {
                     res = false;
@@ -730,11 +729,10 @@ namespace global
             bool convert(I const value, int32 const base = 10)
             {
                 bool res;            
-                int32 const MAX_LENGTH = sizeof(I) * 8 + 1;           
-                char temp[MAX_LENGTH]; 
+                char temp[sizeof(I) * 8 + 1]; 
                 if( not Memory::itoa<I>(value, temp, base) )                    
                 {
-                    return false;
+                    res = false;
                 }
                 else
                 {

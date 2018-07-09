@@ -74,7 +74,17 @@ namespace global
              */
             virtual bool isEmpty() const
             {
-                return ( getLength() == 0 ) ? true : false;
+                bool res;
+                int32 const length = getLength();
+                if(length == 0) 
+                {
+                    res = true;
+                }
+                else
+                {
+                    res = false;
+                }
+                return res;
             }
             
             /** 
@@ -185,18 +195,16 @@ namespace global
              * @param str - a character string would be measured.
              * @return a length of the passed string.
              */
-            int32 getLength(const T* const str) const
+            int32 getLength(const T* str) const
             {
-                int32 l = 0;            
-                if(str != NULL) 
+                int32 len = 0;            
+                T const null = getTerminator();
+                while( *str != null )  
                 {
-                    T const null = getTerminator();            
-                    while( str[l] != null ) 
-                    {
-                        l++;
-                    }
+                    str++;
+                    len++;
                 }
-                return l;
+                return len;
             }
             
             /** 
@@ -205,16 +213,20 @@ namespace global
              * @param dst - a destination array where the content would be copied.
              * @param src - a character string to be copied.
              */
-            void copy(T* const dst, const T* const src) const
+            void copy(T* dst, const T* src) const
             {
                 if(dst != NULL && src != NULL) 
                 {
                     T const null = getTerminator();
-                    int32 i = 0;
-                    while( (dst[i] = src[i]) != null )
+                    dst--;
+                    src--;    
+                    do
                     {
-                        i++;
+                        dst++;
+                        src++;                        
+                        *dst = *src;
                     }
+                    while(*dst != null);
                 }
             }
     
@@ -246,7 +258,7 @@ namespace global
             /**
              * The minimum possible value of int32 type.
              */
-            static const int32 MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0x80000000;        
+            static const int32 MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0 - 0x7fffffff - 1;
             
         private:
         
