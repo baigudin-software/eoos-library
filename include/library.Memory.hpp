@@ -29,14 +29,22 @@ namespace global
              */
             static void* memcpy(void* const dst, const void* src, size_t len)
             {
-                if(dst == NULL || src == NULL) 
+                void* res;
+                if(dst != NULL && src != NULL) 
                 {
-                    return NULL;
-                }         
-                cell* sp  = static_cast<cell*>(const_cast<void*>(src));
-                cell* dp  = static_cast<cell*>(dst);
-                while(len--) *dp++ = *sp++;
-                return dst;
+                    cell* sp  = static_cast<cell*>(const_cast<void*>(src));
+                    cell* dp  = static_cast<cell*>(dst);
+                    while(len--) 
+                    {
+                        *dp++ = *sp++;
+                    }
+                    res = dst;
+                }      
+                else
+                {
+                    res = NULL;
+                }
+                return res;
             }
             
             /** 
