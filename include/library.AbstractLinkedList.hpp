@@ -45,7 +45,7 @@ namespace global
                 last_    (NULL),
                 count_   (0){
                 const bool isConstructed = construct(); 
-                this->setConstruct( isConstructed );
+                this->setConstructed( isConstructed );
             }
         
             /**
@@ -58,7 +58,7 @@ namespace global
                 last_    (NULL),
                 count_   (0){
                 const bool isConstructed = construct(); 
-                this->setConstruct( isConstructed );
+                this->setConstructed( isConstructed );
             }
         
             /**

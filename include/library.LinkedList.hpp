@@ -117,7 +117,7 @@ namespace global
                     curs_    (NULL),
                     rindex_  (ILLEGAL_INDEX){
                     const bool isConstructed = construct(index);
-                    this->setConstruct( isConstructed );
+                    this->setConstructed( isConstructed );
                 }
             
                 /**

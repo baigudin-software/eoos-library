@@ -31,7 +31,7 @@ namespace global
                 data_ (size),
                 temp_ (){
                 const bool isConstructed = construct();
-                setConstruct( isConstructed );            
+                setConstructed( isConstructed );            
             }    
         
             /** 
@@ -50,7 +50,7 @@ namespace global
                 data_  (size, toggle),
                 temp_ (){
                 const bool isConstructed = construct();
-                setConstruct( isConstructed );
+                setConstructed( isConstructed );
             }    
             
             /** 
@@ -183,7 +183,7 @@ namespace global
              *
              * @param flag constructed flag.
              */      
-            void setConstruct(const bool flag)
+            void setConstructed(const bool flag)
             {
                 if(data_.key == HEAP_KEY) 
                 {
