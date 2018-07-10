@@ -67,7 +67,7 @@ namespace global
              */
             virtual bool isConstructed() const
             {
-                return Parent::getConstruct();
+                return Parent::isConstructed();
             }        
                 
             /**

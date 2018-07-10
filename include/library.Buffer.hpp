@@ -148,7 +148,7 @@ namespace global
                 buf_       (NULL),
                 isDeleted_ (true){
                 const bool isConstructed = construct(length);
-                this->setConstruct( isConstructed );
+                this->setConstructed( isConstructed );
             }
 
             /** 
@@ -163,7 +163,7 @@ namespace global
                 buf_       (NULL),
                 isDeleted_ (true){
                 const bool isConstructed = construct(length);
-                this->setConstruct( isConstructed );
+                this->setConstructed( isConstructed );
             }            
         
             /** 
@@ -178,7 +178,7 @@ namespace global
                 buf_       (buf),
                 isDeleted_ (false){
                 const bool isConstructed = construct(length);
-                this->setConstruct( isConstructed );
+                this->setConstructed( isConstructed );
             }
         
             /** 
@@ -195,7 +195,7 @@ namespace global
                 buf_       (buf),
                 isDeleted_ (false){
                 const bool isConstructed = construct(length);
-                this->setConstruct( isConstructed );
+                this->setConstructed( isConstructed );
             }
         
         
