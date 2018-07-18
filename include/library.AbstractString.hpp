@@ -16,7 +16,7 @@
 
 #include "library.AbstractBaseString.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {

@@ -10,7 +10,7 @@
 
 #include "Types.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {

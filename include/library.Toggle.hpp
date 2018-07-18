@@ -11,7 +11,7 @@
 #include "library.Object.hpp"
 #include "api.Toggle.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {

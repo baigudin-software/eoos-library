@@ -12,7 +12,7 @@
 #include "api.Stack.hpp"
 #include "library.Buffer.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {

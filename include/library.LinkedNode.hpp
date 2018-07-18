@@ -10,7 +10,7 @@
 
 #include "library.Object.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {  
