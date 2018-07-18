@@ -10,7 +10,7 @@
 
 #include "library.AbstractLinkedList.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {  

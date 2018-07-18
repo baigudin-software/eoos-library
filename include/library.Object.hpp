@@ -10,7 +10,7 @@
 
 #include "Object.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {
@@ -20,9 +20,9 @@ namespace global
          * @param A - heap memory allocator class.
          */     
         template <class A = Allocator>    
-        class Object : public ::global::Object<A>
+        class Object : public ::local::Object<A>
         {
-            typedef ::global::Object<Allocator> Parent;        
+            typedef ::local::Object<Allocator> Parent;        
         
         public:
         

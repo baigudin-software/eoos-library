@@ -16,7 +16,7 @@
 
 #include "library.AbstractBuffer.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     { 

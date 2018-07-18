@@ -15,7 +15,7 @@
 #include "api.Queue.hpp"
 #include "api.Iterable.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {  

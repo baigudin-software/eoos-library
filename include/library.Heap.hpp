@@ -12,7 +12,7 @@
 
 #include "api.SystemHeap.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {

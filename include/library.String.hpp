@@ -11,7 +11,7 @@
 #include "library.AbstractString.hpp"
 #include "library.Memory.hpp"
 
-namespace global
+namespace local
 {
     namespace library
     {
