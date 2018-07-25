@@ -403,7 +403,7 @@ namespace local
     
         };
         
-        #ifdef NO_STRICT_MISRA_RULES
+        #ifdef EOOS_NO_STRICT_MISRA_RULES
         
         /** 
          * Partial specialization of the template implements the dynamic string class.
@@ -831,7 +831,7 @@ namespace local
     
         };
     
-        #endif // NO_STRICT_MISRA_RULES
+        #endif // EOOS_NO_STRICT_MISRA_RULES
     
     }
 }
