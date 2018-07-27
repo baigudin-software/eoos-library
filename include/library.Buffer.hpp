@@ -44,7 +44,7 @@ namespace local
             /** 
              * Constructor.
              *
-             * NOTE: A passed illegal element will be copied to an internal data of the class
+             * NOTE: A passed illegal element will be copied to an internal data of the class.
              *
              * @param illegal - an illegal value.
              */    
@@ -124,7 +124,7 @@ namespace local
         
         };
         
-        #ifdef NO_STRICT_MISRA_RULES
+        #ifdef EOOS_NO_STRICT_MISRA_RULES
     
         /** 
          * Partial specialization of the template implements the dynamic buffer class.
@@ -310,7 +310,7 @@ namespace local
         
         };
         
-        #endif // NO_STRICT_MISRA_RULES
+        #endif // EOOS_NO_STRICT_MISRA_RULES
         
     }
 }
