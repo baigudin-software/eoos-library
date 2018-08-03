@@ -97,7 +97,7 @@ namespace local
              *
              * @return reference to illegal element.
              */
-            virtual const T& getIllegal() const
+            virtual T& getIllegal() const
             {
                 return illegal_;
             }
@@ -245,7 +245,7 @@ namespace local
             /**
              * Illegal element of this buffer.
              */
-            T illegal_;
+            mutable T illegal_;
         
         };
     }

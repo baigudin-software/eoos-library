@@ -23,7 +23,8 @@ namespace local
         template <typename T, class A = Allocator>
         class LinkedNode : public library::Object<A>
         {
-            typedef library::Object<A> Parent;  
+            typedef library::LinkedNode<T,A> Self;
+            typedef library::Object<A>       Parent;
         
         public:
         
@@ -67,7 +68,7 @@ namespace local
              */
             virtual bool isConstructed() const
             {
-                return this->isConstructed_;
+                return Parent::isConstructed();
             }        
         
             /**
@@ -136,7 +137,7 @@ namespace local
              *
              * @return next element.
              */  
-            virtual const T& getElement() const
+            virtual T& getElement() const
             {
                 return element_;
             }
@@ -195,11 +196,11 @@ namespace local
              * Index of the node.
              */
             int32 index_;
-            
+
             /**
              * Containing element.
-             */        
-            T element_;
+             */
+            mutable T element_;
         
         };
     }

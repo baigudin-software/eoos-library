@@ -31,9 +31,10 @@ namespace local
             public api::List<T>, 
             public api::Queue<T>, 
             public api::Iterable<T>{
-    
-            typedef library::Object<A>        Parent;       
-            typedef library::LinkedNode<T,A>  Node;
+
+            typedef library::AbstractLinkedList<T,A> Self;
+            typedef library::Object<A>               Parent;
+            typedef library::LinkedNode<T,A>         Node;
     
         public:      
     
@@ -44,21 +45,21 @@ namespace local
                 illegal_ (),
                 last_    (NULL),
                 count_   (0){
-                const bool isConstructed = construct(); 
-                this->setConstructed( isConstructed );
             }
         
             /**
              * Constructor.
              *
-             * @param illegal illegal element.
+             * NOTE: A passed element must be copied to an internal data structure of
+             * this class by calling a copy constructor so that the element
+             * might be invalidated after the function called.
+             *
+             * @param illegal - an illegal element.
              */
-            AbstractLinkedList(const T illegal) : Parent(),
+            AbstractLinkedList(const T& illegal) : Parent(),
                 illegal_ (illegal),
                 last_    (NULL),
                 count_   (0){
-                const bool isConstructed = construct(); 
-                this->setConstructed( isConstructed );
             }
         
             /**
@@ -76,7 +77,7 @@ namespace local
              */
             virtual bool isConstructed() const
             {
-                return this->isConstructed_;
+                return Parent::isConstructed();
             }        
             
             /**
@@ -85,9 +86,9 @@ namespace local
              * @param element inserting element.
              * @return true if element is added.
              */      
-            virtual bool add(const T element)
+            virtual bool add(const T& element)
             {
-                return this->isConstructed_ ? addNode(getLength(), element) : false;
+                return Self::isConstructed() ? addNode(getLength(), element) : false;
             }
         
             /**
@@ -97,9 +98,9 @@ namespace local
              * @param element inserting element.
              * @return true if element is inserted.
              */
-            virtual bool add(const int32 index, const T element)
+            virtual bool add(int32 const index, const T& element)
             {
-                return this->isConstructed_ ? addNode(index, element) : false;
+                return Self::isConstructed() ? addNode(index, element) : false;
             }      
         
             /**
@@ -107,7 +108,7 @@ namespace local
              */  
             virtual void clear()
             {
-                if( not this->isConstructed_ ) 
+                if( not Self::isConstructed() )
                 {
                     return;
                 }
@@ -159,7 +160,7 @@ namespace local
              */
             virtual bool remove(const int32 index)
             {
-                return this->isConstructed_ ? removeNode( getNodeByIndex(index) ) : false;
+                return Self::isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
             }
         
             /**
@@ -170,48 +171,48 @@ namespace local
              */
             virtual bool removeElement(const T& element)
             {
-                return this->isConstructed_ ? removeNode( getNodeByElement(element) ) : false;
+                return Self::isConstructed() ? removeNode( getNodeByElement(element) ) : false;
             }
         
             /**
-             * Examines the head element of this queue (list).
+             * Examines the head element of this container.
              *
              * @return the head element.
              */
-            virtual T peek() const
+            virtual T& peek() const
+            {
+                return get(0);
+            }
+
+            /**
+             * Returns the first element in this container.
+             *
+             * @return the first element in this container.
+             */
+            virtual T& getFirst() const
             {
                 return get(0);
             }
         
             /**
-             * Returns the first element in this list.
+             * Returns the last element in this container.
              *
-             * @return the first element in this list.
+             * @return the last element in this container.
              */
-            virtual T getFirst() const
-            {
-                return get(0);
-            }
-        
-            /**
-             * Returns the last element in this list.
-             *
-             * @return the last element in this list.
-             */
-            virtual T getLast() const
+            virtual T& getLast() const
             {
                 return get( getLength() - 1 );      
             }
             
             /**
-             * Returns an element from this list by index.
+             * Returns an element from this container by index.
              *
-             * @param index position in this list.  
-             * @return indexed element of this list.
+             * @param index - position in this container.
+             * @return indexed element of this container.
              */
-            virtual T get(const int32 index) const
+            virtual T& get(int32 index) const
             {
-                if( not this->isConstructed_ ) 
+                if( not Self::isConstructed() )
                 {
                     return illegal_;
                 }
@@ -246,7 +247,7 @@ namespace local
              *
              * @return illegal element.
              */
-            virtual const T& getIllegal() const
+            virtual T& getIllegal() const
             {
                 return illegal_;
             }
@@ -258,7 +259,7 @@ namespace local
              */
             virtual void setIllegal(const T& value)
             {
-                if( this->isConstructed_ ) 
+                if( Self::isConstructed() )
                 {
                     illegal_ = value;
                 }
@@ -272,7 +273,7 @@ namespace local
              */
             virtual bool isIllegal(const T& value) const
             {
-                if( not this->isConstructed_ ) 
+                if( not Self::isConstructed() )
                 {
                     return false;
                 }
@@ -297,7 +298,7 @@ namespace local
              * @param index checking position in this list.
              * @return true if index is present.
              */  
-            virtual bool isIndex(const int32 index) const
+            virtual bool isIndex(int32 const index) const
             {
                 return (0 <= index && index < getLength()) ? true : false;
             }      
@@ -311,7 +312,7 @@ namespace local
              */  
             virtual library::Buffer<T,0,A>* array() const
             {
-                if( not this->isConstructed_ ) 
+                if( not Self::isConstructed() )
                 {
                     return NULL;
                 }
@@ -522,16 +523,6 @@ namespace local
     
         private:
         
-            /** 
-             * Constructor.
-             *
-             * @return true if object has been constructed successfully.
-             */
-            bool construct()
-            {
-                return this->isConstructed_;
-            }
-        
             /**
              * Copy constructor.
              *
@@ -550,7 +541,7 @@ namespace local
             /**
              * Illegal element of this list.
              */
-            T illegal_;
+            mutable T illegal_;
             
             /**
              * Last node of this list.

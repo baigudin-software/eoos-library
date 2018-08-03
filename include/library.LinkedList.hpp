@@ -38,9 +38,13 @@ namespace local
             /**
              * Constructor.
              *
-             * @param illegal illegal element.
+             * NOTE: A passed element must be copied to an internal data structure of
+             * this class by calling a copy constructor so that the element
+             * might be invalidated after the function called.
+             *
+             * @param illegal - an illegal element.
              */
-            LinkedList(const T illegal) : Parent(illegal)
+            LinkedList(const T& illegal) : Parent(illegal)
             {
             }
         
@@ -59,7 +63,7 @@ namespace local
              */
             virtual api::ListIterator<T>* getListIterator(const int32 index)
             {
-                if( not this->isConstructed_ ) 
+                if( not Parent::isConstructed() )
                 {
                     return NULL;
                 }
@@ -98,6 +102,7 @@ namespace local
              */      
             class Iterator : public library::Object<A>, public api::ListIterator<T>
             {
+                typedef Iterator                  Self;
                 typedef library::Object<A>        Parent;
                 typedef library::LinkedList<T,A>  List;
         
@@ -132,7 +137,7 @@ namespace local
                  */    
                 virtual bool isConstructed() const
                 {
-                    return this->isConstructed_;
+                    return Parent::isConstructed();
                 }      
             
                 /**
@@ -195,7 +200,7 @@ namespace local
                  *
                  * @return reference to element.
                  */      
-                virtual const T& getPrevious() const
+                virtual T& getPrevious() const
                 {
                     if( not hasPrevious() ) 
                     {
@@ -247,7 +252,7 @@ namespace local
                  *
                  * @return reference to element.
                  */      
-                virtual const T& getNext() const
+                virtual T& getNext() const
                 {
                     if( not hasNext() ) 
                     {
@@ -294,7 +299,7 @@ namespace local
                  *
                  * @return illegal element.
                  */
-                virtual const T& getIllegal() const
+                virtual T& getIllegal() const
                 {
                     return list_.getIllegal();
                 }
@@ -329,7 +334,7 @@ namespace local
                  */
                 bool construct(const int32 index)
                 {
-                    if( not this->isConstructed_ ) 
+                    if( not Self::isConstructed() )
                     {
                         return false;
                     }
@@ -420,12 +425,12 @@ namespace local
                 /**
                  * Pointer to current node of this iterator.
                  */
-                Node* curs_;
+                mutable Node* curs_;
             
                 /**
                  * Index of element of list which can be removed by remove method.
                  */
-                int32 rindex_;
+                mutable int32 rindex_;
         
             };
         };

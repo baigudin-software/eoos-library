@@ -44,7 +44,7 @@ namespace local
             /** 
              * Constructor.
              *
-             * NOTE: A passed illegal element will be copied to an internal data of the class.
+             * NOTE: A passed illegal element will be copied to an internal data of the class
              *
              * @param illegal - an illegal value.
              */    
