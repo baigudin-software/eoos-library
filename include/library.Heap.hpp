@@ -159,7 +159,7 @@ namespace local
              * @param ptr  aligned to eight memory address.
              * @return address of memory or NULL.
              */
-            void* operator new(size_t, const uint32 ptr)
+            void* operator new(size_t, const intptr ptr)
             {
                 void* address = reinterpret_cast< void* >(ptr);
                 if(address == NULL)
@@ -213,7 +213,7 @@ namespace local
                     return false;
                 }
                 // Test memory
-                const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
+                const intptr addr = reinterpret_cast<intptr>(this) + sizeof(Heap);
                 void*  ptr  = reinterpret_cast<void*>(addr);
                 if( not isMemoryAvailable(ptr, data_.size) ) 
                 {
@@ -264,7 +264,7 @@ namespace local
              */
             HeapBlock* getFirstBlock() const
             {
-                const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(Heap);
+                const intptr addr = reinterpret_cast<intptr>(this) + sizeof(Heap);
                 return reinterpret_cast<HeapBlock*>(addr);
             }
             
@@ -275,7 +275,7 @@ namespace local
              */
             HeapBlock* heapBlock(void* const data)
             {
-                const uint32 addr = reinterpret_cast<uint32>(data) - sizeof(HeapBlock);
+                const intptr addr = reinterpret_cast<intptr>(data) - sizeof(HeapBlock);
                 return reinterpret_cast<HeapBlock*>(addr);
             }
             
@@ -371,7 +371,7 @@ namespace local
                     ptr = NULL;
                 }
                 // Memory address has to be aligned to eight
-                if(reinterpret_cast<uint32>(ptr) & 0x7) 
+                if(reinterpret_cast<intptr>(ptr) & 0x7)
                 {
                     ptr = NULL;
                 }
@@ -639,7 +639,7 @@ namespace local
                         return NULL;
                     }
                     // The passed address must be multipled to eight
-                    if((reinterpret_cast<uint32>(ptr) & 0x7) != 0)
+                    if((reinterpret_cast<intptr>(ptr) & 0x7) != 0)
                     {
                         return NULL;                
                     }
@@ -683,7 +683,7 @@ namespace local
                  */
                 void* data()
                 {
-                    const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock);
+                    const intptr addr = reinterpret_cast<intptr>(this) + sizeof(HeapBlock);
                     return reinterpret_cast<void*>(addr);
                 }
                 
@@ -694,7 +694,7 @@ namespace local
                  */
                 void* next(const size_t size)
                 {
-                    const uint32 addr = reinterpret_cast<uint32>(this) + sizeof(HeapBlock) + size;
+                    const intptr addr = reinterpret_cast<intptr>(this) + sizeof(HeapBlock) + size;
                     return reinterpret_cast<void*>(addr);
                 }
                 

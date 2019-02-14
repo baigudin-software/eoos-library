@@ -197,14 +197,14 @@ namespace local
                 if( Parent::isConstructed() && context_.str != NULL && str != NULL )
                 {
                     res = context_.len - Parent::getLength(str);
-                    // If lengthes are equal, charachers migth be different
+                    // If lengths are equal, characters might be different
                     if(res == 0) 
                     {
                         for(int32 i=0; i<context_.len; i++)
                         {
-                            int32 const a1 = static_cast<int32>(context_.str[i]);
-                            int32 const a2 = static_cast<int32>(str[i]);
-                            res = a1 - a2;
+                            intptr const a1 = static_cast<intptr>(context_.str[i]);
+                            intptr const a2 = static_cast<intptr>(str[i]);
+                            res = static_cast<int32>(a1 - a2);
                             if(res != 0) 
                             {
                                 break;
@@ -581,14 +581,14 @@ namespace local
                 if( Parent::isConstructed() && context_.str != NULL && str != NULL )
                 {
                     res = context_.len - Parent::getLength(str);
-                    // If lengthes are equal, charachers migth be different
+                    // If lengths are equal, characters might be different
                     if(res == 0) 
                     {
                         for(int32 i=0; i<context_.len; i++)
                         {
-                            int32 const a1 = static_cast<int32>(context_.str[i]);
-                            int32 const a2 = static_cast<int32>(str[i]);
-                            res = a1 - a2;
+                            intptr const a1 = static_cast<intptr>(context_.str[i]);
+                            intptr const a2 = static_cast<intptr>(str[i]);
+                            res = static_cast<int32>(a1 - a2);
                             if(res != 0) 
                             {
                                 break;

@@ -312,6 +312,7 @@ namespace local
              */  
             virtual library::Buffer<T,0,A>* array() const
             {
+                #ifdef EOOS_NO_STRICT_MISRA_RULES
                 if( not Self::isConstructed() )
                 {
                     return NULL;
@@ -334,6 +335,9 @@ namespace local
                     node = node->getNext();
                 }
                 return buf;
+                #else
+                return NULL;
+                #endif
             }
         
             /**
