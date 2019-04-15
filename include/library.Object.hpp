@@ -22,7 +22,7 @@ namespace local
         template <class A = Allocator>    
         class Object : public ::local::Object<A>
         {
-            typedef ::local::Object<Allocator> Parent;        
+            typedef ::local::Object<A> Parent;
         
         public:
         
