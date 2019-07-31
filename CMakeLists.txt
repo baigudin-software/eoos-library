@@ -6,7 +6,7 @@
 
 enable_language(CXX)
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(eoos
 INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/include
 )
