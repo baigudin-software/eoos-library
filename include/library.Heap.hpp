@@ -393,7 +393,7 @@ namespace local
              * @param src reference to source object.
              * @return reference to this object.
              */
-            Heap& operator =(const Heap&);
+            Heap& operator=(const Heap&);
 
             /**
              * Heap class aligner aligns that to eight.
@@ -697,7 +697,7 @@ namespace local
                  * @param src reference to source object.
                  * @return reference to this object.
                  */
-                HeapBlock& operator =(const HeapBlock&);
+                HeapBlock& operator=(const HeapBlock&);
 
                 /**
                  * Heap block definition key.
@@ -831,7 +831,7 @@ namespace local
                  * @param obj reference to source object.
                  * @return reference to this object.
                  */
-                HeapData& operator =(const HeapData& obj);
+                HeapData& operator=(const HeapData& obj);
 
             };
 

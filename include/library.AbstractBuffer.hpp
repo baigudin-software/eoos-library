@@ -1,6 +1,6 @@
-/** 
+/**
  * Abstract class for some buffers.
- * 
+ *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2016, Embedded Team, Sergey Baigudin
  * @license   http://embedded.team/license/
@@ -15,51 +15,51 @@
 namespace local
 {
     namespace library
-    { 
-        /** 
+    {
+        /**
          * Primary template implementation.
          *
          * @param T - data type of buffer element.
          * @param A - heap memory allocator class.
-         */ 
+         */
         template <typename T, class A = Allocator>
         class AbstractBuffer : public library::Object<A>, public api::Collection<T>, public api::IllegalValue<T>
         {
             typedef library::AbstractBuffer<T,A>  Self;
             typedef library::Object<A>            Parent;
-    
-        public:      
-    
-            /** 
+
+        public:
+
+            /**
              * Constructor.
              *
              * @param length - count of buffer elements.
-             */    
+             */
             explicit AbstractBuffer(int32 length) : Parent(),
                 length_  (length),
                 illegal_ (){
             }
-        
-            /** 
+
+            /**
              * Constructor.
              *
              * NOTE: A passed illegal element will be copied to an internal data of the class
              *
              * @param length - count of buffer elements.
              * @param illegal - illegal value.
-             */    
+             */
             AbstractBuffer(int32 length, const T& illegal) : Parent(),
                 length_  (length),
                 illegal_ (illegal){
             }
-        
+
             /**
              * Destructor.
              */
             virtual ~AbstractBuffer()
             {
             }
-            
+
             /**
              * Tests if this object has been constructed.
              *
@@ -68,8 +68,8 @@ namespace local
             virtual bool isConstructed() const
             {
                 return Parent::isConstructed();
-            }        
-                
+            }
+
             /**
              * Returns a number of elements.
              *
@@ -79,7 +79,7 @@ namespace local
             {
                 return length_;
             }
-            
+
             /**
              * Tests if this collection has elements.
              *
@@ -89,7 +89,7 @@ namespace local
             {
                 return length_ == 0;
             }
-        
+
             /**
              * Returns illegal element which will be returned as error value.
              *
@@ -101,7 +101,7 @@ namespace local
             {
                 return illegal_;
             }
-        
+
             /**
              * Sets illegal element which will be returned as error value.
              *
@@ -111,7 +111,7 @@ namespace local
             {
                 illegal_ = value;
             }
-        
+
             /**
              * Tests if given value is an illegal.
              *
@@ -122,7 +122,7 @@ namespace local
             {
                 return illegal_ == value;
             }
-            
+
             /**
              * Fills this buffer by given value.
              *
@@ -132,7 +132,7 @@ namespace local
             {
                 fill(value, length_);
             }
-            
+
             /**
              * Fills this buffer by given value.
              *
@@ -143,7 +143,7 @@ namespace local
             {
                 fill(value, 0, length);
             }
-        
+
             /**
              * Fills this buffer by given value.
              *
@@ -154,29 +154,29 @@ namespace local
             void fill(const T& value, const int32 index, const int32 count)
             {
                 const bool hasIndex = index < length_;
-                if( Self::isConstructed() && hasIndex ) 
+                if( Self::isConstructed() && hasIndex )
                 {
                     T* const buf = getBuffer();
                     const int32 length = index + count;
                     const int32 max = ( length <= length_ ) ? length : length_;
-                    for(int32 i=index; i<max; i++) 
+                    for(int32 i=index; i<max; i++)
                     {
                         buf[i] = value;
                     }
-                }                
-            }            
-            
+                }
+            }
+
             /**
              * Returns an element of this buffer.
              *
              * @param index - an element index.
              * @return an element.
              */
-            T& operator [](const int32 index)
+            T& operator[](const int32 index)
             {
                 T* value;
                 T* const buf = getBuffer();
-                if( not Self::isConstructed() || (index >= length_) || (buf == NULL) ) 
+                if( not Self::isConstructed() || (index >= length_) || (buf == NULL) )
                 {
                     value = &illegal_;
                 }
@@ -185,17 +185,17 @@ namespace local
                     value = &buf[index];
                 }
                 return *value;
-            }    
-    
+            }
+
         protected:
-            
+
             /**
              * Returns a pointer to the fist buffer element.
              *
              * @return pointer to buffer or NULL.
              */
-            virtual T* getBuffer() const = 0;            
-    
+            virtual T* getBuffer() const = 0;
+
             /**
              * Copies buffer to buffer.
              *
@@ -206,47 +206,47 @@ namespace local
              */
             void copy(const AbstractBuffer& buf)
             {
-                if( Self::isConstructed() ) 
+                if( Self::isConstructed() )
                 {
                     const int32 size1 = getLength();
                     const int32 size2 = buf.getLength();
                     const int32 size = ( size1 < size2 ) ? size1 : size2;
-                    T* const buf1 = getBuffer();        
+                    T* const buf1 = getBuffer();
                     T* const buf2 = buf.getBuffer();
-                    for(int32 i=0; i<size; i++) 
+                    for(int32 i=0; i<size; i++)
                     {
                         buf1[i] = buf2[i];
-                    }                    
+                    }
                 }
-            }        
-    
+            }
+
         private:
-        
+
             /**
              * Copy constructor.
              *
              * @param obj - reference to source object.
              */
             AbstractBuffer(const AbstractBuffer& obj);
-            
+
             /**
              * Assignment operator.
              *
              * @param obj - reference to source object.
-             * @return reference to this object.     
+             * @return reference to this object.
              */
-            AbstractBuffer& operator =(const AbstractBuffer& obj);
-            
+            AbstractBuffer& operator=(const AbstractBuffer& obj);
+
             /**
              * Number of elements of this buffer.
              */
             int32 length_;
-            
+
             /**
              * Illegal element of this buffer.
              */
             mutable T illegal_;
-        
+
         };
     }
 }

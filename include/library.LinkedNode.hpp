@@ -1,6 +1,6 @@
-/** 
+/**
  * Element for linked lists.
- * 
+ *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2016, Embedded Team, Sergey Baigudin
  * @license   http://embedded.team/license/
@@ -13,8 +13,8 @@
 namespace local
 {
     namespace library
-    {  
-        /** 
+    {
+        /**
          * Primary template implementation.
          *
          * @param T data type of element.
@@ -25,14 +25,14 @@ namespace local
         {
             typedef library::LinkedNode<T,A> Self;
             typedef library::Object<A>       Parent;
-        
+
         public:
-        
+
             /**
              * Constructor.
              *
              * NOTE: A passed element will be copied to the internal data
-             * structure by calling a copy constructor so that the element 
+             * structure by calling a copy constructor so that the element
              * might be invalidated after the function called.
              *
              * @param element an user element of this node.
@@ -43,7 +43,7 @@ namespace local
                 index_   (0),
                 element_ (element){
             }
-        
+
             /**
              * Destructor.
              */
@@ -60,7 +60,7 @@ namespace local
                 prev_ = this;
                 next_ = this;
             }
-            
+
             /**
              * Tests if this object has been constructed.
              *
@@ -69,8 +69,8 @@ namespace local
             virtual bool isConstructed() const
             {
                 return Parent::isConstructed();
-            }        
-        
+            }
+
             /**
              * Inserts a new element after this.
              *
@@ -90,7 +90,7 @@ namespace local
                 }
                 while(node->index_ != 0);
             }
-        
+
             /**
              * Inserts a new element after this.
              *
@@ -111,49 +111,49 @@ namespace local
                 }
                 while(node->index_ != 0);
             }
-        
+
             /**
              * Returns previous element.
              *
              * @return previous element.
-             */  
+             */
             virtual library::LinkedNode<T,A>* getPrevious() const
             {
                 return prev_;
             }
-            
+
             /**
              * Returns next element.
              *
              * @return next element.
-             */  
+             */
             virtual library::LinkedNode<T,A>* getNext() const
             {
                 return next_;
             }
-        
+
             /**
              * Returns the element.
              *
              * @return next element.
-             */  
+             */
             virtual T& getElement() const
             {
                 return element_;
             }
-        
+
             /**
              * Returns the element index.
              *
              * @return element index.
-             */  
+             */
             virtual int32 getIndex() const
             {
                 return index_;
             }
-    
+
         private:
-        
+
             /**
              * Links a given node after this.
              *
@@ -166,32 +166,32 @@ namespace local
                 next_ = node;
                 node->prev_ = this;
             }
-        
+
             /**
              * Copy constructor.
              *
              * @param obj reference to source object.
              */
             LinkedNode(const LinkedNode& obj);
-        
+
             /**
              * Assignment operator.
              *
              * @param obj reference to source object.
-             * @return reference to this object.     
+             * @return reference to this object.
              */
-            LinkedNode& operator =(const LinkedNode& obj);
-        
+            LinkedNode& operator=(const LinkedNode& obj);
+
             /**
              * Previous node.
              */
             LinkedNode* prev_;
-            
+
             /**
              * Next node.
-             */    
+             */
             LinkedNode* next_;
-            
+
             /**
              * Index of the node.
              */
@@ -201,7 +201,7 @@ namespace local
              * Containing element.
              */
             mutable T element_;
-        
+
         };
     }
 }
