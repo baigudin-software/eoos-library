@@ -4,7 +4,7 @@
 # @copyright 2019, Sergey Baigudin, Embedded Team
 # @license   http://embedded.team/license/
 
-target_include_directories(eoos
+target_include_directories(target-eoos
 INTERFACE
-    ${CMAKE_CURRENT_LIST_DIR}/include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
 )
