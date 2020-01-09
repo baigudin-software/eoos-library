@@ -24,7 +24,7 @@ namespace local
          * @param S size of aligning data type.
          * @param A heap memory allocator class.
          */
-        template <typename T, int32 S = sizeof(T), class A = Allocator>
+        template <typename T, size_t S = sizeof(T), class A = Allocator>
         class Align
         {
 
@@ -35,7 +35,6 @@ namespace local
              */
             Align()
             {
-                assignment(0);
             }
 
             /**
@@ -62,38 +61,6 @@ namespace local
             }
 
             /**
-             * Compares this string with a passed string lexicographically.
-             *
-             * @param val a source value.
-             * @return true if this object value equals to a passed value.
-             */
-            bool equal(const T& value) const
-            {
-                Align<T,S,A> obj(value);
-                return equal(obj);
-            }
-
-            /**
-             * Compares this string with a passed string lexicographically.
-             *
-             * @param obj a source object.
-             * @return true if this object value equals to a passed object value.
-             */
-            bool equal(const Align& obj) const
-            {
-                bool res = true;
-                for(int32 i=0; i<SIZE; i++)
-                {
-                    if( val_[i] != obj.val_[i] )
-                    {
-                        res = false;
-                        break;
-                    }
-                }
-                return res;
-            }
-
-            /**
              * Assignment operator.
              *
              * NOTE: A passed value is copied to an internal data structure
@@ -117,6 +84,56 @@ namespace local
             Align& operator=(const Align& obj)
             {
                 copy(obj);
+                return *this;
+            }
+
+            /**
+             * Pre-increment operators.
+             *
+             * @param obj a source object.
+             * @return reference to this object.
+             */
+            Align& operator++()
+            {
+                T val = typecast();
+                assignment(++val);
+                return *this;
+            }
+
+            /**
+             * Pre-decrement operators.
+             *
+             * @param obj a source object.
+             * @return reference to this object.
+             */
+            Align& operator--()
+            {
+                T val = typecast();
+                assignment(--val);
+                return *this;
+            }
+
+            /**
+             * Post-increment operators.
+             *
+             * @return reference to this object.
+             */
+            Align operator++(int)
+            {
+                T val = typecast();
+                assignment(val++);
+                return *this;
+            }
+
+            /**
+             * Post-decrement operators.
+             *
+             * @return reference to this object.
+             */
+            Align operator--(int)
+            {
+                T val = typecast();
+                assignment(val--);
                 return *this;
             }
 
@@ -168,6 +185,38 @@ namespace local
             #endif // EOOS_NO_STRICT_MISRA_RULES
 
         private:
+            
+            /**
+             * Compares a type based value with this class.
+             *
+             * @param val a source value.
+             * @return true if this object value equals to a passed value.
+             */
+            bool equal(const T& value) const
+            {
+                Align<T,S,A> obj(value);
+                return equal(obj);
+            }
+
+            /**
+             * Compares an object of this class type with this class.
+             *
+             * @param obj a source object.
+             * @return true if this object value equals to a passed object value.
+             */
+            bool equal(const Align& obj) const
+            {
+                bool res = true;
+                for(size_t i=0; i<SIZE; i++)
+                {
+                    if( val_[i] != obj.val_[i] )
+                    {
+                        res = false;
+                        break;
+                    }
+                }
+                return res;
+            }            
 
             /**
              * Assigns given value to self data.
@@ -176,7 +225,7 @@ namespace local
              */
             void assignment(const T& value)
             {
-                for(int32 i = 0; i<SIZE; i++)
+                for(size_t i = 0; i<SIZE; i++)
                 {
                     const T v = value >> (8 * i);
                     val_[i] = static_cast<cell>(v);
@@ -190,7 +239,7 @@ namespace local
              */
             void copy(const Align& obj)
             {
-                for(register int32 i=0; i<SIZE; i++)
+                for(size_t i=0; i<SIZE; i++)
                 {
                     val_[i] = obj.val_[i];
                 }
@@ -204,7 +253,7 @@ namespace local
             T typecast() const
             {
                 T r = static_cast<T>(0);
-                for(int32 i=SIZE-1; i>=0; i--)
+                for(size_t i=SIZE-1; i>=0; i--)
                 {
                     r = r << 8;
                     r = r | static_cast<T>(val_[i]);
@@ -215,7 +264,7 @@ namespace local
             /**
              * Size of aligning data.
              */
-            static const int32 SIZE = S;
+            static const size_t SIZE = S;
 
             /**
              * Array of data bytes.
