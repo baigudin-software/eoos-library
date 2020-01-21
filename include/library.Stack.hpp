@@ -2,7 +2,7 @@
  * Stack.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016, Embedded Team, Sergey Baigudin
+ * @copyright 2016, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_STACK_HPP_

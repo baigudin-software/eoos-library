@@ -2,7 +2,7 @@
  * Alignment of simple types to byte boundary of memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Embedded Team, Sergey Baigudin
+ * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_ALIGN_HPP_
@@ -185,7 +185,7 @@ namespace local
             #endif // EOOS_NO_STRICT_MISRA_RULES
 
         private:
-            
+
             /**
              * Compares a type based value with this class.
              *
@@ -216,7 +216,7 @@ namespace local
                     }
                 }
                 return res;
-            }            
+            }
 
             /**
              * Assigns given value to self data.

@@ -8,7 +8,7 @@
  * in a heap memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Embedded Team, Sergey Baigudin
+ * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_BUFFER_HPP_

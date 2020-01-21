@@ -1,8 +1,8 @@
-/** 
+/**
  * Class of static methods to manipulate memory.
- * 
+ *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Embedded Team, Sergey Baigudin
+ * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_MEMORY_HPP_
@@ -16,58 +16,58 @@ namespace local
     {
         class Memory
         {
-        
+
         public:
-        
-            /** 
+
+            /**
              * Copies a block of memory.
              *
              * @param dst a destination array where the content would be copied.
              * @param src a source array to be copied.
-             * @param len a number of bytes to copy.         
-             * @return a pointer to the destination array, or NULL if an error has been occurred.         
+             * @param len a number of bytes to copy.
+             * @return a pointer to the destination array, or NULL if an error has been occurred.
              */
             static void* memcpy(void* const dst, const void* src, size_t len)
             {
                 void* res;
-                if(dst != NULL && src != NULL) 
+                if(dst != NULL && src != NULL)
                 {
                     cell* sp  = static_cast<cell*>(const_cast<void*>(src));
                     cell* dp  = static_cast<cell*>(dst);
-                    while(len--) 
+                    while(len--)
                     {
                         *dp++ = *sp++;
                     }
                     res = dst;
-                }      
+                }
                 else
                 {
                     res = NULL;
                 }
                 return res;
             }
-            
-            /** 
+
+            /**
              * Fills a block of memory.
              *
              * @param dst a destination block of memory would be filled.
              * @param val a value to be set.
              * @param len a number of bytes to be set to the value.
-             * @return a pointer to the destination memory, or NULL if an error has been occurred.         
+             * @return a pointer to the destination memory, or NULL if an error has been occurred.
              */
             static void* memset(void* const dst, const cell val, size_t len)
             {
-                if(dst == NULL) 
+                if(dst == NULL)
                 {
                     return NULL;
-                }         
-                cell* dp = static_cast<cell*>(dst);    
+                }
+                cell* dp = static_cast<cell*>(dst);
                 const cell uc = val;
                 while(len--) *dp++ = uc;
                 return dst;
             }
-            
-            /** 
+
+            /**
              * Returns the length of a passed string .
              *
              * @param str a character string would be measured.
@@ -80,15 +80,15 @@ namespace local
                     return 0;
                 }
                 size_t len = 0;
-                while( *str != '\0' ) 
+                while( *str != '\0' )
                 {
                     len++;
                     str++;
-                }            
+                }
                 return len;
             }
-            
-            /** 
+
+            /**
              * Copies one string to another .
              *
              * @param dst a destination array where the content would be copied.
@@ -97,18 +97,18 @@ namespace local
              */
             static char* strcpy(char* const dst, const char* src)
             {
-                if(dst == NULL || src == NULL) 
+                if(dst == NULL || src == NULL)
                 {
                     return NULL;
-                }        
-                char* d = dst - 1;     
-                const char* s = src  - 1;     
+                }
+                char* d = dst - 1;
+                const char* s = src  - 1;
                 while( (*++d = *++s) != '\0' );
                 return dst;
             }
-            
-            
-            /** 
+
+
+            /**
              * Concatenates two strings.
              *
              * @param dst a destination character string where the content would be appended.
@@ -117,10 +117,10 @@ namespace local
              */
             static char* strcat(char* const dst, const char* src)
             {
-                if(dst == NULL || src == NULL) 
+                if(dst == NULL || src == NULL)
                 {
                     return NULL;
-                }        
+                }
                 char* d = dst - 1;
                 const char* s = src - 1;
                 while( *++d );
@@ -128,45 +128,45 @@ namespace local
                 while( (*++d = *++s) != '\0' );
                 return dst;
             }
-            
-            /** 
+
+            /**
              * Compares two strings.
              *
              * @param str1 character string to be compared.
              * @param str2 character string to be compared.
-             * @return the value 0 if the string 1 is equal to the string 2; 
-             *         a value less than 0 if the string 1 is shorter than the string 2; 
-             *         a value greater than 0 if the string 1 is longer than the string 2, 
+             * @return the value 0 if the string 1 is equal to the string 2;
+             *         a value less than 0 if the string 1 is shorter than the string 2;
+             *         a value greater than 0 if the string 1 is longer than the string 2,
              *         or the minimum possible value if an error has been occurred.
              */
             static int32 strcmp(const char* str1, const char* str2)
             {
-                if(str1 == NULL || str2 == NULL) 
+                if(str1 == NULL || str2 == NULL)
                 {
                     return 0x80000000;
-                }        
+                }
                 int32 ch, res;
                 while(true)
                 {
                     ch = *str1++;
                     res = ch - *str2++;
-                    if(ch == 0 || res != 0) 
+                    if(ch == 0 || res != 0)
                     {
                         break;
                     }
                 }
                 return res;
             }
-            
-            /** 
+
+            /**
              * Converts an integer number to a string.
              *
-             * The function converts an integer value into a character string using the base parameter, 
+             * The function converts an integer value into a character string using the base parameter,
              * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
-             * 
-             * Mark that only if the base is decimal, a passed number is available to be negative values, 
-             * and the resulting string of these values is preceded with a minus sign. In addition, 
-             * a hexadecimal number includes lower case characters, and any resulting strings do not contain 
+             *
+             * Mark that only if the base is decimal, a passed number is available to be negative values,
+             * and the resulting string of these values is preceded with a minus sign. In addition,
+             * a hexadecimal number includes lower case characters, and any resulting strings do not contain
              * any suffixes or prefixes for identifying a numeral system.
              *
              * @param val  a value that would be converted to a string.
@@ -177,16 +177,16 @@ namespace local
             template <typename T>
             static bool itoa(const T val, char* str, const int32 base = 10)
             {
-                const int32 LENGTH = sizeof(T) * 8 + 1;        
+                const int32 LENGTH = sizeof(T) * 8 + 1;
                 if(str == NULL)
                 {
                     return false;
-                }        
-                char temp[LENGTH];        
+                }
+                char temp[LENGTH];
                 bool isNegative;
                 bool res = true;
-                int32 index = LENGTH - 1;            
-                temp[index--] = '\0';            
+                int32 index = LENGTH - 1;
+                temp[index--] = '\0';
                 do
                 {
                     // Test for available base
@@ -199,12 +199,12 @@ namespace local
                             isNegative = false;
                             break;
                         }
-                        case 10:                                
+                        case 10:
                         {
                             isNegative = not isPositive(val) ? true : false;
                             break;
                         }
-                        default: 
+                        default:
                         {
                             res = false;
                             break;
@@ -219,12 +219,12 @@ namespace local
                     T module = isNegative ? 0 - val : val;
                     if( not isPositive(module) )
                     {
-                        res = false;                
+                        res = false;
                         break;
                     }
                     // Do the conversion
                     while(index >= 0)
-                    { 
+                    {
                         char ch;
                         T digit = module % base;
                         if(base == 16 && digit > 9)
@@ -234,7 +234,7 @@ namespace local
                         }
                         else
                         {
-                            ch = '0';                
+                            ch = '0';
                         }
                         temp[index--] = static_cast<char>(digit + ch);
                         module = module / base;
@@ -242,9 +242,9 @@ namespace local
                         {
                             break;
                         }
-                    } 
+                    }
                     // Add minus
-                    if(isNegative && index >= 0) 
+                    if(isNegative && index >= 0)
                     {
                         temp[index--] = '-';
                     }
@@ -254,33 +254,33 @@ namespace local
                 // Copy the temp string to the destination string
                 strcpy(str, &temp[++index]);
                 return res;
-            } 
-            
-            /** 
+            }
+
+            /**
              * Converts a string to an integer number.
              *
              * @param str a character string that would be converted to a number.
-             * @param base a numerical base used to parse the string.         
+             * @param base a numerical base used to parse the string.
              * @return the resulting number.
              */
-            template <typename T>         
+            template <typename T>
             static T atoi(const char* str, const int32 base = 10)
             {
                 switch(base)
                 {
-                    case  2:                 
+                    case  2:
                     case  8:
                     case 10:
                     case 16: break;
                     default: return 0;
                 }
-    
+
                 T result = 0;
                 const T multiplier = static_cast<T>(base);
                 int32 index = 0;
                 bool isNegative = false;
-                // Look for whitespaces         
-                while( isSpace(str[index]) ) 
+                // Look for whitespaces
+                while( isSpace(str[index]) )
                 {
                     index++;
                 }
@@ -305,7 +305,7 @@ namespace local
                     {
                         result *= multiplier;
                         result += static_cast<T>( str[index++] - '0' );
-                    }            
+                    }
                 }
                 else
                 {
@@ -317,15 +317,15 @@ namespace local
                         result *= base;
                         result += static_cast<T>( str[index++] - subtrahend );
                         result += static_cast<T>( addend );
-                    }            
+                    }
                 }
-    
+
                 return isNegative ? 0 - result : result;
             }
-            
-        private:   
-        
-            /** 
+
+        private:
+
+            /**
              * Test if a value is signed or unsigned.
              *
              * @param value a value that would be tested.
@@ -336,79 +336,78 @@ namespace local
             {
                 return value > 0 || value == 0 ? true : false;
             }
-            
-            /** 
+
+            /**
              * Tests if a character is a whitespace character.
              *
              * @param ch a character code.
              * @return true if the character is whitespace.
-             */         
+             */
             static bool isSpace(const int32 ch)
             {
                 return ch == 0x20 || (ch >= 0x09 && ch <= 0x0D) ? true : false;
-            }  
-    
-            /** 
+            }
+
+            /**
              * Tests if a character is a decimal number.
              *
              * @param ch a character code.
-             * @param base a numerical base used to parse the character.         
+             * @param base a numerical base used to parse the character.
              * @return true if the character is a decimal number.
-             */        
+             */
             static bool isDigit(const int32 ch, const int32 base = 10)
             {
                 switch(base)
                 {
-                    case 2:                 
+                    case 2:
                         return ch >= 0x30 && ch <= 0x31 ? true : false;
-                                        
+
                     case 8:
                         return ch >= 0x30 && ch <= 0x37 ? true : false;
-                                        
-                    case 16: 
-                        return ch >= 0x30 && ch <= 0x39 
+
+                    case 16:
+                        return ch >= 0x30 && ch <= 0x39
                             || ch >= 0x41 && ch <= 0x46
                             || ch >= 0x61 && ch <= 0x66 ? true : false;
-                        
-                    case 10:                                
+
+                    case 10:
                         return ch >= 0x30 && ch <= 0x39 ? true : false;
-                        
-                    default: 
+
+                    default:
                         return false;
                 }
-                
-            } 
-            
-            /** 
+
+            }
+
+            /**
              * Detect subtrahend and addend for hex numbers.
              *
              * @param testCh    a testing character code.
              * @param subCh     a resulting subtrahend.
-             * @param subDecade a resulting addend.                  
-             */        
+             * @param subDecade a resulting addend.
+             */
             static void detectMathOperands(const int32 testCh, char& subtrahend, int32& addend)
             {
                 // Test for uppercase letter
                 if(testCh >= 0x41 && testCh <= 0x46)
                 {
-                    subtrahend = 'A';            
+                    subtrahend = 'A';
                     addend = 10;
                 }
-                // Test for lowercase letter           
+                // Test for lowercase letter
                 else if(testCh >= 0x61 && testCh <= 0x66)
                 {
-                    subtrahend = 'a';            
-                    addend = 10;            
+                    subtrahend = 'a';
+                    addend = 10;
                 }
                 else
                 {
-                    subtrahend = '0';            
+                    subtrahend = '0';
                     addend = 0;
                 }
-            }                     
-    
+            }
+
         };
     }
 }
 #endif // LIBRARY_MEMORY_HPP_
-

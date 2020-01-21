@@ -2,7 +2,7 @@
  * Abstract class for some buffers.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2016, Embedded Team, Sergey Baigudin
+ * @copyright 2014-2016, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_ABSTRACT_BUFFER_HPP_

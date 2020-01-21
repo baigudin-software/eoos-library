@@ -2,7 +2,7 @@
  * Toggle of toggle interface.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Embedded Team, Sergey Baigudin
+ * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
  * @license   http://embedded.team/license/
  */
 #ifndef LIBRARY_TOGGLE_HPP_
