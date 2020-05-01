@@ -3,16 +3,15 @@
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
  */
-#ifndef LIBRARY_ALIGN_HPP_
-#define LIBRARY_ALIGN_HPP_
+#ifndef LIB_ALIGN_HPP_
+#define LIB_ALIGN_HPP_
 
 #include "Allocator.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -192,7 +191,7 @@ namespace local
              * @param val a source value.
              * @return true if this object value equals to a passed value.
              */
-            bool equal(const T& value) const
+            bool_t equal(const T& value) const
             {
                 Align<T,S,A> obj(value);
                 return equal(obj);
@@ -204,9 +203,9 @@ namespace local
              * @param obj a source object.
              * @return true if this object value equals to a passed object value.
              */
-            bool equal(const Align& obj) const
+            bool_t equal(const Align& obj) const
             {
-                bool res = true;
+                bool_t res = true;
                 for(size_t i=0; i<SIZE; i++)
                 {
                     if( val_[i] != obj.val_[i] )
@@ -228,7 +227,7 @@ namespace local
                 for(size_t i = 0; i<SIZE; i++)
                 {
                     const T v = value >> (8 * i);
-                    val_[i] = static_cast<cell>(v);
+                    val_[i] = static_cast<cell_t>(v);
                 }
             }
 
@@ -269,7 +268,7 @@ namespace local
             /**
              * Array of data bytes.
              */
-            cell val_[SIZE];
+            cell_t val_[SIZE];
 
         };
 
@@ -281,9 +280,9 @@ namespace local
          * @return true if objects are equal.
          */
         template <typename T>
-        inline bool operator==(const library::Align<T>& obj1, const library::Align<T>& obj2)
+        inline bool_t operator==(const Align<T>& obj1, const Align<T>& obj2)
         {
-            const bool res = obj1.equal(obj2);
+            const bool_t res = obj1.equal(obj2);
             return res;
         }
 
@@ -295,11 +294,11 @@ namespace local
          * @return true if objects are not equal.
          */
         template <typename T>
-        inline bool operator!=(const library::Align<T>& obj1, const library::Align<T>& obj2)
+        inline bool_t operator!=(const Align<T>& obj1, const Align<T>& obj2)
         {
-            const bool res = obj1.equal(obj2);
+            const bool_t res = obj1.equal(obj2);
             return not res;
         }
     }
 }
-#endif // LIBRARY_ALIGN_HPP_
+#endif // LIB_ALIGN_HPP_

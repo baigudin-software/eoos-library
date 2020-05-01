@@ -2,17 +2,16 @@
  * Root class of the library class hierarchy.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_OBJECT_HPP_
-#define LIBRARY_OBJECT_HPP_
+#ifndef LIB_OBJECT_HPP_
+#define LIB_OBJECT_HPP_
 
 #include "Object.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -20,9 +19,9 @@ namespace local
          * @param A - heap memory allocator class.
          */
         template <class A = Allocator>
-        class Object : public ::local::Object<A>
+        class Object : public ::eoos::Object<A>
         {
-            typedef ::local::Object<A> Parent;
+            typedef ::eoos::Object<A> Parent;
 
         public:
 
@@ -43,4 +42,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_OBJECT_HPP_
+#endif // LIB_OBJECT_HPP_

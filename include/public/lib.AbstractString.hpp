@@ -8,17 +8,16 @@
  * in a heap memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_ABSTRACT_STRING_HPP_
-#define LIBRARY_ABSTRACT_STRING_HPP_
+#ifndef LIB_ABSTRACT_STRING_HPP_
+#define LIB_ABSTRACT_STRING_HPP_
 
-#include "library.AbstractBaseString.hpp"
+#include "lib.AbstractBaseString.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implements the static string class.
@@ -27,11 +26,11 @@ namespace local
          * @param L - a maximum number of string characters, or 0 for dynamic allocation.
          * @param A - a heap memory allocator class.
          */
-        template <typename T, int32 L, class A = Allocator>
-        class AbstractString : public library::AbstractBaseString<T,A>
+        template <typename T, int32_t L, class A = Allocator>
+        class AbstractString : public AbstractBaseString<T,A>
         {
-            typedef library::AbstractString<T,L,A>    Self;
-            typedef library::AbstractBaseString<T,A>  Parent;
+            typedef AbstractString<T,L,A>    Self;
+            typedef AbstractBaseString<T,A>  Parent;
 
         public:
 
@@ -59,7 +58,7 @@ namespace local
              *
              * @return number of elements.
              */
-            virtual int32 getLength() const
+            virtual int32_t getLength() const
             {
                 return context_.len;
             }
@@ -71,7 +70,7 @@ namespace local
              * that contains characters. By this reason, a returned address will be actual
              * until you do not call no constant method of this class for an object.
              *
-             * @return first character of containing string characters, or NULL if no string contained.
+             * @return first character of containing string characters, or NULLPTR if no string contained.
              */
             virtual const T* getChar() const
             {
@@ -86,12 +85,12 @@ namespace local
              * @param str - a character string to be copied.
              * @return true if a passed string has been copied successfully.
              */
-            virtual bool copy(const T* const str)
+            virtual bool_t copy(const T* const str)
             {
-                bool res;
-                if( Parent::isConstructed() && str != NULL )
+                bool_t res;
+                if( Parent::isConstructed() && str != NULLPTR )
                 {
-                    int32 const len = Parent::getLength(str);
+                    int32_t const len = Parent::getLength(str);
                     res = true;
                     // If a given string length is more than this max available length
                     if( not context_.isFit(len) )
@@ -132,10 +131,10 @@ namespace local
              * @param str - an character string to be appended.
              * @return true if a passed string has been appended successfully.
              */
-            virtual bool concatenate(const T* const str)
+            virtual bool_t concatenate(const T* const str)
             {
-                bool res;
-                if( Parent::isConstructed() && str != NULL )
+                bool_t res;
+                if( Parent::isConstructed() && str != NULLPTR )
                 {
                     // Simply, copy a given string if the context is freed
                     if( not context_.isAllocated() )
@@ -145,7 +144,7 @@ namespace local
                     else
                     {
                         res = true;
-                        int32 const len = Parent::getLength(str) + context_.len;
+                        int32_t const len = Parent::getLength(str) + context_.len;
                         // If a length of this string plus a given string is more than this max available length
                         if( not context_.isFit(len) )
                         {
@@ -191,20 +190,20 @@ namespace local
              *         a value greater than 0 if this string is greater than a passed string,
              *         or the minimum possible value if an error has been occurred.
              */
-            virtual int32 compare(const T* const str) const
+            virtual int32_t compare(const T* const str) const
             {
-                int32 res;
-                if( Parent::isConstructed() && context_.str != NULL && str != NULL )
+                int32_t res;
+                if( Parent::isConstructed() && context_.str != NULLPTR && str != NULLPTR )
                 {
                     res = context_.len - Parent::getLength(str);
                     // If lengths are equal, characters might be different
                     if(res == 0)
                     {
-                        for(int32 i=0; i<context_.len; i++)
+                        for(int32_t i=0; i<context_.len; i++)
                         {
-                            intptr const a1 = static_cast<intptr>(context_.str[i]);
-                            intptr const a2 = static_cast<intptr>(str[i]);
-                            res = static_cast<int32>(a1 - a2);
+                            uintptr_t const a1 = static_cast<uintptr_t>(context_.str[i]);
+                            uintptr_t const a2 = static_cast<uintptr_t>(str[i]);
+                            res = static_cast<int32_t>(a1 - a2);
                             if(res != 0)
                             {
                                 break;
@@ -261,18 +260,18 @@ namespace local
                 /**
                  * Current number of characters of this string.
                  */
-                int32 len;
+                int32_t len;
 
                 /**
                  * Max available number of characters for this string.
                  */
-                int32 max;
+                int32_t max;
 
                 /**
                  * Constructor.
                  */
                 Context() :
-                    str (NULL),
+                    str (NULLPTR),
                     len (0),
                     max (0){
                 }
@@ -294,7 +293,7 @@ namespace local
                     // Don't instigate a copy of object buffer to this buffer,
                     // as the source object always is temporary and
                     // doesn't have any information in its buffer.
-                    str = obj.str != NULL ? buf_ : NULL;
+                    str = obj.str != NULLPTR ? buf_ : NULLPTR;
                     len = obj.len;
                     max = obj.max;
                 }
@@ -305,10 +304,10 @@ namespace local
                  * @param length - a number of string characters.
                  * @return true if the context has been allocated successfully.
                  */
-                bool allocate(int32 const length)
+                bool_t allocate(int32_t const length)
                 {
-                    bool res;
-                    if(str != NULL || length > L)
+                    bool_t res;
+                    if(str != NULLPTR || length > L)
                     {
                         res = false;
                     }
@@ -328,7 +327,7 @@ namespace local
                  */
                 void free()
                 {
-                    str = NULL;
+                    str = NULLPTR;
                     len = 0;
                     max = 0;
                 }
@@ -338,10 +337,10 @@ namespace local
                  *
                  * @return true if the context has been allocated successfully.
                  */
-                bool isAllocated()
+                bool_t isAllocated()
                 {
-                    bool res;
-                    if( str == NULL )
+                    bool_t res;
+                    if( str == NULLPTR )
                     {
                         res = false;
                     }
@@ -358,9 +357,9 @@ namespace local
                  * @param len - a number of string characters.
                  * @return true if this length will be fit successfully.
                  */
-                bool isFit(int32 len) const
+                bool_t isFit(int32_t len) const
                 {
-                    bool res;
+                    bool_t res;
                     if( len > max )
                     {
                         res = false;
@@ -414,8 +413,8 @@ namespace local
         template <typename T, class A>
         class AbstractString<T,0,A> : public AbstractBaseString<T,A>
         {
-            typedef library::AbstractString<T,0,A>    Self;
-            typedef library::AbstractBaseString<T,A>  Parent;
+            typedef AbstractString<T,0,A>    Self;
+            typedef AbstractBaseString<T,A>  Parent;
 
         public:
 
@@ -443,7 +442,7 @@ namespace local
              *
              * @return number of elements.
              */
-            virtual int32 getLength() const
+            virtual int32_t getLength() const
             {
                 return Parent::isConstructed() ? context_.len : 0;
             }
@@ -455,7 +454,7 @@ namespace local
              * that contains characters. By this reason, a returned address will be actual
              * until you do not call no constant method of this class for an object.
              *
-             * @return first character of containing string characters, or NULL if no string contained.
+             * @return first character of containing string characters, or NULLPTR if no string contained.
              */
             virtual const T* getChar() const
             {
@@ -470,12 +469,12 @@ namespace local
              * @param str - a character string to be copied.
              * @return true if a passed string has been copied successfully.
              */
-            virtual bool copy(const T* const str)
+            virtual bool_t copy(const T* const str)
             {
-                bool res;
-                if( Parent::isConstructed() && str != NULL )
+                bool_t res;
+                if( Parent::isConstructed() && str != NULLPTR )
                 {
-                    int32 const len = Parent::getLength(str);
+                    int32_t const len = Parent::getLength(str);
                     res = true;
                     // If a given string length is more than this max available length
                     if( not context_.isFit(len) )
@@ -516,10 +515,10 @@ namespace local
              * @param str - an character string to be appended.
              * @return true if a passed string has been appended successfully.
              */
-            virtual bool concatenate(const T* const str)
+            virtual bool_t concatenate(const T* const str)
             {
-                bool res;
-                if( Parent::isConstructed() && str != NULL )
+                bool_t res;
+                if( Parent::isConstructed() && str != NULLPTR )
                 {
                     // Simply, copy a given string if the context is freed
                     if( not context_.isAllocated() )
@@ -529,7 +528,7 @@ namespace local
                     else
                     {
                         res = true;
-                        int32 const len = Parent::getLength(str) + context_.len;
+                        int32_t const len = Parent::getLength(str) + context_.len;
                         // If a length of this string plus a given string is more than this max available length
                         if( not context_.isFit(len) )
                         {
@@ -575,20 +574,20 @@ namespace local
              *         a value greater than 0 if this string is greater than a passed string,
              *         or the minimum possible value if an error has been occurred.
              */
-            virtual int32 compare(const T* const str) const
+            virtual int32_t compare(const T* const str) const
             {
-                int32 res;
-                if( Parent::isConstructed() && context_.str != NULL && str != NULL )
+                int32_t res;
+                if( Parent::isConstructed() && context_.str != NULLPTR && str != NULLPTR )
                 {
                     res = context_.len - Parent::getLength(str);
                     // If lengths are equal, characters might be different
                     if(res == 0)
                     {
-                        for(int32 i=0; i<context_.len; i++)
+                        for(int32_t i=0; i<context_.len; i++)
                         {
-                            intptr const a1 = static_cast<intptr>(context_.str[i]);
-                            intptr const a2 = static_cast<intptr>(str[i]);
-                            res = static_cast<int32>(a1 - a2);
+                            uintptr_t const a1 = static_cast<uintptr_t>(context_.str[i]);
+                            uintptr_t const a2 = static_cast<uintptr_t>(str[i]);
+                            res = static_cast<int32_t>(a1 - a2);
                             if(res != 0)
                             {
                                 break;
@@ -645,18 +644,18 @@ namespace local
                 /**
                  * Current number of characters of this string.
                  */
-                int32 len;
+                int32_t len;
 
                 /**
                  * Max available number of characters for this string.
                  */
-                int32 max;
+                int32_t max;
 
                 /**
                  * Constructor.
                  */
                 Context() :
-                    str (NULL),
+                    str (NULLPTR),
                     len (0),
                     max (0){
                 }
@@ -690,16 +689,16 @@ namespace local
                  * @param length - a number of string characters.
                  * @return true if the context has been allocated successfully.
                  */
-                bool allocate(int32 const length)
+                bool_t allocate(int32_t const length)
                 {
-                    bool res;
-                    if(str == NULL)
+                    bool_t res;
+                    if(str == NULLPTR)
                     {
                         // Calculate size in byte for the given length
-                        int32 const size = calculateSize(length);
+                        int32_t const size = calculateSize(length);
                         // Allocate a new array
                         T* const string = reinterpret_cast<T*>( A::allocate(size) );
-                        if(string == NULL)
+                        if(string == NULLPTR)
                         {
                             res = false;
                         }
@@ -724,10 +723,10 @@ namespace local
                  */
                 void free()
                 {
-                    if(str != NULL)
+                    if(str != NULLPTR)
                     {
                         A::free(str);
-                        str = NULL;
+                        str = NULLPTR;
                         len = 0;
                         max = 0;
                     }
@@ -738,10 +737,10 @@ namespace local
                  *
                  * @return true if the context has been allocated successfully.
                  */
-                bool isAllocated()
+                bool_t isAllocated()
                 {
-                    bool res;
-                    if( str == NULL )
+                    bool_t res;
+                    if( str == NULLPTR )
                     {
                         res = false;
                     }
@@ -758,9 +757,9 @@ namespace local
                  * @param len - a number of string characters.
                  * @return true if this length will be fit successfully.
                  */
-                bool isFit(int32 len) const
+                bool_t isFit(int32_t len) const
                 {
-                    bool res;
+                    bool_t res;
                     if( len > max )
                     {
                         res = false;
@@ -780,7 +779,7 @@ namespace local
                  * @param len - a number of string characters.
                  * @return size in byte for a passed string.
                  */
-                static int32 calculateSize(int32 len)
+                static int32_t calculateSize(int32_t len)
                 {
                     size_t size = static_cast<size_t>(len) * sizeof(T) + sizeof(T);
                     // Align size to eight
@@ -790,7 +789,7 @@ namespace local
                         size_t const mask = 0x7U;
                         size = ( size & static_cast<size_t>(~mask) ) + 0x8U;
                     }
-                    int32 const res = static_cast<int32>(size);
+                    int32_t const res = static_cast<int32_t>(size);
                     return res;
                 }
 
@@ -800,10 +799,10 @@ namespace local
                  * @param size - size in byte.
                  * @return a number of string characters.
                  */
-                static int32 calculateLength(int32 const size)
+                static int32_t calculateLength(int32_t const size)
                 {
-                    uint32 const bytes = sizeof(T);
-                    int32 const len = size / static_cast<int32>(bytes);
+                    uint32_t const bytes = sizeof(T);
+                    int32_t const len = size / static_cast<int32_t>(bytes);
                     return (len > 1) ? len - 1 : 0;
                 }
 
@@ -835,4 +834,4 @@ namespace local
 
     }
 }
-#endif // LIBRARY_ABSTRACT_STRING_HPP_
+#endif // LIB_ABSTRACT_STRING_HPP_

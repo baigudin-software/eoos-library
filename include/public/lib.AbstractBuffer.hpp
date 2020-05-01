@@ -2,19 +2,18 @@
  * Abstract class for some buffers.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2016, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_ABSTRACT_BUFFER_HPP_
-#define LIBRARY_ABSTRACT_BUFFER_HPP_
+#ifndef LIB_ABSTRACT_BUFFER_HPP_
+#define LIB_ABSTRACT_BUFFER_HPP_
 
-#include "library.Object.hpp"
+#include "lib.Object.hpp"
 #include "api.Collection.hpp"
 #include "api.IllegalValue.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -23,10 +22,10 @@ namespace local
          * @param A - heap memory allocator class.
          */
         template <typename T, class A = Allocator>
-        class AbstractBuffer : public library::Object<A>, public api::Collection<T>, public api::IllegalValue<T>
+        class AbstractBuffer : public Object<A>, public api::Collection<T>, public api::IllegalValue<T>
         {
-            typedef library::AbstractBuffer<T,A>  Self;
-            typedef library::Object<A>            Parent;
+            typedef AbstractBuffer<T,A>  Self;
+            typedef ::eoos::lib::Object<A> Parent;
 
         public:
 
@@ -35,7 +34,7 @@ namespace local
              *
              * @param length - count of buffer elements.
              */
-            explicit AbstractBuffer(int32 length) : Parent(),
+            explicit AbstractBuffer(int32_t length) : Parent(),
                 length_  (length),
                 illegal_ (){
             }
@@ -48,7 +47,7 @@ namespace local
              * @param length - count of buffer elements.
              * @param illegal - illegal value.
              */
-            AbstractBuffer(int32 length, const T& illegal) : Parent(),
+            AbstractBuffer(int32_t length, const T& illegal) : Parent(),
                 length_  (length),
                 illegal_ (illegal){
             }
@@ -65,7 +64,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -75,7 +74,7 @@ namespace local
              *
              * @return number of elements.
              */
-            virtual int32 getLength() const
+            virtual int32_t getLength() const
             {
                 return length_;
             }
@@ -85,7 +84,7 @@ namespace local
              *
              * @return true if this collection does not contain any elements.
              */
-            virtual bool isEmpty() const
+            virtual bool_t isEmpty() const
             {
                 return length_ == 0;
             }
@@ -118,7 +117,7 @@ namespace local
              * @param value - testing value.
              * @param true if value is an illegal.
              */
-            virtual bool isIllegal(const T& value) const
+            virtual bool_t isIllegal(const T& value) const
             {
                 return illegal_ == value;
             }
@@ -139,7 +138,7 @@ namespace local
              * @param value - filling value.
              * @param length - count of filling elements.
              */
-            void fill(const T& value, const int32 length)
+            void fill(const T& value, const int32_t length)
             {
                 fill(value, 0, length);
             }
@@ -151,15 +150,15 @@ namespace local
              * @param index - begin index.
              * @param count - count of filling elements.
              */
-            void fill(const T& value, const int32 index, const int32 count)
+            void fill(const T& value, const int32_t index, const int32_t count)
             {
-                const bool hasIndex = index < length_;
+                const bool_t hasIndex = index < length_;
                 if( Self::isConstructed() && hasIndex )
                 {
                     T* const buf = getBuffer();
-                    const int32 length = index + count;
-                    const int32 max = ( length <= length_ ) ? length : length_;
-                    for(int32 i=index; i<max; i++)
+                    const int32_t length = index + count;
+                    const int32_t max = ( length <= length_ ) ? length : length_;
+                    for(int32_t i=index; i<max; i++)
                     {
                         buf[i] = value;
                     }
@@ -172,11 +171,11 @@ namespace local
              * @param index - an element index.
              * @return an element.
              */
-            T& operator[](const int32 index)
+            T& operator[](const int32_t index)
             {
                 T* value;
                 T* const buf = getBuffer();
-                if( not Self::isConstructed() || (index >= length_) || (buf == NULL) )
+                if( not Self::isConstructed() || (index >= length_) || (buf == NULLPTR) )
                 {
                     value = &illegal_;
                 }
@@ -192,7 +191,7 @@ namespace local
             /**
              * Returns a pointer to the fist buffer element.
              *
-             * @return pointer to buffer or NULL.
+             * @return pointer to buffer or NULLPTR.
              */
             virtual T* getBuffer() const = 0;
 
@@ -208,12 +207,12 @@ namespace local
             {
                 if( Self::isConstructed() )
                 {
-                    const int32 size1 = getLength();
-                    const int32 size2 = buf.getLength();
-                    const int32 size = ( size1 < size2 ) ? size1 : size2;
+                    const int32_t size1 = getLength();
+                    const int32_t size2 = buf.getLength();
+                    const int32_t size = ( size1 < size2 ) ? size1 : size2;
                     T* const buf1 = getBuffer();
                     T* const buf2 = buf.getBuffer();
-                    for(int32 i=0; i<size; i++)
+                    for(int32_t i=0; i<size; i++)
                     {
                         buf1[i] = buf2[i];
                     }
@@ -240,7 +239,7 @@ namespace local
             /**
              * Number of elements of this buffer.
              */
-            int32 length_;
+            int32_t length_;
 
             /**
              * Illegal element of this buffer.
@@ -250,4 +249,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_ABSTRACT_BUFFER_HPP_
+#endif // LIB_ABSTRACT_BUFFER_HPP_

@@ -2,17 +2,16 @@
  * Doubly linked list.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2016, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_LINKED_LIST_HPP_
-#define LIBRARY_LINKED_LIST_HPP_
+#ifndef LIB_LINKED_LIST_HPP_
+#define LIB_LINKED_LIST_HPP_
 
-#include "library.AbstractLinkedList.hpp"
+#include "lib.AbstractLinkedList.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -21,10 +20,10 @@ namespace local
          * @param A heap memory allocator class.
          */
         template <typename T, class A = Allocator>
-        class LinkedList : public library::AbstractLinkedList<T,A>
+        class LinkedList : public AbstractLinkedList<T,A>
         {
-            typedef library::AbstractLinkedList<T,A>  Parent;
-            typedef library::LinkedNode<T,A>          Node;
+            typedef AbstractLinkedList<T,A>  Parent;
+            typedef LinkedNode<T,A>          Node;
 
         public:
 
@@ -61,19 +60,19 @@ namespace local
              * @param index start position in this list.
              * @return pointer to new list iterator.
              */
-            virtual api::ListIterator<T>* getListIterator(const int32 index)
+            virtual api::ListIterator<T>* getListIterator(const int32_t index)
             {
                 if( not Parent::isConstructed() )
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
                 Iterator* const iterator = new Iterator(index, *this);
-                if(iterator != NULL && iterator->isConstructed())
+                if(iterator != NULLPTR && iterator->isConstructed())
                 {
                     return iterator;
                 }
                 delete iterator;
-                return NULL;
+                return NULLPTR;
             }
 
         private:
@@ -100,11 +99,11 @@ namespace local
              * For this reason, for fast iteration some tests are skipped.
              * You have to use this class only if it has been constructed.
              */
-            class Iterator : public library::Object<A>, public api::ListIterator<T>
+            class Iterator : public Object<A>, public api::ListIterator<T>
             {
-                typedef Iterator                  Self;
-                typedef library::Object<A>        Parent;
-                typedef library::LinkedList<T,A>  List;
+                typedef Iterator Self;
+                typedef ::eoos::lib::Object<A> Parent;
+                typedef LinkedList<T,A> List;
 
             public:
 
@@ -114,14 +113,14 @@ namespace local
                  * @param index position in this list.
                  * @param list  reference to self list.
                  */
-                Iterator(const int32 index, List& list) :
+                Iterator(const int32_t index, List& list) :
                     list_    (list),
                     count_   (list.getReferenceToCount()),
                     last_    (list.getReferenceToLast()),
                     illegal_ (list.getReferenceToIllegal()),
-                    curs_    (NULL),
+                    curs_    (NULLPTR),
                     rindex_  (ILLEGAL_INDEX){
-                    const bool isConstructed = construct(index);
+                    const bool_t isConstructed = construct(index);
                     this->setConstructed( isConstructed );
                 }
 
@@ -135,7 +134,7 @@ namespace local
                  *
                  * @return true if object has been constructed successfully.
                  */
-                virtual bool isConstructed() const
+                virtual bool_t isConstructed() const
                 {
                     return Parent::isConstructed();
                 }
@@ -146,7 +145,7 @@ namespace local
                  * @param element inserting element.
                  * @return true if element is added.
                  */
-                virtual bool add(const T& element)
+                virtual bool_t add(const T& element)
                 {
                     if(count_.list != count_.self)
                     {
@@ -166,7 +165,7 @@ namespace local
                  *
                  * @return true if an element is removed successfully.
                  */
-                virtual bool remove()
+                virtual bool_t remove()
                 {
                     Node* curs;
                     if(count_.list != count_.self)
@@ -183,7 +182,7 @@ namespace local
                     }
                     else
                     {
-                        curs = curs_ != last_ ? curs_->getNext() : NULL;
+                        curs = curs_ != last_ ? curs_->getNext() : NULLPTR;
                     }
                     if(list_.remove(rindex_) == false)
                     {
@@ -206,7 +205,7 @@ namespace local
                     {
                         return illegal_;
                     }
-                    curs_ = curs_ == NULL ? last_ : curs_->getPrevious();
+                    curs_ = curs_ == NULLPTR ? last_ : curs_->getPrevious();
                     rindex_ = curs_->getIndex();
                     return curs_->getElement();
                 }
@@ -216,13 +215,13 @@ namespace local
                  *
                  * @return index of the previous element or -1 if the list iterator is at the beginning of the list.
                  */
-                virtual int32 getPreviousIndex() const
+                virtual int32_t getPreviousIndex() const
                 {
                     if( not hasPrevious() )
                     {
                         return -1;
                     }
-                    return curs_ == NULL ? last_->getIndex() : curs_->getPrevious()->getIndex();
+                    return curs_ == NULLPTR ? last_->getIndex() : curs_->getPrevious()->getIndex();
                 }
 
                 /**
@@ -230,13 +229,13 @@ namespace local
                  *
                  * @return true if previous element is had.
                  */
-                virtual bool hasPrevious() const
+                virtual bool_t hasPrevious() const
                 {
                     if(count_.list != count_.self)
                     {
                         return false;
                     }
-                    if(last_ == NULL)
+                    if(last_ == NULLPTR)
                     {
                         return false;
                     }
@@ -259,7 +258,7 @@ namespace local
                         return illegal_;
                     }
                     Node* const node = curs_;
-                    curs_ = curs_ != last_ ? curs_->getNext() : NULL;
+                    curs_ = curs_ != last_ ? curs_->getNext() : NULLPTR;
                     rindex_ = node->getIndex();
                     return node->getElement();
                 }
@@ -269,7 +268,7 @@ namespace local
                  *
                  * @return index of the next element or list size if the list iterator is at the end of the list.
                  */
-                virtual int32 getNextIndex() const
+                virtual int32_t getNextIndex() const
                 {
                     return hasNext() ? curs_->getIndex() : list_.getLength();
                 }
@@ -279,13 +278,13 @@ namespace local
                  *
                  * @return true if next element is had.
                  */
-                virtual bool hasNext() const
+                virtual bool_t hasNext() const
                 {
                     if(count_.list != count_.self)
                     {
                         return false;
                     }
-                    if(curs_ == NULL)
+                    if(curs_ == NULLPTR)
                     {
                         return false;
                     }
@@ -320,7 +319,7 @@ namespace local
                  * @param value testing value.
                  * @param true if value is an illegal.
                  */
-                virtual bool isIllegal(const T& value) const
+                virtual bool_t isIllegal(const T& value) const
                 {
                     return list_.isIllegal(value);
                 }
@@ -332,7 +331,7 @@ namespace local
                  *
                  * @param index position in this list.
                  */
-                bool construct(const int32 index)
+                bool_t construct(const int32_t index)
                 {
                     if( not Self::isConstructed() )
                     {
@@ -373,7 +372,7 @@ namespace local
                     /**
                      * Constructor.
                      */
-                    Counter(int32& count) :
+                    Counter(int32_t& count) :
                         list (count),
                         self (count){
                     }
@@ -388,19 +387,19 @@ namespace local
                     /**
                      * Quantity of chang made by iterating list.
                      */
-                    const int32& list;
+                    const int32_t& list;
 
                     /**
                      * Quantity of chang made by the iterator.
                      */
-                    int32 self;
+                    int32_t self;
 
                 };
 
                 /**
                  * Illegal iterator index
                  */
-                static const int32 ILLEGAL_INDEX = -1;
+                static const int32_t ILLEGAL_INDEX = -1;
 
                 /**
                  * The list of this iterator.
@@ -430,10 +429,10 @@ namespace local
                 /**
                  * Index of element of list which can be removed by remove method.
                  */
-                mutable int32 rindex_;
+                mutable int32_t rindex_;
 
             };
         };
     }
 }
-#endif // LIBRARY_LINKED_LIST_HPP_
+#endif // LIB_LINKED_LIST_HPP_

@@ -2,22 +2,21 @@
  * Abstract class for sequential accessing to data store.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_ABSTRACT_LINKED_LIST_HPP_
-#define LIBRARY_ABSTRACT_LINKED_LIST_HPP_
+#ifndef LIB_ABSTRACT_LINKED_LIST_HPP_
+#define LIB_ABSTRACT_LINKED_LIST_HPP_
 
-#include "library.Object.hpp"
-#include "library.Buffer.hpp"
-#include "library.LinkedNode.hpp"
+#include "lib.Object.hpp"
+#include "lib.Buffer.hpp"
+#include "lib.LinkedNode.hpp"
 #include "api.List.hpp"
 #include "api.Queue.hpp"
 #include "api.Iterable.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -27,14 +26,14 @@ namespace local
          */
         template <typename T, class A = Allocator>
         class AbstractLinkedList :
-            public library::Object<A>,
+            public Object<A>,
             public api::List<T>,
             public api::Queue<T>,
             public api::Iterable<T>{
 
-            typedef library::AbstractLinkedList<T,A> Self;
-            typedef library::Object<A>               Parent;
-            typedef library::LinkedNode<T,A>         Node;
+            typedef AbstractLinkedList<T,A> Self;
+            typedef ::eoos::lib::Object<A> Parent;
+            typedef LinkedNode<T,A> Node;
 
         public:
 
@@ -43,7 +42,7 @@ namespace local
              */
             AbstractLinkedList() : Parent(),
                 illegal_ (),
-                last_    (NULL),
+                last_    (NULLPTR),
                 count_   (0){
             }
 
@@ -58,7 +57,7 @@ namespace local
              */
             AbstractLinkedList(const T& illegal) : Parent(),
                 illegal_ (illegal),
-                last_    (NULL),
+                last_    (NULLPTR),
                 count_   (0){
             }
 
@@ -75,7 +74,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -86,7 +85,7 @@ namespace local
              * @param element inserting element.
              * @return true if element is added.
              */
-            virtual bool add(const T& element)
+            virtual bool_t add(const T& element)
             {
                 return Self::isConstructed() ? addNode(getLength(), element) : false;
             }
@@ -98,7 +97,7 @@ namespace local
              * @param element inserting element.
              * @return true if element is inserted.
              */
-            virtual bool add(int32 const index, const T& element)
+            virtual bool_t add(int32_t const index, const T& element)
             {
                 return Self::isConstructed() ? addNode(index, element) : false;
             }
@@ -112,8 +111,8 @@ namespace local
                 {
                     return;
                 }
-                const int32 b = getLength() - 1;
-                for(int32 i=b; i>=0; i--)
+                const int32_t b = getLength() - 1;
+                for(int32_t i=b; i>=0; i--)
                 {
                     if( not removeNode( getNodeByIndex(i) ) )
                     {
@@ -127,7 +126,7 @@ namespace local
              *
              * @return true if an element is removed successfully.
              */
-            virtual bool removeFirst()
+            virtual bool_t removeFirst()
             {
                 return remove(0);
             }
@@ -137,7 +136,7 @@ namespace local
              *
              * @return true if an element is removed successfully.
              */
-            virtual bool removeLast()
+            virtual bool_t removeLast()
             {
                 return remove( getLength() - 1 );
             }
@@ -147,7 +146,7 @@ namespace local
              *
              * @return true if an element is removed successfully.
              */
-            virtual bool remove()
+            virtual bool_t remove()
             {
                 return remove(0);
             }
@@ -158,7 +157,7 @@ namespace local
              * @param index   position in this list.
              * @return true if an element is removed successfully.
              */
-            virtual bool remove(const int32 index)
+            virtual bool_t remove(const int32_t index)
             {
                 return Self::isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
             }
@@ -169,7 +168,7 @@ namespace local
              * @param element reference to element.
              * @return true if an element is removed successfully.
              */
-            virtual bool removeElement(const T& element)
+            virtual bool_t removeElement(const T& element)
             {
                 return Self::isConstructed() ? removeNode( getNodeByElement(element) ) : false;
             }
@@ -210,14 +209,14 @@ namespace local
              * @param index - position in this container.
              * @return indexed element of this container.
              */
-            virtual T& get(int32 index) const
+            virtual T& get(int32_t index) const
             {
                 if( not Self::isConstructed() )
                 {
                     return illegal_;
                 }
                 Node* const node = getNodeByIndex(index);
-                return node != NULL ? node->getElement() : illegal_;
+                return node != NULLPTR ? node->getElement() : illegal_;
             }
 
             /**
@@ -225,9 +224,9 @@ namespace local
              *
              * @return number of elements.
              */
-            virtual int32 getLength() const
+            virtual int32_t getLength() const
             {
-                return last_ == NULL ? 0 : last_->getIndex() + 1;
+                return last_ == NULLPTR ? 0 : last_->getIndex() + 1;
             }
 
             /**
@@ -235,9 +234,9 @@ namespace local
              *
              * @return true if this list does not contain any elements.
              */
-            virtual bool isEmpty() const
+            virtual bool_t isEmpty() const
             {
-                return last_ == NULL ? true : false;
+                return last_ == NULLPTR ? true : false;
             }
 
             /**
@@ -271,7 +270,7 @@ namespace local
              * @param value testing value.
              * @param true if value is an illegal.
              */
-            virtual bool isIllegal(const T& value) const
+            virtual bool_t isIllegal(const T& value) const
             {
                 if( not Self::isConstructed() )
                 {
@@ -286,10 +285,10 @@ namespace local
              * @param element reference to the element.
              * @return index or -1 if this list does not contain the element.
              */
-            virtual int32 getIndexOf(const T& element) const
+            virtual int32_t getIndexOf(const T& element) const
             {
                 Node* const node = getNodeByElement(element);
-                return node != NULL ? node->getIndex() : -1;
+                return node != NULLPTR ? node->getIndex() : -1;
             }
 
             /**
@@ -298,7 +297,7 @@ namespace local
              * @param index checking position in this list.
              * @return true if index is present.
              */
-            virtual bool isIndex(int32 const index) const
+            virtual bool_t isIndex(int32_t const index) const
             {
                 return (0 <= index && index < getLength()) ? true : false;
             }
@@ -308,35 +307,35 @@ namespace local
              *
              * You have to call delete operator for returned value after it have used.
              *
-             * @return pointer to reference of elements or NULL if list is empty.
+             * @return pointer to reference of elements or NULLPTR if list is empty.
              */
-            virtual library::Buffer<T,0,A>* array() const
+            virtual Buffer<T,0,A>* array() const
             {
                 #ifdef EOOS_NO_STRICT_MISRA_RULES
                 if( not Self::isConstructed() )
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
-                const int32 count = getLength();
+                const int32_t count = getLength();
                 if(count == 0)
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
                 Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
-                if(buf == NULL || not buf->isConstructed())
+                if(buf == NULLPTR || not buf->isConstructed())
                 {
                     delete buf;
-                    return NULL;
+                    return NULLPTR;
                 }
                 Node* node = last_->getNext();
-                for(int32 i=0; i<count; i++)
+                for(int32_t i=0; i<count; i++)
                 {
                     (*buf)[i] = node->getElement();
                     node = node->getNext();
                 }
                 return buf;
                 #else
-                return NULL;
+                return NULLPTR;
                 #endif
             }
 
@@ -361,19 +360,19 @@ namespace local
              * @param element inserting element.
              * @return true if element is inserted.
              */
-            bool addNode(const int32 index, const T& element)
+            bool_t addNode(const int32_t index, const T& element)
             {
                 if(isIndexOutOfBounds(index))
                 {
                     return false;
                 }
                 Node* const node = new Node(element);
-                if(node == NULL || not node->isConstructed())
+                if(node == NULLPTR || not node->isConstructed())
                 {
                     delete node;
                     return false;
                 }
-                if(last_ == NULL)
+                if(last_ == NULLPTR)
                 {
                     last_ = node;
                     count_++;
@@ -382,7 +381,7 @@ namespace local
                 if(index > 0)
                 {
                     Node* const after = getNodeByIndex(index - 1);
-                    if(after == NULL)
+                    if(after == NULLPTR)
                     {
                         delete node;
                         return false;
@@ -396,7 +395,7 @@ namespace local
                 else
                 {
                     Node* const before = getNodeByIndex(0);
-                    if(before == NULL)
+                    if(before == NULLPTR)
                     {
                         delete node;
                         return false;
@@ -413,18 +412,18 @@ namespace local
              * @param index position in this list.
              * @return pointer to the node of this list.
              */
-            Node* getNodeByIndex(const int32 index) const
+            Node* getNodeByIndex(const int32_t index) const
             {
                 if( not isIndex(index) )
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
                 if(index == getLength() - 1)
                 {
                     return last_;
                 }
                 Node* node = last_->getNext();
-                for(int32 i=0; i<index; i++)
+                for(int32_t i=0; i<index; i++)
                 {
                     node = node->getNext();
                 }
@@ -439,13 +438,13 @@ namespace local
              */
             Node* getNodeByElement(const T& element) const
             {
-                const int32 len = getLength();
+                const int32_t len = getLength();
                 if(len == 0)
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
                 Node* node = last_->getNext();
-                for(int32 i=0; i<len; i++, node = node->getNext())
+                for(int32_t i=0; i<len; i++, node = node->getNext())
                 {
                     if(element != node->getElement())
                     {
@@ -453,7 +452,7 @@ namespace local
                     }
                     return node;
                 }
-                return NULL;
+                return NULLPTR;
             }
 
             /**
@@ -462,9 +461,9 @@ namespace local
              * @param node pointer to node.
              * @return true if a node is removed successfully.
              */
-            bool removeNode(Node* const node)
+            bool_t removeNode(Node* const node)
             {
-                if(node == NULL)
+                if(node == NULLPTR)
                 {
                     return false;
                 }
@@ -472,7 +471,7 @@ namespace local
                 {
                     if(getLength() == 1)
                     {
-                        last_ = NULL;
+                        last_ = NULLPTR;
                     }
                     else
                     {
@@ -490,7 +489,7 @@ namespace local
              * @param index checking position in this list.
              * @return true if index is outed.
              */
-            bool isIndexOutOfBounds(const int32 index) const
+            bool_t isIndexOutOfBounds(const int32_t index) const
             {
                 return (index < 0 || index > getLength()) ? true : false;
             }
@@ -500,7 +499,7 @@ namespace local
              *
              * @return data value.
              */
-            int32& getReferenceToCount()
+            int32_t& getReferenceToCount()
             {
                 return count_;
             }
@@ -555,9 +554,9 @@ namespace local
             /**
              * Number of changes in this list.
              */
-            int32 count_;
+            int32_t count_;
 
         };
     }
 }
-#endif // LIBRARY_ABSTRACT_LINKED_LIST_HPP_
+#endif // LIB_ABSTRACT_LINKED_LIST_HPP_

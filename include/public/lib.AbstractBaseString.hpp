@@ -2,18 +2,17 @@
  * Abstract base string class.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_ABSTRACT_BASE_STRING_HPP_
-#define LIBRARY_ABSTRACT_BASE_STRING_HPP_
+#ifndef LIB_ABSTRACT_BASE_STRING_HPP_
+#define LIB_ABSTRACT_BASE_STRING_HPP_
 
-#include "library.Object.hpp"
+#include "lib.Object.hpp"
 #include "api.String.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -22,10 +21,10 @@ namespace local
          * @param A - a heap memory allocator class.
          */
         template <typename T, class A = Allocator>
-        class AbstractBaseString : public library::Object<A>, public api::String<T>
+        class AbstractBaseString : public Object<A>, public api::String<T>
         {
-            typedef library::AbstractBaseString<T,A>  Self;
-            typedef library::Object<A>                Parent;
+            typedef AbstractBaseString<T,A>  Self;
+            typedef ::eoos::lib::Object<A> Parent;
 
         public:
 
@@ -48,12 +47,12 @@ namespace local
              *
              * @return number of elements.
              */
-            virtual int32 getLength() const = 0;
+            virtual int32_t getLength() const = 0;
 
             /**
              * Returns pointer to the first character of containing string.
              *
-             * @return first character of containing string characters, or NULL if no string contained.
+             * @return first character of containing string characters, or NULLPTR if no string contained.
              */
             virtual const T* getChar() const = 0;
 
@@ -62,7 +61,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -72,10 +71,10 @@ namespace local
              *
              * @return true if this collection does not contain any elements.
              */
-            virtual bool isEmpty() const
+            virtual bool_t isEmpty() const
             {
-                bool res;
-                int32 const length = getLength();
+                bool_t res;
+                int32_t const length = getLength();
                 if(length == 0)
                 {
                     res = true;
@@ -93,9 +92,9 @@ namespace local
              * @param string - a string object to be copied.
              * @return true if a passed string has been copied successfully.
              */
-            virtual bool copy(const api::String<T>& string)
+            virtual bool_t copy(const api::String<T>& string)
             {
-                bool res;
+                bool_t res;
                 if( not Self::isConstructed() || not string.isConstructed() )
                 {
                     res = false;
@@ -114,9 +113,9 @@ namespace local
              * @param string - a string object to be appended.
              * @return true if a passed string has been appended successfully.
              */
-            virtual bool concatenate(const api::String<T>& string)
+            virtual bool_t concatenate(const api::String<T>& string)
             {
-                bool res;
+                bool_t res;
                 if( not Self::isConstructed() || not string.isConstructed() )
                 {
                     res = false;
@@ -138,9 +137,9 @@ namespace local
              *         a value greater than 0 if this string is greater than a passed string,
              *         or the minimum possible value if an error has been occurred.
              */
-            virtual int32 compare(const api::String<T>& string) const
+            virtual int32_t compare(const api::String<T>& string) const
             {
-                int32 res;
+                int32_t res;
                 if( not Self::isConstructed() || not string.isConstructed() )
                 {
                     res = MINIMUM_POSSIBLE_VALUE_OF_INT32;
@@ -168,7 +167,7 @@ namespace local
              * @param str - a character string to be copied.
              * @return true if a passed string has been copied successfully.
              */
-            virtual bool copy(const T* str) = 0;
+            virtual bool_t copy(const T* str) = 0;
 
             /**
              * Concatenates a passed string to this string.
@@ -176,7 +175,7 @@ namespace local
              * @param str - a character string to be appended.
              * @return true if a passed string has been appended successfully.
              */
-            virtual bool concatenate(const T* str) = 0;
+            virtual bool_t concatenate(const T* str) = 0;
 
             /**
              * Compares this string with a passed string lexicographically.
@@ -187,7 +186,7 @@ namespace local
              *         a value greater than 0 if this string is greater than a passed string,
              *         or the minimum possible value if an error has been occurred.
              */
-            virtual int32 compare(const T* str) const = 0;
+            virtual int32_t compare(const T* str) const = 0;
 
             /**
              * Returns a string length.
@@ -195,9 +194,9 @@ namespace local
              * @param str - a character string would be measured.
              * @return a length of the passed string.
              */
-            int32 getLength(const T* str) const
+            int32_t getLength(const T* str) const
             {
-                int32 len = 0;
+                int32_t len = 0;
                 T const null = getTerminator();
                 while( *str != null )
                 {
@@ -215,7 +214,7 @@ namespace local
              */
             void copy(T* dst, const T* src) const
             {
-                if(dst != NULL && src != NULL)
+                if(dst != NULLPTR && src != NULLPTR)
                 {
                     T const null = getTerminator();
                     dst--;
@@ -238,11 +237,11 @@ namespace local
              */
             void concatenate(T* const dst, const T* const src) const
             {
-                if(dst != NULL && src != NULL)
+                if(dst != NULLPTR && src != NULLPTR)
                 {
                     T const null = getTerminator();
-                    int32 d = 0;
-                    int32 s = 0;
+                    int32_t d = 0;
+                    int32_t s = 0;
                     while( dst[d] != null )
                     {
                         d++;
@@ -256,9 +255,9 @@ namespace local
             }
 
             /**
-             * The minimum possible value of int32 type.
+             * The minimum possible value of int32_t type.
              */
-            static const int32 MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0 - 0x7fffffff - 1;
+            static const int32_t MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0 - 0x7fffffff - 1;
 
         private:
 
@@ -276,4 +275,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_ABSTRACT_BASE_STRING_HPP_
+#endif // LIB_ABSTRACT_BASE_STRING_HPP_

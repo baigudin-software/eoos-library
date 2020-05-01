@@ -2,17 +2,16 @@
  * Element for linked lists.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_LINKED_NODE_HPP_
-#define LIBRARY_LINKED_NODE_HPP_
+#ifndef LIB_LINKED_NODE_HPP_
+#define LIB_LINKED_NODE_HPP_
 
-#include "library.Object.hpp"
+#include "lib.Object.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -21,10 +20,10 @@ namespace local
          * @param A heap memory allocator class.
          */
         template <typename T, class A = Allocator>
-        class LinkedNode : public library::Object<A>
+        class LinkedNode : public Object<A>
         {
-            typedef library::LinkedNode<T,A> Self;
-            typedef library::Object<A>       Parent;
+            typedef LinkedNode<T,A> Self;
+            typedef ::eoos::lib::Object<A> Parent;
 
         public:
 
@@ -66,7 +65,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }
@@ -79,7 +78,7 @@ namespace local
              *
              * @param node pointer to inserted node.
              */
-            virtual void insertAfter(library::LinkedNode<T,A>* node)
+            virtual void insertAfter(LinkedNode<T,A>* node)
             {
                 link(node);
                 node->index_ = index_;
@@ -99,7 +98,7 @@ namespace local
              *
              * @param node pointer to inserted node.
              */
-            virtual void insertBefore(library::LinkedNode<T,A>* node)
+            virtual void insertBefore(LinkedNode<T,A>* node)
             {
                 prev_->link(node);
                 node->index_ = index_;
@@ -117,7 +116,7 @@ namespace local
              *
              * @return previous element.
              */
-            virtual library::LinkedNode<T,A>* getPrevious() const
+            virtual LinkedNode<T,A>* getPrevious() const
             {
                 return prev_;
             }
@@ -127,7 +126,7 @@ namespace local
              *
              * @return next element.
              */
-            virtual library::LinkedNode<T,A>* getNext() const
+            virtual LinkedNode<T,A>* getNext() const
             {
                 return next_;
             }
@@ -147,7 +146,7 @@ namespace local
              *
              * @return element index.
              */
-            virtual int32 getIndex() const
+            virtual int32_t getIndex() const
             {
                 return index_;
             }
@@ -159,7 +158,7 @@ namespace local
              *
              * @param node pointer to linking node.
              */
-            void link(library::LinkedNode<T,A>* node)
+            void link(LinkedNode<T,A>* node)
             {
                 next_->prev_ = node;
                 node->next_ = next_;
@@ -195,7 +194,7 @@ namespace local
             /**
              * Index of the node.
              */
-            int32 index_;
+            int32_t index_;
 
             /**
              * Containing element.
@@ -205,4 +204,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_LINKED_NODE_HPP_
+#endif // LIB_LINKED_NODE_HPP_

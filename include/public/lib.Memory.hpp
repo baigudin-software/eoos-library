@@ -2,17 +2,16 @@
  * Class of static methods to manipulate memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_MEMORY_HPP_
-#define LIBRARY_MEMORY_HPP_
+#ifndef LIB_MEMORY_HPP_
+#define LIB_MEMORY_HPP_
 
 #include "Types.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         class Memory
         {
@@ -25,15 +24,15 @@ namespace local
              * @param dst a destination array where the content would be copied.
              * @param src a source array to be copied.
              * @param len a number of bytes to copy.
-             * @return a pointer to the destination array, or NULL if an error has been occurred.
+             * @return a pointer to the destination array, or NULLPTR if an error has been occurred.
              */
             static void* memcpy(void* const dst, const void* src, size_t len)
             {
                 void* res;
-                if(dst != NULL && src != NULL)
+                if(dst != NULLPTR && src != NULLPTR)
                 {
-                    cell* sp  = static_cast<cell*>(const_cast<void*>(src));
-                    cell* dp  = static_cast<cell*>(dst);
+                    cell_t* sp  = static_cast<cell_t*>(const_cast<void*>(src));
+                    cell_t* dp  = static_cast<cell_t*>(dst);
                     while(len--)
                     {
                         *dp++ = *sp++;
@@ -42,7 +41,7 @@ namespace local
                 }
                 else
                 {
-                    res = NULL;
+                    res = NULLPTR;
                 }
                 return res;
             }
@@ -53,16 +52,16 @@ namespace local
              * @param dst a destination block of memory would be filled.
              * @param val a value to be set.
              * @param len a number of bytes to be set to the value.
-             * @return a pointer to the destination memory, or NULL if an error has been occurred.
+             * @return a pointer to the destination memory, or NULLPTR if an error has been occurred.
              */
-            static void* memset(void* const dst, const cell val, size_t len)
+            static void* memset(void* const dst, const cell_t val, size_t len)
             {
-                if(dst == NULL)
+                if(dst == NULLPTR)
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
-                cell* dp = static_cast<cell*>(dst);
-                const cell uc = val;
+                cell_t* dp = static_cast<cell_t*>(dst);
+                const cell_t uc = val;
                 while(len--) *dp++ = uc;
                 return dst;
             }
@@ -73,9 +72,9 @@ namespace local
              * @param str a character string would be measured.
              * @return the length of the passed string.
              */
-            static size_t strlen(const char* str)
+            static size_t strlen(const char_t* str)
             {
-                if(str == NULL)
+                if(str == NULLPTR)
                 {
                     return 0;
                 }
@@ -93,16 +92,16 @@ namespace local
              *
              * @param dst a destination array where the content would be copied.
              * @param src a character string to be copied.
-             * @return a pointer to the destination string, or NULL if an error has been occurred.
+             * @return a pointer to the destination string, or NULLPTR if an error has been occurred.
              */
-            static char* strcpy(char* const dst, const char* src)
+            static char_t* strcpy(char_t* const dst, const char_t* src)
             {
-                if(dst == NULL || src == NULL)
+                if(dst == NULLPTR || src == NULLPTR)
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
-                char* d = dst - 1;
-                const char* s = src  - 1;
+                char_t* d = dst - 1;
+                const char_t* s = src  - 1;
                 while( (*++d = *++s) != '\0' );
                 return dst;
             }
@@ -113,16 +112,16 @@ namespace local
              *
              * @param dst a destination character string where the content would be appended.
              * @param src a character string to be appended.
-             * @return a pointer to the destination string, or NULL if an error has been occurred.
+             * @return a pointer to the destination string, or NULLPTR if an error has been occurred.
              */
-            static char* strcat(char* const dst, const char* src)
+            static char_t* strcat(char_t* const dst, const char_t* src)
             {
-                if(dst == NULL || src == NULL)
+                if(dst == NULLPTR || src == NULLPTR)
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
-                char* d = dst - 1;
-                const char* s = src - 1;
+                char_t* d = dst - 1;
+                const char_t* s = src - 1;
                 while( *++d );
                 d--;
                 while( (*++d = *++s) != '\0' );
@@ -139,13 +138,13 @@ namespace local
              *         a value greater than 0 if the string 1 is longer than the string 2,
              *         or the minimum possible value if an error has been occurred.
              */
-            static int32 strcmp(const char* str1, const char* str2)
+            static int32_t strcmp(const char_t* str1, const char_t* str2)
             {
-                if(str1 == NULL || str2 == NULL)
+                if(str1 == NULLPTR || str2 == NULLPTR)
                 {
                     return 0x80000000;
                 }
-                int32 ch, res;
+                int32_t ch, res;
                 while(true)
                 {
                     ch = *str1++;
@@ -175,17 +174,17 @@ namespace local
              * @return true if the conversion has been completed successfully.
              */
             template <typename T>
-            static bool itoa(const T val, char* str, const int32 base = 10)
+            static bool_t itoa(const T val, char* str, const int32_t base = 10)
             {
-                const int32 LENGTH = sizeof(T) * 8 + 1;
-                if(str == NULL)
+                const int32_t LENGTH = sizeof(T) * 8 + 1;
+                if(str == NULLPTR)
                 {
                     return false;
                 }
                 char temp[LENGTH];
-                bool isNegative;
-                bool res = true;
-                int32 index = LENGTH - 1;
+                bool_t isNegative;
+                bool_t res = true;
+                int32_t index = LENGTH - 1;
                 temp[index--] = '\0';
                 do
                 {
@@ -264,7 +263,7 @@ namespace local
              * @return the resulting number.
              */
             template <typename T>
-            static T atoi(const char* str, const int32 base = 10)
+            static T atoi(const char* str, const int32_t base = 10)
             {
                 switch(base)
                 {
@@ -277,8 +276,8 @@ namespace local
 
                 T result = 0;
                 const T multiplier = static_cast<T>(base);
-                int32 index = 0;
-                bool isNegative = false;
+                int32_t index = 0;
+                bool_t isNegative = false;
                 // Look for whitespaces
                 while( isSpace(str[index]) )
                 {
@@ -310,7 +309,7 @@ namespace local
                 else
                 {
                     char subtrahend;
-                    int32 addend;
+                    int32_t addend;
                     while( isDigit(str[index], base) )
                     {
                         detectMathOperands(str[index], subtrahend, addend);
@@ -332,7 +331,7 @@ namespace local
              * @return true if the value has been negative.
              */
             template <typename T>
-            static bool isPositive(const T value)
+            static bool_t isPositive(const T value)
             {
                 return value > 0 || value == 0 ? true : false;
             }
@@ -343,7 +342,7 @@ namespace local
              * @param ch a character code.
              * @return true if the character is whitespace.
              */
-            static bool isSpace(const int32 ch)
+            static bool_t isSpace(const int32_t ch)
             {
                 return ch == 0x20 || (ch >= 0x09 && ch <= 0x0D) ? true : false;
             }
@@ -355,7 +354,7 @@ namespace local
              * @param base a numerical base used to parse the character.
              * @return true if the character is a decimal number.
              */
-            static bool isDigit(const int32 ch, const int32 base = 10)
+            static bool_t isDigit(const int32_t ch, const int32_t base = 10)
             {
                 switch(base)
                 {
@@ -386,7 +385,7 @@ namespace local
              * @param subCh     a resulting subtrahend.
              * @param subDecade a resulting addend.
              */
-            static void detectMathOperands(const int32 testCh, char& subtrahend, int32& addend)
+            static void detectMathOperands(const int32_t testCh, char& subtrahend, int32_t& addend)
             {
                 // Test for uppercase letter
                 if(testCh >= 0x41 && testCh <= 0x46)
@@ -410,4 +409,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_MEMORY_HPP_
+#endif // LIB_MEMORY_HPP_

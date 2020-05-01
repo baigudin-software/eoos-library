@@ -2,18 +2,17 @@
  * String class.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_STRING_HPP_
-#define LIBRARY_STRING_HPP_
+#ifndef LIB_STRING_HPP_
+#define LIB_STRING_HPP_
 
-#include "library.AbstractString.hpp"
-#include "library.Memory.hpp"
+#include "lib.AbstractString.hpp"
+#include "lib.Memory.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implements the static string class.
@@ -22,11 +21,11 @@ namespace local
          * @param L - a maximum number of string characters, or 0 for dynamic allocation.
          * @param A - a heap memory allocator class.
          */
-        template <typename T, int32 L, class A = Allocator>
-        class String : public library::AbstractString<T,L,A>
+        template <typename T, int32_t L, class A = Allocator>
+        class String : public AbstractString<T,L,A>
         {
-            typedef library::String<T,L,A>         Self;
-            typedef library::AbstractString<T,L,A> Parent;
+            typedef String<T,L,A>         Self;
+            typedef AbstractString<T,L,A> Parent;
 
             /**
              * Constructor.
@@ -72,11 +71,11 @@ namespace local
          * @param L - a maximum number of string characters, or 0 for dynamic allocation.
          * @param A - a heap memory allocator class.
          */
-        template <int32 L, class A>
-        class String<char,L,A> : public library::AbstractString<char,L,A>
+        template <int32_t L, class A>
+        class String<char_t,L,A> : public AbstractString<char_t,L,A>
         {
-            typedef library::String<char,L,A>           Self;
-            typedef library::AbstractString<char,L,A>   Parent;
+            typedef String<char_t,L,A>           Self;
+            typedef AbstractString<char_t,L,A>   Parent;
 
         public:
 
@@ -92,7 +91,7 @@ namespace local
              *
              * @param source - a source object.
              */
-            String(const library::String<char,L,A>& source) : Parent()
+            String(const String<char_t,L,A>& source) : Parent()
             {
                 Parent::copy(source);
             }
@@ -102,7 +101,7 @@ namespace local
              *
              * @param source - a source object interface.
              */
-            String(const api::String<char>& source) : Parent()
+            String(const api::String<char_t>& source) : Parent()
             {
                 Parent::copy(source);
             }
@@ -112,7 +111,7 @@ namespace local
              *
              * @param source - a source character string.
              */
-            String(const char* const source) : Parent()
+            String(const char_t* const source) : Parent()
             {
                 Parent::copy(source);
             }
@@ -123,19 +122,19 @@ namespace local
              * @param value - a source numerical value.
              * @param base - a numerical base used to represent a value as a string.
              */
-            explicit String(int32 const value) : Parent()
+            explicit String(int32_t const value) : Parent()
             {
-                Self::convert<int32>(value, 10);
+                Self::convert<int32_t>(value, 10);
             }
 
             /**
-             * Casts to int32 type.
+             * Casts to int32_t type.
              *
              * @return a numerical value.
              */
-            operator int32() const
+            operator int32_t() const
             {
-                return Self::cast<int32>(10);
+                return Self::cast<int32_t>(10);
             }
 
             /**
@@ -144,7 +143,7 @@ namespace local
              * @param source - a source object.
              * @return this object.
              */
-            library::String<char,L,A>& operator=(const library::String<char,L,A>& source)
+            String<char_t,L,A>& operator=(const String<char_t,L,A>& source)
             {
                 Parent::copy(source);
                 return *this;
@@ -156,7 +155,7 @@ namespace local
              * @param source - a source object interface.
              * @return reference to this object.
              */
-            library::String<char,L,A>& operator=(const api::String<char>& source)
+            String<char_t,L,A>& operator=(const api::String<char_t>& source)
             {
                 Parent::copy(source);
                 return *this;
@@ -168,7 +167,7 @@ namespace local
              * @param source - a source character string.
              * @return reference to this object.
              */
-            library::String<char,L,A>& operator=(const char* const source)
+            String<char_t,L,A>& operator=(const char_t* const source)
             {
                 Parent::copy(source);
                 return *this;
@@ -180,7 +179,7 @@ namespace local
              * @param source - a source object.
              * @return reference to this object.
              */
-            library::String<char,L,A>& operator+=(const library::String<char,L,A>& source)
+            String<char_t,L,A>& operator+=(const String<char_t,L,A>& source)
             {
                 Parent::concatenate(source);
                 return *this;
@@ -192,7 +191,7 @@ namespace local
              * @param source - a source object interface.
              * @return reference to this object.
              */
-            library::String<char,L,A>& operator+=(const api::String<char>& source)
+            String<char_t,L,A>& operator+=(const api::String<char_t>& source)
             {
                 Parent::concatenate(source);
                 return *this;
@@ -204,7 +203,7 @@ namespace local
              * @param source - a source character string.
              * @return reference to this object.
              */
-            library::String<char,L,A>& operator+=(const char* const source)
+            String<char_t,L,A>& operator+=(const char_t* const source)
             {
                 Parent::concatenate(source);
                 return *this;
@@ -216,7 +215,7 @@ namespace local
              * @param value - a source numerical value.
              * @return reference to this object.
              */
-            library::String<char,L,A>& operator+=(int32 const value)
+            String<char_t,L,A>& operator+=(int32_t const value)
             {
                 String const string(value);
                 Parent::concatenate(string);
@@ -242,10 +241,10 @@ namespace local
              * @return true if the conversion has been completed successfully.
              */
             template <typename I>
-            bool convert(I const value, int32 const base = 10)
+            bool_t convert(I const value, int32_t const base = 10)
             {
-                bool res;
-                char temp[sizeof(I) * 8 + 1];
+                bool_t res;
+                char_t temp[sizeof(I) * 8 + 1];
                 if( not Memory::itoa<I>(value, temp, base) )
                 {
                     res = false;
@@ -267,7 +266,7 @@ namespace local
              * @return the resulting number.
              */
             template <typename I>
-            I cast(int32 const base = 10) const
+            I cast(int32_t const base = 10) const
             {
                 return Memory::atoi<I>(Parent::getChar(), base);
             }
@@ -279,17 +278,17 @@ namespace local
              *
              * @return a character which means that this string terminated.
              */
-            virtual char getTerminator() const
+            virtual char_t getTerminator() const
             {
                 return '\0';
             }
 
         private:
 
-            template <int32 L0, class A0> friend bool operator==(const library::String<char,L0,A0>&, const char*);
-            template <int32 L0, class A0> friend bool operator==(const char*, const library::String<char,L0,A0>&);
-            template <int32 L0, class A0> friend bool operator!=(const library::String<char,L0,A0>&, const char*);
-            template <int32 L0, class A0> friend bool operator!=(const char*, const library::String<char,L0,A0>&);
+            template <int32_t L0, class A0> friend bool_t operator==(const String<char_t,L0,A0>&, const char_t*);
+            template <int32_t L0, class A0> friend bool_t operator==(const char_t*, const String<char_t,L0,A0>&);
+            template <int32_t L0, class A0> friend bool_t operator!=(const String<char_t,L0,A0>&, const char_t*);
+            template <int32_t L0, class A0> friend bool_t operator!=(const char_t*, const String<char_t,L0,A0>&);
         };
 
         /**
@@ -299,8 +298,8 @@ namespace local
          * @param source2 - a source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator==(const library::String<char,L,A>& source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator==(const String<char_t,L,A>& source1, const String<char_t,L,A>& source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -312,8 +311,8 @@ namespace local
          * @param source2 - a source object interface 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator==(const library::String<char,L,A>& source1, const api::String<char>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator==(const String<char_t,L,A>& source1, const api::String<char_t>& source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -325,8 +324,8 @@ namespace local
          * @param source2 - a source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator==(const api::String<char>& source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator==(const api::String<char_t>& source1, const String<char_t,L,A>& source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -338,8 +337,8 @@ namespace local
          * @param source2 - a source character string 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator==(const library::String<char,L,A>& source1, const char* const source2)
+        template <int32_t L, class A>
+        inline bool_t operator==(const String<char_t,L,A>& source1, const char_t* const source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -351,8 +350,8 @@ namespace local
          * @param source2 - a source source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator==(const char* const source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator==(const char_t* const source1, const String<char_t,L,A>& source2)
         {
             return ( source2.compare(source1) == 0 ) ? true : false;
         }
@@ -364,8 +363,8 @@ namespace local
          * @param source2 - a source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator!=(const library::String<char,L,A>& source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator!=(const String<char_t,L,A>& source1, const String<char_t,L,A>& source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -377,8 +376,8 @@ namespace local
          * @param source2 - a source object interface 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator!=(const library::String<char,L,A>& source1, const api::String<char>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator!=(const String<char_t,L,A>& source1, const api::String<char_t>& source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -390,8 +389,8 @@ namespace local
          * @param source2 - a source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator!=(const api::String<char>& source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator!=(const api::String<char_t>& source1, const String<char_t,L,A>& source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -403,8 +402,8 @@ namespace local
          * @param source2 - a source character string 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator!=(const library::String<char,L,A>& source1, const char* const source2)
+        template <int32_t L, class A>
+        inline bool_t operator!=(const String<char_t,L,A>& source1, const char_t* const source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -416,8 +415,8 @@ namespace local
          * @param source2 - a source source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline bool operator!=(const char* const source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline bool_t operator!=(const char_t* const source1, const String<char_t,L,A>& source2)
         {
             return ( source2.compare(source1) != 0 ) ? true : false;
         }
@@ -429,10 +428,10 @@ namespace local
          * @param source2 - a source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline library::String<char,L,A> operator+(const library::String<char,L,A>& source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline String<char_t,L,A> operator+(const String<char_t,L,A>& source1, const String<char_t,L,A>& source2)
         {
-            library::String<char,L,A> string(source1);
+            String<char_t,L,A> string(source1);
             string += source2;
             return string;
         }
@@ -444,10 +443,10 @@ namespace local
          * @param source2 - a source object interface 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline library::String<char,L,A> operator+(const library::String<char,L,A>& source1, const api::String<char>& source2)
+        template <int32_t L, class A>
+        inline String<char_t,L,A> operator+(const String<char_t,L,A>& source1, const api::String<char_t>& source2)
         {
-            library::String<char,L,A> string(source1);
+            String<char_t,L,A> string(source1);
             string += source2;
             return string;
         }
@@ -459,10 +458,10 @@ namespace local
          * @param source2 - a source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline library::String<char,L,A> operator+(const api::String<char>& source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline String<char_t,L,A> operator+(const api::String<char_t>& source1, const String<char_t,L,A>& source2)
         {
-            library::String<char,L,A> string(source1);
+            String<char_t,L,A> string(source1);
             string += source2;
             return string;
         }
@@ -474,10 +473,10 @@ namespace local
          * @param source2 - a source character string 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline library::String<char,L,A> operator+(const library::String<char,L,A>& source1, const char* const source2)
+        template <int32_t L, class A>
+        inline String<char_t,L,A> operator+(const String<char_t,L,A>& source1, const char_t* const source2)
         {
-            library::String<char,L,A> string(source1);
+            String<char_t,L,A> string(source1);
             string += source2;
             return string;
         }
@@ -489,10 +488,10 @@ namespace local
          * @param source2 - a source source object 2.
          * @return true if strings are equal.
          */
-        template <int32 L, class A>
-        inline library::String<char,L,A> operator+(const char* const source1, const library::String<char,L,A>& source2)
+        template <int32_t L, class A>
+        inline String<char_t,L,A> operator+(const char_t* const source1, const String<char_t,L,A>& source2)
         {
-            library::String<char,L,A> string(source1);
+            String<char_t,L,A> string(source1);
             string += source2;
             return string;
         }
@@ -506,10 +505,10 @@ namespace local
          * @param A - a heap memory allocator class.
          */
         template <typename T, class A>
-        class String<T,0,A> : public library::AbstractString<T,0,A>
+        class String<T,0,A> : public AbstractString<T,0,A>
         {
-            typedef library::String<T,0,A>         Self;
-            typedef library::AbstractString<T,0,A> Parent;
+            typedef String<T,0,A>         Self;
+            typedef AbstractString<T,0,A> Parent;
 
         public:
 
@@ -557,10 +556,10 @@ namespace local
          * @param A - a heap memory allocator class.
          */
         template <class A>
-        class String<char,0,A> : public library::AbstractString<char,0,A>
+        class String<char_t,0,A> : public AbstractString<char_t,0,A>
         {
-            typedef library::String<char,0,A>         Self;
-            typedef library::AbstractString<char,0,A> Parent;
+            typedef String<char_t,0,A>         Self;
+            typedef AbstractString<char_t,0,A> Parent;
 
         public:
 
@@ -576,7 +575,7 @@ namespace local
              *
              * @param source - a source object.
              */
-            String(const library::String<char,0,A>& source) : Parent()
+            String(const String<char_t,0,A>& source) : Parent()
             {
                 Parent::copy(source);
             }
@@ -586,7 +585,7 @@ namespace local
              *
              * @param source - a source object interface.
              */
-            String(const api::String<char>& source) : Parent()
+            String(const api::String<char_t>& source) : Parent()
             {
                 Parent::copy(source);
             }
@@ -596,7 +595,7 @@ namespace local
              *
              * @param source - a source character string.
              */
-            String(const char* const source) : Parent()
+            String(const char_t* const source) : Parent()
             {
                 Parent::copy(source);
             }
@@ -607,19 +606,19 @@ namespace local
              * @param value - a source numerical value.
              * @param base - a numerical base used to represent a value as a string.
              */
-            explicit String(int32 const value) : Parent()
+            explicit String(int32_t const value) : Parent()
             {
-                Self::convert<int32>(value, 10);
+                Self::convert<int32_t>(value, 10);
             }
 
             /**
-             * Casts to int32 type.
+             * Casts to int32_t type.
              *
              * @return a numerical value.
              */
-            operator int32() const
+            operator int32_t() const
             {
-                return Self::cast<int32>(10);
+                return Self::cast<int32_t>(10);
             }
 
             /**
@@ -628,7 +627,7 @@ namespace local
              * @param source - a source object.
              * @return this object.
              */
-            library::String<char,0,A>& operator=(const library::String<char,0,A>& source)
+            String<char_t,0,A>& operator=(const String<char_t,0,A>& source)
             {
                 Parent::copy(source);
                 return *this;
@@ -640,7 +639,7 @@ namespace local
              * @param source  -a source object interface.
              * @return reference to this object.
              */
-            library::String<char,0,A>& operator=(const api::String<char>& source)
+            String<char_t,0,A>& operator=(const api::String<char_t>& source)
             {
                 Parent::copy(source);
                 return *this;
@@ -652,7 +651,7 @@ namespace local
              * @param source - a source character string.
              * @return reference to this object.
              */
-            library::String<char,0,A>& operator=(const char* const source)
+            String<char_t,0,A>& operator=(const char_t* const source)
             {
                 Parent::copy(source);
                 return *this;
@@ -664,7 +663,7 @@ namespace local
              * @param source - a source object.
              * @return reference to this object.
              */
-            library::String<char,0,A>& operator+=(const library::String<char,0,A>& source)
+            String<char_t,0,A>& operator+=(const String<char_t,0,A>& source)
             {
                 Parent::concatenate(source);
                 return *this;
@@ -676,7 +675,7 @@ namespace local
              * @param source - a source object interface.
              * @return reference to this object.
              */
-            library::String<char,0,A>& operator+=(const api::String<char>& source)
+            String<char_t,0,A>& operator+=(const api::String<char_t>& source)
             {
                 Parent::concatenate(source);
                 return *this;
@@ -688,7 +687,7 @@ namespace local
              * @param source - a source character string.
              * @return reference to this object.
              */
-            library::String<char,0,A>& operator+=(const char* const source)
+            String<char_t,0,A>& operator+=(const char_t* const source)
             {
                 Parent::concatenate(source);
                 return *this;
@@ -700,7 +699,7 @@ namespace local
              * @param value - a source numerical value.
              * @return reference to this object.
              */
-            library::String<char,0,A>& operator+=(int32 const value)
+            String<char_t,0,A>& operator+=(int32_t const value)
             {
                 String string(value);
                 Parent::concatenate(string);
@@ -726,10 +725,10 @@ namespace local
              * @return true if the conversion has been completed successfully.
              */
             template <typename I>
-            bool convert(I const value, int32 const base = 10)
+            bool_t convert(I const value, int32_t const base = 10)
             {
-                bool res;
-                char temp[sizeof(I) * 8 + 1];
+                bool_t res;
+                char_t temp[sizeof(I) * 8 + 1];
                 if( not Memory::itoa<I>(value, temp, base) )
                 {
                     res = false;
@@ -751,9 +750,9 @@ namespace local
              * @return the resulting number.
              */
             template <typename I>
-            I cast(int32 const base = 10) const
+            I cast(int32_t const base = 10) const
             {
-                const char* const str = Parent::getChar();
+                const char_t* const str = Parent::getChar();
                 return Memory::atoi<I>(str, base);
             }
 
@@ -764,17 +763,17 @@ namespace local
              *
              * @return a character which means that this string terminated.
              */
-            virtual char getTerminator() const
+            virtual char_t getTerminator() const
             {
                 return '\0';
             }
 
         private:
 
-            template <class A0> friend bool operator==(const library::String<char,0,A0>&, const char*);
-            template <class A0> friend bool operator==(const char*, const library::String<char,0,A0>&);
-            template <class A0> friend bool operator!=(const library::String<char,0,A0>&, const char*);
-            template <class A0> friend bool operator!=(const char*, const library::String<char,0,A0>&);
+            template <class A0> friend bool_t operator==(const String<char_t,0,A0>&, const char_t*);
+            template <class A0> friend bool_t operator==(const char_t*, const String<char_t,0,A0>&);
+            template <class A0> friend bool_t operator!=(const String<char_t,0,A0>&, const char_t*);
+            template <class A0> friend bool_t operator!=(const char_t*, const String<char_t,0,A0>&);
         };
 
         /**
@@ -785,7 +784,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator==(const library::String<char,0,A>& source1, const library::String<char,0,A>& source2)
+        inline bool_t operator==(const String<char_t,0,A>& source1, const String<char_t,0,A>& source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -798,7 +797,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator==(const library::String<char,0,A>& source1, const api::String<char>& source2)
+        inline bool_t operator==(const String<char_t,0,A>& source1, const api::String<char_t>& source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -811,7 +810,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator==(const api::String<char>& source1, const library::String<char,0,A>& source2)
+        inline bool_t operator==(const api::String<char_t>& source1, const String<char_t,0,A>& source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -824,7 +823,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator==(const library::String<char,0,A>& source1, const char* const source2)
+        inline bool_t operator==(const String<char_t,0,A>& source1, const char_t* const source2)
         {
             return ( source1.compare(source2) == 0 ) ? true : false;
         }
@@ -837,7 +836,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator==(const char* const source1, const library::String<char,0,A>& source2)
+        inline bool_t operator==(const char_t* const source1, const String<char_t,0,A>& source2)
         {
             return ( source2.compare(source1) == 0 ) ? true : false;
         }
@@ -850,7 +849,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator!=(const library::String<char,0,A>& source1, const library::String<char,0,A>& source2)
+        inline bool_t operator!=(const String<char_t,0,A>& source1, const String<char_t,0,A>& source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -863,7 +862,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator!=(const library::String<char,0,A>& source1, const api::String<char>& source2)
+        inline bool_t operator!=(const String<char_t,0,A>& source1, const api::String<char_t>& source2)
         {
             return ( source1.compare(source2) ) != 0 ? true : false;
         }
@@ -876,7 +875,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator!=(const api::String<char>& source1, const library::String<char,0,A>& source2)
+        inline bool_t operator!=(const api::String<char_t>& source1, const String<char_t,0,A>& source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -889,7 +888,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator!=(const library::String<char,0,A>& source1, const char* const source2)
+        inline bool_t operator!=(const String<char_t,0,A>& source1, const char_t* const source2)
         {
             return ( source1.compare(source2) != 0 ) ? true : false;
         }
@@ -902,7 +901,7 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline bool operator!=(const char* const source1, const library::String<char,0,A>& source2)
+        inline bool_t operator!=(const char_t* const source1, const String<char_t,0,A>& source2)
         {
             return ( source2.compare(source1) != 0 ) ? true : false;
         }
@@ -915,9 +914,9 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline library::String<char,0,A> operator+(const library::String<char,0,A>& source1, const library::String<char,0,A>& source2)
+        inline String<char_t,0,A> operator+(const String<char_t,0,A>& source1, const String<char_t,0,A>& source2)
         {
-            library::String<char,0,A> string(source1);
+            String<char_t,0,A> string(source1);
             string += source2;
             return string;
         }
@@ -930,9 +929,9 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline library::String<char,0,A> operator+(const library::String<char,0,A>& source1, const api::String<char>& source2)
+        inline String<char_t,0,A> operator+(const String<char_t,0,A>& source1, const api::String<char_t>& source2)
         {
-            library::String<char,0,A> string(source1);
+            String<char_t,0,A> string(source1);
             string += source2;
             return string;
         }
@@ -945,9 +944,9 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline library::String<char,0,A> operator+(const api::String<char>& source1, const library::String<char,0,A>& source2)
+        inline String<char_t,0,A> operator+(const api::String<char_t>& source1, const String<char_t,0,A>& source2)
         {
-            library::String<char,0,A> string(source1);
+            String<char_t,0,A> string(source1);
             string += source2;
             return string;
         }
@@ -960,9 +959,9 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline library::String<char,0,A> operator+(const library::String<char,0,A>& source1, const char* const source2)
+        inline String<char_t,0,A> operator+(const String<char_t,0,A>& source1, const char_t* const source2)
         {
-            library::String<char,0,A> string(source1);
+            String<char_t,0,A> string(source1);
             string += source2;
             return string;
         }
@@ -975,9 +974,9 @@ namespace local
          * @return true if strings are equal.
          */
         template <class A>
-        inline library::String<char,0,A> operator+(const char* const source1, const library::String<char,0,A>& source2)
+        inline String<char_t,0,A> operator+(const char_t* const source1, const String<char_t,0,A>& source2)
         {
-            library::String<char,0,A> string(source1);
+            String<char_t,0,A> string(source1);
             string += source2;
             return string;
         }
@@ -986,4 +985,4 @@ namespace local
 
     }
 }
-#endif // LIBRARY_STRING_HPP_
+#endif // LIB_STRING_HPP_

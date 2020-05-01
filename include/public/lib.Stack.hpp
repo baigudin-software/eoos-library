@@ -2,19 +2,18 @@
  * Stack.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_STACK_HPP_
-#define LIBRARY_STACK_HPP_
+#ifndef LIB_STACK_HPP_
+#define LIB_STACK_HPP_
 
-#include "library.Object.hpp"
+#include "lib.Object.hpp"
 #include "api.Stack.hpp"
-#include "library.Buffer.hpp"
+#include "lib.Buffer.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -23,10 +22,10 @@ namespace local
          * @param A heap memory allocator class.
          */
         template <typename T, class A = Allocator>
-        class Stack : public library::Object<A>, public api::Stack<T>
+        class Stack : public Object<A>, public api::Stack<T>
         {
-            typedef library::Object<A>  Parent;
-            typedef api::Stack<T>       StackIntf;
+            typedef ::eoos::lib::Object<A> Parent;
+            typedef api::Stack<T> StackIntf;
 
         public:
 
@@ -36,10 +35,10 @@ namespace local
              * @param type  type of this stack.
              * @param count count of buffer elements.
              */
-            Stack(typename api::Stack<T>::Operation type, int32 count) : Parent(),
+            Stack(typename api::Stack<T>::Operation type, int32_t count) : Parent(),
                 stack_ (count),
                 type_  (type){
-                const bool isConstructed = construct();
+                const bool_t isConstructed = construct();
                 this->setConstruct( isConstructed );
             }
 
@@ -50,10 +49,10 @@ namespace local
              * @param count   count of buffer elements.
              * @param illegal illegal value.
              */
-            Stack(typename api::Stack<T>::Operation type, int32 count, const T illegal) : Parent(),
+            Stack(typename api::Stack<T>::Operation type, int32_t count, const T illegal) : Parent(),
                 stack_ (count, illegal),
                 type_  (type){
-                const bool isConstructed = construct();
+                const bool_t isConstructed = construct();
                 this->setConstruct( isConstructed );
             }
 
@@ -69,7 +68,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 return this->isConstructed_;
             }
@@ -83,7 +82,7 @@ namespace local
             {
                 if( not this->isConstructed_ )
                 {
-                    return NULL;
+                    return NULLPTR;
                 }
                 T* const stack = &stack_[0];
                 switch(type_)
@@ -101,7 +100,7 @@ namespace local
                         return &stack[0];
 
                     default:
-                        return NULL;
+                        return NULLPTR;
                 }
             }
 
@@ -120,7 +119,7 @@ namespace local
              *
              * @return number of elements.
              */
-            virtual int32 getLength() const
+            virtual int32_t getLength() const
             {
                 return stack_.getLength();
             }
@@ -130,7 +129,7 @@ namespace local
              *
              * @return true if this collection does not contain any elements.
              */
-            virtual bool isEmpty() const
+            virtual bool_t isEmpty() const
             {
                 return false;
             }
@@ -163,7 +162,7 @@ namespace local
              * @param value testing value.
              * @param true if value is an illegal.
              */
-            virtual bool isIllegal(const T& value) const
+            virtual bool_t isIllegal(const T& value) const
             {
                 return stack_.isIllegal(value);
             }
@@ -175,7 +174,7 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            bool construct()
+            bool_t construct()
             {
                 if( not this->isConstructed_ )
                 {
@@ -219,4 +218,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_STACK_HPP_
+#endif // LIB_STACK_HPP_

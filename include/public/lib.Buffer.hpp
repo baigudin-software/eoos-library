@@ -8,17 +8,16 @@
  * in a heap memory.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_BUFFER_HPP_
-#define LIBRARY_BUFFER_HPP_
+#ifndef LIB_BUFFER_HPP_
+#define LIB_BUFFER_HPP_
 
-#include "library.AbstractBuffer.hpp"
+#include "lib.AbstractBuffer.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implements the static buffer class.
@@ -27,10 +26,10 @@ namespace local
          * @param L - maximum number of buffer elements, or 0 for dynamic allocation.
          * @param A - heap memory allocator class.
          */
-        template <typename T, int32 L, class A = Allocator>
-        class Buffer : public library::AbstractBuffer<T,A>
+        template <typename T, int32_t L, class A = Allocator>
+        class Buffer : public AbstractBuffer<T,A>
         {
-            typedef library::AbstractBuffer<T,A> Parent;
+            typedef AbstractBuffer<T,A> Parent;
 
         public:
 
@@ -94,7 +93,7 @@ namespace local
             /**
              * Returns a pointer to the fist buffer element.
              *
-             * @return pointer to buffer, or NULL.
+             * @return pointer to buffer, or NULLPTR.
              */
             virtual T* getBuffer() const
             {
@@ -135,7 +134,7 @@ namespace local
         template <typename T, class A>
         class Buffer<T,0,A> : public AbstractBuffer<T,A>
         {
-            typedef library::AbstractBuffer<T,A> ParentSpec1;
+            typedef AbstractBuffer<T,A> ParentSpec1;
 
         public:
 
@@ -144,10 +143,10 @@ namespace local
              *
              * @param length - count of buffer elements.
              */
-            explicit Buffer(int32 const length) : ParentSpec1(length),
-                buf_       (NULL),
+            explicit Buffer(int32_t const length) : ParentSpec1(length),
+                buf_       (NULLPTR),
                 isDeleted_ (true){
-                const bool isConstructed = construct(length);
+                const bool_t isConstructed = construct(length);
                 this->setConstructed( isConstructed );
             }
 
@@ -159,10 +158,10 @@ namespace local
              * @param length  - count of buffer elements.
              * @param illegal - illegal value.
              */
-            Buffer(int32 const length, const T& illegal) : ParentSpec1(length, illegal),
-                buf_       (NULL),
+            Buffer(int32_t const length, const T& illegal) : ParentSpec1(length, illegal),
+                buf_       (NULLPTR),
                 isDeleted_ (true){
-                const bool isConstructed = construct(length);
+                const bool_t isConstructed = construct(length);
                 this->setConstructed( isConstructed );
             }
 
@@ -174,10 +173,10 @@ namespace local
              * @param length - number of elements.
              * @param buf    - pointer to external buffer.
              */
-            Buffer(int32 const length, T*  const buf) : ParentSpec1(length),
+            Buffer(int32_t const length, T*  const buf) : ParentSpec1(length),
                 buf_       (buf),
                 isDeleted_ (false){
-                const bool isConstructed = construct(length);
+                const bool_t isConstructed = construct(length);
                 this->setConstructed( isConstructed );
             }
 
@@ -191,10 +190,10 @@ namespace local
              * @param buf     - pointer to external buffer.
              * @param illegal - illegal value.
              */
-            Buffer(int32 const length, T* const buf, const T& illegal) : ParentSpec1(length, illegal),
+            Buffer(int32_t const length, T* const buf, const T& illegal) : ParentSpec1(length, illegal),
                 buf_       (buf),
                 isDeleted_ (false){
-                const bool isConstructed = construct(length);
+                const bool_t isConstructed = construct(length);
                 this->setConstructed( isConstructed );
             }
 
@@ -245,14 +244,14 @@ namespace local
             /**
              * Returns a pointer to the fist buffer element.
              *
-             * @return pointer to buffer, or NULL.
+             * @return pointer to buffer, or NULLPTR.
              */
             virtual T* getBuffer() const
             {
                 T* buf;
                 if( not ParentSpec1::isConstructed() )
                 {
-                    buf = NULL;
+                    buf = NULLPTR;
                 }
                 else
                 {
@@ -269,17 +268,17 @@ namespace local
              * @param length - count of buffer elements.
              * @return boolean result.
              */
-            bool construct(size_t const length)
+            bool_t construct(size_t const length)
             {
-                bool res;
+                bool_t res;
                 if( ParentSpec1::isConstructed() )
                 {
-                    if(buf_ == NULL)
+                    if(buf_ == NULLPTR)
                     {
                         void* const addr = A::allocate(length * (sizeof(T)));
                         buf_ = reinterpret_cast<T*>( addr );
                     }
-                    res = buf_ != NULL;
+                    res = buf_ != NULLPTR;
                 }
                 else
                 {
@@ -306,7 +305,7 @@ namespace local
              * Is set to true for self created array or
              * set to false for external given array.
              */
-            bool isDeleted_;
+            bool_t isDeleted_;
 
         };
 
@@ -314,4 +313,4 @@ namespace local
 
     }
 }
-#endif // LIBRARY_BUFFER_HPP_
+#endif // LIB_BUFFER_HPP_

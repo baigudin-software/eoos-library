@@ -2,18 +2,17 @@
  * Toggle of toggle interface.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
- * @license   http://embedded.team/license/
+ * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIBRARY_TOGGLE_HPP_
-#define LIBRARY_TOGGLE_HPP_
+#ifndef LIB_TOGGLE_HPP_
+#define LIB_TOGGLE_HPP_
 
-#include "library.Object.hpp"
+#include "lib.Object.hpp"
 #include "api.Toggle.hpp"
 
-namespace local
+namespace eoos
 {
-    namespace library
+    namespace lib
     {
         /**
          * Primary template implementation.
@@ -21,9 +20,9 @@ namespace local
          * @param A heap memory allocator class.
          */
         template <class A = Allocator>
-        class Toggle : public library::Object<A>, public api::Toggle
+        class Toggle : public Object<A>, public api::Toggle
         {
-            typedef library::Object<A> Parent;
+            typedef ::eoos::lib::Object<A> Parent;
 
         public:
 
@@ -34,7 +33,7 @@ namespace local
              * the object which will switch nothing.
              */
             Toggle() : Parent(),
-                pointer_ (NULL),
+                pointer_ (NULLPTR),
                 toggle_  (&pointer_){
             }
 
@@ -51,14 +50,14 @@ namespace local
             /**
              * Constructor.
              *
-             * Until the referenced pointer equals NULL the Toggle will not switch
+             * Until the referenced pointer equals NULLPTR the Toggle will not switch
              * given controller. This feature is the most important when a controller
              * might be used before it is initialized.
              *
              * @param sw reference to pointer of toggle interface for controlling its.
              */
             Toggle(api::Toggle*& sw) : Parent(),
-                pointer_ (NULL),
+                pointer_ (NULLPTR),
                 toggle_  (&sw){
             }
 
@@ -72,13 +71,13 @@ namespace local
              *
              * @return true if object has been constructed successfully.
              */
-            virtual bool isConstructed() const
+            virtual bool_t isConstructed() const
             {
                 if( not this->isConstructed_ )
                 {
                     return false;
                 }
-                return *toggle_ == NULL ? false : true;
+                return *toggle_ == NULLPTR ? false : true;
             }
 
             /**
@@ -86,7 +85,7 @@ namespace local
              *
              * @return an enable source bit value of a controller before method was called.
              */
-            virtual bool disable()
+            virtual bool_t disable()
             {
                 if( not isConstructed())
                 {
@@ -101,7 +100,7 @@ namespace local
              *
              * @param status returned status by disable method.
              */
-            virtual void enable(const bool status)
+            virtual void enable(const bool_t status)
             {
                 if( not isConstructed() )
                 {
@@ -140,4 +139,4 @@ namespace local
         };
     }
 }
-#endif // LIBRARY_TOGGLE_HPP_
+#endif // LIB_TOGGLE_HPP_
