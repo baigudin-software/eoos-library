@@ -43,7 +43,12 @@ namespace eoos
                 }
             }
             
-            bool_t isConstructed() const
+            /**
+             * Tests if this object has been constructed.
+             *
+             * @return true if object has been constructed successfully.
+             */
+            virtual bool_t isConstructed() const
             {
                 return Parent::isConstructed();
             }            
