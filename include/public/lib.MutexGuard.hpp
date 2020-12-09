@@ -1,5 +1,5 @@
 /**
- * Guard of mutex.
+ * @brief Guard of mutex.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2020, Sergey Baigudin, Baigudin Software
@@ -12,90 +12,90 @@
 
 namespace eoos
 {
-    namespace lib
+namespace lib
+{
+    
+template <class A = Allocator>
+class MutexGuard : public Object<A>
+{
+    typedef ::eoos::lib::Object<A> Parent;            
+
+public:
+
+    /**
+     * @brief Constructor.
+     *
+     * @param mutex - a mutex for guarding.
+     */
+    explicit MutexGuard(api::Mutex& mutex) : Parent(),
+        mutex_ (mutex){
+        bool_t const isConstructed = construct();
+        setConstructed( isConstructed );                    
+    }
+    
+    /**        
+     * @brief Destructor.
+     */
+    virtual ~MutexGuard()
     {
-        template <class A = Allocator>
-        class MutexGuard : public Object<A>
+        if( Self::isConstructed() )
         {
-            typedef ::eoos::lib::Object<A> Parent;            
+            mutex_.unlock();
+        }
+    }
+    
+    /**
+     * @brief Tests if this object has been constructed.
+     *
+     * @return true if object has been constructed successfully.
+     */
+    virtual bool_t isConstructed() const
+    {
+        return Parent::isConstructed();
+    }            
         
-        public:
+private:
 
-            /**
-             * Constructor.
-             *
-             * @param mutex - a mutex for guarding.
-             */
-            explicit MutexGuard(api::Mutex& mutex) : Parent(),
-                mutex_ (mutex){
-                bool_t const isConstructed = construct();
-                setConstructed( isConstructed );                    
-            }
-            
-            /**        
-             * Destructor.
-             */
-            virtual ~MutexGuard() noexcept
+    /**        
+     * @brief Constructs this object.
+     *
+     * @returns true if this object has been constructed successfully.
+     */
+    bool_t construct()
+    {
+        bool_t res = false;
+        do
+        {
+            if( not isConstructed() )
             {
-                if( isConstructed() )
-                {
-                    mutex_.unlock();
-                }
+                break;
             }
-            
-            /**
-             * Tests if this object has been constructed.
-             *
-             * @return true if object has been constructed successfully.
-             */
-            virtual bool_t isConstructed() const
+            if( not mutex_.isConstructed() )
             {
-                return Parent::isConstructed();
-            }            
-                
-        private:
-        
-            /**        
-             * Constructs this object.
-             *
-             * @returns true if this object has been constructed successfully.
-             */
-            bool construct()
-            {
-                bool res = false;
-                do
-                {
-                    if( not isConstructed() )
-                    {
-                        break;
-                    }
-                    if( not mutex_.isConstructed() )
-                    {
-                        break;
-                    }
-                    res = mutex_.lock();
-                } while(false);
-                return res;
+                break;
             }
-            
-            /**        
-             * Copy constructor.
-             */
-            MutexGuard(const MutexGuard&);
-        
-            /**        
-             * Copy assignment operator.
-             */
-            MutexGuard& operator=(const MutexGuard&);
-        
-            /**
-             * Mutex resource identifier.
-             */
-            api::Mutex& mutex_;
-        };
+            res = mutex_.lock();
+        } while(false);
+        return res;
+    }
+    
+    /**        
+     * @brief Copy constructor.
+     */
+    MutexGuard(const MutexGuard&);
+
+    /**        
+     * @brief Copy assignment operator.
+     */
+    MutexGuard& operator=(const MutexGuard&);
+
+    /**
+     * @brief Mutex resource identifier.
+     */
+    api::Mutex& mutex_;
+};
 
 
-    } // namespace exec
-} // namespace ara
-
+} // namespace lib
+} // namespace eoos
 #endif // LIB_MUTEX_GUARD_HPP_
