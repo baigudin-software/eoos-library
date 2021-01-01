@@ -96,7 +96,7 @@ private:
     /**
      * @brief The list iterator.
      *
-     * This class is implemented in private zone of the list class.
+     * @note This class is implemented in private zone of the list class.
      * For this reason, for fast iteration some tests are skipped.
      * You have to use this class only if it has been constructed.
      */

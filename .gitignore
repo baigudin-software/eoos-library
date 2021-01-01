@@ -4,7 +4,11 @@
 *.lst
 *.map
 
+# VSCode project files
+.vscode
+
 # CCStudio project files
+*.wks
 *.paf2
 *.sbl
 *.log
@@ -14,10 +18,7 @@ Debug
 Release
 
 # Eclipse project files
-.cproject
-.project
 .settings/
-*.launch
 
 # Keil project files
 *.lnp

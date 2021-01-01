@@ -172,7 +172,7 @@ public:
      * @param index - an element index.
      * @return an element.
      */
-    T& operator[](const int32_t index)
+    T& operator[](int32_t const index)
     {
         T* value;
         T* const buf = getBuffer();
