@@ -23,9 +23,9 @@ namespace lib
 /**
  * @brief Primary template implements the static string class.
  *
- * @param T - a data type of string characters.
- * @param L - a maximum number of string characters, or 0 for dynamic allocation.
- * @param A - a heap memory allocator class.
+ * @tparam T - a data type of string characters.
+ * @tparam L - a maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam A - a heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class AbstractString : public AbstractBaseString<T,A>
@@ -408,8 +408,8 @@ private:
 /**
  * @brief Partial specialization of the template implements the dynamic string class.
  *
- * @param T - data type of string characters.
- * @param A - heap memory allocator class.
+ * @tparam T - data type of string characters.
+ * @tparam A - heap memory allocator class.
  */
 template <typename T, class A>
 class AbstractString<T,0,A> : public AbstractBaseString<T,A>

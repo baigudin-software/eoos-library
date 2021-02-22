@@ -17,8 +17,8 @@ namespace lib
 /**
  * @brief Primary template implementation.
  *
- * @param T data type of element.
- * @param A heap memory allocator class.
+ * @tparam T data type of element.
+ * @tparam A heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class LinkedNode : public Object<A>

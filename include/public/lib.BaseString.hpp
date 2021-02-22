@@ -18,9 +18,9 @@ namespace lib
 /**
  * @brief Primary template implements the static string class.
  *
- * @param T - a data type of string characters.
- * @param L - a maximum number of string characters, or 0 for dynamic allocation.
- * @param A - a heap memory allocator class.
+ * @tparam T - a data type of string characters.
+ * @tparam L - a maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam A - a heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class BaseString : public AbstractString<T,L,A>
@@ -69,8 +69,8 @@ protected:
 /**
  * @brief Char type partial specialization of the static string class.
  *
- * @param L - a maximum number of string characters, or 0 for dynamic allocation.
- * @param A - a heap memory allocator class.
+ * @tparam L - a maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam A - a heap memory allocator class.
  */
 template <int32_t L, class A>
 class BaseString<char_t,L,A> : public AbstractString<char_t,L,A>
@@ -502,8 +502,8 @@ inline BaseString<char_t,L,A> operator+(const char_t* const source1, const BaseS
 /**
  * @brief Partial specialization of the template implements the dynamic string class.
  *
- * @param T - a data type of string characters.
- * @param A - a heap memory allocator class.
+ * @tparam T - a data type of string characters.
+ * @tparam A - a heap memory allocator class.
  */
 template <typename T, class A>
 class BaseString<T,0,A> : public AbstractString<T,0,A>
@@ -554,7 +554,7 @@ protected:
 /**
  * @brief Char type partial specialization of the dynamic string class.
  *
- * @param A - a heap memory allocator class.
+ * @tparam A - a heap memory allocator class.
  */
 template <class A>
 class BaseString<char_t,0,A> : public AbstractString<char_t,0,A>

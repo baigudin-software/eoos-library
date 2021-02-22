@@ -2,7 +2,7 @@
  * @brief Root class of the library class hierarchy.
  *
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_OBJECT_HPP_
 #define LIB_OBJECT_HPP_
@@ -16,9 +16,9 @@ namespace lib
 {
 
 /**
- * @brief Primary template implementation.
+ * @brief Root class of the library.
  *
- * @param A - heap memory allocator class.
+ * @tparam A - heap memory allocator class.
  */
 template <class A = Allocator>
 class Object : public ::eoos::Object<A>

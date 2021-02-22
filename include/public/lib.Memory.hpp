@@ -14,6 +14,9 @@ namespace eoos
 namespace lib
 {
 
+/**
+ * @brief Memory manipulator class.
+ */
 class Memory
 {
 

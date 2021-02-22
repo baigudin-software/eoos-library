@@ -18,7 +18,7 @@ namespace lib
 /**
  * @brief Primary template implementation.
  *
- * @param A heap memory allocator class.
+ * @tparam A heap memory allocator class.
  */
 template <class A = Allocator>
 class Toggle : public Object<A>, public api::Toggle

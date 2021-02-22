@@ -18,8 +18,8 @@ namespace lib
 /**
  * @brief Primary template implementation.
  *
- * @param T - a data type of string characters.
- * @param A - a heap memory allocator class.
+ * @tparam T - a data type of string characters.
+ * @tparam A - a heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class AbstractBaseString : public Object<A>, public api::String<T>

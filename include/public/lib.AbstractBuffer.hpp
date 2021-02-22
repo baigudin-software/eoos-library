@@ -19,8 +19,8 @@ namespace lib
 /**
  * @brief Primary template implementation.
  *
- * @param T - data type of buffer element.
- * @param A - heap memory allocator class.
+ * @tparam T - data type of buffer element.
+ * @tparam A - heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class AbstractBuffer : public Object<A>, public api::Collection<T>, public api::IllegalValue<T>

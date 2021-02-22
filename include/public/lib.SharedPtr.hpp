@@ -9,6 +9,7 @@
 
 #include "lib.Object.hpp"
 #include "lib.aux.ControlBlock.hpp"
+#include "lib.Mutex.hpp"
 
 namespace eoos
 {
@@ -62,13 +63,14 @@ public:
 };
     
 /**
- * @brief Primary template implementation.
+ * @brief Shared pointer class.
  *
  * @tparam T Data type of an owning object.
  * @tparam D Deleter type for an owning object. 
  * @tparam A Heap memory allocator class.
+ * @tparam M Mutex to protect the control block inherited from @ref api::Mutex.
  */
-template <typename T, class D = SharedPtrDeleter<T>, class A = Allocator>
+template <typename T, class D = SharedPtrDeleter<T>, class A = Allocator, class M = Mutex<A> >
 class SharedPtr : public Object<A>
 {
     typedef SharedPtr<T,A>  Self;
@@ -79,7 +81,7 @@ public:
     /**
      * @brief Constructor an empty shared object.
      */
-    explicit SharedPtr() : Parent(),
+    SharedPtr() : Parent(),
         cb_ (NULLPTR){
         bool_t const isConstructed = construct();
         setConstructed(isConstructed);    
@@ -121,7 +123,7 @@ public:
     /**
      * @brief Copy assignment operator.
      *
-     * @param obj   Reference to a source object.
+     * @param obj Reference to a source object.
      * @return reference to this object.
      */       
     SharedPtr& operator=(const SharedPtr& obj)
@@ -227,9 +229,9 @@ public:
      *
      * @return counter of shared objects.
      */   
-    uint32_t getCount() const
+    int32_t getCount() const
     {
-        uint32_t counter = 0;
+        int32_t counter = 0;
         if( isConstructed() )
         {
             counter = cb_->getCounter();
@@ -239,7 +241,7 @@ public:
         
 private:
 
-    /**        
+    /**
      * @brief Constructs this object.
      *
      * @param pointer A pointer to get ownership.

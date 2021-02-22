@@ -23,9 +23,9 @@ namespace lib
 /**
  * @brief Primary template implements the static buffer class.
  *
- * @param T - data type of buffer element.
- * @param L - maximum number of buffer elements, or 0 for dynamic allocation.
- * @param A - heap memory allocator class.
+ * @tparam T - data type of buffer element.
+ * @tparam L - maximum number of buffer elements, or 0 for dynamic allocation.
+ * @tparam A - heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class Buffer : public AbstractBuffer<T,A>
@@ -129,8 +129,8 @@ private:
 /**
  * @brief Partial specialization of the template implements the dynamic buffer class.
  *
- * @param T - data type of buffer element.
- * @param A - heap memory allocator class.
+ * @tparam T - data type of buffer element.
+ * @tparam A - heap memory allocator class.
  */
 template <typename T, class A>
 class Buffer<T,0,A> : public AbstractBuffer<T,A>

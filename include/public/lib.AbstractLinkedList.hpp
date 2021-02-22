@@ -22,8 +22,8 @@ namespace lib
 /**
  * @brief Primary template implementation.
  *
- * @param T data type of container element.
- * @param A heap memory allocator class.
+ * @tparam T data type of container element.
+ * @tparam A heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class AbstractLinkedList :

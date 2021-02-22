@@ -20,9 +20,9 @@ namespace lib
  * MISRA C++ NOTE: Any signed underlying types shall not be used
  * for not violating the 5-0-21 MISRA C++:2008 Rule.
  *
- * @param T type of aligning data.
- * @param S size of aligning data type.
- * @param A heap memory allocator class.
+ * @tparam T type of aligning data.
+ * @tparam S size of aligning data type.
+ * @tparam A heap memory allocator class.
  */
 template <typename T, size_t S = sizeof(T), class A = Allocator>
 class Align : public ObjectAllocator<A>

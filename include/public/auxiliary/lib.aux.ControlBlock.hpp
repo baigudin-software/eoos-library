@@ -8,6 +8,7 @@
 #define LIB_AUX_CONTROL_BLOCK_HPP_
 
 #include "lib.Object.hpp"
+#include "lib.MutexGuard.hpp"
 
 namespace eoos
 {
@@ -24,14 +25,13 @@ namespace aux
  * @tparam T Data type of owning the object.
  * @tparam D Deleter type for owning the object.  
  * @tparam A Heap memory allocator class.
+ * @tparam M Mutex to protect the control block inherited from @ref api::Mutex.
  *
  * @note This class is implemented as an auxiliry class for SharedPtr
  * and is tested for construction before usage. Therefore, some checks
  * are skipped in public interface to speedup performence. 
- *
- * @todo Do these operations under a mutex. 
  */
-template <typename T, class D, class A = Allocator> 
+template <typename T, class D, class A = Allocator, class M = Mutex<A> > 
 class ControlBlock : public Object<A>
 {
     typedef Object<A> Parent;    
@@ -45,7 +45,10 @@ public:
      */
     explicit ControlBlock(T* const pointer) : Parent(),
         pointer_ (pointer),
-        counter_ (1){
+        counter_ (1),
+        mutex_   (){
+        bool_t const isConstructed = construct();
+        setConstructed(isConstructed);
     }
     
     /**
@@ -61,6 +64,7 @@ public:
      */
     void increase()
     {
+        MutexGuard<A> const guard(mutex_);
         ++counter_;
     }
     
@@ -69,8 +73,9 @@ public:
      *
      * @return a value of the counter after decreasing.
      */        
-    uint32_t decrease()
+    int32_t decrease()
     {
+        MutexGuard<A> const guard(mutex_);        
         return --counter_;
     }
     
@@ -79,8 +84,8 @@ public:
      *
      * @return a value of the counter.
      */        
-    uint32_t getCounter() const
-    {
+    int32_t getCounter() const
+    {    
         return counter_;
     }
     
@@ -95,6 +100,27 @@ public:
     }    
 
 private:
+
+    /**
+     * @brief Constructs this object.
+     */     
+    bool_t construct()
+    {
+        bool_t res = false;
+        do
+        {
+            if( not isConstructed() )
+            {
+                break;
+            }
+            if( not mutex_.isConstructed() )
+            {
+                break;
+            }
+            res = true;
+        } while(false);
+        return res;
+    }
 
     /**
      * @brief Copy constructor.
@@ -137,8 +163,13 @@ private:
     
     /**
      * @brief Counter of copies of the shared objects.
+     */
+    int32_t counter_;
+
+    /**
+     * @brief Mutex to protect the counter.
      */    
-    uint32_t counter_;
+    M mutex_;
 };
 
 #endif // EOOS_NO_STRICT_MISRA_RULES

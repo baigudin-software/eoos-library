@@ -16,6 +16,9 @@ namespace eoos
 namespace lib
 {
     
+/**
+ * @brief Heap memory class.
+ */
 class Heap : public api::SystemHeap
 {
     typedef Heap Self;

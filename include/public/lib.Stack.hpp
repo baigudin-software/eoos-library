@@ -19,8 +19,8 @@ namespace lib
 /**
  * @brief Primary template implementation.
  *
- * @param T data type of default stack element.
- * @param A heap memory allocator class.
+ * @tparam T data type of default stack element.
+ * @tparam A heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class Stack : public Object<A>, public api::Stack<T>

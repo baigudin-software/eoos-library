@@ -8,17 +8,22 @@
 #define LIB_MUTEX_GUARD_HPP_
 
 #include "lib.Object.hpp"
-#include "api.Mutex.hpp"
+#include "lib.Mutex.hpp"
 
 namespace eoos
 {
 namespace lib
 {
     
+/**
+ * @brief Mutex class.
+ *
+ * @tparam A heap memory allocator class.
+ */    
 template <class A = Allocator>
 class MutexGuard : public Object<A>
 {
-    typedef ::eoos::lib::Object<A> Parent;            
+    typedef Object<A> Parent;            
 
 public:
 
@@ -38,21 +43,11 @@ public:
      */
     virtual ~MutexGuard()
     {
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             mutex_.unlock();
         }
-    }
-    
-    /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
-     */
-    virtual bool_t isConstructed() const
-    {
-        return Parent::isConstructed();
-    }            
+    }     
         
 private:
 
