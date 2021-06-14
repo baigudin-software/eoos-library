@@ -1,10 +1,7 @@
 /**
- * @brief Heap memory.
- *
- * Hardware address for system heap memory has to be aligned to eight.
- *
+ * @file      lib.Heap.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_HEAP_HPP_
 #define LIB_HEAP_HPP_
@@ -17,7 +14,10 @@ namespace lib
 {
     
 /**
- * @brief Heap memory class.
+ * @class Heap
+ * @brief Heap memory.
+ *
+ * Hardware address for system heap memory has to be aligned to eight. 
  */
 class Heap : public api::SystemHeap
 {
@@ -28,7 +28,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param size total heap size.
+     * @param size Total heap size.
      */
     Heap(size_t size) :
         data_ (size),
@@ -46,8 +46,8 @@ public:
      * This gives you a possibility to change using golobal interrupts
      * on fly.
      *
-     * @param size   total heap size.
-     * @param toggle reference to pointer to global interrupts toggle interface.
+     * @param size   Total heap size.
+     * @param toggle Reference to pointer to global interrupts toggle interface.
      */
     Heap(size_t size, api::Toggle*& toggle) :
         data_  (size, toggle),
@@ -65,9 +65,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -83,13 +81,7 @@ public:
     }
 
     /**
-     * @brief Allocates memory.
-     *
-     * @param size required memory size in byte.
-     * @param ptr  NULLPTR value becomes to allocate memory, and
-     *             other given values are simply returned
-     *             as memory address.
-     * @return pointer to allocated memory or NULLPTR.
+     * @copydoc eoos::api::Heap::allocate(size_t,void*)
      */
     virtual void* allocate(const size_t size, void* ptr)
     {
@@ -108,9 +100,7 @@ public:
     }
 
     /**
-     * @brief Frees an allocated memory.
-     *
-     * @param ptr pointer to allocated memory.
+     * @copydoc eoos::api::Heap::free(void*)
      */
     virtual void free(void* ptr)
     {
@@ -128,15 +118,7 @@ public:
     }
 
     /**
-     * @brief Sets a context switching locker.
-     *
-     * The method allows disabling and enabling thread context switching
-     * when memory is being allocated or freed. Thus, the best way is
-     * to pass an interface of global interrupt toggling. The parameter type
-     * is reference to pointer, as when referenced pointer equals to NULLPTR,
-     * no blocks are happening.
-     *
-     * @param toggle reference to pointer to some controller.
+     * @copydoc eoos::api::SystemHeap::setToggle(api::Toggle*&)
      */
     virtual void setToggle(api::Toggle*& toggle)
     {
@@ -144,7 +126,7 @@ public:
     }
 
     /**
-     * @brief Resets a context switching locker.
+     * @copydoc eoos::api::SystemHeap::resetToggle()
      */
     virtual void resetToggle()
     {
@@ -158,9 +140,9 @@ public:
      * checks and tests self memory structure data
      * and leads to call the class constructor.
      *
-     * @param size unused.
-     * @param ptr  aligned to eight memory address.
-     * @return address of memory or NULLPTR.
+     * @param size Unused.
+     * @param ptr  Aligned to eight memory address.
+     * @return Address of memory or NULLPTR.
      */
     void* operator new(size_t, const uintptr_t ptr)
     {
@@ -186,7 +168,7 @@ private:
     /**
      * @brief Sets the object constructed flag.
      *
-     * @param flag constructed flag.
+     * @param flag Constructed flag.
      */
     void setConstructed(const bool_t flag)
     {
@@ -199,7 +181,7 @@ private:
     /**
      * @brief Constructor.
      *
-     * @return true if object has been constructed successfully.
+     * @return True if object has been constructed successfully.
      */
     bool_t construct()
     {
@@ -232,7 +214,7 @@ private:
     /**
      * @brief Disables a controller.
      *
-     * @return an enable source bit value of a controller before method was called.
+     * @return An enable source bit value of a controller before method was called.
      */
     bool_t disable()
     {
@@ -265,7 +247,7 @@ private:
     /**
      * @brief Returns a first heap block address.
      *
-     * @return pointer to heap block.
+     * @return Pointer to heap block.
      */
     HeapBlock* getFirstBlock() const
     {
@@ -276,7 +258,7 @@ private:
     /**
      * @brief Returns a heap block by user data address.
      *
-     * @return pointer to heap block.
+     * @return Pointer to heap block.
      */
     HeapBlock* heapBlock(void* const data)
     {
@@ -287,11 +269,11 @@ private:
     /**
      * @brief Tests memory.
      *
-     * TODO: normal type casts should be done.
+     * @todo normal type casts should be done.
      *
-     * @param addr memory address pointer.
-     * @param size size in byte.
-     * @return true if test complete.
+     * @param addr Memory address pointer.
+     * @param size Size in byte.
+     * @return True if test complete.
      */
     static bool_t isMemoryAvailable(void* const addr, const size_t size)
     {
@@ -355,8 +337,8 @@ private:
      * checks and tests self memory structure data
      * and leads to call the class constructor.
      *
-     * @param ptr  aligned to eight memory address.
-     * @return address of memory or NULLPTR.
+     * @param ptr Aligned to eight memory address.
+     * @return Address of memory or NULLPTR.
      */
     static void* create(void* ptr)
     {
@@ -367,7 +349,7 @@ private:
         }
         // Testing memory for self structure data
         //
-        // TODO: copy constructor of the Heap class for
+        // @todo copy constructor of the Heap class for
         // temporary copying the tested memory to that
         // class. This way would help to restore original
         // memory data if the test were failed.
@@ -384,26 +366,36 @@ private:
     }
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Heap(const Heap& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param src reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
-    Heap& operator=(const Heap&);
+    Heap& operator=(const Heap& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
 
     /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    Heap(Heap&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    Heap& operator=(Heap&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011    
+
+    /**
+     * @struct Aligner<SIZEOF>
      * @brief Heap class aligner aligns that to eight.
      *
-     * Note: If given SIZEOF is already multiple 8, the class size will be 8 bytes.
+     * @note If given SIZEOF is already multiple 8, the class size will be 8 bytes.
      *
-     * @param SIZEOF size of Heap class.
+     * @tparam SIZEOF Size of Heap class.
      */
     template <int32_t SIZEOF>
     struct Aligner
@@ -434,26 +426,28 @@ private:
         static const int32_t SIZE = (SIZEOF & ~0x7) + 0x8 - SIZEOF;
 
         /**
-         * @brief   Temp array.
+         * @brief Temp array.
          */
         cell_t val_[SIZE];
 
     };
 
     /**
+     * @class VirtualTable
      * @brief Contains a Virtual Function Table only.
      *
      * Probably, the solution of using this empty class
      * is not delicate, but it works for understanding
      * about size of a virtual function table of this Heap class.
      *
-     * Note: This uint64_t variable of the class is used, because some compilers
+     * @note This uint64_t variable of the class is used, because some compilers
      * might put 64 bit variable to aligned 8 memory address. Therefore, size of classes
      * with 32 bit pointer to virtual table and one 64 bit variable is 16 bytes.
      */
     class VirtualTable : public api::Heap{uint64_t temp;};
 
     /**
+     * @class HeapBlock
      * @brief Heap memory block.
      *
      * The class data has to be aligned to 8.
@@ -466,8 +460,8 @@ private:
         /**
          * @brief Constructor.
          *
-         * @param heap pointer to heap class.
-         * @param size size of byte given to this new block.
+         * @param heap Pointer to heap class.
+         * @param size Size of byte given to this new block.
          */
         HeapBlock(api::Heap* heap, size_t size) :
             heap_  (heap),
@@ -488,7 +482,7 @@ private:
         /**
          * @brief Tests if this object has been constructed.
          *
-         * @return true if object has been constructed successfully.
+         * @return True if object has been constructed successfully.
          */
         bool_t isConstructed() const
         {
@@ -498,8 +492,8 @@ private:
         /**
          * @brief Allocates a memory block.
          *
-         * @param size size in byte.
-         * @return pointer to an allocated memory.
+         * @param size Size in byte.
+         * @return Pointer to an allocated memory.
          */
         void* alloc(size_t size)
         {
@@ -608,9 +602,9 @@ private:
         /**
          * @brief Operator new.
          *
-         * @param size unused.
-         * @param ptr  address of memory.
-         * @return address of memory.
+         * @param size Unused.
+         * @param ptr  Address of memory.
+         * @return Address of memory.
          */
         void* operator new(size_t, void* const ptr)
         {
@@ -640,7 +634,7 @@ private:
         /**
          * @brief Tests if this memory block is available for deleting.
          *
-         * @return true if it may be deleted.
+         * @return True if it may be deleted.
          */
         bool_t canDelete()
         {
@@ -658,7 +652,7 @@ private:
         /**
          * @brief Tests if this memory block is available.
          *
-         * @return true if memory block is available.
+         * @return True if memory block is available.
          */
         bool_t isUsed()
         {
@@ -668,7 +662,7 @@ private:
         /**
          * @brief Returns an address to data of this block.
          *
-         * @return pointer to memory.
+         * @return Pointer to memory.
          */
         void* data()
         {
@@ -679,7 +673,7 @@ private:
         /**
          * @brief Returns an address to next block.
          *
-         * @return pointer to memory.
+         * @return PSinter to memory.
          */
         void* next(const size_t size)
         {
@@ -688,19 +682,28 @@ private:
         }
 
         /**
-         * @brief Copy constructor.
-         *
-         * @param obj reference to source object.
+         * @copydoc eoos::Object::Object(const Object&)
          */
         HeapBlock(const HeapBlock& obj);
-
+    
         /**
-         * @brief Assignment operator.
-         *
-         * @param src reference to source object.
-         * @return reference to this object.
+         * @copydoc eoos::Object::operator=(const Object&)
          */
-        HeapBlock& operator=(const HeapBlock&);
+        HeapBlock& operator=(const HeapBlock& obj);
+        
+        #if EOOS_CPP_STANDARD >= 2011
+    
+        /**
+         * @copydoc eoos::Object::Object(const Object&&)
+         */       
+        HeapBlock(HeapBlock&& obj) noexcept = delete; 
+        
+        /**
+         * @copydoc eoos::Object::operator=(const Object&&)
+         */
+        HeapBlock& operator=(HeapBlock&& obj) noexcept = delete;
+        
+        #endif // EOOS_CPP_STANDARD >= 2011    
 
         /**
          * @brief Heap block definition key.
@@ -755,6 +758,7 @@ private:
     };
 
     /**
+     * @struct HeapData
      * @brief Heap data.
      *
      * This structure is needed for aligning heap data or otherwise
@@ -765,8 +769,7 @@ private:
         /**
          * @brief Constructor.
          *
-         * @param ikey  heap key constant.
-         * @param isize total heap size.
+         * @param isize Total heap size.
          */
         HeapData(size_t isize) :
             block  (NULLPTR),
@@ -778,9 +781,8 @@ private:
         /**
          * @brief Constructor.
          *
-         * @param ikey    heap key constant.
-         * @param i1size  total heap size.
-         * @param itoggle reference to pointer to global interrupts interface.
+         * @param isize   Total heap size.
+         * @param itoggle Reference to pointer to global interrupts interface.
          */
         HeapData(size_t isize, api::Toggle*& itoggle) :
             block  (NULLPTR),
@@ -822,19 +824,28 @@ private:
     private:
 
         /**
-         * @brief Copy constructor.
-         *
-         * @param obj reference to source object.
+         * @copydoc eoos::Object::Object(const Object&)
          */
         HeapData(const HeapData& obj);
-
+    
         /**
-         * @brief Assignment operator.
-         *
-         * @param obj reference to source object.
-         * @return reference to this object.
+         * @copydoc eoos::Object::operator=(const Object&)
          */
         HeapData& operator=(const HeapData& obj);
+        
+        #if EOOS_CPP_STANDARD >= 2011
+    
+        /**
+         * @copydoc eoos::Object::Object(const Object&&)
+         */       
+        HeapData(HeapData&& obj) noexcept = delete; 
+        
+        /**
+         * @copydoc eoos::Object::operator=(const Object&&)
+         */
+        HeapData& operator=(HeapData&& obj) noexcept = delete;
+        
+        #endif // EOOS_CPP_STANDARD >= 2011    
 
     };
 

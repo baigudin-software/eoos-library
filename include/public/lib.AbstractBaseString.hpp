@@ -1,8 +1,7 @@
 /**
- * @brief Abstract base string class.
- *
+ * @file      lib.AbstractBaseString.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ABSTRACT_BASE_STRING_HPP_
 #define LIB_ABSTRACT_BASE_STRING_HPP_
@@ -16,16 +15,17 @@ namespace lib
 {
 
 /**
- * @brief Primary template implementation.
+ * @class AbstractBaseString<T,A>
+ * @brief Abstract base string class.
  *
- * @tparam T - a data type of string characters.
- * @tparam A - a heap memory allocator class.
+ * @tparam T A data type of string characters.
+ * @tparam A A heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class AbstractBaseString : public Object<A>, public api::String<T>
 {
     typedef AbstractBaseString<T,A>  Self;
-    typedef ::eoos::lib::Object<A> Parent;
+    typedef Object<A> Parent;
 
 public:
 
@@ -44,23 +44,7 @@ public:
     }
 
     /**
-     * @brief Returns a number of elements in this container.
-     *
-     * @return number of elements.
-     */
-    virtual int32_t getLength() const = 0;
-
-    /**
-     * @brief Returns pointer to the first character of containing string.
-     *
-     * @return first character of containing string characters, or NULLPTR if no string contained.
-     */
-    virtual const T* getChar() const = 0;
-
-    /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -68,9 +52,7 @@ public:
     }
 
     /**
-     * @brief Tests if this collection has elements.
-     *
-     * @return true if this collection does not contain any elements.
+     * @copydoc eoos::api::Collection::isEmpty()
      */
     virtual bool_t isEmpty() const
     {
@@ -88,10 +70,7 @@ public:
     }
 
     /**
-     * @brief Copies a passed string into this string.
-     *
-     * @param string - a string object to be copied.
-     * @return true if a passed string has been copied successfully.
+     * @copydoc eoos::api::String::copy(const api::String<T>&)
      */
     virtual bool_t copy(const api::String<T>& string)
     {
@@ -109,10 +88,7 @@ public:
     }
 
     /**
-     * @brief Concatenates a passed string to this string.
-     *
-     * @param string - a string object to be appended.
-     * @return true if a passed string has been appended successfully.
+     * @copydoc eoos::api::String::concatenate(const api::String<T>&)
      */
     virtual bool_t concatenate(const api::String<T>& string)
     {
@@ -130,13 +106,7 @@ public:
     }
 
     /**
-     * @brief Compares this string with a passed string lexicographically.
-     *
-     * @param string - a string object to be compared.
-     * @return the value 0 if a passed string is equal to this string;
-     *         a value less than 0 if this string is less than a passed string;
-     *         a value greater than 0 if this string is greater than a passed string,
-     *         or the minimum possible value if an error has been occurred.
+     * @copydoc eoos::api::String::compare(const api::String<T>&)
      */
     virtual int32_t compare(const api::String<T>& string) const
     {
@@ -152,37 +122,43 @@ public:
         }
         return res;
     }
+    
+    /**
+     * @copydoc eoos::api::Collection::getLength()
+     * @note Declared to declare the parent function
+     */
+    virtual int32_t getLength() const = 0; 
 
 protected:
 
     /**
      * @brief Returns this string terminated character.
      *
-     * @return a character which means that this string terminated.
+     * @return A character which means that this string terminated.
      */
     virtual T getTerminator() const = 0;
 
     /**
      * @brief Copies a passed string into this string.
      *
-     * @param str - a character string to be copied.
-     * @return true if a passed string has been copied successfully.
+     * @param str A character string to be copied.
+     * @return True if a passed string has been copied successfully.
      */
     virtual bool_t copy(const T* str) = 0;
 
     /**
      * @brief Concatenates a passed string to this string.
      *
-     * @param str - a character string to be appended.
-     * @return true if a passed string has been appended successfully.
+     * @param str A character string to be appended.
+     * @return True if a passed string has been appended successfully.
      */
     virtual bool_t concatenate(const T* str) = 0;
 
     /**
      * @brief Compares this string with a passed string lexicographically.
      *
-     * @param str - a character string to be compared.
-     * @return the value 0 if a passed string is equal to this string;
+     * @param str A character string to be compared.
+     * @return The value 0 if a passed string is equal to this string;
      *         a value less than 0 if this string is less than a passed string;
      *         a value greater than 0 if this string is greater than a passed string,
      *         or the minimum possible value if an error has been occurred.
@@ -192,8 +168,8 @@ protected:
     /**
      * @brief Returns a string length.
      *
-     * @param str - a character string would be measured.
-     * @return a length of the passed string.
+     * @param str A character string would be measured.
+     * @return A length of the passed string.
      */
     int32_t getLength(const T* str) const
     {
@@ -210,8 +186,8 @@ protected:
     /**
      * @brief Copies a string.
      *
-     * @param dst - a destination array where the content would be copied.
-     * @param src - a character string to be copied.
+     * @param dst A destination array where the content would be copied.
+     * @param src A character string to be copied.
      */
     void copy(T* dst, const T* src) const
     {
@@ -233,8 +209,8 @@ protected:
     /**
      * @brief Concatenates two strings.
      *
-     * @param dst - a destination character string where the content would be appended.
-     * @param src - an appended character string.
+     * @param dst A destination character string where the content would be appended.
+     * @param src An appended character string.
      */
     void concatenate(T* const dst, const T* const src) const
     {
@@ -269,7 +245,7 @@ private:
      * by creating the default object and
      * calling the copy interface function.
      *
-     * @param obj - a source object.
+     * @param obj A source object.
      */
     AbstractBaseString(const AbstractBaseString<T,A>& obj);
 

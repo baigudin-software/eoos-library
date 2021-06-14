@@ -1,6 +1,5 @@
 /**
- * @brief Mutex.
- *
+ * @file      lib.Mutex.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2015-2021, Sergey Baigudin, Baigudin Software
  */
@@ -17,9 +16,10 @@ namespace lib
 {
 
 /**
+ * @class Mutex<A>
  * @brief Mutex class.
  *
- * @tparam A heap memory allocator class. 
+ * @tparam A Heap memory allocator class. 
  */
 template <class A = Allocator>
 class Mutex : public Object<A>, public api::Mutex
@@ -47,9 +47,7 @@ public:
     }
     
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -57,9 +55,7 @@ public:
     }
     
     /**
-     * @brief Tries to locks this mutex.
-     *
-     * @return true if this mutex is locked successfully, or false if other thread locked on this mutex.
+     * @copydoc eoos::api::Mutex::tryLock()
      */
     virtual bool_t tryLock()
     {
@@ -72,9 +68,7 @@ public:
     }        
 
     /**
-     * @brief Locks the mutex.
-     *
-     * @return true if the mutex is lock successfully.
+     * @copydoc eoos::api::Mutex::lock()
      */
     virtual bool_t lock()
     {
@@ -87,7 +81,7 @@ public:
     }
 
     /**
-     * @brief Unlocks the mutex.
+     * @copydoc eoos::api::Mutex::unlock()
      */
     virtual void unlock()
     {
@@ -102,7 +96,7 @@ private:
     /**
      * @brief Constructor.
      *
-     * @return true if object has been constructed successfully.
+     * @return True if object has been constructed successfully.
      */
     bool_t construct()
     {
@@ -124,38 +118,28 @@ private:
     }
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Mutex(const Mutex& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj - reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     Mutex& operator=(const Mutex& obj);
     
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @brief Move constructor.
-     *
-     * @param obj Right reference to a source object.     
+     * @copydoc eoos::Object::Object(const Object&&)
      */       
     Mutex(Mutex&& obj) noexcept = delete; 
     
     /**
-     * @brief Move assignment operator.
-     *
-     * @param obj Right reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&&)
      */
     Mutex& operator=(Mutex&& obj) noexcept = delete;
     
-    #endif // EOOS_CPP_STANDARD >= 2011    
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief System mutex interface.

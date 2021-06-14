@@ -1,15 +1,13 @@
 /**
- * @brief Shared pointer.
- *
+ * @file      lib.SharedPtr.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_SHARED_PTR_HPP_
 #define LIB_SHARED_PTR_HPP_
 
 #include "lib.Object.hpp"
-#include "lib.aux.ControlBlock.hpp"
-#include "lib.Mutex.hpp"
+#include "lib.MutexGuard.hpp"
 
 namespace eoos
 {
@@ -19,6 +17,7 @@ namespace lib
 #ifdef EOOS_NO_STRICT_MISRA_RULES
 
 /**
+ * @class SharedPtrDeleter<T>
  * @brief Deleter of shared pointers allocate with new operator.
  *
  * @tparam T Data type of an owning object. 
@@ -34,13 +33,14 @@ public:
      *
      * @param ptr Address of allocated the owning object.
      */
-	static void free(T* const ptr)
-	{
-		delete ptr;
-	}
+    static void free(T* const ptr)
+    {
+        delete ptr;
+    }
 };
 
 /**
+ * @class SharedPtrDeleterArray<T>
  * @brief Deleter of shared pointers allocate with new [] operator.
  *
  * @tparam T Data type of an owning object. 
@@ -56,14 +56,15 @@ public:
      *
      * @param ptr Address of allocated the owning objects.
      */
-	static void free(T* const ptr)
-	{
-		delete [] ptr;
-	}
+    static void free(T* const ptr)
+    {
+        delete [] ptr;
+    }
 };
     
 /**
- * @brief Shared pointer class.
+ * @class SharedPtr<T,D,A,M>
+ * @brief Shared pointer.
  *
  * @tparam T Data type of an owning object.
  * @tparam D Deleter type for an owning object. 
@@ -111,9 +112,7 @@ public:
     }
     
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj Reference to a source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     SharedPtr(const SharedPtr& obj) : Parent(obj),
         cb_ (obj.cb_){
@@ -121,10 +120,7 @@ public:
     }
     
     /**
-     * @brief Copy assignment operator.
-     *
-     * @param obj Reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */       
     SharedPtr& operator=(const SharedPtr& obj)
     {
@@ -141,19 +137,14 @@ public:
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @brief Move constructor.
-     *
-     * @param obj Right reference to a source object.     
+     * @copydoc eoos::Object::Object(const Object&&)    
      */       
     SharedPtr(SharedPtr&& obj) noexcept : Parent( move(obj) ),
         cb_ (obj.cb_){
     }   
     
     /**
-     * @brief Move assignment operator.
-     *
-     * @param obj Right reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&&)
      */
     SharedPtr& operator=(SharedPtr&& obj) noexcept
     {
@@ -170,7 +161,7 @@ public:
     /**
      * @brief Casts to boolean data type comparing if the stored pointer does not equal to null.
      *
-     * @return comparation the stored pointer does not equal to null.
+     * @return Comparation the stored pointer does not equal to null.
      */    
     operator bool_t() const 
     {
@@ -180,7 +171,7 @@ public:
     /**
      * @brief Returns the result of dereferencing the stored pointer.
      *
-     * @return the dereferenced stored pointer.
+     * @return The dereferenced stored pointer.
      */
     T& operator*() const
     {
@@ -190,7 +181,7 @@ public:
     /**
      * @brief Returns the stored pointer.
      *
-     * @return the stored pointer or NULLPTR if no pointer stored.
+     * @return The stored pointer or NULLPTR if no pointer stored.
      */
     T* operator->() const
     {
@@ -201,7 +192,7 @@ public:
      * @brief Returns an element of the stored array.
      *
      * @param index An element index.
-     * @return an element.
+     * @return An element.
      */    
     T& operator[](uint32_t const index) const
     {
@@ -212,7 +203,7 @@ public:
     /**
      * @brief Returns the stored pointer.
      *
-     * @return the stored pointer or NULLPTR if no pointer stored.
+     * @return The stored pointer or NULLPTR if no pointer stored.
      */   
     T* get() const
     {
@@ -227,7 +218,7 @@ public:
     /**
      * @brief Returns counter of shared objects for the managed object.
      *
-     * @return counter of shared objects.
+     * @return Counter of shared objects.
      */   
     int32_t getCount() const
     {
@@ -237,7 +228,7 @@ public:
             counter = cb_->getCounter();
         }
         return counter;
-    }    
+    }
         
 private:
 
@@ -245,7 +236,7 @@ private:
      * @brief Constructs this object.
      *
      * @param pointer A pointer to get ownership.
-     * @return true if this object has been constructed successfully.
+     * @return True if this object has been constructed successfully.
      */     
     bool_t construct(T* const pointer = NULLPTR)
     {
@@ -257,7 +248,7 @@ private:
                 D::free(pointer);
                 break;
             }
-            cb_ = new aux::ControlBlock<T,D,A>(pointer);
+            cb_ = new ControlBlock<T,D,A,M>(pointer);
             if(cb_ == NULLPTR)
             {
                 D::free(pointer);
@@ -275,7 +266,7 @@ private:
     }
     
     /**
-     * @brief Release the managed object by control block.
+     * @brief Releases the managed object by control block.
      */       
     void release()
     {
@@ -304,11 +295,155 @@ private:
             setConstructed(false);
         }
     }
-       
+    
+    /**
+     * @class ControlBlock<TT,DD,AA,MM>
+     * @brief Primary template implementation of shared pointer control block class.
+     *
+     * @tparam TT Data type of owning the object.
+     * @tparam DD Deleter type for owning the object.  
+     * @tparam AA Heap memory allocator class.
+     * @tparam MM Mutex to protect the control block inherited from @ref api::Mutex.
+     *
+     * @note This class is implemented as an auxiliry class for SharedPtr
+     * and is tested for construction before usage. Therefore, some checks
+     * are skipped in public interface to speedup performence. 
+     */
+    template <typename TT, class DD, class AA, class MM> 
+    class ControlBlock : public Object<AA>
+    {
+        typedef Object<AA> Parent;    
+        
+    public:
+        
+        /**
+         * @brief Constructor.
+         *
+         * @param pointer A pointer to get ownership.
+         */
+        explicit ControlBlock(T* const pointer) : Parent(),
+            pointer_ (pointer),
+            counter_ (1),
+            mutex_   (){
+            bool_t const isConstructed = construct();
+            setConstructed(isConstructed);
+        }
+        
+        /**
+         * @brief Destructor.
+         */
+        virtual ~ControlBlock()
+        {
+            DD::free(pointer_);
+        }    
+        
+        /**
+         * @brief Increases the counter on one.
+         */
+        void increase()
+        {
+            MutexGuard<AA> const guard(mutex_);
+            ++counter_;
+        }
+        
+        /**
+         * @brief Decreases the counter on one.
+         *
+         * @return A value of the counter after decreasing.
+         */        
+        int32_t decrease()
+        {
+            MutexGuard<AA> const guard(mutex_);        
+            return --counter_;
+        }
+        
+        /**
+         * @brief Returns the counter.
+         *
+         * @return A value of the counter.
+         */        
+        int32_t getCounter() const
+        {    
+            return counter_;
+        }
+        
+        /**
+         * @brief Returns the counter.
+         *
+         * @return A value of the counter.
+         */        
+        TT* getPointer() const
+        {
+            return pointer_;
+        }    
+    
+    private:
+    
+        /**
+         * @brief Constructs this object.
+         */     
+        bool_t construct()
+        {
+            bool_t res = false;
+            do
+            {
+                if( not isConstructed() )
+                {
+                    break;
+                }
+                if( not mutex_.isConstructed() )
+                {
+                    break;
+                }
+                res = true;
+            } while(false);
+            return res;
+        }
+    
+        /**
+         * @copydoc eoos::Object::Object(const Object&)
+         */
+        ControlBlock(const ControlBlock& obj);
+        
+        /**
+         * @copydoc eoos::Object::operator=(const Object&)
+         */       
+        ControlBlock& operator=(const ControlBlock& obj);
+    
+        #if EOOS_CPP_STANDARD >= 2011
+    
+        /**
+         * @copydoc eoos::Object::Object(const Object&&)
+         */       
+        ControlBlock(ControlBlock&& obj) noexcept = delete; 
+        
+        /**
+         * @copydoc eoos::Object::operator=(const Object&&)
+         */
+        ControlBlock& operator=(ControlBlock&& obj) noexcept = delete;
+        
+        #endif // EOOS_CPP_STANDARD >= 2011
+    
+        /**
+         * @brief An owned pointer.
+         */
+        TT* pointer_;
+        
+        /**
+         * @brief Counter of copies of the shared objects.
+         */
+        int32_t counter_;
+    
+        /**
+         * @brief Mutex to protect the counter.
+         */    
+        MM mutex_;
+    };
+    
     /**
      * @brief Control block of the managed object.
      */
-    aux::ControlBlock<T,D,A>* cb_;
+    ControlBlock<T,D,A,M>* cb_;
 
 };
 

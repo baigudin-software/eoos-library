@@ -1,8 +1,7 @@
 /**
- * @brief Base String class.
- *
+ * @file      lib.BaseString.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_BASE_STRING_HPP_
 #define LIB_BASE_STRING_HPP_
@@ -16,11 +15,14 @@ namespace lib
 {
     
 /**
- * @brief Primary template implements the static string class.
+ * @class BaseString<T,L,A>
+ * @brief Static base string class.
  *
- * @tparam T - a data type of string characters.
- * @tparam L - a maximum number of string characters, or 0 for dynamic allocation.
- * @tparam A - a heap memory allocator class.
+ * Primary template implements the static string class.
+ *
+ * @tparam T A data type of string characters.
+ * @tparam L A maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam A A heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class BaseString : public AbstractString<T,L,A>
@@ -38,7 +40,7 @@ class BaseString : public AbstractString<T,L,A>
     /**
      * @brief Constructor.
      *
-     * @param source - a source character string.
+     * @param source A source character string.
      */
     BaseString(const T* const source) : Parent()
     {
@@ -55,9 +57,7 @@ class BaseString : public AbstractString<T,L,A>
 protected:
 
     /**
-     * @brief Returns this string terminated character.
-     *
-     * @return a character which means that this string terminated.
+     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
     virtual T getTerminator() const
     {
@@ -67,10 +67,13 @@ protected:
 };
 
 /**
- * @brief Char type partial specialization of the static string class.
+ * @class BaseString <L,A>
+ * @brief Static char base string class.
  *
- * @tparam L - a maximum number of string characters, or 0 for dynamic allocation.
- * @tparam A - a heap memory allocator class.
+ * Char type partial specialization of the static string class.
+ *
+ * @tparam L A maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam A A heap memory allocator class.
  */
 template <int32_t L, class A>
 class BaseString<char_t,L,A> : public AbstractString<char_t,L,A>
@@ -90,7 +93,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source object.
+     * @param source A source object.
      */
     BaseString(const BaseString<char_t,L,A>& source) : Parent()
     {
@@ -100,7 +103,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source object interface.
+     * @param source A source object interface.
      */
     BaseString(const api::String<char_t>& source) : Parent()
     {
@@ -110,7 +113,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source character string.
+     * @param source A source character string.
      */
     BaseString(const char_t* const source) : Parent()
     {
@@ -120,8 +123,8 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param value - a source numerical value.
-     * @param base - a numerical base used to represent a value as a string.
+     * @param value A source numerical value.
+     * @param base  A numerical base used to represent a value as a string.
      */
     explicit BaseString(int32_t const value) : Parent()
     {
@@ -131,7 +134,7 @@ public:
     /**
      * @brief Casts to int32_t type.
      *
-     * @return a numerical value.
+     * @return A numerical value.
      */
     operator int32_t() const
     {
@@ -141,8 +144,8 @@ public:
     /**
      * @brief Direct assignment operator.
      *
-     * @param source - a source object.
-     * @return this object.
+     * @param source A source object.
+     * @return This object.
      */
     BaseString<char_t,L,A>& operator=(const BaseString<char_t,L,A>& source)
     {
@@ -153,8 +156,8 @@ public:
     /**
      * @brief Assignment operator.
      *
-     * @param source - a source object interface.
-     * @return reference to this object.
+     * @param source A source object interface.
+     * @return Reference to this object.
      */
     BaseString<char_t,L,A>& operator=(const api::String<char_t>& source)
     {
@@ -165,8 +168,8 @@ public:
     /**
      * @brief Assignment operator.
      *
-     * @param source - a source character string.
-     * @return reference to this object.
+     * @param source A source character string.
+     * @return Reference to this object.
      */
     BaseString<char_t,L,A>& operator=(const char_t* const source)
     {
@@ -177,8 +180,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source - a source object.
-     * @return reference to this object.
+     * @param source A source object.
+     * @return Reference to this object.
      */
     BaseString<char_t,L,A>& operator+=(const BaseString<char_t,L,A>& source)
     {
@@ -189,8 +192,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source - a source object interface.
-     * @return reference to this object.
+     * @param source A source object interface.
+     * @return Reference to this object.
      */
     BaseString<char_t,L,A>& operator+=(const api::String<char_t>& source)
     {
@@ -201,8 +204,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source - a source character string.
-     * @return reference to this object.
+     * @param source A source character string.
+     * @return Reference to this object.
      */
     BaseString<char_t,L,A>& operator+=(const char_t* const source)
     {
@@ -213,8 +216,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param value - a source numerical value.
-     * @return reference to this object.
+     * @param value A source numerical value.
+     * @return Reference to this object.
      */
     BaseString<char_t,L,A>& operator+=(int32_t const value)
     {
@@ -234,12 +237,12 @@ public:
      * a hexadecimal number includes lower case characters, and any resulting strings do not contain
      * any suffixes or prefixes for identifying a numeral system.
      *
-     * NOTE: You need to use "string.template convert<I>(value, base);" syntax,
+     * @note You need to use "string.template convert<I>(value, base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
-     * @param val  - a value that would be converted to this string.
-     * @param base - a numerical base used to represent a value as this string.
-     * @return true if the conversion has been completed successfully.
+     * @param val  A value that would be converted to this string.
+     * @param base A numerical base used to represent a value as this string.
+     * @return True if the conversion has been completed successfully.
      */
     template <typename I>
     bool_t convert(I const value, int32_t const base = 10)
@@ -260,11 +263,11 @@ public:
     /**
      * @brief Casts this string to an integer number.
      *
-     * NOTE: You need to use "string.template cast<I>(base);" syntax,
+     * @note You need to use "string.template cast<I>(base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
-     * @param base - a numerical base used to parse the string.
-     * @return the resulting number.
+     * @param base A numerical base used to parse the string.
+     * @return The resulting number.
      */
     template <typename I>
     I cast(int32_t const base = 10) const
@@ -275,9 +278,7 @@ public:
 protected:
 
     /**
-     * @brief Returns this string terminated character.
-     *
-     * @return a character which means that this string terminated.
+     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
     virtual char_t getTerminator() const
     {
@@ -295,9 +296,9 @@ private:
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator==(const BaseString<char_t,L,A>& source1, const BaseString<char_t,L,A>& source2)
@@ -308,9 +309,9 @@ inline bool_t operator==(const BaseString<char_t,L,A>& source1, const BaseString
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object interface 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object interface 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator==(const BaseString<char_t,L,A>& source1, const api::String<char_t>& source2)
@@ -321,9 +322,9 @@ inline bool_t operator==(const BaseString<char_t,L,A>& source1, const api::Strin
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object interface 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator==(const api::String<char_t>& source1, const BaseString<char_t,L,A>& source2)
@@ -334,9 +335,9 @@ inline bool_t operator==(const api::String<char_t>& source1, const BaseString<ch
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source character string 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator==(const BaseString<char_t,L,A>& source1, const char_t* const source2)
@@ -347,9 +348,9 @@ inline bool_t operator==(const BaseString<char_t,L,A>& source1, const char_t* co
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source character string 1.
- * @param source2 - a source source object 2.
- * @return true if strings are equal.
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator==(const char_t* const source1, const BaseString<char_t,L,A>& source2)
@@ -360,9 +361,9 @@ inline bool_t operator==(const char_t* const source1, const BaseString<char_t,L,
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const BaseString<char_t,L,A>& source2)
@@ -373,9 +374,9 @@ inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const BaseString
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object interface 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object interface 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const api::String<char_t>& source2)
@@ -386,9 +387,9 @@ inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const api::Strin
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object interface 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<char_t,L,A>& source2)
@@ -399,9 +400,9 @@ inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<ch
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source character string 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const char_t* const source2)
@@ -412,9 +413,9 @@ inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const char_t* co
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source character string 1.
- * @param source2 - a source source object 2.
- * @return true if strings are equal.
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,L,A>& source2)
@@ -425,9 +426,9 @@ inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,L,
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, const BaseString<char_t,L,A>& source2)
@@ -440,9 +441,9 @@ inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object interface 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object interface 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, const api::String<char_t>& source2)
@@ -455,9 +456,9 @@ inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object interface 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline BaseString<char_t,L,A> operator+(const api::String<char_t>& source1, const BaseString<char_t,L,A>& source2)
@@ -470,9 +471,9 @@ inline BaseString<char_t,L,A> operator+(const api::String<char_t>& source1, cons
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source character string 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, const char_t* const source2)
@@ -485,9 +486,9 @@ inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source character string 1.
- * @param source2 - a source source object 2.
- * @return true if strings are equal.
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
  */
 template <int32_t L, class A>
 inline BaseString<char_t,L,A> operator+(const char_t* const source1, const BaseString<char_t,L,A>& source2)
@@ -500,10 +501,13 @@ inline BaseString<char_t,L,A> operator+(const char_t* const source1, const BaseS
 #ifdef EOOS_NO_STRICT_MISRA_RULES
 
 /**
- * @brief Partial specialization of the template implements the dynamic string class.
+ * @class BaseString<T,A>
+ * @brief Dynamic base string class.
  *
- * @tparam T - a data type of string characters.
- * @tparam A - a heap memory allocator class.
+ * Partial specialization of the template implements the dynamic string class.
+ *
+ * @tparam T A data type of string characters.
+ * @tparam A A heap memory allocator class.
  */
 template <typename T, class A>
 class BaseString<T,0,A> : public AbstractString<T,0,A>
@@ -523,7 +527,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source character string.
+     * @param source A source character string.
      */
     BaseString(const T* const source) : Parent()
     {
@@ -540,9 +544,7 @@ public:
 protected:
 
     /**
-     * @brief Returns this string terminated character.
-     *
-     * @return a character which means that this string terminated.
+     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
     virtual T getTerminator() const
     {
@@ -552,9 +554,12 @@ protected:
 };
 
 /**
- * @brief Char type partial specialization of the dynamic string class.
+ * @class BaseString<A>
+ * @brief Dynamic base string class.
+ * 
+ * Char type partial specialization of the dynamic string class.
  *
- * @tparam A - a heap memory allocator class.
+ * @tparam A A heap memory allocator class.
  */
 template <class A>
 class BaseString<char_t,0,A> : public AbstractString<char_t,0,A>
@@ -574,7 +579,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source object.
+     * @param source A source object.
      */
     BaseString(const BaseString<char_t,0,A>& source) : Parent()
     {
@@ -584,7 +589,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source object interface.
+     * @param source A source object interface.
      */
     BaseString(const api::String<char_t>& source) : Parent()
     {
@@ -594,7 +599,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param source - a source character string.
+     * @param source A source character string.
      */
     BaseString(const char_t* const source) : Parent()
     {
@@ -604,8 +609,8 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param value - a source numerical value.
-     * @param base - a numerical base used to represent a value as a string.
+     * @param value A source numerical value.
+     * @param base  A numerical base used to represent a value as a string.
      */
     explicit BaseString(int32_t const value) : Parent()
     {
@@ -615,7 +620,7 @@ public:
     /**
      * @brief Casts to int32_t type.
      *
-     * @return a numerical value.
+     * @return A numerical value.
      */
     operator int32_t() const
     {
@@ -625,8 +630,8 @@ public:
     /**
      * @brief Direct assignment operator.
      *
-     * @param source - a source object.
-     * @return this object.
+     * @param source A source object.
+     * @return This object.
      */
     BaseString<char_t,0,A>& operator=(const BaseString<char_t,0,A>& source)
     {
@@ -637,8 +642,8 @@ public:
     /**
      * @brief Assignment operator.
      *
-     * @param source  -a source object interface.
-     * @return reference to this object.
+     * @param source A source object interface.
+     * @return Reference to this object.
      */
     BaseString<char_t,0,A>& operator=(const api::String<char_t>& source)
     {
@@ -649,8 +654,8 @@ public:
     /**
      * @brief Assignment operator.
      *
-     * @param source - a source character string.
-     * @return reference to this object.
+     * @param source A source character string.
+     * @return Reference to this object.
      */
     BaseString<char_t,0,A>& operator=(const char_t* const source)
     {
@@ -661,8 +666,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source - a source object.
-     * @return reference to this object.
+     * @param source A source object.
+     * @return Reference to this object.
      */
     BaseString<char_t,0,A>& operator+=(const BaseString<char_t,0,A>& source)
     {
@@ -673,8 +678,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source - a source object interface.
-     * @return reference to this object.
+     * @param source A source object interface.
+     * @return Reference to this object.
      */
     BaseString<char_t,0,A>& operator+=(const api::String<char_t>& source)
     {
@@ -685,8 +690,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source - a source character string.
-     * @return reference to this object.
+     * @param source A source character string.
+     * @return Reference to this object.
      */
     BaseString<char_t,0,A>& operator+=(const char_t* const source)
     {
@@ -697,8 +702,8 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param value - a source numerical value.
-     * @return reference to this object.
+     * @param value A source numerical value.
+     * @return Reference to this object.
      */
     BaseString<char_t,0,A>& operator+=(int32_t const value)
     {
@@ -718,12 +723,12 @@ public:
      * a hexadecimal number includes lower case characters, and any resulting strings do not contain
      * any suffixes or prefixes for identifying a numeral system.
      *
-     * NOTE: You need to use "string.template convert<I>(value, base);" syntax,
+     * @note You need to use "string.template convert<I>(value, base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
-     * @param val  - a value that would be converted to this string.
-     * @param base - a numerical base used to represent a value as this string.
-     * @return true if the conversion has been completed successfully.
+     * @param val  A value that would be converted to this string.
+     * @param base A numerical base used to represent a value as this string.
+     * @return True if the conversion has been completed successfully.
      */
     template <typename I>
     bool_t convert(I const value, int32_t const base = 10)
@@ -744,11 +749,11 @@ public:
     /**
      * @brief Casts this string to an integer number.
      *
-     * NOTE: You need to use "string.template cast<I>(base);" syntax,
+     * @note You need to use "string.template cast<I>(base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
-     * @param base - a numerical base used to parse the string.
-     * @return the resulting number.
+     * @param base A numerical base used to parse the string.
+     * @return The resulting number.
      */
     template <typename I>
     I cast(int32_t const base = 10) const
@@ -760,9 +765,7 @@ public:
 protected:
 
     /**
-     * @brief Returns this string terminated character.
-     *
-     * @return a character which means that this string terminated.
+     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
     virtual char_t getTerminator() const
     {
@@ -780,9 +783,9 @@ private:
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator==(const BaseString<char_t,0,A>& source1, const BaseString<char_t,0,A>& source2)
@@ -793,9 +796,9 @@ inline bool_t operator==(const BaseString<char_t,0,A>& source1, const BaseString
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object interface 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object interface 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator==(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
@@ -806,9 +809,9 @@ inline bool_t operator==(const BaseString<char_t,0,A>& source1, const api::Strin
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object interface 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator==(const api::String<char_t>& source1, const BaseString<char_t,0,A>& source2)
@@ -819,9 +822,9 @@ inline bool_t operator==(const api::String<char_t>& source1, const BaseString<ch
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source character string 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator==(const BaseString<char_t,0,A>& source1, const char_t* const source2)
@@ -832,9 +835,9 @@ inline bool_t operator==(const BaseString<char_t,0,A>& source1, const char_t* co
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 - a source character string 1.
- * @param source2 - a source source object 2.
- * @return true if strings are equal.
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator==(const char_t* const source1, const BaseString<char_t,0,A>& source2)
@@ -845,9 +848,9 @@ inline bool_t operator==(const char_t* const source1, const BaseString<char_t,0,
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const BaseString<char_t,0,A>& source2)
@@ -858,9 +861,9 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const BaseString
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object interface 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object interface 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
@@ -871,9 +874,9 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const api::Strin
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object interface 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<char_t,0,A>& source2)
@@ -884,9 +887,9 @@ inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<ch
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source character string 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const char_t* const source2)
@@ -897,9 +900,9 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const char_t* co
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 - a source character string 1.
- * @param source2 - a source source object 2.
- * @return true if strings are equal.
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,0,A>& source2)
@@ -910,9 +913,9 @@ inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,0,
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, const BaseString<char_t,0,A>& source2)
@@ -925,9 +928,9 @@ inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source object interface 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source object interface 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
@@ -940,9 +943,9 @@ inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object interface 1.
- * @param source2 - a source object 2.
- * @return true if strings are equal.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline BaseString<char_t,0,A> operator+(const api::String<char_t>& source1, const BaseString<char_t,0,A>& source2)
@@ -955,9 +958,9 @@ inline BaseString<char_t,0,A> operator+(const api::String<char_t>& source1, cons
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source object 1.
- * @param source2 - a source character string 2.
- * @return true if strings are equal.
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, const char_t* const source2)
@@ -970,9 +973,9 @@ inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 - a source character string 1.
- * @param source2 - a source source object 2.
- * @return true if strings are equal.
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
  */
 template <class A>
 inline BaseString<char_t,0,A> operator+(const char_t* const source1, const BaseString<char_t,0,A>& source2)

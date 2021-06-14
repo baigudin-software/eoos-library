@@ -1,6 +1,5 @@
 /**
- * @brief Semaphore.
- *
+ * @file      lib.Semaphore.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
@@ -17,9 +16,10 @@ namespace lib
 {
 
 /**
+ * @class Semaphore<A>
  * @brief Semaphore class.
  *
- * @tparam A heap memory allocator class. 
+ * @tparam A Heap memory allocator class. 
  */
 template <class A = Allocator>
 class Semaphore : public Object<A>, public api::Semaphore
@@ -32,7 +32,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param permits - the initial number of permits available.
+     * @param permits The initial number of permits available.
      */
     Semaphore(const int32_t permits) : Parent(),
         semaphore_ (NULLPTR){
@@ -43,8 +43,8 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param permits - the initial number of permits available.
-     * @param isFair  - true if this semaphore will guarantee FIFO granting of permits under contention.
+     * @param permits The initial number of permits available.
+     * @param isFair  True if this semaphore will guarantee FIFO granting of permits under contention.
      */
     Semaphore(const int32_t permits, const bool_t isFair) : Parent(),
         semaphore_ (NULLPTR){
@@ -61,9 +61,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -71,9 +69,7 @@ public:
     }
 
     /**
-     * @brief Acquires one permit from this semaphore.
-     *
-     * @return true if the semaphore is acquired successfully.
+     * @copydoc eoos::api::Semaphore::acquire()
      */
     virtual bool_t acquire()
     {
@@ -88,10 +84,7 @@ public:
     }
 
     /**
-     * @brief Acquires the given number of permits from this semaphore.
-     *
-     * @param permits - the number of permits to acquire.
-     * @return true if the semaphore is acquired successfully.
+     * @copydoc eoos::api::Semaphore::acquire(int32_t)
      */
     virtual bool_t acquire(int32_t const permits)
     {
@@ -106,7 +99,7 @@ public:
     }
 
     /**
-     * @brief Releases one permit.
+     * @copydoc eoos::api::Semaphore::release()
      */
     virtual void release()
     {
@@ -117,9 +110,7 @@ public:
     }
 
     /**
-     * @brief Releases the given number of permits.
-     *
-     * @param permits - the number of permits to release.
+     * @copydoc eoos::api::Semaphore::release(int32_t)
      */
     virtual void release(int32_t const permits)
     {
@@ -130,9 +121,7 @@ public:
     }
 
     /**
-     * @brief Tests if this semaphore is fair.
-     *
-     * @return true if this semaphore has fairness set true.
+     * @copydoc eoos::api::Semaphore::isFair()
      */
     virtual bool_t isFair() const
     {
@@ -146,31 +135,14 @@ public:
         }
     }
 
-    /**
-     * @brief Tests if this resource is blocked.
-     *
-     * @return true if this resource is blocked.
-     */
-    virtual bool_t isBlocked() const
-    {
-        if( Self::isConstructed() )
-        {
-            return semaphore_->isBlocked();
-        }
-        else
-        {
-            return false;
-        }
-    }
-
 private:
 
     /**
      * @brief Constructor.
      *
-     * @param permits - the initial number of permits available.
-     * @param isFair  - true if this semaphore will guarantee FIFO granting of permits under contention.
-     * @return true if object has been constructed successfully.
+     * @param permits The initial number of permits available.
+     * @param isFair  True if this semaphore will guarantee FIFO granting of permits under contention.
+     * @return True if object has been constructed successfully.
      */
     bool_t construct(const int32_t permits, const bool_t* const isFair)
     {
@@ -191,19 +163,28 @@ private:
     }
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Semaphore(const Semaphore& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj - reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     Semaphore& operator=(const Semaphore& obj);
+
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    Semaphore(Semaphore&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    Semaphore& operator=(Semaphore&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief System semaphore interface.

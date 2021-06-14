@@ -1,14 +1,7 @@
 /**
- * @brief Buffer class in static and dynamic specializations.
- *
- * This class has a primary template and a partial specialization of the template.
- * The non-specialized template defines a realization that contains a whole buffer,
- * which is defined by a template argument, as data member of the class.
- * The specialization allocates necessary memory size for containing the buffer
- * in a heap memory.
- *
+ * @file      lib.Buffer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_BUFFER_HPP_
 #define LIB_BUFFER_HPP_
@@ -21,11 +14,15 @@ namespace lib
 {
     
 /**
- * @brief Primary template implements the static buffer class.
+ * @class Buffer<T,L,A>
+ * @brief Buffer class static.
  *
- * @tparam T - data type of buffer element.
- * @tparam L - maximum number of buffer elements, or 0 for dynamic allocation.
- * @tparam A - heap memory allocator class.
+ * This class is a primary template defines a realization that contains
+ * a whole buffer, which is defined by a template argument.
+ *
+ * @tparam T Data type of buffer element.
+ * @tparam L Maximum number of buffer elements, or 0 for dynamic allocation.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class Buffer : public AbstractBuffer<T,A>
@@ -44,9 +41,9 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: A passed illegal element will be copied to an internal data of the class
+     * @note A passed illegal element will be copied to an internal data of the class
      *
-     * @param illegal - an illegal value.
+     * @param illegal An illegal value.
      */
     Buffer(const T& illegal) : Parent(L, illegal),
         buf_ (arr_){
@@ -65,8 +62,8 @@ public:
      * If the source buffer is greater than this buffer,
      * only cropped data of that will be copied.
      *
-     * @param buf - reference to source buffer.
-     * @return reference to this object.
+     * @param buf Reference to source buffer.
+     * @return Reference to this object.
      */
     Buffer& operator=(const Buffer<T,L,A>& buf)
     {
@@ -80,8 +77,8 @@ public:
      * If the source buffer is greater than this buffer,
      * only cropped data of that will be copied.
      *
-     * @param buf - reference to source buffer.
-     * @return reference to this object.
+     * @param buf Reference to source buffer.
+     * @return Reference to this object.
      */
     Buffer& operator=(const AbstractBuffer<T,A>& buf)
     {
@@ -94,7 +91,7 @@ protected:
     /**
      * @brief Returns a pointer to the fist buffer element.
      *
-     * @return pointer to buffer, or NULLPTR.
+     * @return Pointer to buffer, or NULLPTR.
      */
     virtual T* getBuffer() const
     {
@@ -102,13 +99,26 @@ protected:
     }
 
 private:
-
+    
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Buffer(const Buffer& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    Buffer(Buffer&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    Buffer& operator=(Buffer&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
+    
 
     /**
      * @brief Current array of T elements.
@@ -118,7 +128,7 @@ private:
     /**
      * @brief Pointer to current array.
      *
-     * NOTE: The variable has been defined only for giving the getBuffer member function to be constant.
+     * @note The variable has been defined only for giving the getBuffer member function to be constant.
      */
     T* buf_;
 
@@ -127,10 +137,14 @@ private:
 #ifdef EOOS_NO_STRICT_MISRA_RULES
 
 /**
- * @brief Partial specialization of the template implements the dynamic buffer class.
+ * @class Buffer<T,A>
+ * @brief Buffer class dynamic.
  *
- * @tparam T - data type of buffer element.
- * @tparam A - heap memory allocator class.
+ * This is a partial specialization of the template allocates necessary 
+ * memory size for containing the buffer in a heap memory.
+ *
+ * @tparam T Data type of buffer element.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A>
 class Buffer<T,0,A> : public AbstractBuffer<T,A>
@@ -142,7 +156,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param length - count of buffer elements.
+     * @param length Count of buffer elements.
      */
     explicit Buffer(int32_t const length) : ParentSpec1(length),
         buf_       (NULLPTR),
@@ -154,10 +168,10 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: A passed illegal element will be copied to an internal data of the class
+     * @note A passed illegal element will be copied to an internal data of the class
      *
-     * @param length  - count of buffer elements.
-     * @param illegal - illegal value.
+     * @param length  Count of buffer elements.
+     * @param illegal Illegal value.
      */
     Buffer(int32_t const length, const T& illegal) : ParentSpec1(length, illegal),
         buf_       (NULLPTR),
@@ -169,10 +183,10 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: Given external buffer has to exist until this object is alive.
+     * @note Given external buffer has to exist until this object is alive.
      *
-     * @param length - number of elements.
-     * @param buf    - pointer to external buffer.
+     * @param length Number of elements.
+     * @param buf    Pointer to external buffer.
      */
     Buffer(int32_t const length, T*  const buf) : ParentSpec1(length),
         buf_       (buf),
@@ -187,9 +201,9 @@ public:
      * NOTE 1: Given external buffer has to exist until this object is alive.
      * NOTE 2: A passed illegal element will be copied to an internal data of the class.
      *
-     * @param length  - number of elements.
-     * @param buf     - pointer to external buffer.
-     * @param illegal - illegal value.
+     * @param length  Number of elements.
+     * @param buf     Pointer to external buffer.
+     * @param illegal Illegal value.
      */
     Buffer(int32_t const length, T* const buf, const T& illegal) : ParentSpec1(length, illegal),
         buf_       (buf),
@@ -216,8 +230,8 @@ public:
      * If the source buffer is greater than this buffer,
      * only cropped data of that will be copied.
      *
-     * @param buf - reference to source buffer.
-     * @return reference to this object.
+     * @param buf Reference to source buffer.
+     * @return Reference to this object.
      */
     Buffer& operator=(const Buffer<T,0,A>& buf)
     {
@@ -231,8 +245,8 @@ public:
      * If the source buffer is greater than this buffer,
      * only cropped data of that will be copied.
      *
-     * @param buf - reference to source buffer.
-     * @return reference to this object.
+     * @param buf Reference to source buffer.
+     * @return Reference to this object.
      */
     Buffer& operator=(const AbstractBuffer<T,A>& buf)
     {
@@ -245,7 +259,7 @@ protected:
     /**
      * @brief Returns a pointer to the fist buffer element.
      *
-     * @return pointer to buffer, or NULLPTR.
+     * @return Pointer to buffer, or NULLPTR.
      */
     virtual T* getBuffer() const
     {
@@ -266,8 +280,8 @@ private:
     /**
      * @brief Constructor.
      *
-     * @param length - count of buffer elements.
-     * @return boolean result.
+     * @param length Count of buffer elements.
+     * @return Boolean result.
      */
     bool_t construct(size_t const length)
     {
@@ -289,11 +303,24 @@ private:
     }
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Buffer(const Buffer& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    Buffer(Buffer&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    Buffer& operator=(Buffer&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
+
 
     /**
      * @brief Pointer to external given or self created array.

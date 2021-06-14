@@ -1,14 +1,7 @@
 /**
- * @brief Abstract string class.
- *
- * This class has a primary template and a partial specialization of the template.
- * The non-specialized template defines a realization that contains a whole buffer for
- * string characters, which is defined by a template argument, as data member of the class.
- * The specialization allocates necessary memory size for containing the buffer
- * in a heap memory.
- *
+ * @file      lib.AbstractString.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ABSTRACT_STRING_HPP_
 #define LIB_ABSTRACT_STRING_HPP_
@@ -21,11 +14,12 @@ namespace lib
 {
     
 /**
- * @brief Primary template implements the static string class.
+ * @class AbstractString<T,L,A>
+ * @brief Static abstract string class.
  *
- * @tparam T - a data type of string characters.
- * @tparam L - a maximum number of string characters, or 0 for dynamic allocation.
- * @tparam A - a heap memory allocator class.
+ * @tparam T A data type of string characters.
+ * @tparam L A maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam A A heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class AbstractString : public AbstractBaseString<T,A>
@@ -55,9 +49,7 @@ public:
     }
 
     /**
-     * @brief Returns a number of elements in this container.
-     *
-     * @return number of elements.
+     * @copydoc eoos::api::Collection::getLength()
      */
     virtual int32_t getLength() const
     {
@@ -65,13 +57,7 @@ public:
     }
 
     /**
-     * @brief Returns pointer to the first character of containing string.
-     *
-     * NOTE: Be careful, some action with the object might relocate internal buffer
-     * that contains characters. By this reason, a returned address will be actual
-     * until you do not call no constant method of this class for an object.
-     *
-     * @return first character of containing string characters, or NULLPTR if no string contained.
+     * @copydoc eoos::api::String::getLength()
      */
     virtual const T* getChar() const
     {
@@ -81,10 +67,7 @@ public:
 protected:
 
     /**
-     * @brief Copies a passed string into this string.
-     *
-     * @param str - a character string to be copied.
-     * @return true if a passed string has been copied successfully.
+     * @copydoc eoos::lib::AbstractBaseString::copy(const T*)
      */
     virtual bool_t copy(const T* const str)
     {
@@ -127,10 +110,7 @@ protected:
     }
 
     /**
-     * @brief Concatenates a passed string to this string.
-     *
-     * @param str - an character string to be appended.
-     * @return true if a passed string has been appended successfully.
+     * @copydoc eoos::lib::AbstractBaseString::concatenate(const T*)
      */
     virtual bool_t concatenate(const T* const str)
     {
@@ -183,13 +163,7 @@ protected:
     }
 
     /**
-     * @brief Compares this string with a passed string lexicographically.
-     *
-     * @param str - a character string to be compared.
-     * @return the value 0 if a passed string is equal to this string;
-     *         a value less than 0 if this string is less than a passed string;
-     *         a value greater than 0 if this string is greater than a passed string,
-     *         or the minimum possible value if an error has been occurred.
+     * @copydoc eoos::lib::AbstractBaseString::compare(const T*)
      */
     virtual int32_t compare(const T* const str) const
     {
@@ -224,12 +198,12 @@ private:
     /**
      * @brief Constructor.
      *
-     * NOTE: Creating this object based on another object is prohibited.
+     * @note Creating this object based on another object is prohibited.
      * The operation is performed by calling the default object constructor
      * and the copy interface function after that. This sequence of calls is
      * determined because the copy function does not deconstruct the object.
      *
-     * @param obj - a source object.
+     * @param obj A source object.
      */
     AbstractString(const AbstractString<T,L,A>& obj);
 
@@ -240,12 +214,13 @@ private:
      * The operation is performed by calling the copy interface function,
      * because it does not deconstruct the object.
      *
-     * @param obj - a source object.
-     * @return this object.
+     * @param obj A source object.
+     * @return This object.
      */
     AbstractString<T,L,A>& operator=(const AbstractString<T,L,A>& obj);
 
     /**
+     * @struct Context
      * @brief A contex of this class containing string.
      */
     struct Context
@@ -264,17 +239,12 @@ private:
         int32_t len;
 
         /**
-         * @brief Max available number of characters for this string.
-         */
-        int32_t max;
-
-        /**
          * @brief Constructor.
          */
         Context() :
-            str (NULLPTR),
-            len (0),
-            max (0){
+            str  (NULLPTR),
+            len  (0),
+            max_ (0){
         }
 
         /**
@@ -287,7 +257,7 @@ private:
         /**
          * @brief Mirrors an context to this.
          *
-         * @param obj - a source object.
+         * @param obj A source object.
          */
         void mirror(const Context& obj)
         {
@@ -296,14 +266,14 @@ private:
             // doesn't have any information in its buffer.
             str = obj.str != NULLPTR ? buf_ : NULLPTR;
             len = obj.len;
-            max = obj.max;
+            max_ = obj.max_;
         }
 
         /**
          * @brief Allocates this contex.
          *
-         * @param length - a number of string characters.
-         * @return true if the context has been allocated successfully.
+         * @param length A number of string characters.
+         * @return True if the context has been allocated successfully.
          */
         bool_t allocate(int32_t const length)
         {
@@ -317,7 +287,7 @@ private:
                 // Set this class variables
                 str = buf_;
                 len = length;
-                max = L;
+                max_ = L;
                 res = true;
             }
             return res;
@@ -330,13 +300,13 @@ private:
         {
             str = NULLPTR;
             len = 0;
-            max = 0;
+            max_ = 0;
         }
 
         /**
          * @brief Test if this contex is allocated.
          *
-         * @return true if the context has been allocated successfully.
+         * @return True if the context has been allocated successfully.
          */
         bool_t isAllocated()
         {
@@ -355,13 +325,13 @@ private:
         /**
          * @brief Tests if a passed length fits to this max available length.
          *
-         * @param len - a number of string characters.
-         * @return true if this length will be fit successfully.
+         * @param len A number of string characters.
+         * @return True if this length will be fit successfully.
          */
         bool_t isFit(int32_t len) const
         {
             bool_t res;
-            if( len > max )
+            if( len > max_ )
             {
                 res = false;
             }
@@ -377,17 +347,22 @@ private:
         /**
          * @brief Constructor.
          *
-         * @param obj - a source object.
+         * @param obj A source object.
          */
         Context(const Context& context);
 
         /**
          * @brief Assignment operator.
          *
-         * @param obj - a source object.
-         * @return this object.
+         * @param obj A source object.
+         * @return This object.
          */
         Context& operator=(const Context& obj);
+        
+        /**
+         * @brief Max available number of characters for this string.
+         */
+        int32_t max_;        
 
         /**
          * @brief The buffer of characters of this string.
@@ -406,10 +381,11 @@ private:
 #ifdef EOOS_NO_STRICT_MISRA_RULES
 
 /**
- * @brief Partial specialization of the template implements the dynamic string class.
+ * @class AbstractString<T,A>
+ * @brief Dynamic abstract string class.
  *
- * @tparam T - data type of string characters.
- * @tparam A - heap memory allocator class.
+ * @tparam T Data type of string characters.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A>
 class AbstractString<T,0,A> : public AbstractBaseString<T,A>
@@ -439,9 +415,7 @@ public:
     }
 
     /**
-     * @brief Returns a number of elements in this container.
-     *
-     * @return number of elements.
+     * @copydoc eoos::api::Collection::getLength()
      */
     virtual int32_t getLength() const
     {
@@ -449,13 +423,11 @@ public:
     }
 
     /**
-     * @brief Returns pointer to the first character of containing string.
+     * @copydoc eoos::api::String::getChar()    
      *
-     * NOTE: Be careful, some action with the object might relocate internal buffer
+     * @note Be careful, some action with the object might relocate internal buffer
      * that contains characters. By this reason, a returned address will be actual
      * until you do not call no constant method of this class for an object.
-     *
-     * @return first character of containing string characters, or NULLPTR if no string contained.
      */
     virtual const T* getChar() const
     {
@@ -465,10 +437,7 @@ public:
 protected:
 
     /**
-     * @brief Copies a passed string into this string.
-     *
-     * @param str - a character string to be copied.
-     * @return true if a passed string has been copied successfully.
+     * @copydoc eoos::lib::AbstractBaseString::copy(const T*)
      */
     virtual bool_t copy(const T* const str)
     {
@@ -511,10 +480,7 @@ protected:
     }
 
     /**
-     * @brief Concatenates a passed string to this string.
-     *
-     * @param str - an character string to be appended.
-     * @return true if a passed string has been appended successfully.
+     * @copydoc eoos::lib::AbstractBaseString::concatenate(const T*)
      */
     virtual bool_t concatenate(const T* const str)
     {
@@ -567,13 +533,7 @@ protected:
     }
 
     /**
-     * @brief Compares this string with a passed string lexicographically.
-     *
-     * @param str - a character string to be compared.
-     * @return the value 0 if a passed string is equal to this string;
-     *         a value less than 0 if this string is less than a passed string;
-     *         a value greater than 0 if this string is greater than a passed string,
-     *         or the minimum possible value if an error has been occurred.
+     * @copydoc eoos::lib::AbstractBaseString::compare(const T*)
      */
     virtual int32_t compare(const T* const str) const
     {
@@ -608,12 +568,12 @@ private:
     /**
      * @brief Constructor.
      *
-     * NOTE: Creating this object based on another object is prohibited.
+     * @note Creating this object based on another object is prohibited.
      * The operation is performed by calling the default object constructor
      * and the copy interface function after that. This sequence of calls is
      * determined because the copy function does not deconstruct the object.
      *
-     * @param obj - a source object.
+     * @param obj A source object.
      */
     AbstractString(const AbstractString<T,0,A>& obj);
 
@@ -624,12 +584,13 @@ private:
      * The operation is performed by calling the copy interface function,
      * because it does not deconstruct the object.
      *
-     * @param obj - a source object.
-     * @return this object.
+     * @param obj A source object.
+     * @return This object.
      */
     AbstractString<T,0,A>& operator=(const AbstractString<T,0,A>& obj);
 
     /**
+     * @struct Context
      * @brief A contex of this class containing string.
      */
     struct Context
@@ -648,17 +609,12 @@ private:
         int32_t len;
 
         /**
-         * @brief Max available number of characters for this string.
-         */
-        int32_t max;
-
-        /**
          * @brief Constructor.
          */
         Context() :
-            str (NULLPTR),
-            len (0),
-            max (0){
+            str  (NULLPTR),
+            len  (0),
+            max_ (0){
         }
 
         /**
@@ -671,7 +627,7 @@ private:
         /**
          * @brief Mirrors an context to this.
          *
-         * @param obj - a source object.
+         * @param obj A source object.
          */
         void mirror(const Context& obj)
         {
@@ -681,14 +637,14 @@ private:
             // of the object allocated heap for the array of its characters.
             str = obj.str;
             len = obj.len;
-            max = obj.max;
+            max_ = obj.max_;
         }
 
         /**
          * @brief Allocates this contex.
          *
-         * @param length - a number of string characters.
-         * @return true if the context has been allocated successfully.
+         * @param length A number of string characters.
+         * @return True if the context has been allocated successfully.
          */
         bool_t allocate(int32_t const length)
         {
@@ -708,7 +664,7 @@ private:
                     // Set this class variables
                     str = string;
                     len = length;
-                    max = calculateLength(size);
+                    max_ = calculateLength(size);
                     res = true;
                 }
             }
@@ -729,14 +685,14 @@ private:
                 A::free(str);
                 str = NULLPTR;
                 len = 0;
-                max = 0;
+                max_ = 0;
             }
         }
 
         /**
          * @brief Test if this contex is allocated.
          *
-         * @return true if the context has been allocated successfully.
+         * @return True if the context has been allocated successfully.
          */
         bool_t isAllocated()
         {
@@ -755,13 +711,13 @@ private:
         /**
          * @brief Tests if a passed length fits to this max available length.
          *
-         * @param len - a number of string characters.
-         * @return true if this length will be fit successfully.
+         * @param len A number of string characters.
+         * @return True if this length will be fit successfully.
          */
         bool_t isFit(int32_t len) const
         {
             bool_t res;
-            if( len > max )
+            if( len > max_ )
             {
                 res = false;
             }
@@ -777,8 +733,8 @@ private:
         /**
          * @brief Returns size in byte for a string length.
          *
-         * @param len - a number of string characters.
-         * @return size in byte for a passed string.
+         * @param len A number of string characters.
+         * @return Size in byte for a passed string.
          */
         static int32_t calculateSize(int32_t len)
         {
@@ -797,8 +753,8 @@ private:
         /**
          * @brief Returns a string length of size in byte.
          *
-         * @param size - size in byte.
-         * @return a number of string characters.
+         * @param size Size in byte.
+         * @return A number of string characters.
          */
         static int32_t calculateLength(int32_t const size)
         {
@@ -810,17 +766,22 @@ private:
         /**
          * @brief Constructor.
          *
-         * @param obj - a source object.
+         * @param obj A source object.
          */
         Context(const Context& context);
 
         /**
          * @brief Assignment operator.
          *
-         * @param obj - a source object.
-         * @return this object.
+         * @param obj A source object.
+         * @return This object.
          */
         Context& operator=(const Context& obj);
+        
+        /**
+         * @brief Max available number of characters for this string.
+         */
+        int32_t max_;        
 
     };
 

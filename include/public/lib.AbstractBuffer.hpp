@@ -1,6 +1,5 @@
 /**
- * @brief Abstract class for some buffers.
- *
+ * @file      lib.AbstractBuffer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
  */
@@ -17,10 +16,11 @@ namespace lib
 {
     
 /**
- * @brief Primary template implementation.
+ * @class AbstractBuffer<T,A>
+ * @brief Abstract class for some buffers.
  *
- * @tparam T - data type of buffer element.
- * @tparam A - heap memory allocator class.
+ * @tparam T Data type of buffer element.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class AbstractBuffer : public Object<A>, public api::Collection<T>, public api::IllegalValue<T>
@@ -33,7 +33,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param length - count of buffer elements.
+     * @param length Count of buffer elements.
      */
     explicit AbstractBuffer(int32_t length) : Parent(),
         length_  (length),
@@ -43,10 +43,10 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: A passed illegal element will be copied to an internal data of the class
+     * @note A passed illegal element will be copied to an internal data of the class
      *
-     * @param length - count of buffer elements.
-     * @param illegal - illegal value.
+     * @param length  Count of buffer elements.
+     * @param illegal Illegal value.
      */
     AbstractBuffer(int32_t length, const T& illegal) : Parent(),
         length_  (length),
@@ -61,9 +61,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -71,9 +69,7 @@ public:
     }
 
     /**
-     * @brief Returns a number of elements.
-     *
-     * @return number of elements.
+     * @copydoc eoos::api::Collection::getLength()
      */
     virtual int32_t getLength() const
     {
@@ -81,9 +77,7 @@ public:
     }
 
     /**
-     * @brief Tests if this collection has elements.
-     *
-     * @return true if this collection does not contain any elements.
+     * @copydoc eoos::api::Collection::isEmpty()
      */
     virtual bool_t isEmpty() const
     {
@@ -91,11 +85,7 @@ public:
     }
 
     /**
-     * @brief Returns illegal element which will be returned as error value.
-     *
-     * If illegal value is not set method returns uninitialized variable.
-     *
-     * @return reference to illegal element.
+     * @copydoc eoos::api::IllegalValue::getIllegal()
      */
     virtual T& getIllegal() const
     {
@@ -103,9 +93,7 @@ public:
     }
 
     /**
-     * @brief Sets illegal element which will be returned as error value.
-     *
-     * @param value - an illegal value.
+     * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
      */
     virtual void setIllegal(const T& value)
     {
@@ -113,10 +101,7 @@ public:
     }
 
     /**
-     * @brief Tests if given value is an illegal.
-     *
-     * @param value - testing value.
-     * @param true if value is an illegal.
+     * @copydoc eoos::api::IllegalValue::isIllegal()
      */
     virtual bool_t isIllegal(const T& value) const
     {
@@ -126,7 +111,7 @@ public:
     /**
      * @brief Fills this buffer by given value.
      *
-     * @param value - a filling value.
+     * @param value A filling value.
      */
     void fill(const T& value)
     {
@@ -136,8 +121,8 @@ public:
     /**
      * @brief Fills this buffer by given value.
      *
-     * @param value - filling value.
-     * @param length - count of filling elements.
+     * @param value  Filling value.
+     * @param length Count of filling elements.
      */
     void fill(const T& value, const int32_t length)
     {
@@ -147,9 +132,9 @@ public:
     /**
      * @brief Fills this buffer by given value.
      *
-     * @param value - filling value.
-     * @param index - begin index.
-     * @param count - count of filling elements.
+     * @param value Filling value.
+     * @param index Begin index.
+     * @param count Count of filling elements.
      */
     void fill(const T& value, const int32_t index, const int32_t count)
     {
@@ -169,8 +154,8 @@ public:
     /**
      * @brief Returns an element of this buffer.
      *
-     * @param index - an element index.
-     * @return an element.
+     * @param index An element index.
+     * @return An element.
      */
     T& operator[](int32_t const index)
     {
@@ -192,7 +177,7 @@ protected:
     /**
      * @brief Returns a pointer to the fist buffer element.
      *
-     * @return pointer to buffer or NULLPTR.
+     * @return Pointer to buffer or NULLPTR.
      */
     virtual T* getBuffer() const = 0;
 
@@ -202,7 +187,7 @@ protected:
      * If the source buffer greater than this buffer,
      * then only cropped data of that will be and copied.
      *
-     * @param buf - reference to source buffer.
+     * @param buf Reference to source buffer.
      */
     void copy(const AbstractBuffer& buf)
     {
@@ -223,19 +208,28 @@ protected:
 private:
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     AbstractBuffer(const AbstractBuffer& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj - reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     AbstractBuffer& operator=(const AbstractBuffer& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    AbstractBuffer(AbstractBuffer&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    AbstractBuffer& operator=(AbstractBuffer&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011    
 
     /**
      * @brief Number of elements of this buffer.

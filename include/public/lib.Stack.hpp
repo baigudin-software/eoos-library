@@ -1,14 +1,13 @@
 /**
- * @brief Stack.
- *
+ * @file      lib.Stack.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_STACK_HPP_
 #define LIB_STACK_HPP_
 
 #include "lib.Object.hpp"
-#include "api.Stack.hpp"
+#include "api.SysStack.hpp"
 #include "lib.Buffer.hpp"
 
 namespace eoos
@@ -17,71 +16,66 @@ namespace lib
 {
 
 /**
- * @brief Primary template implementation.
+ * @class Stack<T,A>
+ * @brief Stack implementation for system usage.
  *
  * @tparam T data type of default stack element.
- * @tparam A heap memory allocator class.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
-class Stack : public Object<A>, public api::Stack<T>
+class Stack : public Object<A>, public api::SysStack<T>
 {
     typedef ::eoos::lib::Object<A> Parent;
-    typedef api::Stack<T> StackIntf;
+    typedef api::SysStack<T> StackIntf;
 
 public:
 
     /**
      * @brief Constructor.
      *
-     * @param type  type of this stack.
-     * @param count count of buffer elements.
+     * @param type  Type of this stack.
+     * @param count Count of buffer elements.
      */
-    Stack(typename api::Stack<T>::Operation type, int32_t count) : Parent(),
+    Stack(typename api::SysStack<T>::Operation type, int32_t count) : Parent(),
         stack_ (count),
         type_  (type){
-        const bool_t isConstructed = construct();
-        this->setConstruct( isConstructed );
+        bool_t const isConstructed = construct();
+        setConstructed( isConstructed );
     }
 
     /**
      * @brief Constructor.
      *
-     * @param type  type of this stack.
-     * @param count   count of buffer elements.
-     * @param illegal illegal value.
+     * @param type    Type of this stack.
+     * @param count   Count of buffer elements.
+     * @param illegal Illegal value.
      */
-    Stack(typename api::Stack<T>::Operation type, int32_t count, const T illegal) : Parent(),
+    Stack(typename api::SysStack<T>::Operation type, int32_t count, const T illegal) : Parent(),
         stack_ (count, illegal),
         type_  (type){
-        const bool_t isConstructed = construct();
-        this->setConstruct( isConstructed );
+        bool_t const isConstructed = construct();
+        setConstructed( isConstructed );
     }
 
     /**
      * @brief Destructor.
      */
-    virtual ~Stack()
-    {
-    }
+    virtual ~Stack(){}
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
-        return this->isConstructed_;
+        return Parent::isConstructed();
     }
 
     /**
-     * @brief Returns an initial top of stack.
-     *
-     * @return pointer to TOS.
+     * @copydoc eoos::api::SysStack::getTos()
      */
     virtual const T* getTos()
     {
-        if( not this->isConstructed_ )
+        if( not Self::isConstructed() )
         {
             return NULLPTR;
         }
@@ -106,19 +100,15 @@ public:
     }
 
     /**
-     * @brief Returns an type of stack operation.
-     *
-     * @return the stack operation.
+     * @copydoc eoos::api::SysStack::getType()
      */
-    virtual typename api::Stack<T>::Operation getType() const
+    virtual typename api::SysStack<T>::Operation getType() const
     {
         return type_;
     }
 
     /**
-     * @brief Returns a number of elements.
-     *
-     * @return number of elements.
+     * @copydoc eoos::api::Collection::getLength()
      */
     virtual int32_t getLength() const
     {
@@ -126,9 +116,7 @@ public:
     }
 
     /**
-     * @brief Tests if this collection has elements.
-     *
-     * @return true if this collection does not contain any elements.
+     * @copydoc eoos::api::Collection::isEmpty()
      */
     virtual bool_t isEmpty() const
     {
@@ -136,11 +124,7 @@ public:
     }
 
     /**
-     * @brief Returns illegal element which will be returned as error value.
-     *
-     * If illegal value is not set method returns uninitialized variable.
-     *
-     * @return reference to illegal element.
+     * @copydoc eoos::api::IllegalValue::getIllegal()
      */
     virtual const T& getIllegal() const
     {
@@ -148,9 +132,7 @@ public:
     }
 
     /**
-     * @brief Sets illegal element which will be returned as error value.
-     *
-     * @param value illegal value.
+     * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
      */
     virtual void setIllegal(const T& value)
     {
@@ -158,10 +140,7 @@ public:
     }
 
     /**
-     * @brief Tests if given value is an illegal.
-     *
-     * @param value testing value.
-     * @param true if value is an illegal.
+     * @copydoc eoos::api::IllegalValue::isIllegal(const T&)
      */
     virtual bool_t isIllegal(const T& value) const
     {
@@ -173,11 +152,11 @@ private:
     /**
      * @brief Constructor.
      *
-     * @return true if object has been constructed successfully.
+     * @return True if object has been constructed successfully.
      */
     bool_t construct()
     {
-        if( not this->isConstructed_ )
+        if( not Self::isConstructed() )
         {
             return false;
         }
@@ -192,19 +171,28 @@ private:
     }
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Stack(const Stack& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     Stack& operator=(const Stack& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    Stack(Stack&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    Stack& operator=(Stack&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief Stack memory buffer.
@@ -214,7 +202,7 @@ private:
     /**
      * @brief Stack type.
      */
-    const typename api::Stack<T>::Operation type_;
+    const typename api::SysStack<T>::Operation type_;
 
 };
         

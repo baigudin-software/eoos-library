@@ -1,8 +1,7 @@
 /**
- * @brief Guard of mutex.
- *
+ * @file      lib.MutexGuard.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_MUTEX_GUARD_HPP_
 #define LIB_MUTEX_GUARD_HPP_
@@ -16,7 +15,8 @@ namespace lib
 {
     
 /**
- * @brief Mutex class.
+ * @class MutexGuard<A>
+ * @brief Guard of mutex.
  *
  * @tparam A heap memory allocator class.
  */    
@@ -30,7 +30,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param mutex - a mutex for guarding.
+     * @param mutex A mutex for guarding.
      */
     explicit MutexGuard(api::Mutex& mutex) : Parent(),
         mutex_ (mutex){
@@ -54,7 +54,7 @@ private:
     /**        
      * @brief Constructs this object.
      *
-     * @returns true if this object has been constructed successfully.
+     * @return True if this object has been constructed successfully.
      */
     bool_t construct()
     {
@@ -74,22 +74,35 @@ private:
         return res;
     }
     
-    /**        
-     * @brief Copy constructor.
+    /**
+     * @copydoc eoos::Object::Object(const Object&)
      */
-    MutexGuard(const MutexGuard&);
+    MutexGuard(const MutexGuard& obj);
 
-    /**        
-     * @brief Copy assignment operator.
+    /**
+     * @copydoc eoos::Object::operator=(const Object&)
      */
-    MutexGuard& operator=(const MutexGuard&);
+    MutexGuard& operator=(const MutexGuard& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    MutexGuard(MutexGuard&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    MutexGuard& operator=(MutexGuard&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief Mutex resource identifier.
      */
     api::Mutex& mutex_;
 };
-
 
 } // namespace lib
 } // namespace eoos

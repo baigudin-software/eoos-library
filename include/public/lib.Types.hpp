@@ -1,8 +1,9 @@
 /**
- * @brief Library type definitions.
- *
+ * @file      lib.Types.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2021, Sergey Baigudin, Baigudin Software
+ *
+ * @brief Library type definitions.
  */
 #ifndef LIB_TYPES_HPP_
 #define LIB_TYPES_HPP_

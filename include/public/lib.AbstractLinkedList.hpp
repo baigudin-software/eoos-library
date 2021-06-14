@@ -1,8 +1,7 @@
 /**
- * @brief Abstract class for sequential accessing to data store.
- *
+ * @file      lib.AbstractLinkedList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ABSTRACT_LINKED_LIST_HPP_
 #define LIB_ABSTRACT_LINKED_LIST_HPP_
@@ -20,10 +19,11 @@ namespace lib
 {
     
 /**
- * @brief Primary template implementation.
+ * @class AbstractLinkedList<T,A>
+ * @brief Abstract class for sequential accessing to data store.
  *
- * @tparam T data type of container element.
- * @tparam A heap memory allocator class.
+ * @tparam T Data type of container element.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class AbstractLinkedList :
@@ -50,11 +50,11 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: A passed element must be copied to an internal data structure of
+     * @note A passed element must be copied to an internal data structure of
      * this class by calling a copy constructor so that the element
      * might be invalidated after the function called.
      *
-     * @param illegal - an illegal element.
+     * @param illegal An illegal element.
      */
     AbstractLinkedList(const T& illegal) : Parent(),
         illegal_ (illegal),
@@ -71,9 +71,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -81,10 +79,7 @@ public:
     }
 
     /**
-     * @brief Inserts new element to the end of this list.
-     *
-     * @param element inserting element.
-     * @return true if element is added.
+     * @copydoc eoos::api::List::add(const T&)
      */
     virtual bool_t add(const T& element)
     {
@@ -92,11 +87,7 @@ public:
     }
 
     /**
-     * @brief Inserts new element to the specified position in this list.
-     *
-     * @param index   position in this list.
-     * @param element inserting element.
-     * @return true if element is inserted.
+     * @copydoc eoos::api::List::add(int32_t,const T&)
      */
     virtual bool_t add(int32_t const index, const T& element)
     {
@@ -104,7 +95,7 @@ public:
     }
 
     /**
-     * @brief Removes all elements from this list.
+     * @copydoc eoos::api::List::clear()
      */
     virtual void clear()
     {
@@ -123,9 +114,7 @@ public:
     }
 
     /**
-     * @brief Removes the first element from this list.
-     *
-     * @return true if an element is removed successfully.
+     * @copydoc eoos::api::List::removeFirst()
      */
     virtual bool_t removeFirst()
     {
@@ -133,9 +122,7 @@ public:
     }
 
     /**
-     * @brief Removes the last element from this list.
-     *
-     * @return true if an element is removed successfully.
+     * @copydoc eoos::api::List::removeLast()
      */
     virtual bool_t removeLast()
     {
@@ -143,9 +130,7 @@ public:
     }
 
     /**
-     * @brief Removes the head element of this queue or list.
-     *
-     * @return true if an element is removed successfully.
+     * @copydoc eoos::api::Queue::remove()
      */
     virtual bool_t remove()
     {
@@ -153,10 +138,7 @@ public:
     }
 
     /**
-     * @brief Removes the element at the specified position in this list.
-     *
-     * @param index   position in this list.
-     * @return true if an element is removed successfully.
+     * @copydoc eoos::api::List::remove(int32_t)
      */
     virtual bool_t remove(const int32_t index)
     {
@@ -164,10 +146,7 @@ public:
     }
 
     /**
-     * @brief Removes the first occurrence of the specified element from this list.
-     *
-     * @param element reference to element.
-     * @return true if an element is removed successfully.
+     * @copydoc eoos::api::List::removeElement(const T&)
      */
     virtual bool_t removeElement(const T& element)
     {
@@ -175,9 +154,7 @@ public:
     }
 
     /**
-     * @brief Examines the head element of this container.
-     *
-     * @return the head element.
+     * @copydoc eoos::api::Queue::peek(const T&)
      */
     virtual T& peek() const
     {
@@ -185,9 +162,7 @@ public:
     }
 
     /**
-     * @brief Returns the first element in this container.
-     *
-     * @return the first element in this container.
+     * @copydoc eoos::api::List::getFirst()
      */
     virtual T& getFirst() const
     {
@@ -195,9 +170,7 @@ public:
     }
 
     /**
-     * @brief Returns the last element in this container.
-     *
-     * @return the last element in this container.
+     * @copydoc eoos::api::List::getLast()
      */
     virtual T& getLast() const
     {
@@ -205,10 +178,7 @@ public:
     }
 
     /**
-     * @brief Returns an element from this container by index.
-     *
-     * @param index - position in this container.
-     * @return indexed element of this container.
+     * @copydoc eoos::api::List::get()
      */
     virtual T& get(int32_t index) const
     {
@@ -221,9 +191,7 @@ public:
     }
 
     /**
-     * @brief Returns a number of elements in this list.
-     *
-     * @return number of elements.
+     * @copydoc eoos::api::Collection::getLength()
      */
     virtual int32_t getLength() const
     {
@@ -231,9 +199,7 @@ public:
     }
 
     /**
-     * @brief Tests if this list has elements.
-     *
-     * @return true if this list does not contain any elements.
+     * @copydoc eoos::api::Collection::isEmpty()
      */
     virtual bool_t isEmpty() const
     {
@@ -241,11 +207,7 @@ public:
     }
 
     /**
-     * @brief Returns illegal element which will be returned as error value.
-     *
-     * If illegal value is not set method returns uninitialized variable.
-     *
-     * @return illegal element.
+     * @copydoc eoos::api::IllegalValue::getIllegal()
      */
     virtual T& getIllegal() const
     {
@@ -253,9 +215,7 @@ public:
     }
 
     /**
-     * @brief Sets illegal element which will be returned as error value.
-     *
-     * @param value illegal value.
+     * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
      */
     virtual void setIllegal(const T& value)
     {
@@ -266,10 +226,7 @@ public:
     }
 
     /**
-     * @brief Tests if given value is an illegal.
-     *
-     * @param value testing value.
-     * @param true if value is an illegal.
+     * @copydoc eoos::api::IllegalValue::isIllegal(const T&)
      */
     virtual bool_t isIllegal(const T& value) const
     {
@@ -281,10 +238,7 @@ public:
     }
 
     /**
-     * @brief Returns the index of the first occurrence of the specified element in this list.
-     *
-     * @param element reference to the element.
-     * @return index or -1 if this list does not contain the element.
+     * @copydoc eoos::api::List::getIndexOf(const T&)
      */
     virtual int32_t getIndexOf(const T& element) const
     {
@@ -293,24 +247,30 @@ public:
     }
 
     /**
-     * @brief Tests if given index is available.
-     *
-     * @param index checking position in this list.
-     * @return true if index is present.
+     * @copydoc eoos::api::List::isIndex(const T&)
      */
     virtual bool_t isIndex(int32_t const index) const
     {
         return (0 <= index && index < getLength()) ? true : false;
     }
+    
+
+    /**
+     * @copydoc eoos::api::Iterable::getIterator()
+     */
+    virtual api::Iterator<T>* getIterator()
+    {
+        return this->getListIterator(0);
+    }    
 
     /**
      * @brief Returns an array of all list links to elements.
      *
      * You have to call delete operator for returned value after it have used.
      *
-     * @return pointer to reference of elements or NULLPTR if list is empty.
+     * @return Pointer to reference of elements or NULLPTR if list is empty.
      */
-    virtual Buffer<T,0,A>* array() const
+    Buffer<T,0,A>* getAsBuffer() const
     {
         #ifdef EOOS_NO_STRICT_MISRA_RULES
         if( not Self::isConstructed() )
@@ -340,16 +300,6 @@ public:
         #endif
     }
 
-    /**
-     * @brief Returns an iterator of this list elements.
-     *
-     * @return pointer to new itererator.
-     */
-    virtual api::Iterator<T>* getIterator()
-    {
-        return this->getListIterator(0);
-    }
-
 protected:
 
     /**
@@ -357,9 +307,9 @@ protected:
      *
      * Given element will be copied to self nodes structure by a copy constructor calling.
      *
-     * @param index   position in this list.
-     * @param element inserting element.
-     * @return true if element is inserted.
+     * @param index   Position in this list.
+     * @param element Inserting element.
+     * @return True if element is inserted.
      */
     bool_t addNode(const int32_t index, const T& element)
     {
@@ -410,8 +360,8 @@ protected:
     /**
      * @brief Returns a node of this list by index.
      *
-     * @param index position in this list.
-     * @return pointer to the node of this list.
+     * @param index Position in this list.
+     * @return Pointer to the node of this list.
      */
     Node* getNodeByIndex(const int32_t index) const
     {
@@ -434,8 +384,8 @@ protected:
     /**
      * @brief Returns a node of this list by element.
      *
-     * @param element reference to element.
-     * @return pointer to the node of this list.
+     * @param element Reference to element.
+     * @return Pointer to the node of this list.
      */
     Node* getNodeByElement(const T& element) const
     {
@@ -459,8 +409,8 @@ protected:
     /**
      * @brief Removes a node of this list.
      *
-     * @param node pointer to node.
-     * @return true if a node is removed successfully.
+     * @param node Pointer to node.
+     * @return True if a node is removed successfully.
      */
     bool_t removeNode(Node* const node)
     {
@@ -487,8 +437,8 @@ protected:
     /**
      * @brief Tests if index is out of this list bounds.
      *
-     * @param index checking position in this list.
-     * @return true if index is outed.
+     * @param index Checking position in this list.
+     * @return True if index is outed.
      */
     bool_t isIndexOutOfBounds(const int32_t index) const
     {
@@ -498,7 +448,7 @@ protected:
     /**
      * @brief Returns reference to self data value.
      *
-     * @return data value.
+     * @return Data value.
      */
     int32_t& getReferenceToCount()
     {
@@ -508,7 +458,7 @@ protected:
     /**
      * @brief Returns reference to self data value.
      *
-     * @return data value.
+     * @return Data value.
      */
     Node*& getReferenceToLast()
     {
@@ -518,7 +468,7 @@ protected:
     /**
      * @brief Returns reference to self data value.
      *
-     * @return data value.
+     * @return Data value.
      */
     T& getReferenceToIllegal()
     {
@@ -530,15 +480,15 @@ private:
     /**
      * @brief Copy constructor.
      *
-     * @param obj reference to source object.
+     * @param obj Reference to source object.
      */
     AbstractLinkedList(const AbstractLinkedList& obj);
 
     /**
      * @brief Assignment operator.
      *
-     * @param obj reference to source object.
-     * @return reference to this object.
+     * @param obj Reference to source object.
+     * @return Reference to this object.
      */
     AbstractLinkedList& operator=(const AbstractLinkedList& obj);
 

@@ -1,8 +1,7 @@
 /**
- * @brief Alignment of simple types to byte boundary of memory.
- *
+ * @file      lib.Align.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2018, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ALIGN_HPP_
 #define LIB_ALIGN_HPP_
@@ -15,14 +14,15 @@ namespace lib
 {
     
 /**
- * @brief Primary template implementation.
- *
+ * @class Align<T,S,A>
+ * @brief Alignment of simple types to byte boundary of memory.
+ * 
  * MISRA C++ NOTE: Any signed underlying types shall not be used
  * for not violating the 5-0-21 MISRA C++:2008 Rule.
  *
- * @tparam T type of aligning data.
- * @tparam S size of aligning data type.
- * @tparam A heap memory allocator class.
+ * @tparam T Type of aligning data.
+ * @tparam S Size of aligning data type.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, size_t S = sizeof(T), class A = Allocator>
 class Align : public ObjectAllocator<A>
@@ -40,10 +40,10 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: A passed value is copied to an internal data structure
+     * @note A passed value is copied to an internal data structure
      * so that the value might be invalidated after the function called.
      *
-     * @param value a data value.
+     * @param value A data value.
      */
     Align(const T& value)
     {
@@ -53,7 +53,7 @@ public:
     /**
      * @brief Copy constructor.
      *
-     * @param obj a source object.
+     * @param obj A source object.
      */
     Align(const Align& obj)
     {
@@ -63,11 +63,11 @@ public:
     /**
      * @brief Assignment operator.
      *
-     * NOTE: A passed value is copied to an internal data structure
+     * @note A passed value is copied to an internal data structure
      * so that the value might be invalidated after the function called.
      *
-     * @param value a source data value.
-     * @return reference to this object.
+     * @param value A source data value.
+     * @return Reference to this object.
      */
     Align& operator=(const T& value)
     {
@@ -78,8 +78,8 @@ public:
     /**
      * @brief Assignment operator.
      *
-     * @param obj a source object.
-     * @return reference to this object.
+     * @param obj A source object.
+     * @return Reference to this object.
      */
     Align& operator=(const Align& obj)
     {
@@ -90,8 +90,8 @@ public:
     /**
      * @brief Pre-increment operators.
      *
-     * @param obj a source object.
-     * @return reference to this object.
+     * @param obj A source object.
+     * @return Reference to this object.
      */
     Align& operator++()
     {
@@ -103,8 +103,8 @@ public:
     /**
      * @brief Pre-decrement operators.
      *
-     * @param obj a source object.
-     * @return reference to this object.
+     * @param obj A source object.
+     * @return Reference to this object.
      */
     Align& operator--()
     {
@@ -116,7 +116,7 @@ public:
     /**
      * @brief Post-increment operators.
      *
-     * @return reference to this object.
+     * @return This object.
      */
     Align operator++(int)
     {
@@ -128,7 +128,7 @@ public:
     /**
      * @brief Post-decrement operators.
      *
-     * @return reference to this object.
+     * @return This object.
      */
     Align operator--(int)
     {
@@ -140,7 +140,7 @@ public:
     /**
      * @brief Casts to the template data type.
      *
-     * @return a data value.
+     * @return A data value.
      */
     operator T() const
     {
@@ -152,8 +152,8 @@ private:
     /**
      * @brief Compares a type based value with this class.
      *
-     * @param val a source value.
-     * @return true if this object value equals to a passed value.
+     * @param val A source value.
+     * @return True if this object value equals to a passed value.
      */
     bool_t equal(const T& value) const
     {
@@ -164,8 +164,8 @@ private:
     /**
      * @brief Compares an object of this class type with this class.
      *
-     * @param obj a source object.
-     * @return true if this object value equals to a passed object value.
+     * @param obj A source object.
+     * @return True if this object value equals to a passed object value.
      */
     bool_t equal(const Align& obj) const
     {
@@ -184,7 +184,7 @@ private:
     /**
      * @brief Assigns given value to self data.
      *
-     * @param value source data value.
+     * @param value Source data value.
      */
     void assignment(const T& value)
     {
@@ -198,7 +198,7 @@ private:
     /**
      * @brief Copies given object to self data.
      *
-     * @param obj reference to source object.
+     * @param obj Reference to source object.
      */
     void copy(const Align& obj)
     {
@@ -211,7 +211,7 @@ private:
     /**
      * @brief Returns conversed data to type of aligning data.
      *
-     * @return conversed data.
+     * @return Conversed data.
      */
     T typecast() const
     {
@@ -234,9 +234,9 @@ private:
 /**
  * @brief Comparison operator to equal.
  *
- * @param obj1 reference to object.
- * @param obj2 reference to object.
- * @return true if objects are equal.
+ * @param obj1 Reference to object.
+ * @param obj2 Reference to object.
+ * @return True if objects are equal.
  */
 template <typename T>
 inline bool_t operator==(const Align<T>& obj1, const Align<T>& obj2)
@@ -248,9 +248,9 @@ inline bool_t operator==(const Align<T>& obj1, const Align<T>& obj2)
 /**
  * @brief Comparison operator to unequal.
  *
- * @param obj1 reference to object.
- * @param obj2 reference to object.
- * @return true if objects are not equal.
+ * @param obj1 Reference to object.
+ * @param obj2 Reference to object.
+ * @return True if objects are not equal.
  */
 template <typename T>
 inline bool_t operator!=(const Align<T>& obj1, const Align<T>& obj2)

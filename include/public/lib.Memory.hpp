@@ -1,8 +1,7 @@
 /**
- * @brief Class of static methods to manipulate memory.
- *
+ * @file      lib.Memory.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_MEMORY_HPP_
 #define LIB_MEMORY_HPP_
@@ -15,6 +14,7 @@ namespace lib
 {
 
 /**
+ * @class Memory
  * @brief Memory manipulator class.
  */
 class Memory
@@ -25,10 +25,10 @@ public:
     /**
      * @brief Copies a block of memory.
      *
-     * @param dst a destination array where the content would be copied.
-     * @param src a source array to be copied.
-     * @param len a number of bytes to copy.
-     * @return a pointer to the destination array, or NULLPTR if an error has been occurred.
+     * @param dst A destination array where the content would be copied.
+     * @param src A source array to be copied.
+     * @param len A number of bytes to copy.
+     * @return A pointer to the destination array, or NULLPTR if an error has been occurred.
      */
     static void* memcpy(void* const dst, const void* src, size_t len)
     {
@@ -53,10 +53,10 @@ public:
     /**
      * @brief Fills a block of memory.
      *
-     * @param dst a destination block of memory would be filled.
-     * @param val a value to be set.
-     * @param len a number of bytes to be set to the value.
-     * @return a pointer to the destination memory, or NULLPTR if an error has been occurred.
+     * @param dst A destination block of memory would be filled.
+     * @param val A value to be set.
+     * @param len A number of bytes to be set to the value.
+     * @return A pointer to the destination memory, or NULLPTR if an error has been occurred.
      */
     static void* memset(void* const dst, const cell_t val, size_t len)
     {
@@ -73,8 +73,8 @@ public:
     /**
      * @brief Returns the length of a passed string .
      *
-     * @param str a character string would be measured.
-     * @return the length of the passed string.
+     * @param str A character string would be measured.
+     * @return The length of the passed string.
      */
     static size_t strlen(const char_t* str)
     {
@@ -94,9 +94,9 @@ public:
     /**
      * @brief Copies one string to another .
      *
-     * @param dst a destination array where the content would be copied.
-     * @param src a character string to be copied.
-     * @return a pointer to the destination string, or NULLPTR if an error has been occurred.
+     * @param dst A destination array where the content would be copied.
+     * @param src A character string to be copied.
+     * @return A pointer to the destination string, or NULLPTR if an error has been occurred.
      */
     static char_t* strcpy(char_t* const dst, const char_t* src)
     {
@@ -114,9 +114,9 @@ public:
     /**
      * @brief Concatenates two strings.
      *
-     * @param dst a destination character string where the content would be appended.
-     * @param src a character string to be appended.
-     * @return a pointer to the destination string, or NULLPTR if an error has been occurred.
+     * @param dst A destination character string where the content would be appended.
+     * @param src A character string to be appended.
+     * @return A pointer to the destination string, or NULLPTR if an error has been occurred.
      */
     static char_t* strcat(char_t* const dst, const char_t* src)
     {
@@ -135,9 +135,9 @@ public:
     /**
      * @brief Compares two strings.
      *
-     * @param str1 character string to be compared.
-     * @param str2 character string to be compared.
-     * @return the value 0 if the string 1 is equal to the string 2;
+     * @param str1 Character string to be compared.
+     * @param str2 Character string to be compared.
+     * @return The value 0 if the string 1 is equal to the string 2;
      *         a value less than 0 if the string 1 is shorter than the string 2;
      *         a value greater than 0 if the string 1 is longer than the string 2,
      *         or the minimum possible value if an error has been occurred.
@@ -172,10 +172,10 @@ public:
      * a hexadecimal number includes lower case characters, and any resulting strings do not contain
      * any suffixes or prefixes for identifying a numeral system.
      *
-     * @param val  a value that would be converted to a string.
-     * @param str  a character string for a result of the conversion.
-     * @param base a numerical base used to represent a value as a string.
-     * @return true if the conversion has been completed successfully.
+     * @param val  A value that would be converted to a string.
+     * @param str  A character string for a result of the conversion.
+     * @param base A numerical base used to represent a value as a string.
+     * @return True if the conversion has been completed successfully.
      */
     template <typename T>
     static bool_t itoa(const T val, char* str, const int32_t base = 10)
@@ -262,9 +262,9 @@ public:
     /**
      * @brief Converts a string to an integer number.
      *
-     * @param str a character string that would be converted to a number.
-     * @param base a numerical base used to parse the string.
-     * @return the resulting number.
+     * @param str  A character string that would be converted to a number.
+     * @param base A numerical base used to parse the string.
+     * @return The resulting number.
      */
     template <typename T>
     static T atoi(const char* str, const int32_t base = 10)
@@ -329,10 +329,10 @@ public:
 private:
 
     /**
-     * @brief Test if a value is signed or unsigned.
+     * @brief Tests if a value is signed or unsigned.
      *
-     * @param value a value that would be tested.
-     * @return true if the value has been negative.
+     * @param value A value that would be tested.
+     * @return True if the value has been negative.
      */
     template <typename T>
     static bool_t isPositive(const T value)
@@ -343,8 +343,8 @@ private:
     /**
      * @brief Tests if a character is a whitespace character.
      *
-     * @param ch a character code.
-     * @return true if the character is whitespace.
+     * @param ch A character code.
+     * @return True if the character is whitespace.
      */
     static bool_t isSpace(const int32_t ch)
     {
@@ -354,9 +354,9 @@ private:
     /**
      * @brief Tests if a character is a decimal number.
      *
-     * @param ch a character code.
-     * @param base a numerical base used to parse the character.
-     * @return true if the character is a decimal number.
+     * @param ch   A character code.
+     * @param base A numerical base used to parse the character.
+     * @return True if the character is a decimal number.
      */
     static bool_t isDigit(const int32_t ch, const int32_t base = 10)
     {
@@ -379,15 +379,14 @@ private:
             default:
                 return false;
         }
-
     }
 
     /**
-     * @brief Detect subtrahend and addend for hex numbers.
+     * @brief Detects subtrahend and addend for hex numbers.
      *
-     * @param testCh    a testing character code.
-     * @param subCh     a resulting subtrahend.
-     * @param subDecade a resulting addend.
+     * @param testCh    A testing character code.
+     * @param subCh     A resulting subtrahend.
+     * @param subDecade A resulting addend.
      */
     static void detectMathOperands(const int32_t testCh, char& subtrahend, int32_t& addend)
     {

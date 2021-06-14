@@ -1,6 +1,5 @@
 /**
- * @brief Thread.
- *
+ * @file      lib.Thread.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
@@ -17,9 +16,10 @@ namespace lib
 {
 
 /**
+ * @class Thread<A>
  * @brief Thread class.
  *
- * @tparam A heap memory allocator class. 
+ * @tparam A Heap memory allocator class. 
  */
 template <class A = Allocator>   
 class Thread : public Object<A>, public api::Thread
@@ -32,7 +32,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param task - a task interface whose start function is invoked when this thread is started.
+     * @param task A task interface whose start function is invoked when this thread is started.
      */
     explicit Thread(api::Task& task) : Parent(),
         thread_    (NULLPTR){
@@ -49,9 +49,7 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
@@ -59,7 +57,7 @@ public:
     }
 
     /**
-     * @brief Causes this thread to begin execution.
+     * @copydoc eoos::api::Thread::execute()
      */
     virtual void execute()
     {
@@ -70,7 +68,7 @@ public:
     }
 
     /**
-     * @brief Waits for this thread to die.
+     * @copydoc eoos::api::Thread::join()
      */
     virtual void join()
     {
@@ -81,13 +79,11 @@ public:
     }
 
     /**
-     * @brief Returns the identifier of this thread.
-     *
-     * @return the thread identifier.
+     * @copydoc eoos::api::Thread::getId()
      */
     virtual int64_t getId() const
     {
-        int64_t id = WRONG_ID;
+        int64_t id = ID_WRONG;
         if( Self::isConstructed() )
         {
             id = thread_->getId();
@@ -96,13 +92,11 @@ public:
     }
 
     /**
-     * @brief Returns a status of this thread.
-     *
-     * @return this thread status.
+     * @copydoc eoos::api::Thread::getStatus()
      */
     virtual api::Thread::Status getStatus() const
     {
-        api::Thread::Status status = DEAD;
+        api::Thread::Status status = STATUS_DEAD;
         if( Self::isConstructed() )
         {
             status = thread_->getStatus();
@@ -111,13 +105,11 @@ public:
     }
 
     /**
-     * @brief Returns this thread priority.
-     *
-     * @return priority value.
+     * @copydoc eoos::api::Thread::getPriority()
      */
     virtual int32_t getPriority() const
     {
-        int32_t priority = -1;
+        int32_t priority = PRIORITY_WRONG;
         if( Self::isConstructed() )
         {
             priority = thread_->getPriority();
@@ -126,26 +118,19 @@ public:
     }
 
     /**
-     * @brief Sets this thread priority.
-     *
-     * @param priority - number of priority in range [MIN_PRIORITY, MAX_PRIORITY], or LOCK_PRIORITY.
+     * @copydoc eoos::api::Thread::setPriority(int32_t)
      */
-    virtual void setPriority(int32_t const priority)
+    virtual bool_t setPriority(int32_t const priority)
     {
-        if( Self::isConstructed() )
-        {
-            thread_->setPriority(priority);
-        }
+        return ( Self::isConstructed() ) ? thread_->setPriority(priority) : false;
     }
     
     /**
-     * @brief Returns an error of this thread task execution.
-     *
-     * @return an execution error.
+     * @copydoc eoos::api::Thread::getExecutionError()
      */
     virtual int32_t getExecutionError() const
     {
-        int32_t error {-1};
+        int32_t error = -1;
         if( Self::isConstructed() )
         {
             error = thread_->getExecutionError();
@@ -154,42 +139,19 @@ public:
     }
 
     /**
-     * @brief Returns currently executing thread.
-     *
-     * @return executing thread.
-     */
-    static api::Thread& getCurrent()
-    {
-        return getScheduler().getCurrentThread();
-    }
-
-    /**
-     * @brief Causes current thread to sleep.
-     *
-     * @param millis - a time to sleep in milliseconds.
-     * @param nanos  - an additional nanoseconds to sleep.
+     * @copydoc eoos::api::Scheduler::sleep(int64_t, int32_t)
      */
     static void sleep(int64_t const millis, int32_t const nanos = 0)
     {
-        getScheduler().sleepCurrentThread(millis, nanos);
+        getScheduler().sleep(millis, nanos);
     }
 
     /**
-     * @brief Yields to next thread.
+     * @copydoc eoos::api::Scheduler::yield()
      */
     static void yield()
     {
         getScheduler().yield();
-    }
-
-    /**
-     * @brief Returns the toggle interface for controlling global thread switching.
-     *
-     * @return toggle interface.
-     */
-    static api::Toggle& toggle()
-    {
-        return getScheduler().toggle();
     }
 
 private:
@@ -197,15 +159,16 @@ private:
     /**
      * @brief Constructor.
      *
-     * @param task - an task interface whose main method is invoked when this thread is started.
-     * @return true if object has been constructed successfully.
+     * @param task An task interface whose main method is invoked when this thread is started.
+     * @return True if object has been constructed successfully.
      */
     bool_t construct(api::Task& task)
     {
         bool_t res = Self::isConstructed();
         if( res == true )
         {
-            thread_ = getScheduler().createThread(task);
+            api::Scheduler& scheduler = getScheduler();
+            thread_ = scheduler.createThread(task);
             if(thread_ == NULLPTR || not thread_->isConstructed() )
             {
                 res = false;
@@ -221,44 +184,37 @@ private:
      */    
     static api::Scheduler& getScheduler()
     {
-        static api::Scheduler& scheduler = sys::Call::get().getScheduler();
-        return scheduler;
+        // @note Visual Studio 16 2019. The CXX compiler identification is MSVC 19.28.29335.0
+        // Saving result of sys::Call::get().getScheduler() to local static variable is a cause of error
+        // SEH exception with code 0xc0000005 thrown in the test body.
+        // Exception thrown: read access violation. scheduler. was 0xFFFFFFFFFFFFFFEF.
+        // Therefore, each time of calling this getScheduler() return the system call getScheduler() function result
+        return sys::Call::get().getScheduler();
     }
-    
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Thread(const Thread& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj - reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     Thread& operator=(const Thread& obj);
     
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @brief Move constructor.
-     *
-     * @param obj Right reference to a source object.     
+     * @copydoc eoos::Object::Object(const Object&&)
      */       
     Thread(Thread&& obj) noexcept = delete; 
     
     /**
-     * @brief Move assignment operator.
-     *
-     * @param obj Right reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&&)
      */
     Thread& operator=(Thread&& obj) noexcept = delete;
     
-    #endif // EOOS_CPP_STANDARD >= 2011        
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief A system scheduler thread.

@@ -1,6 +1,5 @@
 /**
- * @brief Root class of the library class hierarchy.
- *
+ * @file      lib.Object.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
@@ -16,9 +15,10 @@ namespace lib
 {
 
 /**
- * @brief Root class of the library.
+ * @class Object<A>
+ * @brief Root class of the library class hierarchy.
  *
- * @tparam A - heap memory allocator class.
+ * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
 class Object : public ::eoos::Object<A>
@@ -38,17 +38,12 @@ public:
     virtual ~Object() {}
     
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj - reference to a source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Object(const Object& obj) : Parent(obj) {} 
     
     /**
-     * @brief Copy assignment operator.
-     *
-     * @param obj - reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */       
     Object& operator=(const Object& obj)
     {
@@ -59,17 +54,12 @@ public:
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @brief Move constructor.
-     *
-     * @param obj - right reference to a source object.     
+     * @copydoc eoos::Object::Object(const Object&&)
      */       
     Object(Object&& obj) noexcept : Parent( move(obj) ) {}
     
     /**
-     * @brief Move assignment operator.
-     *
-     * @param obj - right reference to a source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&&)
      */
     Object& operator=(Object&& obj) noexcept
     {

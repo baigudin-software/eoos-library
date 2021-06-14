@@ -1,8 +1,7 @@
 /**
- * @brief Circular doubly linked list.
- *
+ * @file      lib.CircularList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_CIRCULAR_LIST_HPP_
 #define LIB_CIRCULAR_LIST_HPP_
@@ -15,10 +14,11 @@ namespace lib
 {
     
 /**
- * @brief Primary template implementation.
+ * @class CircularList<T,A>
+ * @brief Circular doubly linked list.
  *
- * @tparam T data type of container element.
- * @tparam A heap memory allocator class.
+ * @tparam T Data type of container element.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class CircularList : public AbstractLinkedList<T,A>
@@ -38,7 +38,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param illegal illegal element.
+     * @param illegal An illegal element.
      */
     CircularList(const T illegal) : Parent(illegal)
     {
@@ -52,10 +52,7 @@ public:
     }
 
     /**
-     * @brief Returns a list iterator of this list elements.
-     *
-     * @param index start position in this list.
-     * @return pointer to new list iterator.
+     * @copydoc eoos::api::List::getListIterator(int32_t)
      */
     virtual api::ListIterator<T>* getListIterator(const int32_t index)
     {
@@ -75,21 +72,31 @@ public:
 private:
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     CircularList(const CircularList& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     CircularList& operator=(const CircularList& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
 
     /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    CircularList(CircularList&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    CircularList& operator=(CircularList&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
+    
+    /**
+     * @class Iterator
      * @brief The list iterator.
      *
      * @note This class is implemented in private zone of the list class.
@@ -106,8 +113,8 @@ private:
         /**
          * @brief Constructor.
          *
-         * @param index position in this list.
-         * @param list  reference to self list.
+         * @param index Position in this list.
+         * @param list  Reference to self list.
          */
         Iterator(const int32_t index, const List& list) :
             list_    (list),
@@ -126,9 +133,7 @@ private:
         virtual ~Iterator(){}
 
         /**
-         * @brief Tests if this object has been constructed.
-         *
-         * @return true if object has been constructed successfully.
+         * @copydoc eoos::api::Object::isConstructed()
          */
         virtual bool_t isConstructed() const
         {
@@ -136,10 +141,7 @@ private:
         }
 
         /**
-         * @brief Inserts the specified element into the list.
-         *
-         * @param element inserting element.
-         * @return true if element is added.
+         * @copydoc eoos::api::ListIterator::add(const T&)
          */
         virtual bool_t add(const T& element)
         {
@@ -162,9 +164,7 @@ private:
         }
 
         /**
-         * @brief Removes the last element returned by this iterator.
-         *
-         * @return true if an element is removed successfully.
+         * @copydoc eoos::api::Iterator::remove()
          */
         virtual bool_t remove()
         {
@@ -196,9 +196,7 @@ private:
         }
 
         /**
-         * @brief Returns previous element and advances the cursor backwards.
-         *
-         * @return reference to element.
+         * @copydoc eoos::api::ListIterator::getPrevious()
          */
         virtual const T& getPrevious() const
         {
@@ -212,9 +210,7 @@ private:
         }
 
         /**
-         * @brief Returns the index of the element that would be returned by a subsequent call to previous().
-         *
-         * @return index of the previous element or -1 if the list iterator is at the beginning of the list.
+         * @copydoc eoos::api::ListIterator::getPreviousIndex()
          */
         virtual int32_t getPreviousIndex() const
         {
@@ -222,9 +218,7 @@ private:
         }
 
         /**
-         * @brief Tests if this iteration may return a previous element.
-         *
-         * @return true if previous element is had.
+         * @copydoc eoos::api::ListIterator::hasPrevious()
          */
         virtual bool_t hasPrevious() const
         {
@@ -240,9 +234,7 @@ private:
         }
 
         /**
-         * @brief Returns next element and advances the cursor position.
-         *
-         * @return reference to element.
+         * @copydoc eoos::api::Iterator::getNext()
          */
         virtual const T& getNext() const
         {
@@ -257,9 +249,7 @@ private:
         }
 
         /**
-         * @brief Returns the index of the element that would be returned by a subsequent call to next().
-         *
-         * @return index of the next element or list size if the list iterator is at the end of the list.
+         * @copydoc eoos::api::ListIterator::getNextIndex()
          */
         virtual int32_t getNextIndex() const
         {
@@ -267,9 +257,7 @@ private:
         }
 
         /**
-         * @brief Tests if this iteration may return a next element.
-         *
-         * @return true if next element is had.
+         * @copydoc eoos::api::Iterator::hasNext()
          */
         virtual bool_t hasNext() const
         {
@@ -285,11 +273,7 @@ private:
         }
 
         /**
-         * @brief Returns illegal element which will be return as error value.
-         *
-         * If illegal value is not set method returns uninitialized variable.
-         *
-         * @return illegal element.
+         * @copydoc eoos::api::IllegalValue::getIllegal()
          */
         virtual const T& getIllegal() const
         {
@@ -297,9 +281,7 @@ private:
         }
 
         /**
-         * @brief Sets illegal element which will be returned as error value.
-         *
-         * @param value illegal value.
+         * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
          */
         virtual void setIllegal(const T& value)
         {
@@ -307,10 +289,7 @@ private:
         }
 
         /**
-         * @brief Tests if given value is an illegal.
-         *
-         * @param value testing value.
-         * @param true if value is an illegal.
+         * @copydoc eoos::api::IllegalValue::isIllegal(const T&)
          */
         virtual bool_t isIllegal(const T& value) const
         {
@@ -350,20 +329,29 @@ private:
         }
 
         /**
-         * @brief Copy constructor.
-         *
-         * @param obj reference to source registers.
+         * @copydoc eoos::Object::Object(const Object&)
          */
         Iterator(const Iterator& obj);
-
+    
         /**
-         * @brief Assignment operator.
-         *
-         * @param obj reference to source object.
-         * @return reference to this object.
+         * @copydoc eoos::Object::operator=(const Object&)
          */
-        Iterator& operator =(const Iterator& obj);
-
+        Iterator& operator=(const Iterator& obj);
+        
+        #if EOOS_CPP_STANDARD >= 2011
+    
+        /**
+         * @copydoc eoos::Object::Object(const Object&&)
+         */       
+        Iterator(Iterator&& obj) noexcept = delete; 
+        
+        /**
+         * @copydoc eoos::Object::operator=(const Object&&)
+         */
+        Iterator& operator=(Iterator&& obj) noexcept = delete;
+        
+        #endif // EOOS_CPP_STANDARD >= 2011
+        
         /**
          * @brief List changing counter.
          */

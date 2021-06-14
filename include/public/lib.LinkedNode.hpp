@@ -1,8 +1,7 @@
 /**
- * @brief Element for linked lists.
- *
+ * @file      lib.LinkedNode.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_LINKED_NODE_HPP_
 #define LIB_LINKED_NODE_HPP_
@@ -15,10 +14,11 @@ namespace lib
 {
 
 /**
- * @brief Primary template implementation.
+ * @class LinkedNode<T,A>
+ * @brief Element for linked lists.
  *
- * @tparam T data type of element.
- * @tparam A heap memory allocator class.
+ * @tparam T Data type of element.
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
 class LinkedNode : public Object<A>
@@ -31,11 +31,11 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE: A passed element will be copied to the internal data
+     * @note A passed element will be copied to the internal data
      * structure by calling a copy constructor so that the element
      * might be invalidated after the function called.
      *
-     * @param element an user element of this node.
+     * @param element An user element of this node.
      */
     LinkedNode(const T& element) : Parent(),
         prev_    (this),
@@ -62,24 +62,14 @@ public:
     }
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
-     */
-    virtual bool_t isConstructed() const
-    {
-        return Parent::isConstructed();
-    }
-
-    /**
      * @brief Inserts a new element after this.
      *
      * Method links a node after this and reindexes
      * chain of nodes starts from given node.
      *
-     * @param node pointer to inserted node.
+     * @param node Pointer to inserted node.
      */
-    virtual void insertAfter(LinkedNode<T,A>* node)
+    void insertAfter(LinkedNode<T,A>* node)
     {
         link(node);
         node->index_ = index_;
@@ -97,9 +87,9 @@ public:
      * Method links a node before this and reindexes
      * chain of nodes starts from this node.
      *
-     * @param node pointer to inserted node.
+     * @param node Pointer to inserted node.
      */
-    virtual void insertBefore(LinkedNode<T,A>* node)
+    void insertBefore(LinkedNode<T,A>* node)
     {
         prev_->link(node);
         node->index_ = index_;
@@ -115,9 +105,9 @@ public:
     /**
      * @brief Returns previous element.
      *
-     * @return previous element.
+     * @return Previous element.
      */
-    virtual LinkedNode<T,A>* getPrevious() const
+    LinkedNode<T,A>* getPrevious() const
     {
         return prev_;
     }
@@ -125,9 +115,9 @@ public:
     /**
      * @brief Returns next element.
      *
-     * @return next element.
+     * @return The next element.
      */
-    virtual LinkedNode<T,A>* getNext() const
+    LinkedNode<T,A>* getNext() const
     {
         return next_;
     }
@@ -135,9 +125,9 @@ public:
     /**
      * @brief Returns the element.
      *
-     * @return next element.
+     * @return The next element.
      */
-    virtual T& getElement() const
+    T& getElement() const
     {
         return element_;
     }
@@ -145,9 +135,9 @@ public:
     /**
      * @brief Returns the element index.
      *
-     * @return element index.
+     * @return An element index.
      */
-    virtual int32_t getIndex() const
+    int32_t getIndex() const
     {
         return index_;
     }
@@ -157,7 +147,7 @@ private:
     /**
      * @brief Links a given node after this.
      *
-     * @param node pointer to linking node.
+     * @param node Pointer to linking node.
      */
     void link(LinkedNode<T,A>* node)
     {
@@ -166,21 +156,30 @@ private:
         next_ = node;
         node->prev_ = this;
     }
-
+    
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     LinkedNode(const LinkedNode& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
-     * @return reference to this object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     LinkedNode& operator=(const LinkedNode& obj);
+    
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    LinkedNode(LinkedNode&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    LinkedNode& operator=(LinkedNode&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011    
 
     /**
      * @brief Previous node.

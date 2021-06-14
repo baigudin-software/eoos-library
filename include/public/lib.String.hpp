@@ -1,8 +1,7 @@
 /**
- * @brief Char String class.
- *
+ * @file      lib.String.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_STRING_HPP_
 #define LIB_STRING_HPP_
@@ -15,7 +14,8 @@ namespace lib
 {
 
 /**
- * @brief String type for chars.
+ * @class String
+ * @brief String type for chars with default allocator.
  *
  * The dynamic string for any numbers of characters with a default allocator
  * used to allocate an internal container to contain the characters

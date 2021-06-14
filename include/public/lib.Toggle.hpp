@@ -1,8 +1,7 @@
 /**
- * @brief Toggle of toggle interface.
- *
+ * @file      lib.Toggle.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_TOGGLE_HPP_
 #define LIB_TOGGLE_HPP_
@@ -14,11 +13,12 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
- * @brief Primary template implementation.
+ * @class Toggle<A>
+ * @brief Toggle of toggle interface.
  *
- * @tparam A heap memory allocator class.
+ * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
 class Toggle : public Object<A>, public api::Toggle
@@ -41,7 +41,7 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param sw reference to toggle interface for controlling its.
+     * @param sw Reference to toggle interface for controlling its.
      */
     Toggle(api::Toggle& sw) : Parent(),
         pointer_ (&sw),
@@ -55,7 +55,7 @@ public:
      * given controller. This feature is the most important when a controller
      * might be used before it is initialized.
      *
-     * @param sw reference to pointer of toggle interface for controlling its.
+     * @param sw Reference to pointer of toggle interface for controlling its.
      */
     Toggle(api::Toggle*& sw) : Parent(),
         pointer_ (NULLPTR),
@@ -68,23 +68,20 @@ public:
     virtual ~Toggle(){}
 
     /**
-     * @brief Tests if this object has been constructed.
-     *
-     * @return true if object has been constructed successfully.
+     * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const
     {
-        if( not this->isConstructed_ )
+        bool_t isConstructed = Parent::isConstructed();
+        if( isConstructed )
         {
-            return false;
+            isConstructed = (*toggle_ == NULLPTR) ? false : true;
         }
-        return *toggle_ == NULLPTR ? false : true;
+        return isConstructed;
     }
 
     /**
-     * @brief Disables a controller.
-     *
-     * @return an enable source bit value of a controller before method was called.
+     * @copydoc eoos::api::Toggle::disable()
      */
     virtual bool_t disable()
     {
@@ -97,9 +94,7 @@ public:
     }
 
     /**
-     * @brief Enables a controller.
-     *
-     * @param status returned status by disable method.
+     * @copydoc eoos::api::Toggle::enable(bool_t)
      */
     virtual void enable(const bool_t status)
     {
@@ -114,18 +109,28 @@ public:
 private:
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj reference to source object.
+     * @copydoc eoos::Object::Object(const Object&)
      */
     Toggle(const Toggle& obj);
 
     /**
-     * @brief Assignment operator.
-     *
-     * @param obj reference to source object.
+     * @copydoc eoos::Object::operator=(const Object&)
      */
     Toggle& operator=(const Toggle& obj);
+
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(const Object&&)
+     */       
+    Toggle(Toggle&& obj) noexcept = delete; 
+    
+    /**
+     * @copydoc eoos::Object::operator=(const Object&&)
+     */
+    Toggle& operator=(Toggle&& obj) noexcept = delete;
+    
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief Pointer to always existent interface.
