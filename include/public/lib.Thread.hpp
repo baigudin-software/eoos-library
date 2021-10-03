@@ -25,7 +25,7 @@ template <class A = Allocator>
 class Thread : public Object<A>, public api::Thread
 {
     typedef Thread Self;
-    typedef Object<A> Parent;
+    typedef lib::Object<A> Parent;
 
 public:
 
@@ -153,6 +153,10 @@ public:
     {
         getScheduler().yield();
     }
+
+protected:
+
+    using Parent::setConstructed;      
 
 private:
 

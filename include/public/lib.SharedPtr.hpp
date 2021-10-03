@@ -79,6 +79,8 @@ class SharedPtr : public Object<A>
 
 public:
 
+    using Parent::isConstructed;
+
     /**
      * @brief Constructor an empty shared object.
      */
@@ -229,6 +231,10 @@ public:
         }
         return counter;
     }
+    
+protected:
+
+    using Parent::setConstructed;     
         
 private:
 

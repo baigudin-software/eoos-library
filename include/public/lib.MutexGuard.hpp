@@ -27,6 +27,8 @@ class MutexGuard : public Object<A>
 
 public:
 
+    using Parent::isConstructed;
+
     /**
      * @brief Constructor.
      *
@@ -47,7 +49,11 @@ public:
         {
             mutex_.unlock();
         }
-    }     
+    }
+    
+protected:
+
+    using Parent::setConstructed;    
         
 private:
 

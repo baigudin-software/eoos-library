@@ -24,8 +24,8 @@ namespace lib
 template <class A = Allocator>
 class Mutex : public Object<A>, public api::Mutex
 {
-    typedef Mutex Self;
-    typedef Object<A> Parent;
+    typedef Mutex<A> Self;
+    typedef lib::Object<A> Parent;
 
 public:
 
@@ -90,6 +90,10 @@ public:
             mutex_->unlock();
         }
     }
+
+protected:
+
+    using Parent::setConstructed;
 
 private:
 
