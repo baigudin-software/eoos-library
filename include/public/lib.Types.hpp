@@ -14,6 +14,8 @@ namespace eoos
 {
 namespace lib
 {
+    
+#if EOOS_CPP_STANDARD >= 2011
 
 /**
  * @brief Structs to remove references.
@@ -30,6 +32,21 @@ constexpr typename remove_reference<T>::type&& move(T&& arg) noexcept
 {
     return static_cast<typename remove_reference<T>::type&&>(arg);
 }
+
+/**
+ * @brief Empty class type used to disambiguate the overloads of throwing and non-throwing allocation.
+ */
+struct nothrow_t 
+{ 
+    explicit nothrow_t() = default; 
+};
+
+/**
+ * @brief Constant of type lib::nothrow_t used to disambiguate the overloads of throwing and non-throwing allocation functions.
+ */
+extern nothrow_t const nothrow;
+
+#endif // EOOS_CPP_STANDARD >= 2011
 
 } // namespace lib
 } // namespace eoos
