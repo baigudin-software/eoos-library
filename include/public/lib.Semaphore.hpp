@@ -25,7 +25,7 @@ template <class A = Allocator>
 class Semaphore : public Object<A>, public api::Semaphore
 {
     typedef Semaphore Self;
-    typedef Object<A> Parent;
+    typedef lib::Object<A> Parent;
 
 public:
 
@@ -134,6 +134,10 @@ public:
             return false;
         }
     }
+
+protected:
+
+    using Parent::setConstructed;
 
 private:
 

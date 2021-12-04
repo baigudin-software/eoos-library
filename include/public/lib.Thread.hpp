@@ -70,25 +70,14 @@ public:
     /**
      * @copydoc eoos::api::Thread::join()
      */
-    virtual void join()
+    virtual bool_t join()
     {
+        bool_t res = false;
         if( Self::isConstructed() )
         {
-            thread_->join();
+            res = thread_->join();
         }
-    }
-
-    /**
-     * @copydoc eoos::api::Thread::getId()
-     */
-    virtual int64_t getId() const
-    {
-        int64_t id = ID_WRONG;
-        if( Self::isConstructed() )
-        {
-            id = thread_->getId();
-        }
-        return id;
+        return res;
     }
 
     /**
