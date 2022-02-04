@@ -369,9 +369,9 @@ private:
                 return ch >= 0x30 && ch <= 0x37 ? true : false;
 
             case 16:
-                return ch >= 0x30 && ch <= 0x39
-                    || ch >= 0x41 && ch <= 0x46
-                    || ch >= 0x61 && ch <= 0x66 ? true : false;
+                return (ch >= 0x30 && ch <= 0x39)
+                    || (ch >= 0x41 && ch <= 0x46)
+                    || (ch >= 0x61 && ch <= 0x66) ? true : false;
 
             case 10:
                 return ch >= 0x30 && ch <= 0x39 ? true : false;
