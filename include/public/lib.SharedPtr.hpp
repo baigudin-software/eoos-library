@@ -70,6 +70,8 @@ public:
  * @tparam D Deleter type for an owning object. 
  * @tparam A Heap memory allocator class.
  * @tparam M Mutex to protect the control block inherited from @ref api::Mutex.
+ *
+ * @todo Move class M template param out of the params to define it somewhere in other place.
  */
 template <typename T, class D = SharedPtrDeleter<T>, class A = Allocator, class M = Mutex<A> >
 class SharedPtr : public Object<A>
