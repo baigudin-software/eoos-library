@@ -150,8 +150,8 @@ private:
      */
     bool_t construct(const int32_t permits, const bool_t* const isFair)
     {
-        bool_t res = Self::isConstructed();
-        if( res == true )
+        bool_t const res = Self::isConstructed();
+        if( res == false )
         {
             return false;
         }
