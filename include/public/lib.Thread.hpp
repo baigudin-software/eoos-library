@@ -59,12 +59,14 @@ public:
     /**
      * @copydoc eoos::api::Thread::execute()
      */
-    virtual void execute()
+    virtual bool_t execute()
     {
+        bool_t res = false;
         if( Self::isConstructed() )
         {
-            thread_->execute();
+            res = thread_->execute();
         }
+        return res;
     }
 
     /**
@@ -78,19 +80,6 @@ public:
             res = thread_->join();
         }
         return res;
-    }
-
-    /**
-     * @copydoc eoos::api::Thread::getStatus()
-     */
-    virtual api::Thread::Status getStatus() const
-    {
-        api::Thread::Status status = STATUS_DEAD;
-        if( Self::isConstructed() )
-        {
-            status = thread_->getStatus();
-        }
-        return status;
     }
 
     /**
@@ -114,19 +103,6 @@ public:
         return ( Self::isConstructed() ) ? thread_->setPriority(priority) : false;
     }
     
-    /**
-     * @copydoc eoos::api::Thread::getExecutionError()
-     */
-    virtual int32_t getExecutionError() const
-    {
-        int32_t error = -1;
-        if( Self::isConstructed() )
-        {
-            error = thread_->getExecutionError();
-        }
-        return error;
-    }
-
     /**
      * @copydoc eoos::api::Scheduler::sleep(int64_t, int32_t)
      */
