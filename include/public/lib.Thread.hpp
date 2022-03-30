@@ -104,11 +104,11 @@ public:
     }
     
     /**
-     * @copydoc eoos::api::Scheduler::sleep(int64_t, int32_t)
+     * @copydoc eoos::api::Scheduler::sleep(int32_t)
      */
-    static void sleep(int64_t const millis, int32_t const nanos = 0)
+    static void sleep(int32_t const ms)
     {
-        getScheduler().sleep(millis, nanos);
+        getScheduler().sleep(ms);
     }
 
     /**
