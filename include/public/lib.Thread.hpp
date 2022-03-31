@@ -106,9 +106,9 @@ public:
     /**
      * @copydoc eoos::api::Scheduler::sleep(int32_t)
      */
-    static void sleep(int32_t const ms)
+    static bool_t sleep(int32_t const ms)
     {
-        getScheduler().sleep(ms);
+        return getScheduler().sleep(ms);
     }
 
     /**
