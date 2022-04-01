@@ -1,10 +1,10 @@
 /**
  * @file      lib.CircularList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_CIRCULAR_LIST_HPP_
-#define LIB_CIRCULAR_LIST_HPP_
+#ifndef LIB_CIRCULARLIST_HPP_
+#define LIB_CIRCULARLIST_HPP_
 
 #include "lib.AbstractLinkedList.hpp"
 
@@ -70,30 +70,6 @@ public:
     }
 
 private:
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    CircularList(const CircularList& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    CircularList& operator=(const CircularList& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    CircularList(CircularList&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    CircularList& operator=(CircularList&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
     
     /**
      * @class Iterator
@@ -103,9 +79,9 @@ private:
      * For this reason, for fast iteration some tests are skipped.
      * You have to use this class only if it has been constructed.
      */
-    class Iterator : public Object<A>, public api::ListIterator<T>
+    class Iterator : public NonCopyable<A>, public api::ListIterator<T>
     {
-        typedef ::eoos::lib::Object<A> Parent;
+        typedef NonCopyable<A> Parent;
         typedef CircularList<T,A>  List;
 
     public:
@@ -327,30 +303,6 @@ private:
             curs_ = list_.getNodeByIndex(index);
             return true;
         }
-
-        /**
-         * @copydoc eoos::Object::Object(const Object&)
-         */
-        Iterator(const Iterator& obj);
-    
-        /**
-         * @copydoc eoos::Object::operator=(const Object&)
-         */
-        Iterator& operator=(const Iterator& obj);
-        
-        #if EOOS_CPP_STANDARD >= 2011
-    
-        /**
-         * @copydoc eoos::Object::Object(const Object&&)
-         */       
-        Iterator(Iterator&& obj) noexcept = delete; 
-        
-        /**
-         * @copydoc eoos::Object::operator=(const Object&&)
-         */
-        Iterator& operator=(Iterator&& obj) noexcept = delete;
-        
-        #endif // EOOS_CPP_STANDARD >= 2011
         
         /**
          * @brief List changing counter.
@@ -424,4 +376,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_CIRCULAR_LIST_HPP_
+#endif // LIB_CIRCULARLIST_HPP_

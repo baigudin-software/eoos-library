@@ -1,12 +1,12 @@
 /**
  * @file      lib.LinkedNode.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_LINKED_NODE_HPP_
-#define LIB_LINKED_NODE_HPP_
+#ifndef LIB_LINKEDNODE_HPP_
+#define LIB_LINKEDNODE_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 
 namespace eoos
 {
@@ -21,10 +21,10 @@ namespace lib
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
-class LinkedNode : public Object<A>
+class LinkedNode : public NonCopyable<A>
 {
     typedef LinkedNode<T,A> Self;
-    typedef ::eoos::lib::Object<A> Parent;
+    typedef NonCopyable<A> Parent;
 
 public:
 
@@ -155,31 +155,7 @@ private:
         node->next_ = next_;
         next_ = node;
         node->prev_ = this;
-    }
-    
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    LinkedNode(const LinkedNode& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    LinkedNode& operator=(const LinkedNode& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    LinkedNode(LinkedNode&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    LinkedNode& operator=(LinkedNode&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011    
+    }   
 
     /**
      * @brief Previous node.
@@ -205,4 +181,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_LINKED_NODE_HPP_
+#endif // LIB_LINKEDNODE_HPP_

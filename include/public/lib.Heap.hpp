@@ -1,7 +1,7 @@
 /**
  * @file      lib.Heap.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_HEAP_HPP_
 #define LIB_HEAP_HPP_
@@ -144,7 +144,7 @@ public:
      * @param ptr  Aligned to eight memory address.
      * @return Address of memory or NULLPTR.
      */
-    void* operator new(size_t, const uintptr_t ptr)
+    static void* operator new(size_t, const uintptr_t ptr)
     {
         void* memory;
         void* address = reinterpret_cast< void* >(ptr);
@@ -159,6 +159,13 @@ public:
             memory = create(address);
         }
         return memory;
+    }
+    
+    /**
+     * @brief Operator delete.
+     */
+    static void operator delete(void*, void*)
+    {
     }
 
 private:
@@ -606,7 +613,7 @@ private:
          * @param ptr  Address of memory.
          * @return Address of memory.
          */
-        void* operator new(size_t, void* const ptr)
+        static void* operator new(size_t, void* const ptr)
         {
             void* memory;
             do
@@ -627,6 +634,13 @@ private:
             }
             while(false);
             return memory;
+        }
+        
+        /**
+         * @brief Operator delete.
+         */
+        static void operator delete(void*, void*)
+        {
         }
 
     private:

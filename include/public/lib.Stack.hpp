@@ -1,13 +1,13 @@
 /**
  * @file      lib.Stack.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_STACK_HPP_
 #define LIB_STACK_HPP_
 
-#include "lib.Object.hpp"
-#include "api.SysStack.hpp"
+#include "lib.NonCopyable.hpp"
+#include "api.Stack.hpp"
 #include "lib.Buffer.hpp"
 
 namespace eoos
@@ -23,10 +23,10 @@ namespace lib
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
-class Stack : public Object<A>, public api::SysStack<T>
+class Stack : public NonCopyable<A>, public api::Stack<T>
 {
-    typedef ::eoos::lib::Object<A> Parent;
-    typedef api::SysStack<T> StackIntf;
+    typedef NonCopyable<A> Parent;
+    typedef api::Stack<T> StackIntf;
 
 public:
 
@@ -36,7 +36,7 @@ public:
      * @param type  Type of this stack.
      * @param count Count of buffer elements.
      */
-    Stack(typename api::SysStack<T>::Operation type, int32_t count) : Parent(),
+    Stack(typename api::Stack<T>::Operation type, int32_t count) : Parent(),
         stack_ (count),
         type_  (type){
         bool_t const isConstructed = construct();
@@ -50,7 +50,7 @@ public:
      * @param count   Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Stack(typename api::SysStack<T>::Operation type, int32_t count, const T illegal) : Parent(),
+    Stack(typename api::Stack<T>::Operation type, int32_t count, const T illegal) : Parent(),
         stack_ (count, illegal),
         type_  (type){
         bool_t const isConstructed = construct();
@@ -71,7 +71,7 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::SysStack::getTos()
+     * @copydoc eoos::api::Stack::getTos()
      */
     virtual const T* getTos()
     {
@@ -100,9 +100,9 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::SysStack::getType()
+     * @copydoc eoos::api::Stack::getType()
      */
-    virtual typename api::SysStack<T>::Operation getType() const
+    virtual typename api::Stack<T>::Operation getType() const
     {
         return type_;
     }
@@ -171,30 +171,6 @@ private:
     }
 
     /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Stack(const Stack& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    Stack& operator=(const Stack& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Stack(Stack&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Stack& operator=(Stack&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
-
-    /**
      * @brief Stack memory buffer.
      */
     Buffer<T,0,A> stack_;
@@ -202,7 +178,7 @@ private:
     /**
      * @brief Stack type.
      */
-    const typename api::SysStack<T>::Operation type_;
+    const typename api::Stack<T>::Operation type_;
 
 };
         

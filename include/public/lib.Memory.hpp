@@ -1,7 +1,7 @@
 /**
  * @file      lib.Memory.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_MEMORY_HPP_
 #define LIB_MEMORY_HPP_

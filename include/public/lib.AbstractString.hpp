@@ -1,10 +1,10 @@
 /**
  * @file      lib.AbstractString.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_ABSTRACT_STRING_HPP_
-#define LIB_ABSTRACT_STRING_HPP_
+#ifndef LIB_ABSTRACTSTRING_HPP_
+#define LIB_ABSTRACTSTRING_HPP_
 
 #include "lib.AbstractBaseString.hpp"
 
@@ -796,4 +796,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_ABSTRACT_STRING_HPP_
+#endif // LIB_ABSTRACTSTRING_HPP_

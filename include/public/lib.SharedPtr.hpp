@@ -1,13 +1,14 @@
 /**
  * @file      lib.SharedPtr.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_SHARED_PTR_HPP_
-#define LIB_SHARED_PTR_HPP_
+#ifndef LIB_SHAREDPTR_HPP_
+#define LIB_SHAREDPTR_HPP_
 
 #include "lib.Object.hpp"
 #include "lib.MutexGuard.hpp"
+#include "lib.NonCopyable.hpp"
 
 namespace eoos
 {
@@ -318,9 +319,9 @@ private:
      * are skipped in public interface to speedup performence. 
      */
     template <typename TT, class DD, class AA, class MM> 
-    class ControlBlock : public Object<AA>
+    class ControlBlock : public NonCopyable<AA>
     {
-        typedef Object<AA> Parent;    
+        typedef NonCopyable<AA> Parent;    
         
     public:
         
@@ -407,31 +408,7 @@ private:
             } while(false);
             return res;
         }
-    
-        /**
-         * @copydoc eoos::Object::Object(const Object&)
-         */
-        ControlBlock(const ControlBlock& obj);
         
-        /**
-         * @copydoc eoos::Object::operator=(const Object&)
-         */       
-        ControlBlock& operator=(const ControlBlock& obj);
-    
-        #if EOOS_CPP_STANDARD >= 2011
-    
-        /**
-         * @copydoc eoos::Object::Object(const Object&&)
-         */       
-        ControlBlock(ControlBlock&& obj) noexcept = delete; 
-        
-        /**
-         * @copydoc eoos::Object::operator=(const Object&&)
-         */
-        ControlBlock& operator=(ControlBlock&& obj) noexcept = delete;
-        
-        #endif // EOOS_CPP_STANDARD >= 2011
-    
         /**
          * @brief An owned pointer.
          */
@@ -459,4 +436,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_SHARED_PTR_HPP_
+#endif // LIB_SHAREDPTR_HPP_

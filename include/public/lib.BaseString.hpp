@@ -1,10 +1,10 @@
 /**
  * @file      lib.BaseString.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2017-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2017-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_BASE_STRING_HPP_
-#define LIB_BASE_STRING_HPP_
+#ifndef LIB_BASESTRING_HPP_
+#define LIB_BASESTRING_HPP_
 
 #include "lib.AbstractString.hpp"
 #include "lib.Memory.hpp"
@@ -989,4 +989,4 @@ inline BaseString<char_t,0,A> operator+(const char_t* const source1, const BaseS
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_BASE_STRING_HPP_
+#endif // LIB_BASESTRING_HPP_

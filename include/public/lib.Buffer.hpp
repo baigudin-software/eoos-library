@@ -1,7 +1,7 @@
 /**
  * @file      lib.Buffer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_BUFFER_HPP_
 #define LIB_BUFFER_HPP_
@@ -98,27 +98,7 @@ protected:
         return buf_;
     }
 
-private:
-    
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Buffer(const Buffer& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Buffer(Buffer&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Buffer& operator=(Buffer&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
-    
+private:    
 
     /**
      * @brief Current array of T elements.
@@ -301,26 +281,6 @@ private:
         }
         return res;
     }
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Buffer(const Buffer& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Buffer(Buffer&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Buffer& operator=(Buffer&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
-
 
     /**
      * @brief Pointer to external given or self created array.

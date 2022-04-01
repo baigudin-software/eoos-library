@@ -1,7 +1,7 @@
 /**
  * @file      lib.Object.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_OBJECT_HPP_
 #define LIB_OBJECT_HPP_
@@ -38,14 +38,14 @@ public:
     virtual ~Object() {}
     
     /**
-     * @copydoc eoos::Object::Object(const Object&)
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    Object(const Object& obj) : Parent(obj) {} 
+    Object(Object const& obj) : Parent(obj) {} 
     
     /**
      * @copydoc eoos::Object::operator=(const Object&)
      */       
-    Object& operator=(const Object& obj)
+    Object& operator=(Object const& obj)
     {
         Parent::operator=(obj);
         return *this;

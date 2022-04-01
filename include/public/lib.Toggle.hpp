@@ -1,12 +1,12 @@
 /**
  * @file      lib.Toggle.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_TOGGLE_HPP_
 #define LIB_TOGGLE_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "api.Toggle.hpp"
 
 namespace eoos
@@ -21,9 +21,9 @@ namespace lib
  * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
-class Toggle : public Object<A>, public api::Toggle
+class Toggle : public NonCopyable<A>, public api::Toggle
 {
-    typedef ::eoos::lib::Object<A> Parent;
+    typedef NonCopyable<A> Parent;
 
 public:
 
@@ -107,30 +107,6 @@ public:
     }
 
 private:
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Toggle(const Toggle& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    Toggle& operator=(const Toggle& obj);
-
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Toggle(Toggle&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Toggle& operator=(Toggle&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief Pointer to always existent interface.

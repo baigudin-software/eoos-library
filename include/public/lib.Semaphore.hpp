@@ -1,12 +1,12 @@
 /**
  * @file      lib.Semaphore.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_SEMAPHORE_HPP_
 #define LIB_SEMAPHORE_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "api.Semaphore.hpp"
 #include "sys.Call.hpp"
 
@@ -22,10 +22,10 @@ namespace lib
  * @tparam A Heap memory allocator class. 
  */
 template <class A = Allocator>
-class Semaphore : public Object<A>, public api::Semaphore
+class Semaphore : public NonCopyable<A>, public api::Semaphore
 {
     typedef Semaphore Self;
-    typedef lib::Object<A> Parent;
+    typedef lib::NonCopyable<A> Parent;
 
 public:
 
@@ -165,30 +165,6 @@ private:
         }
         return semaphore_ != NULLPTR ? semaphore_->isConstructed() : false;
     }
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Semaphore(const Semaphore& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    Semaphore& operator=(const Semaphore& obj);
-
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Semaphore(Semaphore&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Semaphore& operator=(Semaphore&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief System semaphore interface.

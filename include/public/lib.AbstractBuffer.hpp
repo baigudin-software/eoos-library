@@ -1,12 +1,12 @@
 /**
  * @file      lib.AbstractBuffer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2020, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_ABSTRACT_BUFFER_HPP_
-#define LIB_ABSTRACT_BUFFER_HPP_
+#ifndef LIB_ABSTRACTBUFFER_HPP_
+#define LIB_ABSTRACTBUFFER_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "api.Collection.hpp"
 #include "api.IllegalValue.hpp"
 
@@ -23,10 +23,10 @@ namespace lib
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
-class AbstractBuffer : public Object<A>, public api::Collection<T>, public api::IllegalValue<T>
+class AbstractBuffer : public NonCopyable<A>, public api::Collection<T>, public api::IllegalValue<T>
 {
     typedef AbstractBuffer<T,A>  Self;
-    typedef ::eoos::lib::Object<A> Parent;
+    typedef NonCopyable<A> Parent;
 
 public:
 
@@ -208,30 +208,6 @@ protected:
 private:
 
     /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    AbstractBuffer(const AbstractBuffer& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    AbstractBuffer& operator=(const AbstractBuffer& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    AbstractBuffer(AbstractBuffer&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    AbstractBuffer& operator=(AbstractBuffer&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011    
-
-    /**
      * @brief Number of elements of this buffer.
      */
     int32_t length_;
@@ -245,4 +221,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_ABSTRACT_BUFFER_HPP_
+#endif // LIB_ABSTRACTBUFFER_HPP_

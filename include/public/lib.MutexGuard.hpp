@@ -3,10 +3,10 @@
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2020-2021, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_MUTEX_GUARD_HPP_
-#define LIB_MUTEX_GUARD_HPP_
+#ifndef LIB_MUTEXGUARD_HPP_
+#define LIB_MUTEXGUARD_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "lib.Mutex.hpp"
 
 namespace eoos
@@ -21,9 +21,9 @@ namespace lib
  * @tparam A heap memory allocator class.
  */    
 template <class A = Allocator>
-class MutexGuard : public Object<A>
+class MutexGuard : public NonCopyable<A>
 {
-    typedef Object<A> Parent;            
+    typedef NonCopyable<A> Parent;            
 
 public:
 
@@ -79,30 +79,6 @@ private:
         } while(false);
         return res;
     }
-    
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    MutexGuard(const MutexGuard& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    MutexGuard& operator=(const MutexGuard& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    MutexGuard(MutexGuard&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    MutexGuard& operator=(MutexGuard&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief Mutex resource identifier.
@@ -112,4 +88,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_MUTEX_GUARD_HPP_
+#endif // LIB_MUTEXGUARD_HPP_

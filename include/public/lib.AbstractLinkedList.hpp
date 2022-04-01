@@ -1,12 +1,12 @@
 /**
  * @file      lib.AbstractLinkedList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_ABSTRACT_LINKED_LIST_HPP_
-#define LIB_ABSTRACT_LINKED_LIST_HPP_
+#ifndef LIB_ABSTRACTLINKEDLIST_HPP_
+#define LIB_ABSTRACTLINKEDLIST_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "lib.Buffer.hpp"
 #include "lib.LinkedNode.hpp"
 #include "api.List.hpp"
@@ -27,13 +27,13 @@ namespace lib
  */
 template <typename T, class A = Allocator>
 class AbstractLinkedList :
-    public Object<A>,
+    public NonCopyable<A>,
     public api::List<T>,
     public api::Queue<T>,
     public api::Iterable<T>{
 
     typedef AbstractLinkedList<T,A> Self;
-    typedef ::eoos::lib::Object<A> Parent;
+    typedef NonCopyable<A> Parent;
     typedef LinkedNode<T,A> Node;
 
 public:
@@ -478,21 +478,6 @@ protected:
 private:
 
     /**
-     * @brief Copy constructor.
-     *
-     * @param obj Reference to source object.
-     */
-    AbstractLinkedList(const AbstractLinkedList& obj);
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param obj Reference to source object.
-     * @return Reference to this object.
-     */
-    AbstractLinkedList& operator=(const AbstractLinkedList& obj);
-
-    /**
      * @brief Illegal element of this list.
      */
     mutable T illegal_;
@@ -511,4 +496,4 @@ private:
         
 } // namespace lib
 } // namespace eoos
-#endif // LIB_ABSTRACT_LINKED_LIST_HPP_
+#endif // LIB_ABSTRACTLINKEDLIST_HPP_

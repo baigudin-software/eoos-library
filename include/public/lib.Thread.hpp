@@ -1,12 +1,12 @@
 /**
  * @file      lib.Thread.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_THREAD_HPP_
 #define LIB_THREAD_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "api.Thread.hpp"
 #include "sys.Call.hpp"
 
@@ -22,10 +22,10 @@ namespace lib
  * @tparam A Heap memory allocator class. 
  */
 template <class A = Allocator>   
-class Thread : public Object<A>, public api::Thread
+class Thread : public NonCopyable<A>, public api::Thread
 {
     typedef Thread Self;
-    typedef lib::Object<A> Parent;
+    typedef NonCopyable<A> Parent;
 
 public:
 
@@ -160,30 +160,6 @@ private:
         // Therefore, each time of calling this getScheduler() return the system call getScheduler() function result
         return sys::Call::get().getScheduler();
     }
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Thread(const Thread& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    Thread& operator=(const Thread& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Thread(Thread&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Thread& operator=(Thread&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief A system scheduler thread.

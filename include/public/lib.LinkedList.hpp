@@ -1,10 +1,10 @@
 /**
  * @file      lib.LinkedList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_LINKED_LIST_HPP_
-#define LIB_LINKED_LIST_HPP_
+#ifndef LIB_LINKEDLIST_HPP_
+#define LIB_LINKEDLIST_HPP_
 
 #include "lib.AbstractLinkedList.hpp"
 
@@ -74,30 +74,6 @@ public:
     }
 
 private:
-    
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    LinkedList(const LinkedList& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    LinkedList& operator=(const LinkedList& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    LinkedList(LinkedList&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    LinkedList& operator=(LinkedList&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @class Iterator
@@ -107,10 +83,10 @@ private:
      * For this reason, for fast iteration some tests are skipped.
      * You have to use this class only if it has been constructed.
      */
-    class Iterator : public Object<A>, public api::ListIterator<T>
+    class Iterator : public NonCopyable<A>, public api::ListIterator<T>
     {
         typedef Iterator Self;
-        typedef ::eoos::lib::Object<A> Parent;
+        typedef NonCopyable<A> Parent;
         typedef LinkedList<T,A> List;
 
     public:
@@ -330,30 +306,6 @@ private:
         }
 
         /**
-         * @copydoc eoos::Object::Object(const Object&)
-         */
-        Iterator(const Iterator& obj);
-    
-        /**
-         * @copydoc eoos::Object::operator=(const Object&)
-         */
-        Iterator& operator=(const Iterator& obj);
-        
-        #if EOOS_CPP_STANDARD >= 2011
-    
-        /**
-         * @copydoc eoos::Object::Object(const Object&&)
-         */       
-        Iterator(Iterator&& obj) noexcept = delete; 
-        
-        /**
-         * @copydoc eoos::Object::operator=(const Object&&)
-         */
-        Iterator& operator=(Iterator&& obj) noexcept = delete;
-        
-        #endif // EOOS_CPP_STANDARD >= 2011
-
-        /**
          * @struct Counter
          * @brief List changing counter.
          */
@@ -426,4 +378,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_LINKED_LIST_HPP_
+#endif // LIB_LINKEDLIST_HPP_

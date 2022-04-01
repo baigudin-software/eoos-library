@@ -1,12 +1,12 @@
 /**
  * @file      lib.Mutex.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2015-2021, Sergey Baigudin, Baigudin Software
+ * @copyright 2015-2022, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_MUTEX_HPP_
 #define LIB_MUTEX_HPP_
 
-#include "lib.Object.hpp"
+#include "lib.NonCopyable.hpp"
 #include "api.Mutex.hpp"
 #include "sys.Call.hpp"
 
@@ -22,10 +22,10 @@ namespace lib
  * @tparam A Heap memory allocator class. 
  */
 template <class A = Allocator>
-class Mutex : public Object<A>, public api::Mutex
+class Mutex : public NonCopyable<A>, public api::Mutex
 {
     typedef Mutex<A> Self;
-    typedef lib::Object<A> Parent;
+    typedef NonCopyable<A> Parent;
 
 public:
 
@@ -120,30 +120,6 @@ private:
         } while(false);
         return res;
     }
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&)
-     */
-    Mutex(const Mutex& obj);
-
-    /**
-     * @copydoc eoos::Object::operator=(const Object&)
-     */
-    Mutex& operator=(const Mutex& obj);
-    
-    #if EOOS_CPP_STANDARD >= 2011
-
-    /**
-     * @copydoc eoos::Object::Object(const Object&&)
-     */       
-    Mutex(Mutex&& obj) noexcept = delete; 
-    
-    /**
-     * @copydoc eoos::Object::operator=(const Object&&)
-     */
-    Mutex& operator=(Mutex&& obj) noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @brief System mutex interface.
