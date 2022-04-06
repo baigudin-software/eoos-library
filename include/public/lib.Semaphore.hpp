@@ -24,7 +24,6 @@ namespace lib
 template <class A = Allocator>
 class Semaphore : public NonCopyable<A>, public api::Semaphore
 {
-    typedef Semaphore Self;
     typedef lib::NonCopyable<A> Parent;
 
 public:
@@ -36,19 +35,7 @@ public:
      */
     Semaphore(const int32_t permits) : Parent(),
         semaphore_ (NULLPTR){
-        bool_t const isConstructed = construct(permits, NULLPTR);
-        setConstructed( isConstructed );
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param permits The initial number of permits available.
-     * @param isFair  True if this semaphore will guarantee FIFO granting of permits under contention.
-     */
-    Semaphore(const int32_t permits, const bool_t isFair) : Parent(),
-        semaphore_ (NULLPTR){
-        bool_t const isConstructed = construct(permits, &isFair);
+        bool_t const isConstructed = construct(permits);
         setConstructed( isConstructed );
     }
 
@@ -73,24 +60,9 @@ public:
      */
     virtual bool_t acquire()
     {
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             return semaphore_->acquire();
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * @copydoc eoos::api::Semaphore::acquire(int32_t)
-     */
-    virtual bool_t acquire(int32_t const permits)
-    {
-        if( Self::isConstructed() )
-        {
-            return semaphore_->acquire(permits);
         }
         else
         {
@@ -103,35 +75,9 @@ public:
      */
     virtual void release()
     {
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             semaphore_->release();
-        }
-    }
-
-    /**
-     * @copydoc eoos::api::Semaphore::release(int32_t)
-     */
-    virtual void release(int32_t const permits)
-    {
-        if( Self::isConstructed() )
-        {
-            semaphore_->release(permits);
-        }
-    }
-
-    /**
-     * @copydoc eoos::api::Semaphore::isFair()
-     */
-    virtual bool_t isFair() const
-    {
-        if( Self::isConstructed() )
-        {
-            return semaphore_->isFair();
-        }
-        else
-        {
-            return false;
         }
     }
 
@@ -145,25 +91,17 @@ private:
      * @brief Constructor.
      *
      * @param permits The initial number of permits available.
-     * @param isFair  True if this semaphore will guarantee FIFO granting of permits under contention.
      * @return True if object has been constructed successfully.
      */
-    bool_t construct(const int32_t permits, const bool_t* const isFair)
+    bool_t construct(const int32_t permits)
     {
-        bool_t const res = Self::isConstructed();
+        bool_t const res = isConstructed();
         if( res == false )
         {
             return false;
         }
-        if( isFair == NULLPTR )
-        {
-            semaphore_ = sys::Call::get().createSemaphore(permits, false);
-        }
-        else
-        {
-            semaphore_ = sys::Call::get().createSemaphore(permits, *isFair);
-        }
-        return semaphore_ != NULLPTR ? semaphore_->isConstructed() : false;
+        semaphore_ = sys::Call::get().createSemaphore(permits);
+        return (semaphore_ != NULLPTR) ? semaphore_->isConstructed() : false;
     }
 
     /**

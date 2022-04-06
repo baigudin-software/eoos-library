@@ -64,7 +64,7 @@ public:
     /**
      * @brief Inserts a new element after this.
      *
-     * Method links a node after this and reindexes
+     * Function links a node after this and reindexes
      * chain of nodes starts from given node.
      *
      * @param node Pointer to inserted node.
@@ -84,7 +84,7 @@ public:
     /**
      * @brief Inserts a new element after this.
      *
-     * Method links a node before this and reindexes
+     * Function links a node before this and reindexes
      * chain of nodes starts from this node.
      *
      * @param node Pointer to inserted node.

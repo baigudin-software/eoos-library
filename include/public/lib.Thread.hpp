@@ -24,7 +24,6 @@ namespace lib
 template <class A = Allocator>   
 class Thread : public NonCopyable<A>, public api::Thread
 {
-    typedef Thread Self;
     typedef NonCopyable<A> Parent;
 
 public:
@@ -36,7 +35,7 @@ public:
      */
     explicit Thread(api::Task& task) : Parent(),
         thread_    (NULLPTR){
-        bool_t const isConstructed = construct(task);
+        bool_t const isConstructed = construct(&task);
         setConstructed( isConstructed );
     }
 
@@ -45,7 +44,10 @@ public:
      */
     virtual ~Thread()
     {
-        delete thread_;
+        if( thread_ != NULLPTR )
+        {
+            delete thread_;
+        }
     }
 
     /**
@@ -62,7 +64,7 @@ public:
     virtual bool_t execute()
     {
         bool_t res = false;
-        if( Self::isConstructed() )
+        if( isConstructed() && thread_ != NULLPTR )
         {
             res = thread_->execute();
         }
@@ -75,7 +77,7 @@ public:
     virtual bool_t join()
     {
         bool_t res = false;
-        if( Self::isConstructed() )
+        if( isConstructed() && thread_ != NULLPTR )
         {
             res = thread_->join();
         }
@@ -88,7 +90,7 @@ public:
     virtual int32_t getPriority() const
     {
         int32_t priority = PRIORITY_WRONG;
-        if( Self::isConstructed() )
+        if( isConstructed() && thread_ != NULLPTR )
         {
             priority = thread_->getPriority();
         }
@@ -100,7 +102,7 @@ public:
      */
     virtual bool_t setPriority(int32_t const priority)
     {
-        return ( Self::isConstructed() ) ? thread_->setPriority(priority) : false;
+        return ( isConstructed() && thread_ != NULLPTR ) ? thread_->setPriority(priority) : false;
     }
     
     /**
@@ -121,26 +123,56 @@ public:
 
 protected:
 
-    using Parent::setConstructed;      
+    using Parent::setConstructed;
+    
+    /**
+     * @brief Constructor.
+     *
+     * @param task A task interface whose start function is invoked when this thread is started.
+     */
+    Thread() : Parent(),
+        thread_    (NULLPTR){
+        bool_t const isConstructed = construct(NULLPTR);
+        setConstructed( isConstructed );
+    }    
+    
+    /**
+     * @brief Sets a task.
+     *
+     * @param task An task interface whose start function is invoked when this thread is started.
+     * @return True if the task has been set successfully.
+     */
+    bool_t setTask(api::Task& task)
+    {
+        bool_t res = false;
+        if( thread_ == NULLPTR )
+        {
+            api::Scheduler& scheduler = getScheduler();
+            thread_ = scheduler.createThread(task);
+            if(thread_ != NULLPTR && thread_->isConstructed() )
+            {
+                res = true;
+            }
+        }
+        return res;
+    }
 
 private:
 
     /**
      * @brief Constructor.
      *
-     * @param task An task interface whose main method is invoked when this thread is started.
+     * @param task An task interface whose start function is invoked when this thread is started.
      * @return True if object has been constructed successfully.
      */
-    bool_t construct(api::Task& task)
+    bool_t construct(api::Task* const task)
     {
-        bool_t res = Self::isConstructed();
+        bool_t res = isConstructed();
         if( res == true )
         {
-            api::Scheduler& scheduler = getScheduler();
-            thread_ = scheduler.createThread(task);
-            if(thread_ == NULLPTR || not thread_->isConstructed() )
+            if(task != NULLPTR)
             {
-                res = false;
+                res = setTask(*task);
             }
         }
         return res;

@@ -427,7 +427,7 @@ public:
      *
      * @note Be careful, some action with the object might relocate internal buffer
      * that contains characters. By this reason, a returned address will be actual
-     * until you do not call no constant method of this class for an object.
+     * until you do not call no constant function of this class for an object.
      */
     virtual const T* getChar() const
     {

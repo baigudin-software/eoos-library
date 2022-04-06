@@ -136,7 +136,7 @@ public:
     /**
      * @brief Operator new.
      *
-     * Method initiates a building of heap memory
+     * Function initiates a building of heap memory
      * checks and tests self memory structure data
      * and leads to call the class constructor.
      *
@@ -221,7 +221,7 @@ private:
     /**
      * @brief Disables a controller.
      *
-     * @return An enable source bit value of a controller before method was called.
+     * @return An enable source bit value of a controller before function was called.
      */
     bool_t disable()
     {
@@ -236,7 +236,7 @@ private:
     /**
      * @brief Enables a controller.
      *
-     * @param status returned status by disable method.
+     * @param status returned status by disable function.
      */
     void enable(const bool_t status)
     {
@@ -340,7 +340,7 @@ private:
     /**
      * @brief Allocates memory for heap.
      *
-     * Method initiates a building of heap memory
+     * Function initiates a building of heap memory
      * checks and tests self memory structure data
      * and leads to call the class constructor.
      *

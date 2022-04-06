@@ -369,7 +369,7 @@ private:
         mutable Node* curs_;
 
         /**
-         * @brief Index of element of list which can be removed by remove method.
+         * @brief Index of element of list which can be removed by remove function.
          */
         mutable int32_t rindex_;
 
