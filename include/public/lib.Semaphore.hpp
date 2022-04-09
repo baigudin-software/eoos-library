@@ -60,14 +60,12 @@ public:
      */
     virtual bool_t acquire()
     {
+        bool_t res = false;
         if( isConstructed() )
         {
-            return semaphore_->acquire();
+            res = semaphore_->acquire();
         }
-        else
-        {
-            return false;
-        }
+        return res;
     }
 
     /**
@@ -95,13 +93,13 @@ private:
      */
     bool_t construct(const int32_t permits)
     {
-        bool_t const res = isConstructed();
-        if( res == false )
+        bool_t res = isConstructed();
+        if( res == true )
         {
-            return false;
+            semaphore_ = sys::Call::get().createSemaphore(permits);
+            res = (semaphore_ != NULLPTR) ? semaphore_->isConstructed() : false;
         }
-        semaphore_ = sys::Call::get().createSemaphore(permits);
-        return (semaphore_ != NULLPTR) ? semaphore_->isConstructed() : false;
+        return res;
     }
 
     /**
