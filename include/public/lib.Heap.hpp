@@ -164,9 +164,7 @@ public:
     /**
      * @brief Operator delete.
      */
-    static void operator delete(void*, void*)
-    {
-    }
+    static void operator delete(void*, void*) {}
 
 private:
 
@@ -371,7 +369,14 @@ private:
         }
         return ptr;
     }
-
+    
+    /**
+     * @brief Operator delete.
+     *
+     * @param ptr An address of allocated memory block or a null pointer.
+     */
+    static void operator delete(void* const ptr);
+    
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
@@ -639,9 +644,7 @@ private:
         /**
          * @brief Operator delete.
          */
-        static void operator delete(void*, void*)
-        {
-        }
+        static void operator delete(void*, void*) {}
 
     private:
 
@@ -694,6 +697,13 @@ private:
             const uintptr_t addr = reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size;
             return reinterpret_cast<void*>(addr);
         }
+        
+        /**
+         * @brief Operator delete.
+         *
+         * @param ptr An address of allocated memory block or a null pointer.
+         */
+        static void operator delete(void* const ptr);
 
         /**
          * @copydoc eoos::Object::Object(const Object&)

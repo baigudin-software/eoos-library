@@ -75,7 +75,7 @@ public:
      */
     virtual const T* getTos()
     {
-        if( not Self::isConstructed() )
+        if( not isConstructed() )
         {
             return NULLPTR;
         }
@@ -146,6 +146,10 @@ public:
     {
         return stack_.isIllegal(value);
     }
+    
+protected:
+
+    using Parent::setConstructed;    
 
 private:
 
@@ -156,7 +160,7 @@ private:
      */
     bool_t construct()
     {
-        if( not Self::isConstructed() )
+        if( not isConstructed() )
         {
             return false;
         }
