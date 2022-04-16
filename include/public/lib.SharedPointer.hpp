@@ -1,12 +1,13 @@
 /**
- * @file      lib.SharedPtr.hpp
+ * @file      lib.SharedPointer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2020-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_SHAREDPTR_HPP_
-#define LIB_SHAREDPTR_HPP_
+#ifndef LIB_SHAREDPOINTER_HPP_
+#define LIB_SHAREDPOINTER_HPP_
 
 #include "lib.Object.hpp"
+#include "api.SmartPointer.hpp"
 #include "lib.MutexGuard.hpp"
 #include "lib.NonCopyable.hpp"
 
@@ -18,13 +19,13 @@ namespace lib
 #ifdef EOOS_NO_STRICT_MISRA_RULES
 
 /**
- * @class SharedPtrDeleter<T>
+ * @class SharedPointerDeleter<T>
  * @brief Deleter of shared pointers allocate with new operator.
  *
  * @tparam T Data type of an owning object. 
  */
 template <typename T>
-class SharedPtrDeleter
+class SharedPointerDeleter
 {
     
 public:
@@ -41,13 +42,13 @@ public:
 };
 
 /**
- * @class SharedPtrDeleterArray<T>
+ * @class SharedPointerDeleterArray<T>
  * @brief Deleter of shared pointers allocate with new [] operator.
  *
  * @tparam T Data type of an owning object. 
  */
 template <typename T>
-class SharedPtrDeleterArray
+class SharedPointerDeleterArray
 {
     
 public:
@@ -64,20 +65,17 @@ public:
 };
     
 /**
- * @class SharedPtr<T,D,A,M>
+ * @class SharedPointer<T,D,A>
  * @brief Shared pointer.
  *
  * @tparam T Data type of an owning object.
  * @tparam D Deleter type for an owning object. 
  * @tparam A Heap memory allocator class.
- * @tparam M Mutex to protect the control block inherited from @ref api::Mutex.
- *
- * @todo Move class M template param out of the params to define it somewhere in other place.
  */
-template <typename T, class D = SharedPtrDeleter<T>, class A = Allocator, class M = Mutex<A> >
-class SharedPtr : public Object<A>
+template <typename T, class D = SharedPointerDeleter<T>, class A = Allocator>
+class SharedPointer : public Object<A>, public api::SmartPointer<T>
 {
-    typedef SharedPtr<T,A>  Self;
+    typedef SharedPointer<T,D,A> Self;
     typedef Object<A> Parent;
 
 public:
@@ -87,7 +85,7 @@ public:
     /**
      * @brief Constructor an empty shared object.
      */
-    SharedPtr() : Parent(),
+    SharedPointer() : Parent(),
         cb_ (NULLPTR){
         bool_t const isConstructed = construct();
         setConstructed(isConstructed);    
@@ -99,7 +97,7 @@ public:
      * @param pointer A pointer to get ownership.
      * @note If the shared object is not able to be constructed, an object passed by the pointer will be deleted.
      */
-    explicit SharedPtr(T* const pointer) : Parent(),
+    explicit SharedPointer(T* const pointer) : Parent(),
         cb_ (NULLPTR){
         bool_t const isConstructed = construct(pointer);
         setConstructed(isConstructed);    
@@ -108,33 +106,33 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~SharedPtr()
+    virtual ~SharedPointer()
     {
         if( isConstructed() )
         {
             release();
         }
     }
-    
+
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
-    SharedPtr(const SharedPtr& obj) : Parent(obj),
+    SharedPointer(const SharedPointer& obj) : Parent(obj),
         cb_ (obj.cb_){
         acquire();
     }
-    
+
     /**
      * @copydoc eoos::Object::operator=(const Object&)
      */       
-    SharedPtr& operator=(const SharedPtr& obj)
+    SharedPointer& operator=(const SharedPointer& obj)
     {
         if( this != &obj && isConstructed() )
         {
             release();
-            Parent::operator=(obj);            
             cb_ = obj.cb_;
-            acquire();
+            acquire();            
+            Parent::operator=(obj);            
         }
         return *this;
     }    
@@ -142,26 +140,35 @@ public:
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @copydoc eoos::Object::Object(const Object&&)    
+     * @copydoc eoos::Object::Object(Object&&)
      */       
-    SharedPtr(SharedPtr&& obj) noexcept : Parent( move(obj) ),
+    SharedPointer(SharedPointer&& obj) noexcept : Parent( move(obj) ),
         cb_ (obj.cb_){
     }   
-    
+
     /**
-     * @copydoc eoos::Object::operator=(const Object&&)
+     * @copydoc eoos::Object::operator=(Object&&)
      */
-    SharedPtr& operator=(SharedPtr&& obj) noexcept
+    SharedPointer& operator=(SharedPointer&& obj) noexcept
     {
         if( this != &obj && isConstructed() )
         {
-            Parent::operator=( move(obj) );            
+            release();            
             cb_ = obj.cb_;
+            Parent::operator=( move(obj) );            
         }        
         return *this;
     }        
-    
+
     #endif // EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::api::Object::isConstructed()
+     */
+    virtual bool_t isConstructed() const
+    {
+        return Parent::isConstructed();
+    }
 
     /**
      * @brief Casts to boolean data type comparing if the stored pointer does not equal to null.
@@ -172,7 +179,7 @@ public:
     {
         return get() != NULLPTR;
     }
-    
+
     /**
      * @brief Returns the result of dereferencing the stored pointer.
      *
@@ -182,7 +189,7 @@ public:
     {
         return *get();
     }
-    
+
     /**
      * @brief Returns the stored pointer.
      *
@@ -192,7 +199,7 @@ public:
     {
         return get();
     }
-    
+
     /**
      * @brief Returns an element of the stored array.
      *
@@ -204,13 +211,11 @@ public:
         T* pointer = get();
         return pointer[index];
     }
-    
+
     /**
-     * @brief Returns the stored pointer.
-     *
-     * @return The stored pointer or NULLPTR if no pointer stored.
-     */   
-    T* get() const
+     * @copydoc eoos::api::SmartPointer::get()
+     */
+    virtual T* get() const
     {
         T* pointer = NULLPTR;
         if( isConstructed() )
@@ -219,26 +224,78 @@ public:
         }
         return pointer;
     }
-    
+
     /**
-     * @brief Returns counter of shared objects for the managed object.
-     *
-     * @return Counter of shared objects.
+     * @copydoc eoos::api::SmartPointer::reset()
      */   
-    int32_t getCount() const
+    virtual void reset()
+    {
+        reset(NULLPTR);
+    }
+
+    /**
+     * @copydoc eoos::api::SmartPointer::reset(T*)
+     */
+    virtual void reset(T* ptr)
+    {
+		if (get() != ptr)
+        {
+            Self temp(ptr);
+            swap(temp);
+        }
+    }
+
+    /**
+     * @copydoc eoos::api::SmartPointer::getCount()
+     */
+    virtual int32_t getCount() const
     {
         int32_t counter = 0;
         if( isConstructed() )
         {
-            counter = cb_->getCounter();
+            if( cb_->getPointer() != NULLPTR )
+            {
+                counter = cb_->getCounter();
+            }
         }
         return counter;
     }
     
+    /**
+     * @copydoc eoos::api::SmartPointer::isNull()
+     */       
+    virtual bool_t isNull() const
+    {
+        return get() == NULLPTR;        
+    }
+    
+    /**
+     * @copydoc eoos::api::SmartPointer::isUnique()
+     */   
+    virtual bool_t isUnique() const
+    {
+        return getCount() == 1;
+    }
+    
+    /**
+     * @brief Swap this managed object with an object magaged by given smart object.
+     *
+     * @param obj A smart object to swap managed objects.
+     */    
+    void swap(SharedPointer& obj)
+    {
+        if( isConstructed() && obj.isConstructed() )
+        {
+            ControlBlock<T,D,A>* const cb = cb_;
+            cb_ = obj.cb_;
+            obj.cb_ = cb;
+        }
+    }    
+    
 protected:
 
     using Parent::setConstructed;     
-        
+
 private:
 
     /**
@@ -257,7 +314,7 @@ private:
                 D::free(pointer);
                 break;
             }
-            cb_ = new ControlBlock<T,D,A,M>(pointer);
+            cb_ = new ControlBlock<T,D,A>(pointer);
             if(cb_ == NULLPTR)
             {
                 D::free(pointer);
@@ -265,6 +322,7 @@ private:
             }
             if( not cb_->isConstructed() )
             {
+                D::free(pointer);                
                 delete cb_;
                 cb_ = NULLPTR;
                 break;
@@ -273,7 +331,7 @@ private:
         } while(false);
         return res;
     }
-    
+
     /**
      * @brief Releases the managed object by control block.
      */       
@@ -281,15 +339,16 @@ private:
     {
         if( cb_ != NULLPTR )
         {
-            uint32_t const counter = cb_->decrease();
+            int32_t const counter = cb_->decrease();
             if(counter == 0)
             {
+                D::free(cb_->getPointer());
                 delete cb_;
                 cb_ = NULLPTR;            
             }
         }
     }        
-    
+
     /**
      * @brief Acquires a managed object by control block.
      */
@@ -299,32 +358,27 @@ private:
         {
             cb_->increase();
         }
-        else
-        {
-            setConstructed(false);
-        }
     }
-    
+
     /**
-     * @class ControlBlock<TT,DD,AA,MM>
+     * @class ControlBlock<TT,DD,AA>
      * @brief Primary template implementation of shared pointer control block class.
      *
      * @tparam TT Data type of owning the object.
      * @tparam DD Deleter type for owning the object.  
      * @tparam AA Heap memory allocator class.
-     * @tparam MM Mutex to protect the control block inherited from @ref api::Mutex.
      *
-     * @note This class is implemented as an auxiliry class for SharedPtr
+     * @note This class is implemented as an auxiliry class for SharedPointer
      * and is tested for construction before usage. Therefore, some checks
      * are skipped in public interface to speedup performence. 
      */
-    template <typename TT, class DD, class AA, class MM> 
+    template <typename TT, class DD, class AA> 
     class ControlBlock : public NonCopyable<AA>
     {
         typedef NonCopyable<AA> Parent;    
-        
+
     public:
-        
+
         /**
          * @brief Constructor.
          *
@@ -337,15 +391,12 @@ private:
             bool_t const isConstructed = construct();
             setConstructed(isConstructed);
         }
-        
+
         /**
          * @brief Destructor.
          */
-        virtual ~ControlBlock()
-        {
-            DD::free(pointer_);
-        }    
-        
+        virtual ~ControlBlock() {}    
+
         /**
          * @brief Increases the counter on one.
          */
@@ -354,7 +405,7 @@ private:
             MutexGuard<AA> const guard(mutex_);
             ++counter_;
         }
-        
+
         /**
          * @brief Decreases the counter on one.
          *
@@ -365,7 +416,7 @@ private:
             MutexGuard<AA> const guard(mutex_);        
             return --counter_;
         }
-        
+
         /**
          * @brief Returns the counter.
          *
@@ -375,17 +426,17 @@ private:
         {    
             return counter_;
         }
-        
+
         /**
-         * @brief Returns the counter.
+         * @brief Returns the managed raw pointer.
          *
-         * @return A value of the counter.
+         * @return The managed raw pointer.
          */        
         TT* getPointer() const
         {
             return pointer_;
         }    
-    
+
     private:
     
         /**
@@ -422,13 +473,13 @@ private:
         /**
          * @brief Mutex to protect the counter.
          */    
-        MM mutex_;
+        Mutex<AA> mutex_;
     };
-    
+
     /**
      * @brief Control block of the managed object.
      */
-    ControlBlock<T,D,A,M>* cb_;
+    ControlBlock<T,D,A>* cb_;
 
 };
 
@@ -436,4 +487,4 @@ private:
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_SHAREDPTR_HPP_
+#endif // LIB_SHAREDPOINTER_HPP_

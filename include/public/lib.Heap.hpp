@@ -390,12 +390,12 @@ private:
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @copydoc eoos::Object::Object(const Object&&)
+     * @copydoc eoos::Object::Object(Object&&)
      */       
     Heap(Heap&& obj) noexcept = delete; 
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&&)
+     * @copydoc eoos::Object::operator=(Object&&)
      */
     Heap& operator=(Heap&& obj) noexcept = delete;
     
@@ -718,12 +718,12 @@ private:
         #if EOOS_CPP_STANDARD >= 2011
     
         /**
-         * @copydoc eoos::Object::Object(const Object&&)
+         * @copydoc eoos::Object::Object(Object&&)
          */       
         HeapBlock(HeapBlock&& obj) noexcept = delete; 
         
         /**
-         * @copydoc eoos::Object::operator=(const Object&&)
+         * @copydoc eoos::Object::operator=(Object&&)
          */
         HeapBlock& operator=(HeapBlock&& obj) noexcept = delete;
         
@@ -860,12 +860,12 @@ private:
         #if EOOS_CPP_STANDARD >= 2011
     
         /**
-         * @copydoc eoos::Object::Object(const Object&&)
+         * @copydoc eoos::Object::Object(Object&&)
          */       
         HeapData(HeapData&& obj) noexcept = delete; 
         
         /**
-         * @copydoc eoos::Object::operator=(const Object&&)
+         * @copydoc eoos::Object::operator=(Object&&)
          */
         HeapData& operator=(HeapData&& obj) noexcept = delete;
         

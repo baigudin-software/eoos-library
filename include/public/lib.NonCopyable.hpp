@@ -51,12 +51,12 @@ private:
     #if EOOS_CPP_STANDARD >= 2011
     
     /**
-     * @copydoc eoos::Object::Object(const Object&&)
+     * @copydoc eoos::Object::Object(Object&&)
      */       
     NonCopyable(NonCopyable&& obj) noexcept = delete;
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&&)
+     * @copydoc eoos::Object::operator=(Object&&)
      */
     NonCopyable& operator=(NonCopyable&& obj) noexcept = delete;
 

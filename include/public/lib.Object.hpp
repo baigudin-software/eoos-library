@@ -54,12 +54,12 @@ public:
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @copydoc eoos::Object::Object(const Object&&)
+     * @copydoc eoos::Object::Object(Object&&)
      */       
     Object(Object&& obj) noexcept : Parent( move(obj) ) {}
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&&)
+     * @copydoc eoos::Object::operator=(Object&&)
      */
     Object& operator=(Object&& obj) noexcept
     {
