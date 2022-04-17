@@ -483,6 +483,32 @@ private:
 
 };
 
+/**
+ * @brief Comparison operator to equal.
+ *
+ * @param obj1 Reference to object.
+ * @param obj2 Reference to object.
+ * @return True if objects are equal.
+ */
+template <typename T, class D = SharedPointerDeleter<T>, class A = Allocator>
+inline bool_t operator==(const SharedPointer<T,D,A>& obj1, const SharedPointer<T,D,A>& obj2)
+{
+    return obj1.get() == obj2.get();
+}
+
+/**
+ * @brief Comparison operator to unequal.
+ *
+ * @param obj1 Reference to object.
+ * @param obj2 Reference to object.
+ * @return True if objects are not equal.
+ */
+template <typename T, class D = SharedPointerDeleter<T>, class A = Allocator>
+inline bool_t operator!=(const SharedPointer<T,D,A>& obj1, const SharedPointer<T,D,A>& obj2)
+{
+    return obj1.get() != obj2.get();
+}
+
 #endif // EOOS_NO_STRICT_MISRA_RULES
 
 } // namespace lib

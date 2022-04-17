@@ -238,8 +238,8 @@ private:
  * @param obj2 Reference to object.
  * @return True if objects are equal.
  */
-template <typename T>
-inline bool_t operator==(const Align<T>& obj1, const Align<T>& obj2)
+template <typename T, size_t S = sizeof(T), class A = Allocator>
+inline bool_t operator==(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
 {
     const bool_t res = obj1.equal(obj2);
     return res;
@@ -252,8 +252,8 @@ inline bool_t operator==(const Align<T>& obj1, const Align<T>& obj2)
  * @param obj2 Reference to object.
  * @return True if objects are not equal.
  */
-template <typename T>
-inline bool_t operator!=(const Align<T>& obj1, const Align<T>& obj2)
+template <typename T, size_t S = sizeof(T), class A = Allocator>
+inline bool_t operator!=(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
 {
     const bool_t res = obj1.equal(obj2);
     return not res;
