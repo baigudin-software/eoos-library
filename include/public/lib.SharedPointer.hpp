@@ -8,6 +8,7 @@
 
 #include "lib.Object.hpp"
 #include "api.SmartPointer.hpp"
+#include "lib.SmartPointerDeleter.hpp"
 #include "lib.MutexGuard.hpp"
 #include "lib.NonCopyable.hpp"
 
@@ -17,52 +18,6 @@ namespace lib
 {
 
 #ifdef EOOS_NO_STRICT_MISRA_RULES
-
-/**
- * @class SharedPointerDeleter<T>
- * @brief Deleter of shared pointers allocate with new operator.
- *
- * @tparam T Data type of an owning object. 
- */
-template <typename T>
-class SharedPointerDeleter
-{
-    
-public:
-
-    /**
-     * @brief Frees an allocated object.
-     *
-     * @param ptr Address of allocated the owning object.
-     */
-    static void free(T* const ptr)
-    {
-        delete ptr;
-    }
-};
-
-/**
- * @class SharedPointerDeleterArray<T>
- * @brief Deleter of shared pointers allocate with new [] operator.
- *
- * @tparam T Data type of an owning object. 
- */
-template <typename T>
-class SharedPointerDeleterArray
-{
-    
-public:
-
-    /**
-     * @brief Frees an allocated array of objects.
-     *
-     * @param ptr Address of allocated the owning objects.
-     */
-    static void free(T* const ptr)
-    {
-        delete [] ptr;
-    }
-};
     
 /**
  * @class SharedPointer<T,D,A>
@@ -72,15 +27,13 @@ public:
  * @tparam D Deleter type for an owning object. 
  * @tparam A Heap memory allocator class.
  */
-template <typename T, class D = SharedPointerDeleter<T>, class A = Allocator>
+template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
 class SharedPointer : public Object<A>, public api::SmartPointer<T>
 {
     typedef SharedPointer<T,D,A> Self;
     typedef Object<A> Parent;
 
 public:
-
-    using Parent::isConstructed;
 
     /**
      * @brief Constructor an empty shared object.
@@ -208,10 +161,10 @@ public:
      */    
     T& operator[](uint32_t const index) const
     {
-        T* pointer = get();
+        T* const pointer = get();
         return pointer[index];
     }
-
+    
     /**
      * @copydoc eoos::api::SmartPointer::get()
      */
@@ -490,7 +443,7 @@ private:
  * @param obj2 Reference to object.
  * @return True if objects are equal.
  */
-template <typename T, class D = SharedPointerDeleter<T>, class A = Allocator>
+template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
 inline bool_t operator==(const SharedPointer<T,D,A>& obj1, const SharedPointer<T,D,A>& obj2)
 {
     return obj1.get() == obj2.get();
@@ -503,7 +456,7 @@ inline bool_t operator==(const SharedPointer<T,D,A>& obj1, const SharedPointer<T
  * @param obj2 Reference to object.
  * @return True if objects are not equal.
  */
-template <typename T, class D = SharedPointerDeleter<T>, class A = Allocator>
+template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
 inline bool_t operator!=(const SharedPointer<T,D,A>& obj1, const SharedPointer<T,D,A>& obj2)
 {
     return obj1.get() != obj2.get();
