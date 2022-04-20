@@ -56,7 +56,7 @@ public:
      */
     virtual api::ListIterator<T>* getListIterator(const int32_t index)
     {
-        if( not this->isConstructed_ )
+        if( not isConstructed() )
         {
             return NULLPTR;
         }
@@ -92,14 +92,14 @@ private:
          * @param index Position in this list.
          * @param list  Reference to self list.
          */
-        Iterator(const int32_t index, const List& list) :
+        Iterator(int32_t const index, List& list) :
             list_    (list),
             count_   (list.getReferenceToCount()),
             last_    (list.getReferenceToLast()),
             illegal_ (list.getReferenceToIllegal()),
             curs_    (NULLPTR),
             rindex_  (ILLEGAL_INDEX){
-            const bool_t isConstructed = construct(index);
+            bool_t const  isConstructed = construct(index);
             this->setConstructed( isConstructed );
         }
 
@@ -113,7 +113,7 @@ private:
          */
         virtual bool_t isConstructed() const
         {
-            return this->isConstructed_;
+            return Parent::isConstructed();
         }
 
         /**
@@ -167,21 +167,21 @@ private:
             }
             count_.self++;
             rindex_ = ILLEGAL_INDEX;
-            curs_ = last_ != NULLPTR ? curs : NULLPTR;
+            curs_ = (last_ != NULLPTR) ? curs : NULLPTR;
             return true;
         }
 
         /**
          * @copydoc eoos::api::ListIterator::getPrevious()
          */
-        virtual const T& getPrevious() const
+        virtual T& getPrevious() const
         {
             if( not hasPrevious())
             {
                 return illegal_;
             }
             curs_ = curs_->getPrevious();
-            rindex_ = curs_->index();
+            rindex_ = curs_->getIndex();
             return curs_->getElement();
         }
 
@@ -212,7 +212,7 @@ private:
         /**
          * @copydoc eoos::api::Iterator::getNext()
          */
-        virtual const T& getNext() const
+        virtual T& getNext() const
         {
             if( not hasNext() )
             {
@@ -251,7 +251,7 @@ private:
         /**
          * @copydoc eoos::api::IllegalValue::getIllegal()
          */
-        virtual const T& getIllegal() const
+        virtual T& getIllegal() const
         {
             return list_.getIllegal();
         }
@@ -281,7 +281,7 @@ private:
          */
         bool_t construct(int32_t index)
         {
-            if( not this->isConstructed_ )
+            if( not isConstructed() )
             {
                 return false;
             }
@@ -364,12 +364,12 @@ private:
         /**
          * @brief Pointer to current node of this iterator.
          */
-        Node* curs_;
+        mutable Node* curs_;
 
         /**
          * @brief Index of element of list which can be removed by remove function.
          */
-        int32_t rindex_;
+        mutable int32_t rindex_;
 
     };
 };

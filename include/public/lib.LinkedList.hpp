@@ -97,14 +97,14 @@ private:
          * @param index Position in this list.
          * @param list  Reference to self list.
          */
-        Iterator(const int32_t index, List& list) :
+        Iterator(int32_t const index, List& list) :
             list_    (list),
             count_   (list.getReferenceToCount()),
             last_    (list.getReferenceToLast()),
             illegal_ (list.getReferenceToIllegal()),
             curs_    (NULLPTR),
             rindex_  (ILLEGAL_INDEX){
-            const bool_t isConstructed = construct(index);
+            bool_t const isConstructed = construct(index);
             this->setConstructed( isConstructed );
         }
 
@@ -159,7 +159,7 @@ private:
             }
             else
             {
-                curs = curs_ != last_ ? curs_->getNext() : NULLPTR;
+                curs = (curs_ != last_) ? curs_->getNext() : NULLPTR;
             }
             if(list_.remove(rindex_) == false)
             {
@@ -180,7 +180,7 @@ private:
             {
                 return illegal_;
             }
-            curs_ = curs_ == NULLPTR ? last_ : curs_->getPrevious();
+            curs_ = (curs_ == NULLPTR) ? last_ : curs_->getPrevious();
             rindex_ = curs_->getIndex();
             return curs_->getElement();
         }
@@ -194,7 +194,7 @@ private:
             {
                 return -1;
             }
-            return curs_ == NULLPTR ? last_->getIndex() : curs_->getPrevious()->getIndex();
+            return (curs_ == NULLPTR) ? last_->getIndex() : curs_->getPrevious()->getIndex();
         }
 
         /**
@@ -227,7 +227,7 @@ private:
                 return illegal_;
             }
             Node* const node = curs_;
-            curs_ = curs_ != last_ ? curs_->getNext() : NULLPTR;
+            curs_ = (curs_ != last_) ? curs_->getNext() : NULLPTR;
             rindex_ = node->getIndex();
             return node->getElement();
         }

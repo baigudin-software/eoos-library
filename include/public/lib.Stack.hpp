@@ -126,7 +126,7 @@ public:
     /**
      * @copydoc eoos::api::IllegalValue::getIllegal()
      */
-    virtual const T& getIllegal() const
+    virtual T& getIllegal() const
     {
         return stack_.getIllegal();
     }
