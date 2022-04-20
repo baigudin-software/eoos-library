@@ -56,7 +56,7 @@ public:
      */
     virtual api::ListIterator<T>* getListIterator(const int32_t index)
     {
-        if( not isConstructed() )
+        if( not Parent::isConstructed() )
         {
             return NULLPTR;
         }
