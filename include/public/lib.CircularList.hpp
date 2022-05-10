@@ -61,7 +61,7 @@ public:
             return NULLPTR;
         }
         Iterator* const iterator = new Iterator(index, *this);
-        if(iterator != NULLPTR && iterator->isConstructed())
+        if( (iterator != NULLPTR) && iterator->isConstructed())
         {
             return iterator;
         }
@@ -130,7 +130,7 @@ private:
             {
                 return false;
             }
-            count_.self++;
+            count_.self++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
             rindex_ = ILLEGAL_INDEX;
             if(last == NULLPTR)
             {
@@ -165,7 +165,7 @@ private:
             {
                 return false;
             }
-            count_.self++;
+            count_.self++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
             rindex_ = ILLEGAL_INDEX;
             curs_ = (last_ != NULLPTR) ? curs : NULLPTR;
             return true;

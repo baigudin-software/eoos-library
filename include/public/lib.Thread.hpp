@@ -64,7 +64,7 @@ public:
     virtual bool_t execute()
     {
         bool_t res = false;
-        if( isConstructed() && thread_ != NULLPTR )
+        if( isConstructed() && (thread_ != NULLPTR) )
         {
             res = thread_->execute();
         }
@@ -77,7 +77,7 @@ public:
     virtual bool_t join()
     {
         bool_t res = false;
-        if( isConstructed() && thread_ != NULLPTR )
+        if( isConstructed() && (thread_ != NULLPTR) )
         {
             res = thread_->join();
         }
@@ -90,7 +90,7 @@ public:
     virtual int32_t getPriority() const
     {
         int32_t priority = PRIORITY_WRONG;
-        if( isConstructed() && thread_ != NULLPTR )
+        if( isConstructed() && (thread_ != NULLPTR) )
         {
             priority = thread_->getPriority();
         }
@@ -102,7 +102,7 @@ public:
      */
     virtual bool_t setPriority(int32_t const priority)
     {
-        return ( isConstructed() && thread_ != NULLPTR ) ? thread_->setPriority(priority) : false;
+        return ( isConstructed() && (thread_ != NULLPTR) ) ? thread_->setPriority(priority) : false;
     }
     
     /**
@@ -149,7 +149,7 @@ protected:
         {
             api::Scheduler& scheduler = getScheduler();
             thread_ = scheduler.createThread(task);
-            if(thread_ != NULLPTR && thread_->isConstructed() )
+            if( (thread_ != NULLPTR) && thread_->isConstructed() )
             {
                 res = true;
             }

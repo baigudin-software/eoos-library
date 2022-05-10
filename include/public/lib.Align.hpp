@@ -88,7 +88,7 @@ public:
     }
 
     /**
-     * @brief Pre-increment operators.
+     * @brief Pre-increment operator.
      *
      * @param obj A source object.
      * @return Reference to this object.
@@ -96,12 +96,13 @@ public:
     Align& operator++()
     {
         T val = typecast();
-        assignment(++val);
+        val += 1;
+        assignment(val);
         return *this;
     }
 
     /**
-     * @brief Pre-decrement operators.
+     * @brief Pre-decrement operator.
      *
      * @param obj A source object.
      * @return Reference to this object.
@@ -109,31 +110,34 @@ public:
     Align& operator--()
     {
         T val = typecast();
-        assignment(--val);
+        val -= 1;
+        assignment(val);
         return *this;
     }
 
     /**
-     * @brief Post-increment operators.
+     * @brief Post-increment operator.
      *
      * @return This object.
      */
-    Align operator++(int)
+    Align operator++(int) ///< SCA Justificated MISRA-C++:2008 Rule 3-9-2
     {
         T val = typecast();
-        assignment(val++);
+        val += 1;
+        assignment(val);
         return *this;
     }
 
     /**
-     * @brief Post-decrement operators.
+     * @brief Post-decrement operator.
      *
      * @return This object.
      */
-    Align operator--(int)
+    Align operator--(int) ///< SCA Justificated MISRA-C++:2008 Rule 3-9-2
     {
         T val = typecast();
-        assignment(val--);
+        val -= 1;
+        assignment(val);
         return *this;
     }
 
@@ -170,7 +174,7 @@ private:
     bool_t equal(const Align& obj) const
     {
         bool_t res = true;
-        for(size_t i=0; i<S; i++)
+        for(size_t i=0U; i<S; i++)
         {
             if( val_[i] != obj.val_[i] )
             {
@@ -188,9 +192,9 @@ private:
      */
     void assignment(const T& value)
     {
-        for(size_t i = 0; i<S; i++)
+        for(size_t i = 0U; i<S; i++)
         {
-            const T v = value >> (8 * i);
+            T const v = value >> (8U * i); ///< SCA Justificated MISRA-C++:2008 Rule 5-0-21
             val_[i] = static_cast<cell_t>(v);
         }
     }
@@ -202,7 +206,7 @@ private:
      */
     void copy(const Align& obj)
     {
-        for(size_t i=0; i<S; i++)
+        for(size_t i=0U; i<S; i++)
         {
             val_[i] = obj.val_[i];
         }
@@ -215,11 +219,12 @@ private:
      */
     T typecast() const
     {
+        int32_t const max = static_cast<int32_t>(S) - 1;
         T r = static_cast<T>(0);
-        for(int32_t i=S-1; i>=0; i--)
+        for(int32_t i=max; i>=0; i--)
         {
-            r = r << 8;
-            r = r | static_cast<T>(val_[i]);
+            r = r << 8U;                     ///< SCA Justificated MISRA-C++:2008 Rule 5-0-21
+            r = r | static_cast<T>(val_[i]); ///< SCA Justificated MISRA-C++:2008 Rule 5-0-21
         }
         return r;
     }
@@ -227,7 +232,7 @@ private:
     /**
      * @brief Array of data bytes.
      */
-    cell_t val_[S];
+    ucell_t val_[S];
 
 };
 

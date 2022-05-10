@@ -75,7 +75,7 @@ public:
     virtual bool_t copy(const api::String<T>& string)
     {
         bool_t res;
-        if( not Self::isConstructed() || not string.isConstructed() )
+        if( (not Self::isConstructed()) || (not string.isConstructed()) )
         {
             res = false;
         }
@@ -93,7 +93,7 @@ public:
     virtual bool_t concatenate(const api::String<T>& string)
     {
         bool_t res;
-        if( not Self::isConstructed() || not string.isConstructed() )
+        if( (not Self::isConstructed()) || (not string.isConstructed()) )
         {
             res = false;
         }
@@ -111,7 +111,7 @@ public:
     virtual int32_t compare(const api::String<T>& string) const
     {
         int32_t res;
-        if( not Self::isConstructed() || not string.isConstructed() )
+        if( (not Self::isConstructed()) || (not string.isConstructed()) )
         {
             res = MINIMUM_POSSIBLE_VALUE_OF_INT32;
         }
@@ -177,7 +177,7 @@ protected:
         T const null = getTerminator();
         while( *str != null )
         {
-            str++;
+            str++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
             len++;
         }
         return len;
@@ -191,15 +191,15 @@ protected:
      */
     void copy(T* dst, const T* src) const
     {
-        if(dst != NULLPTR && src != NULLPTR)
+        if( (dst != NULLPTR) && (src != NULLPTR) )
         {
             T const null = getTerminator();
-            dst--;
-            src--;
+            dst--; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
+            src--; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
             do
             {
-                dst++;
-                src++;
+                dst++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
+                src++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
                 *dst = *src;
             }
             while(*dst != null);
@@ -214,7 +214,7 @@ protected:
      */
     void concatenate(T* const dst, const T* const src) const
     {
-        if(dst != NULLPTR && src != NULLPTR)
+        if( (dst != NULLPTR) && (src != NULLPTR) )
         {
             T const null = getTerminator();
             int32_t d = 0;
@@ -223,8 +223,13 @@ protected:
             {
                 d++;
             }
-            while( (dst[d] = src[s]) != null )
+            while(true)
             {
+                dst[d] = src[s]; 
+                if(dst[d] == null)
+                {
+                    break;
+                }
                 d++;
                 s++;
             }

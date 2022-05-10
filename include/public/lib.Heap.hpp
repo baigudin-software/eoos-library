@@ -196,16 +196,16 @@ private:
     bool_t construct()
     {
         // Crop a size to multiple of eight
-        if(sizeof(HeapBlock) + 16 > data_.size)
+        if( (sizeof(HeapBlock) + 16UL) > data_.size )
         {
             return false;
         }
         // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
-        if((sizeof(Heap) & 0x7) != 0)
+        if((sizeof(Heap) & 0x7UL) != 0UL)
         {
             return false;
         }
-        if((sizeof(HeapBlock) & 0x7) != 0)
+        if((sizeof(HeapBlock) & 0x7UL) != 0UL)
         {
             return false;
         }
@@ -218,7 +218,7 @@ private:
         }
         // Alloc first heap block
         data_.block = new ( getFirstBlock() ) HeapBlock(this, data_.size);
-        return data_.block != NULLPTR ? true : false;
+        return (data_.block != NULLPTR) ? true : false;
     }
 
     /**
@@ -233,7 +233,7 @@ private:
             return false;
         }
         api::Toggle* const toggle = *data_.toggle;
-        return toggle != NULLPTR ? toggle->disable() : false;
+        return (toggle != NULLPTR) ? toggle->disable() : false;
     }
 
     /**
@@ -287,52 +287,52 @@ private:
      */
     static bool_t isMemoryAvailable(void* const addr, const size_t size)
     {
-        cell_t mask = -1;
-        cell_t* ptr = reinterpret_cast<cell_t*>(addr);
+        size_t mask = static_cast<ucell_t>(-1);
+        ucell_t* ptr = reinterpret_cast<ucell_t*>(addr);
         // Value test
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            ptr[i] = static_cast<cell_t>(i & mask);
+            ptr[i] = static_cast<ucell_t>(i & mask);
         }
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            if(ptr[i] != static_cast<cell_t>(i & mask))
+            if(ptr[i] != static_cast<ucell_t>(i & mask))
             {
                 return false;
             }
         }
         // 0x55 test
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            ptr[i] = static_cast<cell_t>(0x55555555 & mask);
+            ptr[i] = static_cast<ucell_t>(0x55555555UL & mask);
         }
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            if(ptr[i] != static_cast<cell_t>(0x55555555 & mask))
+            if(ptr[i] != static_cast<ucell_t>(0x55555555UL & mask))
             {
                 return false;
             }
         }
         // 0xAA test
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            ptr[i] = static_cast<cell_t>(0xaaaaaaaa & mask);
+            ptr[i] = static_cast<ucell_t>(0xAAAAAAAAUL & mask);
         }
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            if(ptr[i] != static_cast<cell_t>(0xaaaaaaaa & mask))
+            if(ptr[i] != static_cast<ucell_t>(0xAAAAAAAAUL & mask))
             {
                 return false;
             }
         }
         // Zero test
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            ptr[i] = 0x00;
+            ptr[i] = 0x00U;
         }
-        for( size_t i=0; i<size; i++)
+        for( size_t i=0UL; i<size; i++)
         {
-            if(ptr[i] != 0x00)
+            if(ptr[i] != 0x00U)
             {
                 return false;
             }
@@ -353,7 +353,7 @@ private:
     static void* create(void* ptr)
     {
         // Size of this class has to be multipled to eight
-        if((sizeof(Heap) & 0x7) != 0)
+        if((sizeof(Heap) & 0x7UL) != 0UL)
         {
             ptr = NULLPTR;
         }
@@ -368,7 +368,7 @@ private:
             ptr = NULLPTR;
         }
         // Memory address has to be aligned to eight
-        if(reinterpret_cast<uintptr_t>(ptr) & 0x7)
+        if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL )
         {
             ptr = NULLPTR;
         }
@@ -378,36 +378,36 @@ private:
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
-    Heap(const Heap& obj);
+    Heap(Heap const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
 
     /**
      * @copydoc eoos::Object::operator=(const Object&)
      */
-    Heap& operator=(const Heap& obj);
+    Heap& operator=(Heap const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
     
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    Heap(Heap&& obj) noexcept = delete; 
+    Heap(Heap&&) noexcept = delete; 
     
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Heap& operator=(Heap&& obj) noexcept = delete;
+    Heap& operator=(Heap&&) noexcept = delete;
     
     #endif // EOOS_CPP_STANDARD >= 2011    
 
     /**
-     * @struct Aligner<SIZEOF>
+     * @struct Aligner<S>
      * @brief Heap class aligner aligns that to eight.
      *
-     * @note If given SIZEOF is already multiple 8, the class size will be 8 bytes.
+     * @note If given S is already multiple 8, the class size will be 8 bytes.
      *
-     * @tparam SIZEOF Size of Heap class.
+     * @tparam S Size of Heap class.
      */
-    template <int32_t SIZEOF>
+    template <size_t S>
     struct Aligner
     {
 
@@ -419,7 +419,7 @@ private:
         Aligner()
         {
             #ifdef EOOS_DEBUG
-            for(int32_t i=0; i<SIZE; i++) val_[i] = 0x0A;
+            for(size_t i=0; i<SIZE; i++) val_[i] = 0x0AUL;
             #endif
         }
 
@@ -433,12 +433,22 @@ private:
         /**
          * @brief Aligning data size.
          */
-        static const int32_t SIZE = (SIZEOF & ~0x7) + 0x8 - SIZEOF;
+		static const size_t SIZEOF = S;
+
+        /**
+         * @brief Aligning data size.
+         */
+		static const size_t MASK = ~0x7UL;
+
+        /**
+         * @brief Aligning data size.
+         */
+        static const size_t SIZE = ( ( SIZEOF & MASK ) + 0x8UL ) - SIZEOF;
 
         /**
          * @brief Temp array.
          */
-        cell_t val_[SIZE];
+        ucell_t val_[SIZE];
 
     };
 
@@ -496,7 +506,7 @@ private:
          */
         bool_t isConstructed() const
         {
-            return key_ == BLOCK_KEY ? true : false;
+            return (key_ == BLOCK_KEY) ? true : false;
         }
 
         /**
@@ -507,14 +517,14 @@ private:
          */
         void* alloc(size_t size)
         {
-            if(size == 0)
+            if(size == 0UL)
             {
                 return NULLPTR;
             }
             // Align a size to 8 byte boudary
-            if((size & 0x7) != 0)
+            if((size & 0x7UL) != 0UL)
             {
-                size = (size & ~0x7) + 0x8;
+                size = (size & ~0x7UL) + 0x8UL;
             }
             HeapBlock* curr = this;
             while(curr != NULLPTR)
@@ -536,7 +546,7 @@ private:
                 return NULLPTR;
             }
             // Has required memory size for data and a new heap block
-            if(curr->size_ >= size + sizeof(HeapBlock))
+            if( curr->size_ >= (size + sizeof(HeapBlock)) )
             {
                 HeapBlock* next = new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size);
                 if(next == NULLPTR)
@@ -545,14 +555,14 @@ private:
                 }
                 next->next_ = curr->next_;
                 next->prev_ = curr;
-                if(next->next_)
+                if(next->next_ != NULLPTR)
                 {
                     next->next_->prev_ = next;
                 }
                 curr->next_ = next;
                 curr->size_ = size;
             }
-            curr->attr_|= ATTR_USED;
+            curr->attr_ |= ATTR_USED;
             return curr->data();
         }
 
@@ -565,19 +575,25 @@ private:
             {
                 return;
             }
-            int32_t sibling = 0;
-            if(prev_ != NULLPTR && not prev_->isUsed())
+            uint32_t sibling = 0UL;
+            if( prev_ != NULLPTR )
             {
-                sibling |= PREV_FREE;
+                if( not prev_->isUsed() )
+                {
+                    sibling |= PREV_FREE;
+                }
             }
-            if(next_ != NULLPTR && not next_->isUsed())
+            if( next_ != NULLPTR )
             {
-                sibling |= NEXT_FREE;
+                if( not next_->isUsed() )
+                {
+                    sibling |= NEXT_FREE;
+                }
             }
             switch(sibling)
             {
                 case PREV_FREE | NEXT_FREE:
-                    prev_->size_ += 2 * sizeof(HeapBlock) + size_ + next_->size_;
+                    prev_->size_ += ( 2UL * sizeof(HeapBlock) ) + size_ + next_->size_;
                     prev_->next_ = next_->next_;
                     if(prev_->next_ != NULLPTR)
                     {
@@ -601,11 +617,11 @@ private:
                     {
                         next_->prev_ = this;
                     }
-                    attr_ &= ~ATTR_USED;
+                    attr_ &= MASK_UNUSED;
                     break;
 
                 default:
-                    attr_ &= ~ATTR_USED;
+                    attr_ &= MASK_UNUSED;
             }
         }
 
@@ -622,13 +638,13 @@ private:
             do
             {
                 // Size of this class must be multipled to eight
-                if((sizeof(HeapBlock) & 0x7) != 0)
+                if((sizeof(HeapBlock) & 0x7UL) != 0UL)
                 {
                     memory = NULLPTR;
                     break;
                 }
                 // The passed address must be multipled to eight
-                if((reinterpret_cast<uintptr_t>(ptr) & 0x7) != 0)
+                if((reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL)
                 {
                     memory = NULLPTR;
                     break;
@@ -671,7 +687,7 @@ private:
          */
         bool_t isUsed()
         {
-            return (attr_ & ATTR_USED) != 0 ? true : false;
+            return ( (attr_ & ATTR_USED) != 0UL ) ? true : false;
         }
 
         /**
@@ -699,46 +715,51 @@ private:
         /**
          * @copydoc eoos::Object::Object(const Object&)
          */
-        HeapBlock(const HeapBlock& obj);
+        HeapBlock(HeapBlock const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
     
         /**
          * @copydoc eoos::Object::operator=(const Object&)
          */
-        HeapBlock& operator=(const HeapBlock& obj);
+        HeapBlock& operator=(HeapBlock const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
         
         #if EOOS_CPP_STANDARD >= 2011
     
         /**
          * @copydoc eoos::Object::Object(Object&&)
          */       
-        HeapBlock(HeapBlock&& obj) noexcept = delete; 
+        HeapBlock(HeapBlock&&) noexcept = delete; 
         
         /**
          * @copydoc eoos::Object::operator=(Object&&)
          */
-        HeapBlock& operator=(HeapBlock&& obj) noexcept = delete;
+        HeapBlock& operator=(HeapBlock&&) noexcept = delete;
         
         #endif // EOOS_CPP_STANDARD >= 2011    
 
         /**
          * @brief Heap block definition key.
          */
-        static const int64_t BLOCK_KEY = 0x1982040120150515L;
+        static const size_t BLOCK_KEY = 0x20150515UL;
 
         /**
          * @brief Block is used.
          */
-        static const int32_t ATTR_USED = 0x00000001;
+        static const uint32_t ATTR_USED = 0x00000001UL;
 
         /**
          * @brief Next block is free.
          */
-        static const int32_t NEXT_FREE = 0x00000001;
+        static const uint32_t NEXT_FREE = 0x00000001UL;
 
         /**
          * @brief Previous block is free.
          */
-        static const int32_t PREV_FREE = 0x00000002;
+        static const uint32_t PREV_FREE = 0x00000002UL;
+
+        /**
+         * @brief Mask block is unused.
+         */
+        static const uint32_t MASK_UNUSED = 0xFFFFFFFEUL;
 
         /**
          * @brief Heap page of this block.
@@ -758,7 +779,7 @@ private:
         /**
          * @brief Attributes of this block.
          */
-        int32_t attr_;
+        uint32_t attr_;
 
         /**
          * @brief Size in byte of this block.
@@ -789,8 +810,9 @@ private:
         HeapData(size_t isize) :
             block  (NULLPTR),
             toggle (NULLPTR),
-            size   ((isize & ~0x7) - sizeof(Heap)),
+            size   (0),
             key    (HEAP_KEY){
+            size = (isize & ~0x7UL) - sizeof(Heap);
         }
 
         /**
@@ -802,8 +824,9 @@ private:
         HeapData(size_t isize, api::Toggle*& itoggle) :
             block  (NULLPTR),
             toggle (&itoggle),
-            size   ((isize & ~0x7) - sizeof(Heap)),
+            size   (0),
             key    (HEAP_KEY){
+            size = (isize & ~0x7UL) - sizeof(Heap);
         }
 
         /**
@@ -841,24 +864,24 @@ private:
         /**
          * @copydoc eoos::Object::Object(const Object&)
          */
-        HeapData(const HeapData& obj);
+        HeapData(HeapData const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
     
         /**
          * @copydoc eoos::Object::operator=(const Object&)
          */
-        HeapData& operator=(const HeapData& obj);
+        HeapData& operator=(HeapData const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
         
         #if EOOS_CPP_STANDARD >= 2011
     
         /**
          * @copydoc eoos::Object::Object(Object&&)
          */       
-        HeapData(HeapData&& obj) noexcept = delete; 
+        HeapData(HeapData&&) noexcept = delete; 
         
         /**
          * @copydoc eoos::Object::operator=(Object&&)
          */
-        HeapData& operator=(HeapData&& obj) noexcept = delete;
+        HeapData& operator=(HeapData&&) noexcept = delete;
         
         #endif // EOOS_CPP_STANDARD >= 2011    
 
@@ -867,7 +890,7 @@ private:
     /**
      * @brief Size of this Heap class without aligned data.
      */
-    static const int32_t SIZEOF_HEAP = sizeof(HeapData) + sizeof(VirtualTable) - sizeof(uint64_t);
+    static const size_t SIZEOF_HEAP = ( sizeof(HeapData) + sizeof(VirtualTable) ) - sizeof(uint64_t);
 
     /**
      * @brief Heap page memory definition key.

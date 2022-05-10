@@ -52,7 +52,7 @@ public:
         LinkedNode* node = this->next_;
         while(node->index_ != 0)
         {
-            node->index_--;
+            node->index_--; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
             node = node->next_;
         }
         next_->prev_ = prev_;
@@ -75,7 +75,7 @@ public:
         node->index_ = index_;
         do
         {
-            node->index_++;
+            node->index_++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
             node = node->next_;
         }
         while(node->index_ != 0);
@@ -96,7 +96,7 @@ public:
         node = this;
         do
         {
-            node->index_++;
+            node->index_++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
             node = node->next_;
         }
         while(node->index_ != 0);

@@ -187,7 +187,7 @@ public:
             return illegal_;
         }
         Node* const node = getNodeByIndex(index);
-        return node != NULLPTR ? node->getElement() : illegal_;
+        return (node != NULLPTR) ? node->getElement() : illegal_;
     }
 
     /**
@@ -195,7 +195,7 @@ public:
      */
     virtual int32_t getLength() const
     {
-        return last_ == NULLPTR ? 0 : last_->getIndex() + 1;
+        return (last_ == NULLPTR) ? 0 : (last_->getIndex() + 1);
     }
 
     /**
@@ -203,7 +203,7 @@ public:
      */
     virtual bool_t isEmpty() const
     {
-        return last_ == NULLPTR ? true : false;
+        return (last_ == NULLPTR) ? true : false;
     }
 
     /**
@@ -234,7 +234,7 @@ public:
         {
             return false;
         }
-        return illegal_ == value ? true : false;
+        return (illegal_ == value) ? true : false;
     }
 
     /**
@@ -243,7 +243,7 @@ public:
     virtual int32_t getIndexOf(const T& element) const
     {
         Node* const node = getNodeByElement(element);
-        return node != NULLPTR ? node->getIndex() : -1;
+        return (node != NULLPTR) ? node->getIndex() : -1;
     }
 
     /**
@@ -251,7 +251,14 @@ public:
      */
     virtual bool_t isIndex(int32_t const index) const
     {
-        return (0 <= index && index < getLength()) ? true : false;
+        if( 0 <= index )
+        {
+            if( index < getLength() )
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
 
@@ -283,7 +290,7 @@ public:
             return NULLPTR;
         }
         Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
-        if(buf == NULLPTR || not buf->isConstructed())
+        if( (buf == NULLPTR) || (not buf->isConstructed()) )
         {
             delete buf;
             return NULLPTR;
@@ -310,6 +317,8 @@ protected:
      * @param index   Position in this list.
      * @param element Inserting element.
      * @return True if element is inserted.
+     *
+     * @todo Shall re-implemented according MISRA-C++:2008 Rule 6–6–5 as the delete operator is used. 
      */
     bool_t addNode(const int32_t index, const T& element)
     {
@@ -318,11 +327,16 @@ protected:
             return false;
         }
         Node* const node = new Node(element);
-        if(node == NULLPTR || not node->isConstructed())
+        if( node == NULLPTR )
         {
             delete node;
             return false;
         }
+        if( not node->isConstructed() )
+        {
+            delete node;
+            return false;
+        }        
         if(last_ == NULLPTR)
         {
             last_ = node;
@@ -369,7 +383,7 @@ protected:
         {
             return NULLPTR;
         }
-        if(index == getLength() - 1)
+        if( index == (getLength() - 1) )
         {
             return last_;
         }
@@ -395,10 +409,11 @@ protected:
             return NULLPTR;
         }
         Node* node = last_->getNext();
-        for(int32_t i=0; i<len; i++, node = node->getNext())
+        for(int32_t i=0; i<len; i++)
         {
             if(element != node->getElement())
             {
+                node = node->getNext();
                 continue;
             }
             return node;
@@ -442,7 +457,18 @@ protected:
      */
     bool_t isIndexOutOfBounds(const int32_t index) const
     {
-        return (index < 0 || index > getLength()) ? true : false;
+        if( index < 0 )
+        {
+            return true;
+        }
+        else if( index > getLength() )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**

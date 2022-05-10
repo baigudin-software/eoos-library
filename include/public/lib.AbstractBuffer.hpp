@@ -161,7 +161,7 @@ public:
     {
         T* value;
         T* const buf = getBuffer();
-        if( not Self::isConstructed() || (index >= length_) || (buf == NULLPTR) )
+        if( (not Self::isConstructed()) || (index >= length_) || (buf == NULLPTR) )
         {
             value = &illegal_;
         }

@@ -72,7 +72,7 @@ protected:
     virtual bool_t copy(const T* const str)
     {
         bool_t res;
-        if( Parent::isConstructed() && str != NULLPTR )
+        if( Parent::isConstructed() && (str != NULLPTR) )
         {
             int32_t const len = Parent::getLength(str);
             res = true;
@@ -115,7 +115,7 @@ protected:
     virtual bool_t concatenate(const T* const str)
     {
         bool_t res;
-        if( Parent::isConstructed() && str != NULLPTR )
+        if( Parent::isConstructed() && (str != NULLPTR) )
         {
             // Simply, copy a given string if the context is freed
             if( not context_.isAllocated() )
@@ -168,7 +168,7 @@ protected:
     virtual int32_t compare(const T* const str) const
     {
         int32_t res;
-        if( Parent::isConstructed() && context_.str != NULLPTR && str != NULLPTR )
+        if( Parent::isConstructed() && (context_.str != NULLPTR) && (str != NULLPTR) )
         {
             res = context_.len - Parent::getLength(str);
             // If lengths are equal, characters might be different
@@ -178,7 +178,7 @@ protected:
                 {
                     uintptr_t const a1 = static_cast<uintptr_t>(context_.str[i]);
                     uintptr_t const a2 = static_cast<uintptr_t>(str[i]);
-                    res = static_cast<int32_t>(a1 - a2);
+                    res = static_cast<int32_t>(a1) - static_cast<int32_t>(a2);
                     if(res != 0)
                     {
                         break;
@@ -264,7 +264,7 @@ private:
             // Don't instigate a copy of object buffer to this buffer,
             // as the source object always is temporary and
             // doesn't have any information in its buffer.
-            str = obj.str != NULLPTR ? buf_ : NULLPTR;
+            str = (obj.str != NULLPTR) ? buf_ : NULLPTR;
             len = obj.len;
             max_ = obj.max_;
         }
@@ -278,7 +278,7 @@ private:
         bool_t allocate(int32_t const length)
         {
             bool_t res;
-            if(str != NULLPTR || length > L)
+            if( (str != NULLPTR) || (length > L) )
             {
                 res = false;
             }
@@ -328,7 +328,7 @@ private:
          * @param len A number of string characters.
          * @return True if this length will be fit successfully.
          */
-        bool_t isFit(int32_t len) const
+        bool_t isFit(int32_t len) const ///< SCA Justificated MISRA-C++:2008 Rule 2-10-2
         {
             bool_t res;
             if( len > max_ )
@@ -442,7 +442,7 @@ protected:
     virtual bool_t copy(const T* const str)
     {
         bool_t res;
-        if( Parent::isConstructed() && str != NULLPTR )
+        if( Parent::isConstructed() && (str != NULLPTR) )
         {
             int32_t const len = Parent::getLength(str);
             res = true;
@@ -485,7 +485,7 @@ protected:
     virtual bool_t concatenate(const T* const str)
     {
         bool_t res;
-        if( Parent::isConstructed() && str != NULLPTR )
+        if( Parent::isConstructed() && (str != NULLPTR) )
         {
             // Simply, copy a given string if the context is freed
             if( not context_.isAllocated() )
@@ -538,7 +538,7 @@ protected:
     virtual int32_t compare(const T* const str) const
     {
         int32_t res;
-        if( Parent::isConstructed() && context_.str != NULLPTR && str != NULLPTR )
+        if( Parent::isConstructed() && (context_.str != NULLPTR) && (str != NULLPTR) )
         {
             res = context_.len - Parent::getLength(str);
             // If lengths are equal, characters might be different
@@ -548,7 +548,7 @@ protected:
                 {
                     uintptr_t const a1 = static_cast<uintptr_t>(context_.str[i]);
                     uintptr_t const a2 = static_cast<uintptr_t>(str[i]);
-                    res = static_cast<int32_t>(a1 - a2);
+                    res = static_cast<int32_t>(a1) - static_cast<int32_t>(a2);
                     if(res != 0)
                     {
                         break;
@@ -714,7 +714,7 @@ private:
          * @param len A number of string characters.
          * @return True if this length will be fit successfully.
          */
-        bool_t isFit(int32_t len) const
+        bool_t isFit(int32_t len) const ///< SCA Justificated MISRA-C++:2008 Rule 2-10-2
         {
             bool_t res;
             if( len > max_ )
@@ -738,7 +738,7 @@ private:
          */
         static int32_t calculateSize(int32_t len)
         {
-            size_t size = static_cast<size_t>(len) * sizeof(T) + sizeof(T);
+            size_t size = (static_cast<size_t>(len) * sizeof(T)) + sizeof(T);
             // Align size to eight
             size_t const align = size & 0x7U;
             if(align != 0U)
@@ -760,7 +760,7 @@ private:
         {
             uint32_t const bytes = sizeof(T);
             int32_t const len = size / static_cast<int32_t>(bytes);
-            return (len > 1) ? len - 1 : 0;
+            return (len > 1) ? (len - 1) : 0;
         }
 
         /**

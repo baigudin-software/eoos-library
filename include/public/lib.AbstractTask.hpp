@@ -55,7 +55,7 @@ public:
      */
     virtual size_t getStackSize() const
     {
-        return 0;
+        return 0U;
     }
 
 };

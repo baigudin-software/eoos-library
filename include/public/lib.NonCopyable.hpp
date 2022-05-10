@@ -41,24 +41,24 @@ private:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    NonCopyable(NonCopyable const& obj);
+    NonCopyable(NonCopyable const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
     
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    NonCopyable& operator=(NonCopyable const& obj);   
+    NonCopyable& operator=(NonCopyable const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
 
     #if EOOS_CPP_STANDARD >= 2011
     
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    NonCopyable(NonCopyable&& obj) noexcept = delete;
+    NonCopyable(NonCopyable&&) noexcept = delete;
     
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    NonCopyable& operator=(NonCopyable&& obj) noexcept = delete;
+    NonCopyable& operator=(NonCopyable&&) noexcept = delete;
 
     #endif // EOOS_CPP_STANDARD >= 2011
 

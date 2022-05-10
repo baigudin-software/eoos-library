@@ -179,7 +179,7 @@ public:
     virtual int32_t getCount() const
     {
         int32_t counter = 0;
-        if( isConstructed() && pointer_ != NULLPTR )
+        if( isConstructed() && (pointer_ != NULLPTR) )
         {
             counter = 1;
         }

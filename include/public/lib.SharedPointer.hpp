@@ -80,7 +80,7 @@ public:
      */       
     SharedPointer& operator=(const SharedPointer& obj)
     {
-        if( this != &obj && isConstructed() )
+        if( isConstructed() && (this != &obj) )
         {
             release();
             cb_ = obj.cb_;
@@ -356,6 +356,7 @@ private:
         void increase()
         {
             MutexGuard<AA> const guard(mutex_);
+            static_cast<void>(guard);            
             ++counter_;
         }
 
@@ -366,7 +367,8 @@ private:
          */        
         int32_t decrease()
         {
-            MutexGuard<AA> const guard(mutex_);        
+            MutexGuard<AA> const guard(mutex_);
+            static_cast<void>(guard);            
             return --counter_;
         }
 

@@ -128,7 +128,7 @@ public:
      */
     explicit BaseString(int32_t const value) : Parent()
     {
-        Self::convert<int32_t>(value, 10);
+        static_cast<void>( Self::convert<int32_t>(value, 10) );
     }
 
     /**
@@ -248,7 +248,7 @@ public:
     bool_t convert(I const value, int32_t const base = 10)
     {
         bool_t res;
-        char_t temp[sizeof(I) * 8 + 1];
+        char_t temp[ (sizeof(I) * 8U) + 1U ];
         if( not Memory::itoa<I>(value, temp, base) )
         {
             res = false;
@@ -614,7 +614,7 @@ public:
      */
     explicit BaseString(int32_t const value) : Parent()
     {
-        Self::convert<int32_t>(value, 10);
+        static_cast<void>( Self::convert<int32_t>(value, 10) );
     }
 
     /**
@@ -726,15 +726,15 @@ public:
      * @note You need to use "string.template convert<I>(value, base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
-     * @param val  A value that would be converted to this string.
-     * @param base A numerical base used to represent a value as this string.
+     * @param value A value that would be converted to this string.
+     * @param base  A numerical base used to represent a value as this string.
      * @return True if the conversion has been completed successfully.
      */
     template <typename I>
     bool_t convert(I const value, int32_t const base = 10)
     {
         bool_t res;
-        char_t temp[sizeof(I) * 8 + 1];
+        char_t temp[ (sizeof(I) * 8U) + 1U ];
         if( not Memory::itoa<I>(value, temp, base) )
         {
             res = false;
@@ -868,7 +868,7 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const BaseString
 template <class A>
 inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
 {
-    return ( source1.compare(source2) ) != 0 ? true : false;
+    return ( source1.compare(source2) != 0 ) ? true : false;
 }
 
 /**
