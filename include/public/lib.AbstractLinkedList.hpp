@@ -41,7 +41,7 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractLinkedList() : Parent(),
+    AbstractLinkedList() : NonCopyable<A>(), api::List<T>(), api::Queue<T>(), api::Iterable<T>(),
         illegal_ (),
         last_    (NULLPTR),
         count_   (0){
@@ -56,7 +56,7 @@ public:
      *
      * @param illegal An illegal element.
      */
-    AbstractLinkedList(const T& illegal) : Parent(),
+    AbstractLinkedList(const T& illegal) : NonCopyable<A>(), api::List<T>(), api::Queue<T>(), api::Iterable<T>(),
         illegal_ (illegal),
         last_    (NULLPTR),
         count_   (0){
@@ -67,13 +67,13 @@ public:
      */
     virtual ~AbstractLinkedList()
     {
-        clear();
+        Self::clear();
     }
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
+    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Justified Rule 10-3-1 and Defected Rule 9-3-3
     {
         return Parent::isConstructed();
     }
@@ -156,7 +156,7 @@ public:
     /**
      * @copydoc eoos::api::Queue::peek(const T&)
      */
-    virtual T& peek() const
+    virtual T& peek()
     {
         return get(0);
     }
@@ -164,7 +164,7 @@ public:
     /**
      * @copydoc eoos::api::List::getFirst()
      */
-    virtual T& getFirst() const
+    virtual T& getFirst()
     {
         return get(0);
     }
@@ -172,7 +172,7 @@ public:
     /**
      * @copydoc eoos::api::List::getLast()
      */
-    virtual T& getLast() const
+    virtual T& getLast()
     {
         return get( getLength() - 1 );
     }
@@ -180,11 +180,11 @@ public:
     /**
      * @copydoc eoos::api::List::get()
      */
-    virtual T& get(int32_t index) const
+    virtual T& get(int32_t index)
     {
         if( not Self::isConstructed() )
         {
-            return illegal_;
+            return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
         }
         Node* const node = getNodeByIndex(index);
         return (node != NULLPTR) ? node->getElement() : illegal_;
@@ -209,7 +209,7 @@ public:
     /**
      * @copydoc eoos::api::IllegalValue::getIllegal()
      */
-    virtual T& getIllegal() const
+    virtual T const& getIllegal() const
     {
         return illegal_;
     }
@@ -277,7 +277,7 @@ public:
      *
      * @return Pointer to reference of elements or NULLPTR if list is empty.
      */
-    Buffer<T,0,A>* getAsBuffer() const
+    Buffer<T,0,A>* getAsBuffer()
     {
         #ifdef EOOS_NO_STRICT_MISRA_RULES
         if( not Self::isConstructed() )
@@ -377,7 +377,7 @@ protected:
      * @param index Position in this list.
      * @return Pointer to the node of this list.
      */
-    Node* getNodeByIndex(const int32_t index) const
+    Node* getNodeByIndex(const int32_t index)
     {
         if( not isIndex(index) )
         {
@@ -478,7 +478,7 @@ protected:
      */
     int32_t& getReferenceToCount()
     {
-        return count_;
+        return count_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
     }
 
     /**
@@ -488,7 +488,7 @@ protected:
      */
     Node*& getReferenceToLast()
     {
-        return last_;
+        return last_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
     }
 
     /**
@@ -498,7 +498,7 @@ protected:
      */
     T& getReferenceToIllegal()
     {
-        return illegal_;
+        return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
     }
 
 private:

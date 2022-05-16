@@ -59,7 +59,7 @@ protected:
     /**
      * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
-    virtual T getTerminator() const
+    virtual T getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return T::TERMINATING_CHARACTER;
     }
@@ -95,7 +95,7 @@ public:
      *
      * @param source A source object.
      */
-    BaseString(const BaseString<char_t,L,A>& source) : Parent()
+    BaseString(const BaseString<char_t,L,A>& source) : Parent() ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
     {
         Parent::copy(source);
     }
@@ -245,7 +245,7 @@ public:
      * @return True if the conversion has been completed successfully.
      */
     template <typename I>
-    bool_t convert(I const value, int32_t const base = 10)
+    bool_t convert(I const value, int32_t const base = 10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         bool_t res;
         char_t temp[ (sizeof(I) * 8U) + 1U ];
@@ -263,14 +263,14 @@ public:
     /**
      * @brief Casts this string to an integer number.
      *
-     * @note You need to use "string.template cast<I>(base);" syntax,
+     * @note You need to use "BaseString.template cast<I>(base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
      * @param base A numerical base used to parse the string.
      * @return The resulting number.
      */
     template <typename I>
-    I cast(int32_t const base = 10) const
+    I cast(int32_t const base = 10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return Memory::atoi<I>(Parent::getChar(), base);
     }
@@ -280,7 +280,7 @@ protected:
     /**
      * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
-    virtual char_t getTerminator() const
+    virtual char_t getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return '\0';
     }
@@ -546,7 +546,7 @@ protected:
     /**
      * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
-    virtual T getTerminator() const
+    virtual T getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return T::TERMINATING_CHARACTER;
     }
@@ -581,7 +581,7 @@ public:
      *
      * @param source A source object.
      */
-    BaseString(const BaseString<char_t,0,A>& source) : Parent()
+    BaseString(const BaseString<char_t,0,A>& source) : Parent() ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
     {
         Parent::copy(source);
     }
@@ -731,7 +731,7 @@ public:
      * @return True if the conversion has been completed successfully.
      */
     template <typename I>
-    bool_t convert(I const value, int32_t const base = 10)
+    bool_t convert(I const value, int32_t const base = 10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         bool_t res;
         char_t temp[ (sizeof(I) * 8U) + 1U ];
@@ -749,14 +749,14 @@ public:
     /**
      * @brief Casts this string to an integer number.
      *
-     * @note You need to use "string.template cast<I>(base);" syntax,
+     * @note You need to use "BaseString.template cast<I>(base);" syntax,
      * if you have to specify the template argument type explicitly.
      *
      * @param base A numerical base used to parse the string.
      * @return The resulting number.
      */
     template <typename I>
-    I cast(int32_t const base = 10) const
+    I cast(int32_t const base = 10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         const char_t* const str = Parent::getChar();
         return Memory::atoi<I>(str, base);
@@ -767,7 +767,7 @@ protected:
     /**
      * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
      */
-    virtual char_t getTerminator() const
+    virtual char_t getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return '\0';
     }

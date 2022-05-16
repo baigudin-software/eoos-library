@@ -37,9 +37,9 @@ public:
         {
             cell_t const* sp  = static_cast<cell_t const*>(src);
             cell_t* dp  = static_cast<cell_t*>(dst);
-            while(len-- != 0U) ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+            while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             {
-                *dp++ = *sp++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15 and Rule 5-2-10
+                *dp++ = *sp++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
             }
             res = dst;
         }
@@ -66,7 +66,10 @@ public:
         }
         cell_t* dp = static_cast<cell_t*>(dst);
         cell_t const uc = val;
-        while(len-- != 0U) *dp++ = uc; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15 and Rule 5-2-10
+        while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
+        {
+            *dp++ = uc; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
+        }
         return dst;
     }
 
@@ -86,7 +89,7 @@ public:
         while( *str != '\0' )
         {
             len++;
-            str++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
+            str++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         }
         return len;
     }
@@ -104,9 +107,9 @@ public:
         {
             return NULLPTR;
         }
-        char_t* d = dst - 1;              ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
-        const char_t* s = src  - 1;       ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
-        while( (*++d = *++s) != '\0' ) {} ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
+        char_t* d = dst - 1;              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        const char_t* s = src  - 1;       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         return dst;
     }
 
@@ -124,11 +127,11 @@ public:
         {
             return NULLPTR;
         }
-        char_t* d = dst - 1;              ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
-        while( *++d != '\0' ) {}          ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15 and Rule 5-2-10
-        d--;                              ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
-        const char_t* s = src - 1;        ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15       
-        while( (*++d = *++s) != '\0' ) {} ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
+        char_t* d = dst - 1;              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        while( *++d != '\0' ) {}          ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
+        d--;                              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        const char_t* s = src - 1;        ///< SCA MISRA-C++:2008 Justified Rule 5-0-15       
+        while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         return dst;
     }
 
@@ -151,8 +154,8 @@ public:
         int32_t res;
         while(true)
         {
-            int32_t ch1 = static_cast<int32_t>(*str1++); ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15 and Rule 5-2-10
-			int32_t ch2 = static_cast<int32_t>(*str2++); ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15 and Rule 5-2-10
+            int32_t ch1 = static_cast<int32_t>(*str1++); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
+			int32_t ch2 = static_cast<int32_t>(*str2++); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
             res = ch1 - ch2;
             if( (ch1 == 0) || (res != 0) )
             {
@@ -190,7 +193,7 @@ public:
         bool_t isNegative;
         bool_t res = true;
         int32_t index = LENGTH - 1;
-        temp[index--] = '\0'; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-11 and Rule 5-2-10
+        temp[index--] = '\0'; ///< SCA MISRA-C++:2008 Justified Rule 5-0-11 and Rule 5-2-10
         do
         {
             // Test for available base
@@ -243,7 +246,7 @@ public:
                 {
                     ch = '0';
                 }
-                temp[index--] = static_cast<char_t>(digit + ch); ///< SCA Justificated MISRA-C++:2008 Rule 3-9-2, Rule 5-0-11 and Rule 5-2-10
+                temp[index--] = static_cast<char_t>(digit + ch); ///< SCA MISRA-C++:2008 Justified Rule 3-9-2, Rule 5-0-11 and Rule 5-2-10
                 module = module / base;
                 if(module == 0)
                 {
@@ -253,13 +256,13 @@ public:
             // Add minus
             if( isNegative && (index >= 0) )
             {
-                temp[index--] = '-'; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-11 and Rule 5-2-10
+                temp[index--] = '-'; ///< SCA MISRA-C++:2008 Justified Rule 5-0-11 and Rule 5-2-10
             }
             res = true;
         }
         while(false);
         // Copy the temp string to the destination string
-        strcpy(str, &temp[++index]); ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+        strcpy(str, &temp[++index]); ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
         return res;
     }
 
@@ -273,15 +276,27 @@ public:
     template <typename T>
     static T atoi(const char_t* str, int32_t const base = 10)
     {
+        bool_t isBase = false;
         switch(base)
         {
             case  2:
             case  8:
             case 10:
-            case 16: break;
-            default: return 0;
+            case 16:
+            {
+                isBase = true;
+                break;
+            }
+            default:
+            {
+                isBase = false;
+                break;
+            }
         }
-
+        if( not isBase )
+        {
+            return 0;
+        }
         T result = 0;
         T const multiplier = static_cast<T>(base);
         int32_t index = 0;
@@ -304,6 +319,10 @@ public:
                 isNegative = false;
                 index++;
             }
+            else
+            {
+                isNegative = false;
+            }
         }
         // Do fast calculation for no hexadecimal base
         if(base != 16)
@@ -311,7 +330,7 @@ public:
             while( isDigit(str[index], base) )
             {
                 result *= multiplier;
-                result += static_cast<T>( str[index++] - '0' ); ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+                result += static_cast<T>( str[index++] - '0' ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             }
         }
         else
@@ -322,7 +341,7 @@ public:
             {
                 detectMathOperands(str[index], subtrahend, addend);
                 result *= base;
-                result += static_cast<T>( str[index++] - subtrahend ); ///< SCA Justificated MISRA-C++:2008 Rule 4-5-3, Rule 5-0-11 and Rule 5-2-10
+                result += static_cast<T>( str[index++] - subtrahend ); ///< SCA MISRA-C++:2008 Justified Rule 4-5-3, Rule 5-0-11 and Rule 5-2-10
                 result += static_cast<T>( addend );
             }
         }
@@ -365,27 +384,41 @@ private:
      */
     static bool_t isDigit(char_t const character, int32_t const base = 10)
     {
+        bool_t res = false;
         int32_t const ch = static_cast<int32_t>(character);        
         switch(base)
         {
             case 2:
-                return ( (ch >= 0x30) && (ch <= 0x31) ) ? true : false;
-
+            {
+                res = ( (ch >= 0x30) && (ch <= 0x31) ) ? true : false;
+                break;
+            }
             case 8:
-                return ( (ch >= 0x30) && (ch <= 0x37) ) ? true : false;
-
+            {
+                res = ( (ch >= 0x30) && (ch <= 0x37) ) ? true : false;
+                break;
+            }
             case 16:
-                return ( 
+            {
+                res = ( 
                     ( (ch >= 0x30) && (ch <= 0x39) )
                  || ( (ch >= 0x41) && (ch <= 0x46) )
                  || ( (ch >= 0x61) && (ch <= 0x66) )
                 ) ? true : false;
+                break;
+            }
             case 10:
-                return ( (ch >= 0x30) && (ch <= 0x39) ) ? true : false;
-
+            {
+                res = ( (ch >= 0x30) && (ch <= 0x39) ) ? true : false;
+                break;
+            }
             default:
-                return false;
+            {
+                res = false;
+                break;
+            }
         }
+        return res;
     }
 
     /**

@@ -52,7 +52,7 @@ public:
         LinkedNode* node = this->next_;
         while(node->index_ != 0)
         {
-            node->index_--; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+            node->index_--; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
             node = node->next_;
         }
         next_->prev_ = prev_;
@@ -75,7 +75,7 @@ public:
         node->index_ = index_;
         do
         {
-            node->index_++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+            node->index_++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
             node = node->next_;
         }
         while(node->index_ != 0);
@@ -96,7 +96,7 @@ public:
         node = this;
         do
         {
-            node->index_++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+            node->index_++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
             node = node->next_;
         }
         while(node->index_ != 0);
@@ -107,7 +107,17 @@ public:
      *
      * @return Previous element.
      */
-    LinkedNode<T,A>* getPrevious() const
+    LinkedNode<T,A>* getPrevious() ///< SCA MISRA-C++:2008 Justified Rule 9-3-3
+    {
+        return prev_;
+    }
+
+    /**
+     * @brief Returns previous element.
+     *
+     * @return Previous element.
+     */
+    LinkedNode<T,A> const* getPrevious() const
     {
         return prev_;
     }
@@ -117,7 +127,17 @@ public:
      *
      * @return The next element.
      */
-    LinkedNode<T,A>* getNext() const
+    LinkedNode<T,A>* getNext() ///< SCA MISRA-C++:2008 Justified Rule 9-3-3
+    {
+        return next_;
+    }
+
+    /**
+     * @brief Returns next element.
+     *
+     * @return The next element.
+     */
+    LinkedNode<T,A> const* getNext() const
     {
         return next_;
     }
@@ -127,7 +147,17 @@ public:
      *
      * @return The next element.
      */
-    T& getElement() const
+    T& getElement()
+    {
+        return element_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
+    }
+
+    /**
+     * @brief Returns the element.
+     *
+     * @return The next element.
+     */
+    T const& getElement() const
     {
         return element_;
     }
@@ -175,7 +205,7 @@ private:
     /**
      * @brief Containing element.
      */
-    mutable T element_;
+    T element_;
 
 };
 

@@ -33,7 +33,7 @@ public:
      *
      * @param permits The initial number of permits available.
      */
-    Semaphore(const int32_t permits) : Parent(),
+    explicit Semaphore(const int32_t permits) : Parent(),
         semaphore_ (NULLPTR){
         bool_t const isConstructed = construct(permits);
         setConstructed( isConstructed );

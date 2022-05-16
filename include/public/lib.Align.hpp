@@ -55,7 +55,7 @@ public:
      *
      * @param obj A source object.
      */
-    Align(const Align& obj)
+    Align(const Align& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
     {
         copy(obj);
     }
@@ -120,7 +120,7 @@ public:
      *
      * @return This object.
      */
-    Align operator++(int) ///< SCA Justificated MISRA-C++:2008 Rule 3-9-2
+    Align operator++(int) ///< SCA MISRA-C++:2008 Justified Rule 3-9-2
     {
         T val = typecast();
         val += 1;
@@ -133,7 +133,7 @@ public:
      *
      * @return This object.
      */
-    Align operator--(int) ///< SCA Justificated MISRA-C++:2008 Rule 3-9-2
+    Align operator--(int) ///< SCA MISRA-C++:2008 Justified Rule 3-9-2
     {
         T val = typecast();
         val -= 1;
@@ -190,11 +190,11 @@ private:
      *
      * @param value Source data value.
      */
-    void assignment(const T& value)
+    void assignment(const T& value) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         for(size_t i = 0U; i<S; i++)
         {
-            T const v = value >> (8U * i); ///< SCA Justificated MISRA-C++:2008 Rule 5-0-21
+            T const v = value >> (8U * i); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
             val_[i] = static_cast<cell_t>(v);
         }
     }
@@ -204,7 +204,7 @@ private:
      *
      * @param obj Reference to source object.
      */
-    void copy(const Align& obj)
+    void copy(const Align& obj) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         for(size_t i=0U; i<S; i++)
         {
@@ -223,8 +223,8 @@ private:
         T r = static_cast<T>(0);
         for(int32_t i=max; i>=0; i--)
         {
-            r = r << 8U;                     ///< SCA Justificated MISRA-C++:2008 Rule 5-0-21
-            r = r | static_cast<T>(val_[i]); ///< SCA Justificated MISRA-C++:2008 Rule 5-0-21
+            r = r << 8U;                     ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
+            r = r | static_cast<T>(val_[i]); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
         }
         return r;
     }

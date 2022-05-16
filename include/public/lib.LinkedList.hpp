@@ -44,7 +44,7 @@ public:
      *
      * @param illegal An illegal element.
      */
-    LinkedList(const T& illegal) : Parent(illegal)
+    LinkedList(const T& illegal) : AbstractLinkedList<T,A>(illegal)
     {
     }
 
@@ -100,7 +100,7 @@ private:
          * @param index Position in this list.
          * @param list  Reference to self list.
          */
-        Iterator(int32_t const index, List& list) :
+        Iterator(int32_t const index, List& list) : NonCopyable<A>(), api::ListIterator<T>(),
             list_    (list),
             count_   (list.getReferenceToCount()),
             last_    (list.getReferenceToLast()),
@@ -119,7 +119,7 @@ private:
         /**
          * @copydoc eoos::api::Object::isConstructed()
          */
-        virtual bool_t isConstructed() const
+        virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Justified Rule 10-3-1 and Defected Rule 9-3-3
         {
             return Parent::isConstructed();
         }
@@ -137,7 +137,7 @@ private:
             {
                 return false;
             }
-            count_.self++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+            count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
             rindex_ = ILLEGAL_INDEX;
             return true;
         }
@@ -168,7 +168,7 @@ private:
             {
                 return false;
             }
-            count_.self++; ///< SCA Justificated MISRA-C++:2008 Rule 5-2-10
+            count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
             rindex_ = ILLEGAL_INDEX;
             curs_ = curs;
             return true;
@@ -177,11 +177,11 @@ private:
         /**
          * @copydoc eoos::api::ListIterator::getPrevious()
          */
-        virtual T& getPrevious() const
+        virtual T& getPrevious()
         {
             if( not hasPrevious() )
             {
-                return illegal_;
+                return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
             curs_ = (curs_ == NULLPTR) ? last_ : curs_->getPrevious();
             rindex_ = curs_->getIndex();
@@ -223,11 +223,11 @@ private:
         /**
          * @copydoc eoos::api::Iterator::getNext()
          */
-        virtual T& getNext() const
+        virtual T& getNext()
         {
             if( not hasNext() )
             {
-                return illegal_;
+                return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
             Node* const node = curs_;
             curs_ = (curs_ != last_) ? curs_->getNext() : NULLPTR;
@@ -262,7 +262,7 @@ private:
         /**
          * @copydoc eoos::api::IllegalValue::getIllegal()
          */
-        virtual T& getIllegal() const
+        virtual T const& getIllegal() const
         {
             return list_.getIllegal();
         }
@@ -332,12 +332,12 @@ private:
             /**
              * @brief Quantity of chang made by iterating list.
              */
-            const int32_t& list;
+            const int32_t& list; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
             /**
              * @brief Quantity of chang made by the iterator.
              */
-            int32_t self;
+            int32_t self; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         };
 
@@ -369,12 +369,12 @@ private:
         /**
          * @brief Pointer to current node of this iterator.
          */
-        mutable Node* curs_;
+        Node* curs_;
 
         /**
          * @brief Index of element of list which can be removed by remove function.
          */
-        mutable int32_t rindex_;
+        int32_t rindex_;
 
     };
 };

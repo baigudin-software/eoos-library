@@ -46,7 +46,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
+    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return Parent::isConstructed();
     }
@@ -177,7 +177,7 @@ protected:
         T const null = getTerminator();
         while( *str != null )
         {
-            str++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
+            str++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
             len++;
         }
         return len;
@@ -194,12 +194,12 @@ protected:
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
             T const null = getTerminator();
-            dst--; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
-            src--; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
+            dst--; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+            src--; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
             do
             {
-                dst++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
-                src++; ///< SCA Justificated MISRA-C++:2008 Rule 5-0-15
+                dst++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+                src++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
                 *dst = *src;
             }
             while(*dst != null);

@@ -70,7 +70,7 @@ public:
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
-    SharedPointer(const SharedPointer& obj) : Parent(obj),
+    SharedPointer(const SharedPointer& obj) : Parent(obj), ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         cb_ (obj.cb_){
         acquire();
     }
@@ -118,7 +118,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
+    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return Parent::isConstructed();
     }

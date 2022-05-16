@@ -231,12 +231,12 @@ private:
         /**
          * @brief The first character of this string.
          */
-        T* str;
+        T* str; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Current number of characters of this string.
          */
-        int32_t len;
+        int32_t len; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Constructor.
@@ -308,7 +308,7 @@ private:
          *
          * @return True if the context has been allocated successfully.
          */
-        bool_t isAllocated()
+        bool_t isAllocated() const
         {
             bool_t res;
             if( str == NULLPTR )
@@ -328,7 +328,7 @@ private:
          * @param len A number of string characters.
          * @return True if this length will be fit successfully.
          */
-        bool_t isFit(int32_t len) const ///< SCA Justificated MISRA-C++:2008 Rule 2-10-2
+        bool_t isFit(int32_t len) const ///< SCA MISRA-C++:2008 Justified Rule 2-10-2
         {
             bool_t res;
             if( len > max_ )
@@ -601,12 +601,12 @@ private:
         /**
          * @brief The first character of this string.
          */
-        T* str;
+        T* str; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Current number of characters of this string.
          */
-        int32_t len;
+        int32_t len; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Constructor.
@@ -714,7 +714,7 @@ private:
          * @param len A number of string characters.
          * @return True if this length will be fit successfully.
          */
-        bool_t isFit(int32_t len) const ///< SCA Justificated MISRA-C++:2008 Rule 2-10-2
+        bool_t isFit(int32_t len) const ///< SCA MISRA-C++:2008 Justified Rule 2-10-2
         {
             bool_t res;
             if( len > max_ )

@@ -63,7 +63,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
+    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return Parent::isConstructed();
     }
@@ -87,7 +87,7 @@ public:
     /**
      * @copydoc eoos::api::IllegalValue::getIllegal()
      */
-    virtual T& getIllegal() const
+    virtual T const& getIllegal() const
     {
         return illegal_;
     }

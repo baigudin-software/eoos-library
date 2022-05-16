@@ -30,7 +30,7 @@ public:
      *
      * @param size Total heap size.
      */
-    Heap(size_t size) :
+    explicit Heap(size_t size) : api::SystemHeap(),
         data_ (size),
         temp_ (){
         const bool_t isConstructed = construct();
@@ -49,7 +49,7 @@ public:
      * @param size   Total heap size.
      * @param toggle Reference to pointer to global interrupts toggle interface.
      */
-    Heap(size_t size, api::Toggle*& toggle) :
+    Heap(size_t size, api::Toggle*& toggle) : api::SystemHeap(),
         data_  (size, toggle),
         temp_ (){
         const bool_t isConstructed = construct();
@@ -226,7 +226,7 @@ private:
      *
      * @return An enable source bit value of a controller before function was called.
      */
-    bool_t disable()
+    bool_t disable() const
     {
         if(data_.toggle == NULLPTR)
         {
@@ -241,7 +241,7 @@ private:
      *
      * @param status returned status by disable function.
      */
-    void enable(const bool_t status)
+    void enable(const bool_t status) const
     {
         if(data_.toggle == NULLPTR)
         {
@@ -270,7 +270,7 @@ private:
      *
      * @return Pointer to heap block.
      */
-    HeapBlock* heapBlock(void* const data)
+    static HeapBlock* heapBlock(void* const data)
     {
         const uintptr_t addr = reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock);
         return reinterpret_cast<HeapBlock*>(addr);
@@ -378,12 +378,12 @@ private:
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
-    Heap(Heap const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
+    Heap(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
 
     /**
      * @copydoc eoos::Object::operator=(const Object&)
      */
-    Heap& operator=(Heap const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
+    Heap& operator=(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
     
     #if EOOS_CPP_STANDARD >= 2011
 
@@ -593,6 +593,7 @@ private:
             switch(sibling)
             {
                 case PREV_FREE | NEXT_FREE:
+                {
                     prev_->size_ += ( 2UL * sizeof(HeapBlock) ) + size_ + next_->size_;
                     prev_->next_ = next_->next_;
                     if(prev_->next_ != NULLPTR)
@@ -600,8 +601,9 @@ private:
                         prev_->next_->prev_ = prev_;
                     }
                     break;
-
+                }
                 case PREV_FREE:
+                {
                     prev_->size_ += sizeof(HeapBlock) + size_;
                     prev_->next_ = next_;
                     if(next_ != NULLPTR)
@@ -609,8 +611,9 @@ private:
                         next_->prev_ = prev_;
                     }
                     break;
-
+                }
                 case NEXT_FREE:
+                {
                     size_ += sizeof(HeapBlock) + next_->size_;
                     next_ = next_->next_;
                     if(next_ != NULLPTR)
@@ -619,9 +622,12 @@ private:
                     }
                     attr_ &= MASK_UNUSED;
                     break;
-
+                }
                 default:
+                {
                     attr_ &= MASK_UNUSED;
+                    break;
+                }
             }
         }
 
@@ -667,7 +673,7 @@ private:
          *
          * @return True if it may be deleted.
          */
-        bool_t canDelete()
+        bool_t canDelete() const
         {
             if( not isConstructed() )
             {
@@ -685,7 +691,7 @@ private:
          *
          * @return True if memory block is available.
          */
-        bool_t isUsed()
+        bool_t isUsed() const
         {
             return ( (attr_ & ATTR_USED) != 0UL ) ? true : false;
         }
@@ -715,12 +721,12 @@ private:
         /**
          * @copydoc eoos::Object::Object(const Object&)
          */
-        HeapBlock(HeapBlock const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
+        HeapBlock(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
     
         /**
          * @copydoc eoos::Object::operator=(const Object&)
          */
-        HeapBlock& operator=(HeapBlock const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
+        HeapBlock& operator=(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
         
         #if EOOS_CPP_STANDARD >= 2011
     
@@ -807,7 +813,7 @@ private:
          *
          * @param isize Total heap size.
          */
-        HeapData(size_t isize) :
+        explicit HeapData(size_t isize) :
             block  (NULLPTR),
             toggle (NULLPTR),
             size   (0),
@@ -837,7 +843,7 @@ private:
         /**
          * @brief First memory block of heap page memory.
          */
-        HeapBlock* block;
+        HeapBlock* block; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Threads switching off key.
@@ -847,29 +853,29 @@ private:
          * a changing thread context. The most useful case is to give
          * a global interrupts toggle interface.
          */
-        api::Toggle** toggle;
+        api::Toggle** toggle; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Actual size of heap.
          */
-        size_t size;
+        size_t size; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Heap page memory definition key.
          */
-        int32_t key;
+        int32_t key; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
     private:
 
         /**
          * @copydoc eoos::Object::Object(const Object&)
          */
-        HeapData(HeapData const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
+        HeapData(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
     
         /**
          * @copydoc eoos::Object::operator=(const Object&)
          */
-        HeapData& operator=(HeapData const&); ///< SCA Justificated MISRA-C++:2008 Rule 3-2-2
+        HeapData& operator=(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
         
         #if EOOS_CPP_STANDARD >= 2011
     

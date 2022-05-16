@@ -65,7 +65,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
+    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return Parent::isConstructed();
     }
@@ -80,23 +80,36 @@ public:
             return NULLPTR;
         }
         T* const stack = &stack_[0];
+        T* tos = NULLPTR;
         switch(type_)
         {
             case StackIntf::FD:
-                return &stack[stack_.getLength()];
-
+            {
+                tos = &stack[stack_.getLength()];
+                break;
+            }
             case StackIntf::ED:
-                return &stack[stack_.getLength() - 1];
-
+            {
+                tos = &stack[stack_.getLength() - 1];
+                break;
+            }
             case StackIntf::FA:
-                return &stack[0] - 1;
-
+            {
+                tos = &stack[0] - 1;
+                break;
+            }
             case StackIntf::EA:
-                return &stack[0];
-
+            {
+                tos = &stack[0];
+                break;
+            }
             default:
-                return NULLPTR;
+            {
+                tos = NULLPTR;
+                break;
+            }
         }
+        return tos;
     }
 
     /**
@@ -118,7 +131,7 @@ public:
     /**
      * @copydoc eoos::api::Collection::isEmpty()
      */
-    virtual bool_t isEmpty() const
+    virtual bool_t isEmpty() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return false;
     }
@@ -126,7 +139,7 @@ public:
     /**
      * @copydoc eoos::api::IllegalValue::getIllegal()
      */
-    virtual T& getIllegal() const
+    virtual T const& getIllegal() const
     {
         return stack_.getIllegal();
     }
