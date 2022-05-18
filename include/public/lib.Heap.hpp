@@ -30,9 +30,10 @@ public:
      *
      * @param size Total heap size.
      */
-    explicit Heap(size_t size) : api::SystemHeap(),
-        data_ (size),
-        temp_ (){
+    explicit Heap(size_t size) 
+        : api::SystemHeap()
+        , data_(size)
+        , temp_() {
         const bool_t isConstructed = construct();
         setConstructed( isConstructed );
     }
@@ -49,9 +50,10 @@ public:
      * @param size   Total heap size.
      * @param toggle Reference to pointer to global interrupts toggle interface.
      */
-    Heap(size_t size, api::Toggle*& toggle) : api::SystemHeap(),
-        data_  (size, toggle),
-        temp_ (){
+    Heap(size_t size, api::Toggle*& toggle) 
+        : api::SystemHeap()
+        , data_  (size, toggle)
+        , temp_ () {
         const bool_t isConstructed = construct();
         setConstructed( isConstructed );
     }
@@ -483,13 +485,13 @@ private:
          * @param heap Pointer to heap class.
          * @param size Size of byte given to this new block.
          */
-        HeapBlock(api::Heap* heap, size_t size) :
-            heap_  (heap),
-            prev_  (NULLPTR),
-            next_  (NULLPTR),
-            attr_  (0),
-            size_  (size - sizeof(HeapBlock)),
-            key_   (BLOCK_KEY){
+        HeapBlock(api::Heap* heap, size_t size) 
+            : heap_(heap)
+            , prev_(NULLPTR)
+            , next_(NULLPTR)
+            , attr_(0)
+            , size_(size - sizeof(HeapBlock))
+            , key_(BLOCK_KEY) {
         }
 
         /**
@@ -813,11 +815,11 @@ private:
          *
          * @param isize Total heap size.
          */
-        explicit HeapData(size_t isize) :
-            block  (NULLPTR),
-            toggle (NULLPTR),
-            size   (0),
-            key    (HEAP_KEY){
+        explicit HeapData(size_t isize) 
+            : block(NULLPTR)
+            , toggle(NULLPTR)
+            , size(0)
+            , key(HEAP_KEY) {
             size = (isize & ~0x7UL) - sizeof(Heap);
         }
 
@@ -827,11 +829,11 @@ private:
          * @param isize   Total heap size.
          * @param itoggle Reference to pointer to global interrupts interface.
          */
-        HeapData(size_t isize, api::Toggle*& itoggle) :
-            block  (NULLPTR),
-            toggle (&itoggle),
-            size   (0),
-            key    (HEAP_KEY){
+        HeapData(size_t isize, api::Toggle*& itoggle) 
+            : block(NULLPTR)
+            , toggle(&itoggle)
+            , size(0)
+            , key(HEAP_KEY){
             size = (isize & ~0x7UL) - sizeof(Heap);
         }
 

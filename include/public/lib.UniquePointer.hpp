@@ -36,8 +36,10 @@ public:
     /**
      * @brief Constructor an empty unique object.
      */
-    UniquePointer() : Parent(),
-        pointer_ (NULLPTR){
+    UniquePointer() 
+        : Object<A>()
+        , api::SmartPointer<T>()
+        , pointer_ (NULLPTR) {
         bool_t const isConstructed = construct();
         setConstructed(isConstructed);    
     }
@@ -48,8 +50,10 @@ public:
      * @param pointer A pointer to get ownership.
      * @note If the unique object is not able to be constructed, an object passed by the pointer will be deleted.
      */
-    explicit UniquePointer(T* const pointer) : Parent(),
-        pointer_ (pointer){
+    explicit UniquePointer(T* const pointer) 
+        : Object<A>()
+        , api::SmartPointer<T>()
+        , pointer_ (pointer) {
         bool_t const isConstructed = construct();
         setConstructed(isConstructed);    
     }
@@ -70,8 +74,10 @@ public:
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    UniquePointer(UniquePointer&& obj) noexcept : Parent( move(obj) ),
-        pointer_ (obj.pointer_){
+    UniquePointer(UniquePointer&& obj) noexcept 
+        : Object<A>( move(obj) )
+        , api::SmartPointer<T>()
+        , pointer_ (obj.pointer_) {
     }   
 
     /**

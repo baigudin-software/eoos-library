@@ -33,8 +33,10 @@ public:
      *
      * @param task A task interface whose start function is invoked when this thread is started.
      */
-    explicit Thread(api::Task& task) : Parent(),
-        thread_    (NULLPTR){
+    explicit Thread(api::Task& task) 
+        : NonCopyable<A>()
+        , api::Thread()
+        , thread_(NULLPTR) {
         bool_t const isConstructed = construct(&task);
         setConstructed( isConstructed );
     }
@@ -130,8 +132,10 @@ protected:
      *
      * @param task A task interface whose start function is invoked when this thread is started.
      */
-    Thread() : Parent(),
-        thread_    (NULLPTR){
+    Thread() 
+        : NonCopyable<A>()
+        , api::Thread()
+        , thread_(NULLPTR){
         bool_t const isConstructed = construct(NULLPTR);
         setConstructed( isConstructed );
     }    

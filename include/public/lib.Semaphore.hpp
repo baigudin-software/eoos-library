@@ -33,8 +33,10 @@ public:
      *
      * @param permits The initial number of permits available.
      */
-    explicit Semaphore(const int32_t permits) : Parent(),
-        semaphore_ (NULLPTR){
+    explicit Semaphore(const int32_t permits) 
+        : NonCopyable<A>()
+        , api::Semaphore()
+        , semaphore_(NULLPTR) {
         bool_t const isConstructed = construct(permits);
         setConstructed( isConstructed );
     }

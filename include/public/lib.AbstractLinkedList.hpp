@@ -41,10 +41,14 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractLinkedList() : NonCopyable<A>(), api::List<T>(), api::Queue<T>(), api::Iterable<T>(),
-        illegal_ (),
-        last_    (NULLPTR),
-        count_   (0){
+    AbstractLinkedList() 
+        : NonCopyable<A>()
+        , api::List<T>()
+        , api::Queue<T>()
+        , api::Iterable<T>()
+        , illegal_()
+        , last_(NULLPTR)
+        , count_(0) {
     }
 
     /**
@@ -56,10 +60,14 @@ public:
      *
      * @param illegal An illegal element.
      */
-    AbstractLinkedList(const T& illegal) : NonCopyable<A>(), api::List<T>(), api::Queue<T>(), api::Iterable<T>(),
-        illegal_ (illegal),
-        last_    (NULLPTR),
-        count_   (0){
+    AbstractLinkedList(const T& illegal) 
+        : NonCopyable<A>()
+        , api::List<T>()
+        , api::Queue<T>()
+        , api::Iterable<T>()
+        , illegal_(illegal)
+        , last_(NULLPTR)
+        , count_(0) {
     }
 
     /**

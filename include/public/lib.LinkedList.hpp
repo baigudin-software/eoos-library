@@ -31,8 +31,8 @@ public:
     /**
      * @brief Constructor.
      */
-    LinkedList() : Parent()
-    {
+    LinkedList() 
+        : AbstractLinkedList<T,A>() {
     }
 
     /**
@@ -44,8 +44,8 @@ public:
      *
      * @param illegal An illegal element.
      */
-    LinkedList(const T& illegal) : AbstractLinkedList<T,A>(illegal)
-    {
+    LinkedList(const T& illegal) 
+        : AbstractLinkedList<T,A>(illegal) {
     }
 
     /**
@@ -100,13 +100,15 @@ private:
          * @param index Position in this list.
          * @param list  Reference to self list.
          */
-        Iterator(int32_t const index, List& list) : NonCopyable<A>(), api::ListIterator<T>(),
-            list_    (list),
-            count_   (list.getReferenceToCount()),
-            last_    (list.getReferenceToLast()),
-            illegal_ (list.getReferenceToIllegal()),
-            curs_    (NULLPTR),
-            rindex_  (ILLEGAL_INDEX){
+        Iterator(int32_t const index, List& list) 
+            : NonCopyable<A>()
+            , api::ListIterator<T>()
+            , list_(list)
+            , count_(list.getReferenceToCount())
+            , last_(list.getReferenceToLast())
+            , illegal_(list.getReferenceToIllegal())
+            , curs_(NULLPTR)
+            , rindex_(ILLEGAL_INDEX) {
             bool_t const isConstructed = construct(index);
             this->setConstructed( isConstructed );
         }
@@ -317,9 +319,9 @@ private:
             /**
              * @brief Constructor.
              */
-            Counter(int32_t& count) :
-                list (count),
-                self (count){
+            Counter(int32_t& count)
+                : list (count)
+                , self (count) {
             }
 
             /**

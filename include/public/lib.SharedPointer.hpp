@@ -38,8 +38,10 @@ public:
     /**
      * @brief Constructor an empty shared object.
      */
-    SharedPointer() : Parent(),
-        cb_ (NULLPTR){
+    SharedPointer() 
+        : Object<A>()
+        , api::SmartPointer<T>()
+        , cb_(NULLPTR) {
         bool_t const isConstructed = construct();
         setConstructed(isConstructed);    
     }
@@ -50,8 +52,10 @@ public:
      * @param pointer A pointer to get ownership.
      * @note If the shared object is not able to be constructed, an object passed by the pointer will be deleted.
      */
-    explicit SharedPointer(T* const pointer) : Parent(),
-        cb_ (NULLPTR){
+    explicit SharedPointer(T* const pointer) 
+        : Object<A>()
+        , api::SmartPointer<T>()
+        , cb_(NULLPTR) {
         bool_t const isConstructed = construct(pointer);
         setConstructed(isConstructed);    
     }
@@ -70,8 +74,10 @@ public:
     /**
      * @copydoc eoos::Object::Object(const Object&)
      */
-    SharedPointer(const SharedPointer& obj) : Parent(obj), ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-        cb_ (obj.cb_){
+    SharedPointer(const SharedPointer& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+        : Object<A>(obj)
+        , api::SmartPointer<T>()
+        , cb_(obj.cb_){
         acquire();
     }
 
@@ -95,8 +101,10 @@ public:
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    SharedPointer(SharedPointer&& obj) noexcept : Parent( move(obj) ),
-        cb_ (obj.cb_){
+    SharedPointer(SharedPointer&& obj) noexcept 
+        : Object<A>( move(obj) )
+        , api::SmartPointer<T>()        
+        , cb_(obj.cb_) {
     }   
 
     /**
@@ -337,10 +345,11 @@ private:
          *
          * @param pointer A pointer to get ownership.
          */
-        explicit ControlBlock(T* const pointer) : Parent(),
-            pointer_ (pointer),
-            counter_ (1),
-            mutex_   (){
+        explicit ControlBlock(T* const pointer) 
+            : NonCopyable<AA>()
+            , pointer_(pointer)
+            , counter_(1)
+            , mutex_() {
             bool_t const isConstructed = construct();
             setConstructed(isConstructed);
         }

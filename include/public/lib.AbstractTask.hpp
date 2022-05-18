@@ -30,7 +30,10 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractTask() : Parent() {}
+    AbstractTask() 
+        : NonCopyable<A>()
+        , api::Task() {
+    }
 
     /**
      * @brief Destructor.

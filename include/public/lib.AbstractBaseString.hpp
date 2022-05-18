@@ -32,8 +32,9 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractBaseString() : Parent()
-    {
+    AbstractBaseString() 
+        : Object<A>()
+        , api::String<T>() {
     }
 
     /**

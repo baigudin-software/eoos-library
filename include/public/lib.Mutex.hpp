@@ -32,8 +32,10 @@ public:
     /**
      * @brief Constructor.
      */
-    Mutex() : Parent(),
-        mutex_ (NULLPTR){
+    Mutex() 
+        : NonCopyable<A>()
+        , api::Mutex()
+        , mutex_ (NULLPTR){
         bool_t const isConstructed = construct();
         setConstructed( isConstructed );
     }

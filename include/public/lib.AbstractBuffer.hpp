@@ -35,9 +35,12 @@ public:
      *
      * @param length Count of buffer elements.
      */
-    explicit AbstractBuffer(int32_t length) : Parent(),
-        length_  (length),
-        illegal_ (){
+    explicit AbstractBuffer(int32_t length) 
+        : NonCopyable<A>()
+        , api::Collection<T>()
+        , api::IllegalValue<T>()
+        , length_(length)
+        , illegal_(){
     }
 
     /**
@@ -48,9 +51,12 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    AbstractBuffer(int32_t length, const T& illegal) : Parent(),
-        length_  (length),
-        illegal_ (illegal){
+    AbstractBuffer(int32_t length, const T& illegal) 
+        : NonCopyable<A>()
+        , api::Collection<T>()
+        , api::IllegalValue<T>()
+        , length_(length)
+        , illegal_(illegal){
     }
 
     /**

@@ -33,8 +33,8 @@ public:
     /**
      * @brief Constructor.
      */
-    Align()
-    {
+    Align() 
+        : ObjectAllocator<A>() {
     }
 
     /**
@@ -45,8 +45,8 @@ public:
      *
      * @param value A data value.
      */
-    Align(const T& value)
-    {
+    Align(const T& value) 
+        : ObjectAllocator<A>() {
         assignment(value);
     }
 
@@ -56,7 +56,7 @@ public:
      * @param obj A source object.
      */
     Align(const Align& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-    {
+        : ObjectAllocator<A>(obj) {
         copy(obj);
     }
 

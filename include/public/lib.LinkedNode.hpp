@@ -37,11 +37,12 @@ public:
      *
      * @param element An user element of this node.
      */
-    LinkedNode(const T& element) : Parent(),
-        prev_    (this),
-        next_    (this),
-        index_   (0),
-        element_ (element){
+    LinkedNode(const T& element) 
+        : NonCopyable<A>()
+        , prev_(this)
+        , next_(this)
+        , index_(0)
+        , element_(element) {
     }
 
     /**

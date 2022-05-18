@@ -36,9 +36,11 @@ public:
      * @param type  Type of this stack.
      * @param count Count of buffer elements.
      */
-    Stack(typename api::Stack<T>::Operation type, int32_t count) : Parent(),
-        stack_ (count),
-        type_  (type){
+    Stack(typename api::Stack<T>::Operation type, int32_t count) 
+        : NonCopyable<A>()
+        , api::Stack<T>()
+        , stack_(count)
+        , type_(type){
         bool_t const isConstructed = construct();
         setConstructed( isConstructed );
     }
@@ -50,9 +52,11 @@ public:
      * @param count   Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Stack(typename api::Stack<T>::Operation type, int32_t count, const T illegal) : Parent(),
-        stack_ (count, illegal),
-        type_  (type){
+    Stack(typename api::Stack<T>::Operation type, int32_t count, const T illegal) 
+        : NonCopyable<A>()
+        , api::Stack<T>()
+        , stack_(count, illegal)
+        , type_(type) {
         bool_t const isConstructed = construct();
         setConstructed( isConstructed );
     }

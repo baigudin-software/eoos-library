@@ -36,8 +36,9 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractString() : Parent(),
-        context_ (){
+    AbstractString() 
+        : AbstractBaseString<T,A>()
+        , context_() {
     }
 
     /**

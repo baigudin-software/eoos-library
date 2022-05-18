@@ -34,8 +34,9 @@ public:
     /**
      * @brief Constructor.
      */
-    Buffer() : Parent(L),
-        buf_ (arr_){
+    Buffer() 
+        : AbstractBuffer<T,A>(L)
+        , buf_(arr_){
     }
 
     /**
@@ -45,8 +46,9 @@ public:
      *
      * @param illegal An illegal value.
      */
-    Buffer(const T& illegal) : Parent(L, illegal),
-        buf_ (arr_){
+    Buffer(const T& illegal) 
+        : AbstractBuffer<T,A>(L, illegal)
+        , buf_ (arr_){
     }
 
     /**
@@ -129,7 +131,7 @@ private:
 template <typename T, class A>
 class Buffer<T,0,A> : public AbstractBuffer<T,A>
 {
-    typedef AbstractBuffer<T,A> ParentSpec1;
+    typedef AbstractBuffer<T,A> Parent;
 
 public:
 
@@ -138,9 +140,10 @@ public:
      *
      * @param length Count of buffer elements.
      */
-    explicit Buffer(int32_t const length) : ParentSpec1(length),
-        buf_       (NULLPTR),
-        isDeleted_ (true){
+    explicit Buffer(int32_t const length) 
+        : AbstractBuffer<T,A>(length)
+        , buf_(NULLPTR)
+        , isDeleted_(true) {
         const bool_t isConstructed = construct(length);
         this->setConstructed( isConstructed );
     }
@@ -153,9 +156,10 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Buffer(int32_t const length, const T& illegal) : ParentSpec1(length, illegal),
-        buf_       (NULLPTR),
-        isDeleted_ (true){
+    Buffer(int32_t const length, const T& illegal) 
+        : AbstractBuffer<T,A>(length, illegal)
+        , buf_(NULLPTR)
+        , isDeleted_(true) {
         const bool_t isConstructed = construct(length);
         this->setConstructed( isConstructed );
     }
@@ -168,9 +172,10 @@ public:
      * @param length Number of elements.
      * @param buf    Pointer to external buffer.
      */
-    Buffer(int32_t const length, T*  const buf) : ParentSpec1(length),
-        buf_       (buf),
-        isDeleted_ (false){
+    Buffer(int32_t const length, T*  const buf) 
+        : AbstractBuffer<T,A>(length)
+        , buf_(buf)
+        , isDeleted_(false) {
         const bool_t isConstructed = construct(length);
         this->setConstructed( isConstructed );
     }
@@ -185,9 +190,10 @@ public:
      * @param buf     Pointer to external buffer.
      * @param illegal Illegal value.
      */
-    Buffer(int32_t const length, T* const buf, const T& illegal) : ParentSpec1(length, illegal),
-        buf_       (buf),
-        isDeleted_ (false){
+    Buffer(int32_t const length, T* const buf, const T& illegal) 
+        : AbstractBuffer<T,A>(length, illegal)
+        , buf_(buf)
+        , isDeleted_(false) {
         const bool_t isConstructed = construct(length);
         this->setConstructed( isConstructed );
     }
@@ -244,7 +250,7 @@ protected:
     virtual T* getBuffer() const
     {
         T* buf;
-        if( not ParentSpec1::isConstructed() )
+        if( not Parent::isConstructed() )
         {
             buf = NULLPTR;
         }
@@ -266,7 +272,7 @@ private:
     bool_t construct(size_t const length)
     {
         bool_t res;
-        if( ParentSpec1::isConstructed() )
+        if( Parent::isConstructed() )
         {
             if(buf_ == NULLPTR)
             {

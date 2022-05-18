@@ -33,8 +33,8 @@ class BaseString : public AbstractString<T,L,A>
     /**
      * @brief Constructor.
      */
-    BaseString() : Parent()
-    {
+    BaseString() 
+        : AbstractString<T,L,A>() {
     }
 
     /**
@@ -42,8 +42,8 @@ class BaseString : public AbstractString<T,L,A>
      *
      * @param source A source character string.
      */
-    BaseString(const T* const source) : Parent()
-    {
+    BaseString(const T* const source) 
+        : AbstractString<T,L,A>() {
         Parent::copy(source);
     }
 
@@ -78,16 +78,16 @@ protected:
 template <int32_t L, class A>
 class BaseString<char_t,L,A> : public AbstractString<char_t,L,A>
 {
-    typedef BaseString<char_t,L,A>           Self;
-    typedef AbstractString<char_t,L,A>   Parent;
+    typedef BaseString<char_t,L,A>     Self;
+    typedef AbstractString<char_t,L,A> Parent;
 
 public:
 
     /**
      * @brief Constructor.
      */
-    BaseString() : Parent()
-    {
+    BaseString() 
+        : AbstractString<char_t,L,A>() {
     }
 
     /**
@@ -95,8 +95,8 @@ public:
      *
      * @param source A source object.
      */
-    BaseString(const BaseString<char_t,L,A>& source) : Parent() ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-    {
+    BaseString(const BaseString<char_t,L,A>& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+        : AbstractString<char_t,L,A>() {
         Parent::copy(source);
     }
 
@@ -105,8 +105,8 @@ public:
      *
      * @param source A source object interface.
      */
-    BaseString(const api::String<char_t>& source) : Parent()
-    {
+    BaseString(const api::String<char_t>& source) 
+        : AbstractString<char_t,L,A>() {
         Parent::copy(source);
     }
 
@@ -115,8 +115,8 @@ public:
      *
      * @param source A source character string.
      */
-    BaseString(const char_t* const source) : Parent()
-    {
+    BaseString(const char_t* const source) 
+        : AbstractString<char_t,L,A>() {
         Parent::copy(source);
     }
 
@@ -126,8 +126,8 @@ public:
      * @param value A source numerical value.
      * @param base  A numerical base used to represent a value as a string.
      */
-    explicit BaseString(int32_t const value) : Parent()
-    {
+    explicit BaseString(int32_t const value) 
+        : AbstractString<char_t,L,A>() {
         static_cast<void>( Self::convert<int32_t>(value, 10) );
     }
 
@@ -512,7 +512,7 @@ inline BaseString<char_t,L,A> operator+(const char_t* const source1, const BaseS
 template <typename T, class A>
 class BaseString<T,0,A> : public AbstractString<T,0,A>
 {
-    typedef BaseString<T,0,A>         Self;
+    typedef BaseString<T,0,A>     Self;
     typedef AbstractString<T,0,A> Parent;
 
 public:
@@ -520,8 +520,8 @@ public:
     /**
      * @brief Constructor.
      */
-    BaseString() : Parent()
-    {
+    BaseString() 
+        : AbstractString<T,0,A>() {
     }
 
     /**
@@ -529,8 +529,8 @@ public:
      *
      * @param source A source character string.
      */
-    BaseString(const T* const source) : Parent()
-    {
+    BaseString(const T* const source) 
+        : AbstractString<T,0,A>() {
         Parent::copy(source);
     }
 
@@ -572,8 +572,8 @@ public:
     /**
      * @brief Constructor.
      */
-    BaseString() : Parent()
-    {
+    BaseString() 
+        : AbstractString<char_t,0,A>() {
     }
 
     /**
@@ -581,8 +581,8 @@ public:
      *
      * @param source A source object.
      */
-    BaseString(const BaseString<char_t,0,A>& source) : Parent() ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-    {
+    BaseString(const BaseString<char_t,0,A>& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+        : AbstractString<char_t,0,A>() {
         Parent::copy(source);
     }
 
@@ -591,8 +591,8 @@ public:
      *
      * @param source A source object interface.
      */
-    BaseString(const api::String<char_t>& source) : Parent()
-    {
+    BaseString(const api::String<char_t>& source) 
+        : AbstractString<char_t,0,A>() {
         Parent::copy(source);
     }
 
@@ -601,8 +601,8 @@ public:
      *
      * @param source A source character string.
      */
-    BaseString(const char_t* const source) : Parent()
-    {
+    BaseString(const char_t* const source) 
+        : AbstractString<char_t,0,A>() {
         Parent::copy(source);
     }
 
@@ -612,8 +612,8 @@ public:
      * @param value A source numerical value.
      * @param base  A numerical base used to represent a value as a string.
      */
-    explicit BaseString(int32_t const value) : Parent()
-    {
+    explicit BaseString(int32_t const value) 
+        : AbstractString<char_t,0,A>() {
         static_cast<void>( Self::convert<int32_t>(value, 10) );
     }
 

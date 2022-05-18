@@ -29,8 +29,9 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractThreadTask() : Parent() 
-    {
+    AbstractThreadTask() 
+        : Thread<A>()
+        , api::Task() {
         bool_t const isConstructed = construct();
         setConstructed( isConstructed );        
     }

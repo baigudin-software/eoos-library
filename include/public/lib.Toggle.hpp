@@ -33,9 +33,11 @@ public:
      * Default constructor is used for creating
      * the object which will switch nothing.
      */
-    Toggle() : Parent(),
-        pointer_ (NULLPTR),
-        toggle_  (&pointer_){
+    Toggle() 
+        : NonCopyable<A>()
+        , api::Toggle()
+        , pointer_(NULLPTR)
+        , toggle_(&pointer_) {
     }
 
     /**
@@ -43,9 +45,11 @@ public:
      *
      * @param sw Reference to toggle interface for controlling its.
      */
-    Toggle(api::Toggle& sw) : Parent(),
-        pointer_ (&sw),
-        toggle_  (&pointer_){
+    Toggle(api::Toggle& sw)
+        : NonCopyable<A>()
+        , api::Toggle()    
+        , pointer_(&sw)
+        , toggle_(&pointer_) {
     }
 
     /**
@@ -57,9 +61,11 @@ public:
      *
      * @param sw Reference to pointer of toggle interface for controlling its.
      */
-    Toggle(api::Toggle*& sw) : Parent(),
-        pointer_ (NULLPTR),
-        toggle_  (&sw){
+    Toggle(api::Toggle*& sw)
+        : NonCopyable<A>()
+        , api::Toggle()    
+        , pointer_(NULLPTR)
+        , toggle_(&sw){
     }
 
     /**
