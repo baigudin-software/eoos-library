@@ -75,7 +75,7 @@ public:
         {
             return false;
         }
-        if( not getFirstBlock()->isConstructed() )
+        if( !getFirstBlock()->isConstructed() )
         {
             return false;
         }
@@ -87,7 +87,7 @@ public:
      */
     virtual void* allocate(const size_t size, void* ptr)
     {
-        if( not Self::isConstructed() )
+        if( !Self::isConstructed() )
         {
             return NULLPTR;
         }
@@ -110,7 +110,7 @@ public:
         {
             return;
         }
-        if( not Self::isConstructed() )
+        if( !Self::isConstructed() )
         {
             return;
         }
@@ -214,7 +214,7 @@ private:
         // Test memory
         const uintptr_t addr = reinterpret_cast<uintptr_t>(this) + sizeof(Heap);
         void*  ptr  = reinterpret_cast<void*>(addr);
-        if( not isMemoryAvailable(ptr, data_.size) )
+        if( !isMemoryAvailable(ptr, data_.size) )
         {
             return false;
         }
@@ -365,7 +365,7 @@ private:
         // temporary copying the tested memory to that
         // class. This way would help to restore original
         // memory data if the test were failed.
-        if( not isMemoryAvailable(ptr, sizeof(Heap)) )
+        if( !isMemoryAvailable(ptr, sizeof(Heap)) )
         {
             ptr = NULLPTR;
         }
@@ -573,21 +573,21 @@ private:
          */
         void free()
         {
-            if( not canDelete() )
+            if( !canDelete() )
             {
                 return;
             }
             uint32_t sibling = 0UL;
             if( prev_ != NULLPTR )
             {
-                if( not prev_->isUsed() )
+                if( !prev_->isUsed() )
                 {
                     sibling |= PREV_FREE;
                 }
             }
             if( next_ != NULLPTR )
             {
-                if( not next_->isUsed() )
+                if( !next_->isUsed() )
                 {
                     sibling |= NEXT_FREE;
                 }
@@ -677,11 +677,11 @@ private:
          */
         bool_t canDelete() const
         {
-            if( not isConstructed() )
+            if( !isConstructed() )
             {
                 return false;
             }
-            if( not heap_->isConstructed() )
+            if( !heap_->isConstructed() )
             {
                 return false;
             }

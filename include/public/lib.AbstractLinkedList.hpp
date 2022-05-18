@@ -107,14 +107,14 @@ public:
      */
     virtual void clear()
     {
-        if( not Self::isConstructed() )
+        if( !Self::isConstructed() )
         {
             return;
         }
         const int32_t b = getLength() - 1;
         for(int32_t i=b; i>=0; i--)
         {
-            if( not removeNode( getNodeByIndex(i) ) )
+            if( !removeNode( getNodeByIndex(i) ) )
             {
                 break;
             }
@@ -190,7 +190,7 @@ public:
      */
     virtual T& get(int32_t index)
     {
-        if( not Self::isConstructed() )
+        if( !Self::isConstructed() )
         {
             return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
         }
@@ -238,7 +238,7 @@ public:
      */
     virtual bool_t isIllegal(const T& value) const
     {
-        if( not Self::isConstructed() )
+        if( !Self::isConstructed() )
         {
             return false;
         }
@@ -288,7 +288,7 @@ public:
     Buffer<T,0,A>* getAsBuffer()
     {
         #ifdef EOOS_NO_STRICT_MISRA_RULES
-        if( not Self::isConstructed() )
+        if( !Self::isConstructed() )
         {
             return NULLPTR;
         }
@@ -298,7 +298,7 @@ public:
             return NULLPTR;
         }
         Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
-        if( (buf == NULLPTR) || (not buf->isConstructed()) )
+        if( (buf == NULLPTR) || (!buf->isConstructed()) )
         {
             delete buf;
             return NULLPTR;
@@ -340,7 +340,7 @@ protected:
             delete node;
             return false;
         }
-        if( not node->isConstructed() )
+        if( !node->isConstructed() )
         {
             delete node;
             return false;
@@ -387,7 +387,7 @@ protected:
      */
     Node* getNodeByIndex(const int32_t index)
     {
-        if( not isIndex(index) )
+        if( !isIndex(index) )
         {
             return NULLPTR;
         }

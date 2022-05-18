@@ -91,7 +91,7 @@ public:
      */
     virtual bool_t disable()
     {
-        if( not isConstructed())
+        if( !isConstructed())
         {
             return false;
         }
@@ -104,7 +104,7 @@ public:
      */
     virtual void enable(const bool_t status)
     {
-        if( not isConstructed() )
+        if( !isConstructed() )
         {
             return;
         }

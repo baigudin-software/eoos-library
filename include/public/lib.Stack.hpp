@@ -79,7 +79,7 @@ public:
      */
     virtual const T* getTos()
     {
-        if( not isConstructed() )
+        if( !isConstructed() )
         {
             return NULLPTR;
         }
@@ -177,11 +177,11 @@ private:
      */
     bool_t construct()
     {
-        if( not isConstructed() )
+        if( !isConstructed() )
         {
             return false;
         }
-        if( not stack_.isConstructed() )
+        if( !stack_.isConstructed() )
         {
             return false;
         }

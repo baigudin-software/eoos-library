@@ -250,7 +250,7 @@ protected:
     virtual T* getBuffer() const
     {
         T* buf;
-        if( not Parent::isConstructed() )
+        if( !Parent::isConstructed() )
         {
             buf = NULLPTR;
         }

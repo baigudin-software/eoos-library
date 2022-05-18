@@ -249,7 +249,7 @@ public:
     {
         bool_t res;
         char_t temp[ (sizeof(I) * 8U) + 1U ];
-        if( not Memory::itoa<I>(value, temp, base) )
+        if( !Memory::itoa<I>(value, temp, base) )
         {
             res = false;
         }
@@ -735,7 +735,7 @@ public:
     {
         bool_t res;
         char_t temp[ (sizeof(I) * 8U) + 1U ];
-        if( not Memory::itoa<I>(value, temp, base) )
+        if( !Memory::itoa<I>(value, temp, base) )
         {
             res = false;
         }

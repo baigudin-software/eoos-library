@@ -208,7 +208,7 @@ public:
                 }
                 case 10:
                 {
-                    isNegative = not isPositive(val) ? true : false;
+                    isNegative = ( !isPositive(val) ) ? true : false;
                     break;
                 }
                 default:
@@ -224,7 +224,7 @@ public:
             }
             // Prepare absolute value
             T module = isNegative ? (0 - val) : val;
-            if( not isPositive(module) )
+            if( !isPositive(module) )
             {
                 res = false;
                 break;
@@ -293,7 +293,7 @@ public:
                 break;
             }
         }
-        if( not isBase )
+        if( !isBase )
         {
             return 0;
         }

@@ -68,11 +68,11 @@ private:
         bool_t res = false;
         do
         {
-            if( not isConstructed() )
+            if( !isConstructed() )
             {
                 break;
             }
-            if( not mutex_.isConstructed() )
+            if( !mutex_.isConstructed() )
             {
                 break;
             }

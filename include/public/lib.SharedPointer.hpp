@@ -270,7 +270,7 @@ private:
         bool_t res = false;
         do
         {
-            if( not isConstructed() )
+            if( !isConstructed() )
             {
                 D::free(pointer);
                 break;
@@ -281,7 +281,7 @@ private:
                 D::free(pointer);
                 break;
             }
-            if( not cb_->isConstructed() )
+            if( !cb_->isConstructed() )
             {
                 D::free(pointer);                
                 delete cb_;
@@ -411,11 +411,11 @@ private:
             bool_t res = false;
             do
             {
-                if( not isConstructed() )
+                if( !isConstructed() )
                 {
                     break;
                 }
-                if( not mutex_.isConstructed() )
+                if( !mutex_.isConstructed() )
                 {
                     break;
                 }

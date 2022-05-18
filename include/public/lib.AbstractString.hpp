@@ -78,7 +78,7 @@ protected:
             int32_t const len = Parent::getLength(str);
             res = true;
             // If a given string length is more than this max available length
-            if( not context_.isFit(len) )
+            if( !context_.isFit(len) )
             {
                 // Create a new temporary string context
                 Context context;
@@ -119,7 +119,7 @@ protected:
         if( Parent::isConstructed() && (str != NULLPTR) )
         {
             // Simply, copy a given string if the context is freed
-            if( not context_.isAllocated() )
+            if( !context_.isAllocated() )
             {
                 res = Self::copy(str);
             }
@@ -128,7 +128,7 @@ protected:
                 res = true;
                 int32_t const len = Parent::getLength(str) + context_.len;
                 // If a length of this string plus a given string is more than this max available length
-                if( not context_.isFit(len) )
+                if( !context_.isFit(len) )
                 {
                     // Create a new temporary string context
                     Context context;
@@ -448,7 +448,7 @@ protected:
             int32_t const len = Parent::getLength(str);
             res = true;
             // If a given string length is more than this max available length
-            if( not context_.isFit(len) )
+            if( !context_.isFit(len) )
             {
                 // Create a new temporary string context
                 Context context;
@@ -489,7 +489,7 @@ protected:
         if( Parent::isConstructed() && (str != NULLPTR) )
         {
             // Simply, copy a given string if the context is freed
-            if( not context_.isAllocated() )
+            if( !context_.isAllocated() )
             {
                 res = Self::copy(str);
             }
@@ -498,7 +498,7 @@ protected:
                 res = true;
                 int32_t const len = Parent::getLength(str) + context_.len;
                 // If a length of this string plus a given string is more than this max available length
-                if( not context_.isFit(len) )
+                if( !context_.isFit(len) )
                 {
                     // Create a new temporary string context
                     Context context;

@@ -261,7 +261,7 @@ template <typename T, size_t S = sizeof(T), class A = Allocator>
 inline bool_t operator!=(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
 {
     const bool_t res = obj1.equal(obj2);
-    return not res;
+    return !res;
 }
 
 } // namespace lib

@@ -255,7 +255,7 @@ private:
         bool_t res = false;
         do
         {
-            if( not isConstructed() )
+            if( !isConstructed() )
             {
                 D::free(pointer);
                 break;

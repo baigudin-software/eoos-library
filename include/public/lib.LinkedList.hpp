@@ -60,7 +60,7 @@ public:
      */
     virtual api::ListIterator<T>* getListIterator(const int32_t index)
     {
-        if( not Parent::isConstructed() )
+        if( !Parent::isConstructed() )
         {
             return NULLPTR;
         }
@@ -181,7 +181,7 @@ private:
          */
         virtual T& getPrevious()
         {
-            if( not hasPrevious() )
+            if( !hasPrevious() )
             {
                 return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
@@ -195,7 +195,7 @@ private:
          */
         virtual int32_t getPreviousIndex() const
         {
-            if( not hasPrevious() )
+            if( !hasPrevious() )
             {
                 return -1;
             }
@@ -227,7 +227,7 @@ private:
          */
         virtual T& getNext()
         {
-            if( not hasNext() )
+            if( !hasNext() )
             {
                 return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
@@ -294,11 +294,11 @@ private:
          */
         bool_t construct(const int32_t index)
         {
-            if( not Self::isConstructed() )
+            if( !Self::isConstructed() )
             {
                 return false;
             }
-            if( not list_.isConstructed() )
+            if( !list_.isConstructed() )
             {
                 return false;
             }

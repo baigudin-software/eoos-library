@@ -109,12 +109,12 @@ private:
         bool_t res = false;
         do
         {   
-            if( not Self::isConstructed() )
+            if( !Self::isConstructed() )
             {
                 break;
             }
             mutex_ = sys::Call::get().createMutex();
-            if( not Parent::isConstructed(mutex_) )
+            if( !Parent::isConstructed(mutex_) )
             {
                 break;
             }

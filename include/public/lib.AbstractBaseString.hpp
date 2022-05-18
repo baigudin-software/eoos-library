@@ -76,7 +76,7 @@ public:
     virtual bool_t copy(const api::String<T>& string)
     {
         bool_t res;
-        if( (not Self::isConstructed()) || (not string.isConstructed()) )
+        if( (!Self::isConstructed()) || (!string.isConstructed()) )
         {
             res = false;
         }
@@ -94,7 +94,7 @@ public:
     virtual bool_t concatenate(const api::String<T>& string)
     {
         bool_t res;
-        if( (not Self::isConstructed()) || (not string.isConstructed()) )
+        if( (!Self::isConstructed()) || (!string.isConstructed()) )
         {
             res = false;
         }
@@ -112,7 +112,7 @@ public:
     virtual int32_t compare(const api::String<T>& string) const
     {
         int32_t res;
-        if( (not Self::isConstructed()) || (not string.isConstructed()) )
+        if( (!Self::isConstructed()) || (!string.isConstructed()) )
         {
             res = MINIMUM_POSSIBLE_VALUE_OF_INT32;
         }
