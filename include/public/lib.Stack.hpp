@@ -41,7 +41,7 @@ public:
         , api::Stack<T>()
         , stack_(count)
         , type_(type){
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -57,7 +57,7 @@ public:
         , api::Stack<T>()
         , stack_(count, illegal)
         , type_(type) {
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -83,8 +83,8 @@ public:
         {
             return NULLPTR;
         }
-        T* const stack = &stack_[0];
-        T* tos = NULLPTR;
+        T* const stack( &stack_[0] );
+        T* tos( NULLPTR );
         switch(type_)
         {
             case StackIntf::FD:

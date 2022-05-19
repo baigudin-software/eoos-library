@@ -32,7 +32,7 @@ public:
     AbstractThreadTask() 
         : Thread<A>()
         , api::Task() {
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );        
     }
 

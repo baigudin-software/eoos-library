@@ -37,7 +37,7 @@ public:
         : NonCopyable<A>()
         , api::Semaphore()
         , semaphore_(NULLPTR) {
-        bool_t const isConstructed = construct(permits);
+        bool_t const isConstructed( construct(permits) );
         setConstructed( isConstructed );
     }
 
@@ -62,7 +62,7 @@ public:
      */
     virtual bool_t acquire()
     {
-        bool_t res = false;
+        bool_t res( false );
         if( isConstructed() )
         {
             res = semaphore_->acquire();
@@ -95,7 +95,7 @@ private:
      */
     bool_t construct(const int32_t permits)
     {
-        bool_t res = isConstructed();
+        bool_t res( isConstructed() );
         if( res == true )
         {
             semaphore_ = sys::Call::get().createSemaphore(permits);

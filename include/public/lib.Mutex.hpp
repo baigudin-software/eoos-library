@@ -36,7 +36,7 @@ public:
         : NonCopyable<A>()
         , api::Mutex()
         , mutex_ (NULLPTR){
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -61,7 +61,7 @@ public:
      */
     virtual bool_t tryLock()
     {
-        bool_t res = false;
+        bool_t res( false );
         if( Self::isConstructed() )
         {
             res = mutex_->tryLock();
@@ -74,7 +74,7 @@ public:
      */
     virtual bool_t lock()
     {
-        bool_t res = false;
+        bool_t res( false );
         if( Self::isConstructed() )
         {
             res = mutex_->lock();
@@ -106,7 +106,7 @@ private:
      */
     bool_t construct()
     {
-        bool_t res = false;
+        bool_t res( false );
         do
         {   
             if( !Self::isConstructed() )

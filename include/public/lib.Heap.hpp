@@ -34,7 +34,7 @@ public:
         : api::SystemHeap()
         , data_(size)
         , temp_() {
-        const bool_t isConstructed = construct();
+        const bool_t isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -54,7 +54,7 @@ public:
         : api::SystemHeap()
         , data_  (size, toggle)
         , temp_ () {
-        const bool_t isConstructed = construct();
+        const bool_t isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -95,7 +95,7 @@ public:
         {
             return ptr;
         }
-        const bool_t is = disable();
+        const bool_t is( disable() );
         ptr = getFirstBlock()->alloc(size);
         enable(is);
         return ptr;
@@ -114,7 +114,7 @@ public:
         {
             return;
         }
-        const bool_t is = disable();
+        const bool_t is( disable() );
         heapBlock(ptr)->free();
         enable(is);
     }
@@ -149,7 +149,7 @@ public:
     static void* operator new(size_t, const uintptr_t ptr)
     {
         void* memory;
-        void* address = reinterpret_cast< void* >(ptr);
+        void* address( reinterpret_cast< void* >(ptr) );
         if(address == NULLPTR)
         {
             // No class constructor call
@@ -212,8 +212,8 @@ private:
             return false;
         }
         // Test memory
-        const uintptr_t addr = reinterpret_cast<uintptr_t>(this) + sizeof(Heap);
-        void*  ptr  = reinterpret_cast<void*>(addr);
+        const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
+        void*  ptr ( reinterpret_cast<void*>(addr) );
         if( !isMemoryAvailable(ptr, data_.size) )
         {
             return false;
@@ -234,7 +234,7 @@ private:
         {
             return false;
         }
-        api::Toggle* const toggle = *data_.toggle;
+        api::Toggle* const toggle( *data_.toggle );
         return (toggle != NULLPTR) ? toggle->disable() : false;
     }
 
@@ -249,7 +249,7 @@ private:
         {
             return;
         }
-        api::Toggle* const toggle = *data_.toggle;
+        api::Toggle* const toggle( *data_.toggle );
         if(toggle != NULLPTR)
         {
             toggle->enable(status);
@@ -263,7 +263,7 @@ private:
      */
     HeapBlock* getFirstBlock() const
     {
-        const uintptr_t addr = reinterpret_cast<uintptr_t>(this) + sizeof(Heap);
+        const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
         return reinterpret_cast<HeapBlock*>(addr);
     }
 
@@ -274,7 +274,7 @@ private:
      */
     static HeapBlock* heapBlock(void* const data)
     {
-        const uintptr_t addr = reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock);
+        const uintptr_t addr( reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock) );
         return reinterpret_cast<HeapBlock*>(addr);
     }
 
@@ -289,14 +289,14 @@ private:
      */
     static bool_t isMemoryAvailable(void* const addr, const size_t size)
     {
-        size_t mask = static_cast<ucell_t>(-1);
-        ucell_t* ptr = reinterpret_cast<ucell_t*>(addr);
+        size_t mask( static_cast<ucell_t>(-1) );
+        ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) );
         // Value test
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = static_cast<ucell_t>(i & mask);
         }
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != static_cast<ucell_t>(i & mask))
             {
@@ -304,11 +304,11 @@ private:
             }
         }
         // 0x55 test
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = static_cast<ucell_t>(0x55555555UL & mask);
         }
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != static_cast<ucell_t>(0x55555555UL & mask))
             {
@@ -316,11 +316,11 @@ private:
             }
         }
         // 0xAA test
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = static_cast<ucell_t>(0xAAAAAAAAUL & mask);
         }
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != static_cast<ucell_t>(0xAAAAAAAAUL & mask))
             {
@@ -328,11 +328,11 @@ private:
             }
         }
         // Zero test
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = 0x00U;
         }
-        for( size_t i=0UL; i<size; i++)
+        for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != 0x00U)
             {
@@ -421,7 +421,10 @@ private:
         Aligner()
         {
             #ifdef EOOS_DEBUG
-            for(size_t i=0; i<SIZE; i++) val_[i] = 0x0AUL;
+            for(size_t i(0U); i<SIZE; i++) 
+            {
+                val_[i] = 0x0AUL;
+            }
             #endif
         }
 
@@ -528,7 +531,7 @@ private:
             {
                 size = (size & ~0x7UL) + 0x8UL;
             }
-            HeapBlock* curr = this;
+            HeapBlock* curr( this );
             while(curr != NULLPTR)
             {
                 if(curr->isUsed())
@@ -550,7 +553,7 @@ private:
             // Has required memory size for data and a new heap block
             if( curr->size_ >= (size + sizeof(HeapBlock)) )
             {
-                HeapBlock* next = new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size);
+                HeapBlock* next( new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size) );
                 if(next == NULLPTR)
                 {
                     return NULLPTR;
@@ -577,7 +580,7 @@ private:
             {
                 return;
             }
-            uint32_t sibling = 0UL;
+            uint32_t sibling( 0UL );
             if( prev_ != NULLPTR )
             {
                 if( !prev_->isUsed() )
@@ -705,7 +708,7 @@ private:
          */
         void* data()
         {
-            const uintptr_t addr = reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock);
+            const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) );
             return reinterpret_cast<void*>(addr);
         }
 
@@ -716,7 +719,7 @@ private:
          */
         void* next(const size_t size)
         {
-            const uintptr_t addr = reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size;
+            const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size );
             return reinterpret_cast<void*>(addr);
         }
 

@@ -37,7 +37,7 @@ public:
         : NonCopyable<A>()
         , api::Thread()
         , thread_(NULLPTR) {
-        bool_t const isConstructed = construct(&task);
+        bool_t const isConstructed( construct(&task) );
         setConstructed( isConstructed );
     }
 
@@ -65,7 +65,7 @@ public:
      */
     virtual bool_t execute()
     {
-        bool_t res = false;
+        bool_t res( false );
         if( isConstructed() && (thread_ != NULLPTR) )
         {
             res = thread_->execute();
@@ -78,7 +78,7 @@ public:
      */
     virtual bool_t join()
     {
-        bool_t res = false;
+        bool_t res( false );
         if( isConstructed() && (thread_ != NULLPTR) )
         {
             res = thread_->join();
@@ -91,7 +91,7 @@ public:
      */
     virtual int32_t getPriority() const
     {
-        int32_t priority = PRIORITY_WRONG;
+        int32_t priority( PRIORITY_WRONG );
         if( isConstructed() && (thread_ != NULLPTR) )
         {
             priority = thread_->getPriority();
@@ -136,7 +136,7 @@ protected:
         : NonCopyable<A>()
         , api::Thread()
         , thread_(NULLPTR){
-        bool_t const isConstructed = construct(NULLPTR);
+        bool_t const isConstructed( construct(NULLPTR) );
         setConstructed( isConstructed );
     }    
     
@@ -148,10 +148,10 @@ protected:
      */
     bool_t setTask(api::Task& task)
     {
-        bool_t res = false;
+        bool_t res( false );
         if( thread_ == NULLPTR )
         {
-            api::Scheduler& scheduler = getScheduler();
+            api::Scheduler& scheduler( getScheduler() );
             thread_ = scheduler.createThread(task);
             if( (thread_ != NULLPTR) && thread_->isConstructed() )
             {
@@ -171,7 +171,7 @@ private:
      */
     bool_t construct(api::Task* const task)
     {
-        bool_t res = isConstructed();
+        bool_t res( isConstructed() );
         if( res == true )
         {
             if(task != NULLPTR)

@@ -144,7 +144,7 @@ public:
         : AbstractBuffer<T,A>(length)
         , buf_(NULLPTR)
         , isDeleted_(true) {
-        const bool_t isConstructed = construct(length);
+        const bool_t isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -160,7 +160,7 @@ public:
         : AbstractBuffer<T,A>(length, illegal)
         , buf_(NULLPTR)
         , isDeleted_(true) {
-        const bool_t isConstructed = construct(length);
+        const bool_t isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -176,7 +176,7 @@ public:
         : AbstractBuffer<T,A>(length)
         , buf_(buf)
         , isDeleted_(false) {
-        const bool_t isConstructed = construct(length);
+        const bool_t isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -194,7 +194,7 @@ public:
         : AbstractBuffer<T,A>(length, illegal)
         , buf_(buf)
         , isDeleted_(false) {
-        const bool_t isConstructed = construct(length);
+        const bool_t isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -276,7 +276,7 @@ private:
         {
             if(buf_ == NULLPTR)
             {
-                void* const addr = A::allocate(length * (sizeof(T)));
+                void* const addr( A::allocate(length * (sizeof(T))) );
                 buf_ = reinterpret_cast<T*>( addr );
             }
             res = buf_ != NULLPTR;

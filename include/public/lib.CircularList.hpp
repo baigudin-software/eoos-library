@@ -60,7 +60,7 @@ public:
         {
             return NULLPTR;
         }
-        Iterator* const iterator = new Iterator(index, *this);
+        Iterator* const iterator( new Iterator(index, *this) );
         if( iterator != NULLPTR )
         {
             if( iterator->isConstructed() )
@@ -105,7 +105,7 @@ private:
             , illegal_ (list.getReferenceToIllegal())
             , curs_    (NULLPTR)
             , rindex_  (ILLEGAL_INDEX) {
-            bool_t const  isConstructed = construct(index);
+            bool_t const  isConstructed( construct(index) );
             this->setConstructed( isConstructed );
         }
 
@@ -131,7 +131,7 @@ private:
             {
                 return false;
             }
-            Node* const last = last_;
+            Node* const last( last_ );
             if(list_.add(getNextIndex(), element) == false)
             {
                 return false;
@@ -224,7 +224,7 @@ private:
             {
                 return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
-            Node* const node = curs_;
+            Node* const node( curs_ );
             curs_ = curs_->getNext();
             rindex_ = node->getIndex();
             return node->getElement();

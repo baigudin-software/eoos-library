@@ -37,7 +37,7 @@ public:
     explicit MutexGuard(api::Mutex& mutex) 
         : NonCopyable<A>()
         , mutex_ (mutex){
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );                    
     }
     
@@ -65,7 +65,7 @@ private:
      */
     bool_t construct()
     {
-        bool_t res = false;
+        bool_t res( false );
         do
         {
             if( !isConstructed() )

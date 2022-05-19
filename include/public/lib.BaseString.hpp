@@ -758,7 +758,7 @@ public:
     template <typename I>
     I cast(int32_t const base = 10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
-        const char_t* const str = Parent::getChar();
+        const char_t* const str( Parent::getChar() );
         return Memory::atoi<I>(str, base);
     }
 

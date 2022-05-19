@@ -144,13 +144,14 @@ public:
      */
     void fill(const T& value, const int32_t index, const int32_t count)
     {
-        const bool_t hasIndex = index < length_;
+        const bool_t hasIndex( index < length_ );
         if( Self::isConstructed() && hasIndex )
         {
-            T* const buf = getBuffer();
-            const int32_t length = index + count;
-            const int32_t max = ( length <= length_ ) ? length : length_;
-            for(int32_t i=index; i<max; i++)
+            T* const buf( getBuffer() );
+            int32_t const length( index + count );
+            // MSVC warning C4003 of Most Vexing Parse case avoided with no nameing the variable 'max'
+            int32_t const maximum( ( length <= length_ ) ? length : length_ );
+            for(int32_t i(index); i<maximum; i++)
             {
                 buf[i] = value;
             }
@@ -166,7 +167,7 @@ public:
     T& operator[](int32_t const index)
     {
         T* value;
-        T* const buf = getBuffer();
+        T* const buf( getBuffer() );
         if( (!Self::isConstructed()) || (index >= length_) || (buf == NULLPTR) )
         {
             value = &illegal_;
@@ -199,12 +200,12 @@ protected:
     {
         if( Self::isConstructed() )
         {
-            const int32_t size1 = getLength();
-            const int32_t size2 = buf.getLength();
-            const int32_t size = ( size1 < size2 ) ? size1 : size2;
-            T* const buf1 = getBuffer();
-            T* const buf2 = buf.getBuffer();
-            for(int32_t i=0; i<size; i++)
+            int32_t const size1( getLength() );
+            int32_t const size2( buf.getLength() );
+            int32_t const size( ( size1 < size2 ) ? size1 : size2 );
+            T* const buf1( getBuffer() );
+            T* const buf2( buf.getBuffer() );
+            for(int32_t i(0); i<size; i++)
             {
                 buf1[i] = buf2[i];
             }

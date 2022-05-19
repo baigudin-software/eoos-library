@@ -75,7 +75,7 @@ protected:
         bool_t res;
         if( Parent::isConstructed() && (str != NULLPTR) )
         {
-            int32_t const len = Parent::getLength(str);
+            int32_t const len( Parent::getLength(str) );
             res = true;
             // If a given string length is more than this max available length
             if( !context_.isFit(len) )
@@ -126,7 +126,7 @@ protected:
             else
             {
                 res = true;
-                int32_t const len = Parent::getLength(str) + context_.len;
+                int32_t const len( Parent::getLength(str) + context_.len );
                 // If a length of this string plus a given string is more than this max available length
                 if( !context_.isFit(len) )
                 {
@@ -175,10 +175,10 @@ protected:
             // If lengths are equal, characters might be different
             if(res == 0)
             {
-                for(int32_t i=0; i<context_.len; i++)
+                for(int32_t i(0); i<context_.len; i++)
                 {
-                    uintptr_t const a1 = static_cast<uintptr_t>(context_.str[i]);
-                    uintptr_t const a2 = static_cast<uintptr_t>(str[i]);
+                    uintptr_t const a1( static_cast<uintptr_t>(context_.str[i]) );
+                    uintptr_t const a2( static_cast<uintptr_t>(str[i]) );
                     res = static_cast<int32_t>(a1) - static_cast<int32_t>(a2);
                     if(res != 0)
                     {
@@ -445,7 +445,7 @@ protected:
         bool_t res;
         if( Parent::isConstructed() && (str != NULLPTR) )
         {
-            int32_t const len = Parent::getLength(str);
+            int32_t const len( Parent::getLength(str) );
             res = true;
             // If a given string length is more than this max available length
             if( !context_.isFit(len) )
@@ -496,7 +496,7 @@ protected:
             else
             {
                 res = true;
-                int32_t const len = Parent::getLength(str) + context_.len;
+                int32_t const len( Parent::getLength(str) + context_.len );
                 // If a length of this string plus a given string is more than this max available length
                 if( !context_.isFit(len) )
                 {
@@ -545,10 +545,10 @@ protected:
             // If lengths are equal, characters might be different
             if(res == 0)
             {
-                for(int32_t i=0; i<context_.len; i++)
+                for(int32_t i(0); i<context_.len; i++)
                 {
-                    uintptr_t const a1 = static_cast<uintptr_t>(context_.str[i]);
-                    uintptr_t const a2 = static_cast<uintptr_t>(str[i]);
+                    uintptr_t const a1( static_cast<uintptr_t>(context_.str[i]) );
+                    uintptr_t const a2( static_cast<uintptr_t>(str[i]) );
                     res = static_cast<int32_t>(a1) - static_cast<int32_t>(a2);
                     if(res != 0)
                     {
@@ -653,9 +653,9 @@ private:
             if(str == NULLPTR)
             {
                 // Calculate size in byte for the given length
-                int32_t const size = calculateSize(length);
+                int32_t const size( calculateSize(length) );
                 // Allocate a new array
-                T* const string = reinterpret_cast<T*>( A::allocate(size) );
+                T* const string( reinterpret_cast<T*>( A::allocate(size) ) );
                 if(string == NULLPTR)
                 {
                     res = false;
@@ -739,15 +739,15 @@ private:
          */
         static int32_t calculateSize(int32_t len)
         {
-            size_t size = (static_cast<size_t>(len) * sizeof(T)) + sizeof(T);
+            size_t size( (static_cast<size_t>(len) * sizeof(T)) + sizeof(T) );
             // Align size to eight
-            size_t const align = size & 0x7U;
+            size_t const align( size & 0x7U );
             if(align != 0U)
             {
-                size_t const mask = 0x7U;
+                size_t const mask( 0x7U );
                 size = ( size & static_cast<size_t>(~mask) ) + 0x8U;
             }
-            int32_t const res = static_cast<int32_t>(size);
+            int32_t const res( static_cast<int32_t>(size) );
             return res;
         }
 
@@ -759,8 +759,8 @@ private:
          */
         static int32_t calculateLength(int32_t const size)
         {
-            uint32_t const bytes = sizeof(T);
-            int32_t const len = size / static_cast<int32_t>(bytes);
+            uint32_t const bytes( sizeof(T) );
+            int32_t const len( size / static_cast<int32_t>(bytes) );
             return (len > 1) ? (len - 1) : 0;
         }
 

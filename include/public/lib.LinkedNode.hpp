@@ -50,7 +50,7 @@ public:
      */
     virtual ~LinkedNode()
     {
-        LinkedNode* node = this->next_;
+        LinkedNode* node( this->next_ );
         while(node->index_ != 0)
         {
             node->index_--; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10

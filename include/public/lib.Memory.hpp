@@ -35,8 +35,8 @@ public:
         void* res;
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            cell_t const* sp  = static_cast<cell_t const*>(src);
-            cell_t* dp  = static_cast<cell_t*>(dst);
+            cell_t const* sp( static_cast<cell_t const*>(src) );
+            cell_t* dp( static_cast<cell_t*>(dst) );
             while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             {
                 *dp++ = *sp++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
@@ -64,8 +64,8 @@ public:
         {
             return NULLPTR;
         }
-        cell_t* dp = static_cast<cell_t*>(dst);
-        cell_t const uc = val;
+        cell_t* dp( static_cast<cell_t*>(dst) );
+        cell_t const uc( val );
         while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
         {
             *dp++ = uc; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
@@ -85,7 +85,7 @@ public:
         {
             return 0U;
         }
-        size_t len = 0U;
+        size_t len( 0U );
         while( *str != '\0' )
         {
             len++;
@@ -107,8 +107,8 @@ public:
         {
             return NULLPTR;
         }
-        char_t* d = dst - 1;              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-        const char_t* s = src  - 1;       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        char_t* d( dst - 1 );             ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        const char_t* s( src  - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         return dst;
     }
@@ -127,10 +127,10 @@ public:
         {
             return NULLPTR;
         }
-        char_t* d = dst - 1;              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        char_t* d( dst - 1 );             ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( *++d != '\0' ) {}          ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
         d--;                              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-        const char_t* s = src - 1;        ///< SCA MISRA-C++:2008 Justified Rule 5-0-15       
+        const char_t* s( src - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15       
         while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         return dst;
     }
@@ -154,8 +154,8 @@ public:
         int32_t res;
         while(true)
         {
-            int32_t ch1 = static_cast<int32_t>(*str1++); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
-			int32_t ch2 = static_cast<int32_t>(*str2++); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
+            int32_t ch1( static_cast<int32_t>(*str1++) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
+			int32_t ch2( static_cast<int32_t>(*str2++) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
             res = ch1 - ch2;
             if( (ch1 == 0) || (res != 0) )
             {
@@ -184,15 +184,15 @@ public:
     template <typename T>
     static bool_t itoa(T const val, char_t* str, int32_t const base = 10)
     {
-        const int32_t LENGTH = ( static_cast<int32_t>( sizeof(T) ) * 8) + 1;
+        const int32_t LENGTH( ( static_cast<int32_t>( sizeof(T) ) * 8) + 1 );
         if(str == NULLPTR)
         {
             return false;
         }
         char_t temp[LENGTH];
         bool_t isNegative;
-        bool_t res = true;
-        int32_t index = LENGTH - 1;
+        bool_t res( true );
+        int32_t index( LENGTH - 1 );
         temp[index--] = '\0'; ///< SCA MISRA-C++:2008 Justified Rule 5-0-11 and Rule 5-2-10
         do
         {
@@ -223,7 +223,7 @@ public:
                 break;
             }
             // Prepare absolute value
-            T module = isNegative ? (0 - val) : val;
+            T module( isNegative ? (0 - val) : val );
             if( !isPositive(module) )
             {
                 res = false;
@@ -236,7 +236,7 @@ public:
             while(index >= 0)
             {
                 char_t ch;
-                T digit = module % base;
+                T digit( module % base );
                 if( (base == 16) && (digit > 9) )
                 {
                     ch = 'a';
@@ -276,7 +276,7 @@ public:
     template <typename T>
     static T atoi(const char_t* str, int32_t const base = 10)
     {
-        bool_t isBase = false;
+        bool_t isBase( false );
         switch(base)
         {
             case  2:
@@ -297,10 +297,10 @@ public:
         {
             return 0;
         }
-        T result = 0;
-        T const multiplier = static_cast<T>(base);
-        int32_t index = 0;
-        bool_t isNegative = false;
+        T result( 0 );
+        T const multiplier( static_cast<T>(base) );
+        int32_t index( 0 );
+        bool_t isNegative( false );
         // Look for whitespaces
         while( isSpace(str[index]) )
         {
@@ -371,7 +371,7 @@ private:
      */
     static bool_t isSpace(char_t const character)
     {
-        int32_t const ch = static_cast<int32_t>(character);
+        int32_t const ch( static_cast<int32_t>(character) );
         return ( (ch == 0x20) || ( (ch >= 0x09) && (ch <= 0x0D) ) ) ? true : false;
     }
 
@@ -384,8 +384,8 @@ private:
      */
     static bool_t isDigit(char_t const character, int32_t const base = 10)
     {
-        bool_t res = false;
-        int32_t const ch = static_cast<int32_t>(character);        
+        bool_t res( false );
+        int32_t const ch( static_cast<int32_t>(character) );
         switch(base)
         {
             case 2:
@@ -430,7 +430,7 @@ private:
      */
     static void detectMathOperands(char_t const character, char_t& subtrahend, int32_t& addend)
     {
-        int32_t const ch = static_cast<int32_t>(character);
+        int32_t const ch( static_cast<int32_t>(character) );
         // Test for uppercase letter
         if( (ch >= 0x41) && (ch <= 0x46) )
         {

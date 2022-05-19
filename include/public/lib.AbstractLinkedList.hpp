@@ -111,8 +111,8 @@ public:
         {
             return;
         }
-        const int32_t b = getLength() - 1;
-        for(int32_t i=b; i>=0; i--)
+        const int32_t b( getLength() - 1 );
+        for(int32_t i(b); i>=0; i--)
         {
             if( !removeNode( getNodeByIndex(i) ) )
             {
@@ -194,7 +194,7 @@ public:
         {
             return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
         }
-        Node* const node = getNodeByIndex(index);
+        Node* const node( getNodeByIndex(index) );
         return (node != NULLPTR) ? node->getElement() : illegal_;
     }
 
@@ -250,7 +250,7 @@ public:
      */
     virtual int32_t getIndexOf(const T& element) const
     {
-        Node* const node = getNodeByElement(element);
+        Node* const node( getNodeByElement(element) );
         return (node != NULLPTR) ? node->getIndex() : -1;
     }
 
@@ -292,19 +292,19 @@ public:
         {
             return NULLPTR;
         }
-        const int32_t count = getLength();
+        const int32_t count( getLength() );
         if(count == 0)
         {
             return NULLPTR;
         }
-        Buffer<T,0,A>* buf = new Buffer<T,0,A>(count, illegal_);
+        Buffer<T,0,A>* buf( new Buffer<T,0,A>(count, illegal_) );
         if( (buf == NULLPTR) || (!buf->isConstructed()) )
         {
             delete buf;
             return NULLPTR;
         }
-        Node* node = last_->getNext();
-        for(int32_t i=0; i<count; i++)
+        Node* node( last_->getNext() );
+        for(int32_t i(0); i<count; i++)
         {
             (*buf)[i] = node->getElement();
             node = node->getNext();
@@ -334,7 +334,7 @@ protected:
         {
             return false;
         }
-        Node* const node = new Node(element);
+        Node* const node( new Node(element) );
         if( node == NULLPTR )
         {
             delete node;
@@ -353,7 +353,7 @@ protected:
         }
         if(index > 0)
         {
-            Node* const after = getNodeByIndex(index - 1);
+            Node* const after( getNodeByIndex(index - 1) );
             if(after == NULLPTR)
             {
                 delete node;
@@ -367,7 +367,7 @@ protected:
         }
         else
         {
-            Node* const before = getNodeByIndex(0);
+            Node* const before( getNodeByIndex(0) );
             if(before == NULLPTR)
             {
                 delete node;
@@ -395,8 +395,8 @@ protected:
         {
             return last_;
         }
-        Node* node = last_->getNext();
-        for(int32_t i=0; i<index; i++)
+        Node* node( last_->getNext() );
+        for(int32_t i(0); i<index; i++)
         {
             node = node->getNext();
         }
@@ -411,13 +411,13 @@ protected:
      */
     Node* getNodeByElement(const T& element) const
     {
-        const int32_t len = getLength();
+        const int32_t len( getLength() );
         if(len == 0)
         {
             return NULLPTR;
         }
-        Node* node = last_->getNext();
-        for(int32_t i=0; i<len; i++)
+        Node* node( last_->getNext() );
+        for(int32_t i(0); i<len; i++)
         {
             if(element != node->getElement())
             {

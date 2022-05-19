@@ -78,7 +78,7 @@ public:
      */
     virtual bool_t isConstructed() const
     {
-        bool_t isConstructed = Parent::isConstructed();
+        bool_t isConstructed( Parent::isConstructed() );
         if( isConstructed )
         {
             isConstructed = (*toggle_ == NULLPTR) ? false : true;
@@ -95,7 +95,7 @@ public:
         {
             return false;
         }
-        api::Toggle* const switcher = *toggle_;
+        api::Toggle* const switcher( *toggle_ );
         return switcher->disable();
     }
 
@@ -108,7 +108,7 @@ public:
         {
             return;
         }
-        api::Toggle* const switcher = *toggle_;
+        api::Toggle* const switcher( *toggle_ );
         switcher->enable(status);
     }
 

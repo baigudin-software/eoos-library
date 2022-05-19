@@ -40,7 +40,7 @@ public:
         : Object<A>()
         , api::SmartPointer<T>()
         , pointer_ (NULLPTR) {
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed(isConstructed);    
     }
 
@@ -54,7 +54,7 @@ public:
         : Object<A>()
         , api::SmartPointer<T>()
         , pointer_ (pointer) {
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed(isConstructed);    
     }
 
@@ -142,7 +142,7 @@ public:
      */    
     T& operator[](uint32_t const index) const
     {
-        T* const pointer = get();
+        T* const pointer( get() );
         return pointer[index];
     }
 
@@ -151,7 +151,7 @@ public:
      */
     virtual T* get() const
     {
-        T* pointer = NULLPTR;
+        T* pointer( NULLPTR );
         if( isConstructed() )
         {
             pointer = pointer_;
@@ -184,7 +184,7 @@ public:
      */
     virtual int32_t getCount() const
     {
-        int32_t counter = 0;
+        int32_t counter( 0 );
         if( isConstructed() && (pointer_ != NULLPTR) )
         {
             counter = 1;
@@ -217,7 +217,7 @@ public:
     {
         if( isConstructed() && obj.isConstructed() )
         {
-            T* const pointer = pointer_;
+            T* const pointer( pointer_ );
             pointer_ = obj.pointer_;
             obj.pointer_ = pointer;
         }
@@ -230,7 +230,7 @@ public:
      */    
     T* release()
     {
-        T* pointer = pointer_;
+        T* pointer( pointer_ );
         if( isConstructed() )
         {
             pointer_ = NULLPTR;
@@ -252,7 +252,7 @@ private:
      */     
     bool_t construct(T* const pointer = NULLPTR)
     {
-        bool_t res = false;
+        bool_t res( false );
         do
         {
             if( !isConstructed() )

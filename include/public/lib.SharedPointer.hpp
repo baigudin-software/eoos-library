@@ -42,7 +42,7 @@ public:
         : Object<A>()
         , api::SmartPointer<T>()
         , cb_(NULLPTR) {
-        bool_t const isConstructed = construct();
+        bool_t const isConstructed( construct() );
         setConstructed(isConstructed);    
     }
 
@@ -56,7 +56,7 @@ public:
         : Object<A>()
         , api::SmartPointer<T>()
         , cb_(NULLPTR) {
-        bool_t const isConstructed = construct(pointer);
+        bool_t const isConstructed( construct(pointer) );
         setConstructed(isConstructed);    
     }
 
@@ -169,7 +169,7 @@ public:
      */    
     T& operator[](uint32_t const index) const
     {
-        T* const pointer = get();
+        T* const pointer( get() );
         return pointer[index];
     }
     
@@ -178,7 +178,7 @@ public:
      */
     virtual T* get() const
     {
-        T* pointer = NULLPTR;
+        T* pointer( NULLPTR );
         if( isConstructed() )
         {
             pointer = cb_->getPointer();
@@ -211,7 +211,7 @@ public:
      */
     virtual int32_t getCount() const
     {
-        int32_t counter = 0;
+        int32_t counter( 0 );
         if( isConstructed() )
         {
             if( cb_->getPointer() != NULLPTR )
@@ -247,7 +247,7 @@ public:
     {
         if( isConstructed() && obj.isConstructed() )
         {
-            ControlBlock<T,D,A>* const cb = cb_;
+            ControlBlock<T,D,A>* const cb( cb_ );
             cb_ = obj.cb_;
             obj.cb_ = cb;
         }
@@ -267,7 +267,7 @@ private:
      */     
     bool_t construct(T* const pointer = NULLPTR)
     {
-        bool_t res = false;
+        bool_t res( false );
         do
         {
             if( !isConstructed() )
@@ -300,7 +300,7 @@ private:
     {
         if( cb_ != NULLPTR )
         {
-            int32_t const counter = cb_->decrease();
+            int32_t const counter( cb_->decrease() );
             if(counter == 0)
             {
                 D::free(cb_->getPointer());
@@ -350,7 +350,7 @@ private:
             , pointer_(pointer)
             , counter_(1)
             , mutex_() {
-            bool_t const isConstructed = construct();
+            bool_t const isConstructed( construct() );
             setConstructed(isConstructed);
         }
 
@@ -408,7 +408,7 @@ private:
          */     
         bool_t construct()
         {
-            bool_t res = false;
+            bool_t res( false );
             do
             {
                 if( !isConstructed() )

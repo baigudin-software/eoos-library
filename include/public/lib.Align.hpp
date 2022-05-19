@@ -95,7 +95,7 @@ public:
      */
     Align& operator++()
     {
-        T val = typecast();
+        T val( typecast() );
         val += 1;
         assignment(val);
         return *this;
@@ -109,7 +109,7 @@ public:
      */
     Align& operator--()
     {
-        T val = typecast();
+        T val( typecast() );
         val -= 1;
         assignment(val);
         return *this;
@@ -122,7 +122,7 @@ public:
      */
     Align operator++(int) ///< SCA MISRA-C++:2008 Justified Rule 3-9-2
     {
-        T val = typecast();
+        T val( typecast() );
         val += 1;
         assignment(val);
         return *this;
@@ -135,7 +135,7 @@ public:
      */
     Align operator--(int) ///< SCA MISRA-C++:2008 Justified Rule 3-9-2
     {
-        T val = typecast();
+        T val( typecast() );
         val -= 1;
         assignment(val);
         return *this;
@@ -173,8 +173,8 @@ private:
      */
     bool_t equal(const Align& obj) const
     {
-        bool_t res = true;
-        for(size_t i=0U; i<S; i++)
+        bool_t res( true );
+        for(size_t i(0U); i<S; i++)
         {
             if( val_[i] != obj.val_[i] )
             {
@@ -192,9 +192,9 @@ private:
      */
     void assignment(const T& value) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
-        for(size_t i = 0U; i<S; i++)
+        for(size_t i(0U); i<S; i++)
         {
-            T const v = value >> (8U * i); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
+            T const v( value >> (8U * i) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
             val_[i] = static_cast<cell_t>(v);
         }
     }
@@ -206,7 +206,7 @@ private:
      */
     void copy(const Align& obj) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
-        for(size_t i=0U; i<S; i++)
+        for(size_t i(0U); i<S; i++)
         {
             val_[i] = obj.val_[i];
         }
@@ -219,9 +219,9 @@ private:
      */
     T typecast() const
     {
-        int32_t const max = static_cast<int32_t>(S) - 1;
-        T r = static_cast<T>(0);
-        for(int32_t i=max; i>=0; i--)
+        int32_t const max( static_cast<int32_t>(S) - 1 );
+        T r( static_cast<T>(0) );
+        for(int32_t i(max); i>=0; i--)
         {
             r = r << 8U;                     ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
             r = r | static_cast<T>(val_[i]); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
@@ -246,7 +246,7 @@ private:
 template <typename T, size_t S = sizeof(T), class A = Allocator>
 inline bool_t operator==(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
 {
-    const bool_t res = obj1.equal(obj2);
+    const bool_t res( obj1.equal(obj2) );
     return res;
 }
 
@@ -260,7 +260,7 @@ inline bool_t operator==(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
 template <typename T, size_t S = sizeof(T), class A = Allocator>
 inline bool_t operator!=(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
 {
-    const bool_t res = obj1.equal(obj2);
+    const bool_t res( obj1.equal(obj2) );
     return !res;
 }
 

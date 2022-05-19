@@ -58,7 +58,7 @@ public:
     virtual bool_t isEmpty() const
     {
         bool_t res;
-        int32_t const length = getLength();
+        int32_t const length( getLength() );
         if(length == 0)
         {
             res = true;
@@ -82,7 +82,7 @@ public:
         }
         else
         {
-            const T* const str = string.getChar();
+            const T* const str( string.getChar() );
             res = copy(str);
         }
         return res;
@@ -100,7 +100,7 @@ public:
         }
         else
         {
-            const T* const str = string.getChar();
+            const T* const str( string.getChar() );
             res = concatenate(str);
         }
         return res;
@@ -118,7 +118,7 @@ public:
         }
         else
         {
-            const T* const str = string.getChar();
+            const T* const str( string.getChar() );
             res = compare(str);
         }
         return res;
@@ -174,8 +174,8 @@ protected:
      */
     int32_t getLength(const T* str) const
     {
-        int32_t len = 0;
-        T const null = getTerminator();
+        int32_t len( 0 ); 
+        T const null( getTerminator() );
         while( *str != null )
         {
             str++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
@@ -194,7 +194,7 @@ protected:
     {
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            T const null = getTerminator();
+            T const null( getTerminator() );
             dst--; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
             src--; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
             do
@@ -217,9 +217,9 @@ protected:
     {
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            T const null = getTerminator();
-            int32_t d = 0;
-            int32_t s = 0;
+            T const null( getTerminator() );
+            int32_t d( 0 );
+            int32_t s( 0 );
             while( dst[d] != null )
             {
                 d++;
@@ -240,7 +240,7 @@ protected:
     /**
      * @brief The minimum possible value of int32_t type.
      */
-    static const int32_t MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0 - 0x7fffffff - 1;
+    static const int32_t MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0 - 0x7fffffff - 1 ;
 
 private:
 
