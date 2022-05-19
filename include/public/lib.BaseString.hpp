@@ -42,7 +42,7 @@ class BaseString : public AbstractString<T,L,A>
      *
      * @param source A source character string.
      */
-    BaseString(const T* const source) 
+    BaseString(T const* const source) 
         : AbstractString<T,L,A>() {
         Parent::copy(source);
     }
@@ -95,7 +95,7 @@ public:
      *
      * @param source A source object.
      */
-    BaseString(const BaseString<char_t,L,A>& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+    BaseString(BaseString<char_t,L,A> const& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         : AbstractString<char_t,L,A>() {
         Parent::copy(source);
     }
@@ -105,7 +105,7 @@ public:
      *
      * @param source A source object interface.
      */
-    BaseString(const api::String<char_t>& source) 
+    BaseString(api::String<char_t> const& source) 
         : AbstractString<char_t,L,A>() {
         Parent::copy(source);
     }
@@ -115,7 +115,7 @@ public:
      *
      * @param source A source character string.
      */
-    BaseString(const char_t* const source) 
+    BaseString(char_t const* const source) 
         : AbstractString<char_t,L,A>() {
         Parent::copy(source);
     }
@@ -147,7 +147,7 @@ public:
      * @param source A source object.
      * @return This object.
      */
-    BaseString<char_t,L,A>& operator=(const BaseString<char_t,L,A>& source)
+    BaseString<char_t,L,A>& operator=(BaseString<char_t,L,A> const& source)
     {
         Parent::copy(source);
         return *this;
@@ -159,7 +159,7 @@ public:
      * @param source A source object interface.
      * @return Reference to this object.
      */
-    BaseString<char_t,L,A>& operator=(const api::String<char_t>& source)
+    BaseString<char_t,L,A>& operator=(api::String<char_t> const& source)
     {
         Parent::copy(source);
         return *this;
@@ -171,7 +171,7 @@ public:
      * @param source A source character string.
      * @return Reference to this object.
      */
-    BaseString<char_t,L,A>& operator=(const char_t* const source)
+    BaseString<char_t,L,A>& operator=(char_t const* const source)
     {
         Parent::copy(source);
         return *this;
@@ -183,7 +183,7 @@ public:
      * @param source A source object.
      * @return Reference to this object.
      */
-    BaseString<char_t,L,A>& operator+=(const BaseString<char_t,L,A>& source)
+    BaseString<char_t,L,A>& operator+=(BaseString<char_t,L,A> const& source)
     {
         Parent::concatenate(source);
         return *this;
@@ -195,7 +195,7 @@ public:
      * @param source A source object interface.
      * @return Reference to this object.
      */
-    BaseString<char_t,L,A>& operator+=(const api::String<char_t>& source)
+    BaseString<char_t,L,A>& operator+=(api::String<char_t> const& source)
     {
         Parent::concatenate(source);
         return *this;
@@ -207,7 +207,7 @@ public:
      * @param source A source character string.
      * @return Reference to this object.
      */
-    BaseString<char_t,L,A>& operator+=(const char_t* const source)
+    BaseString<char_t,L,A>& operator+=(char_t const* const source)
     {
         Parent::concatenate(source);
         return *this;
@@ -287,10 +287,10 @@ protected:
 
 private:
 
-    template <int32_t L0, class A0> friend bool_t operator==(const BaseString<char_t,L0,A0>&, const char_t*);
-    template <int32_t L0, class A0> friend bool_t operator==(const char_t*, const BaseString<char_t,L0,A0>&);
-    template <int32_t L0, class A0> friend bool_t operator!=(const BaseString<char_t,L0,A0>&, const char_t*);
-    template <int32_t L0, class A0> friend bool_t operator!=(const char_t*, const BaseString<char_t,L0,A0>&);
+    template <int32_t L0, class A0> friend bool_t operator==(BaseString<char_t,L0,A0> const&, char_t const*);
+    template <int32_t L0, class A0> friend bool_t operator==(char_t* const, BaseString<char_t,L0,A0> const&);
+    template <int32_t L0, class A0> friend bool_t operator!=(BaseString<char_t,L0,A0> const&, char_t const*);
+    template <int32_t L0, class A0> friend bool_t operator!=(char_t const*, BaseString<char_t,L0,A0> const&);
 };
 
 /**
@@ -301,7 +301,7 @@ private:
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator==(const BaseString<char_t,L,A>& source1, const BaseString<char_t,L,A>& source2)
+inline bool_t operator==(BaseString<char_t,L,A> const& source1, BaseString<char_t,L,A> const& source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -314,7 +314,7 @@ inline bool_t operator==(const BaseString<char_t,L,A>& source1, const BaseString
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator==(const BaseString<char_t,L,A>& source1, const api::String<char_t>& source2)
+inline bool_t operator==(BaseString<char_t,L,A> const& source1, api::String<char_t> const& source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -327,7 +327,7 @@ inline bool_t operator==(const BaseString<char_t,L,A>& source1, const api::Strin
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator==(const api::String<char_t>& source1, const BaseString<char_t,L,A>& source2)
+inline bool_t operator==(api::String<char_t> const& source1, BaseString<char_t,L,A> const& source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -340,7 +340,7 @@ inline bool_t operator==(const api::String<char_t>& source1, const BaseString<ch
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator==(const BaseString<char_t,L,A>& source1, const char_t* const source2)
+inline bool_t operator==(BaseString<char_t,L,A> const& source1, char_t const* const source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -353,7 +353,7 @@ inline bool_t operator==(const BaseString<char_t,L,A>& source1, const char_t* co
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator==(const char_t* const source1, const BaseString<char_t,L,A>& source2)
+inline bool_t operator==(char_t const* const source1, BaseString<char_t,L,A> const& source2)
 {
     return ( source2.compare(source1) == 0 ) ? true : false;
 }
@@ -366,7 +366,7 @@ inline bool_t operator==(const char_t* const source1, const BaseString<char_t,L,
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const BaseString<char_t,L,A>& source2)
+inline bool_t operator!=(BaseString<char_t,L,A> const& source1, BaseString<char_t,L,A> const& source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -379,7 +379,7 @@ inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const BaseString
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const api::String<char_t>& source2)
+inline bool_t operator!=(BaseString<char_t,L,A> const& source1, api::String<char_t> const& source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -392,7 +392,7 @@ inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const api::Strin
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<char_t,L,A>& source2)
+inline bool_t operator!=(api::String<char_t> const& source1, BaseString<char_t,L,A> const& source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -405,7 +405,7 @@ inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<ch
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const char_t* const source2)
+inline bool_t operator!=(BaseString<char_t,L,A> const& source1, char_t const* const source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -418,7 +418,7 @@ inline bool_t operator!=(const BaseString<char_t,L,A>& source1, const char_t* co
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,L,A>& source2)
+inline bool_t operator!=(char_t const* const source1, BaseString<char_t,L,A> const& source2)
 {
     return ( source2.compare(source1) != 0 ) ? true : false;
 }
@@ -431,7 +431,7 @@ inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,L,
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, const BaseString<char_t,L,A>& source2)
+inline BaseString<char_t,L,A> operator+(BaseString<char_t,L,A> const& source1, BaseString<char_t,L,A> const& source2)
 {
     BaseString<char_t,L,A> string(source1);
     string += source2;
@@ -446,7 +446,7 @@ inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, c
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, const api::String<char_t>& source2)
+inline BaseString<char_t,L,A> operator+(BaseString<char_t,L,A> const& source1, api::String<char_t> const& source2)
 {
     BaseString<char_t,L,A> string(source1);
     string += source2;
@@ -461,7 +461,7 @@ inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, c
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(const api::String<char_t>& source1, const BaseString<char_t,L,A>& source2)
+inline BaseString<char_t,L,A> operator+(api::String<char_t> const& source1, BaseString<char_t,L,A> const& source2)
 {
     BaseString<char_t,L,A> string(source1);
     string += source2;
@@ -476,7 +476,7 @@ inline BaseString<char_t,L,A> operator+(const api::String<char_t>& source1, cons
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, const char_t* const source2)
+inline BaseString<char_t,L,A> operator+(BaseString<char_t,L,A> const& source1, char_t const* const source2)
 {
     BaseString<char_t,L,A> string(source1);
     string += source2;
@@ -491,7 +491,7 @@ inline BaseString<char_t,L,A> operator+(const BaseString<char_t,L,A>& source1, c
  * @return True if strings are equal.
  */
 template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(const char_t* const source1, const BaseString<char_t,L,A>& source2)
+inline BaseString<char_t,L,A> operator+(char_t const* const source1, BaseString<char_t,L,A> const& source2)
 {
     BaseString<char_t,L,A> string(source1);
     string += source2;
@@ -529,7 +529,7 @@ public:
      *
      * @param source A source character string.
      */
-    BaseString(const T* const source) 
+    BaseString(T const* const source) 
         : AbstractString<T,0,A>() {
         Parent::copy(source);
     }
@@ -581,7 +581,7 @@ public:
      *
      * @param source A source object.
      */
-    BaseString(const BaseString<char_t,0,A>& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+    BaseString(BaseString<char_t,0,A> const& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         : AbstractString<char_t,0,A>() {
         Parent::copy(source);
     }
@@ -591,7 +591,7 @@ public:
      *
      * @param source A source object interface.
      */
-    BaseString(const api::String<char_t>& source) 
+    BaseString(api::String<char_t> const& source) 
         : AbstractString<char_t,0,A>() {
         Parent::copy(source);
     }
@@ -601,7 +601,7 @@ public:
      *
      * @param source A source character string.
      */
-    BaseString(const char_t* const source) 
+    BaseString(char_t const* const source) 
         : AbstractString<char_t,0,A>() {
         Parent::copy(source);
     }
@@ -633,7 +633,7 @@ public:
      * @param source A source object.
      * @return This object.
      */
-    BaseString<char_t,0,A>& operator=(const BaseString<char_t,0,A>& source)
+    BaseString<char_t,0,A>& operator=(BaseString<char_t,0,A> const& source)
     {
         Parent::copy(source);
         return *this;
@@ -645,7 +645,7 @@ public:
      * @param source A source object interface.
      * @return Reference to this object.
      */
-    BaseString<char_t,0,A>& operator=(const api::String<char_t>& source)
+    BaseString<char_t,0,A>& operator=(api::String<char_t> const& source)
     {
         Parent::copy(source);
         return *this;
@@ -657,7 +657,7 @@ public:
      * @param source A source character string.
      * @return Reference to this object.
      */
-    BaseString<char_t,0,A>& operator=(const char_t* const source)
+    BaseString<char_t,0,A>& operator=(char_t const* const source)
     {
         Parent::copy(source);
         return *this;
@@ -669,7 +669,7 @@ public:
      * @param source A source object.
      * @return Reference to this object.
      */
-    BaseString<char_t,0,A>& operator+=(const BaseString<char_t,0,A>& source)
+    BaseString<char_t,0,A>& operator+=(BaseString<char_t,0,A> const& source)
     {
         Parent::concatenate(source);
         return *this;
@@ -681,7 +681,7 @@ public:
      * @param source A source object interface.
      * @return Reference to this object.
      */
-    BaseString<char_t,0,A>& operator+=(const api::String<char_t>& source)
+    BaseString<char_t,0,A>& operator+=(api::String<char_t> const& source)
     {
         Parent::concatenate(source);
         return *this;
@@ -693,7 +693,7 @@ public:
      * @param source A source character string.
      * @return Reference to this object.
      */
-    BaseString<char_t,0,A>& operator+=(const char_t* const source)
+    BaseString<char_t,0,A>& operator+=(char_t const* const source)
     {
         Parent::concatenate(source);
         return *this;
@@ -758,7 +758,7 @@ public:
     template <typename I>
     I cast(int32_t const base = 10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
-        const char_t* const str( Parent::getChar() );
+        char_t const* const str( Parent::getChar() );
         return Memory::atoi<I>(str, base);
     }
 
@@ -774,10 +774,10 @@ protected:
 
 private:
 
-    template <class A0> friend bool_t operator==(const BaseString<char_t,0,A0>&, const char_t*);
-    template <class A0> friend bool_t operator==(const char_t*, const BaseString<char_t,0,A0>&);
-    template <class A0> friend bool_t operator!=(const BaseString<char_t,0,A0>&, const char_t*);
-    template <class A0> friend bool_t operator!=(const char_t*, const BaseString<char_t,0,A0>&);
+    template <class A0> friend bool_t operator==(BaseString<char_t,0,A0> const&, char_t const*);
+    template <class A0> friend bool_t operator==(char_t const*, BaseString<char_t,0,A0> const&);
+    template <class A0> friend bool_t operator!=(BaseString<char_t,0,A0> const&, char_t const*);
+    template <class A0> friend bool_t operator!=(char_t const*, BaseString<char_t,0,A0> const&);
 };
 
 /**
@@ -788,7 +788,7 @@ private:
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator==(const BaseString<char_t,0,A>& source1, const BaseString<char_t,0,A>& source2)
+inline bool_t operator==(BaseString<char_t,0,A> const& source1, BaseString<char_t,0,A> const& source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -801,7 +801,7 @@ inline bool_t operator==(const BaseString<char_t,0,A>& source1, const BaseString
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator==(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
+inline bool_t operator==(BaseString<char_t,0,A> const& source1, api::String<char_t> const& source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -814,7 +814,7 @@ inline bool_t operator==(const BaseString<char_t,0,A>& source1, const api::Strin
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator==(const api::String<char_t>& source1, const BaseString<char_t,0,A>& source2)
+inline bool_t operator==(api::String<char_t> const& source1, BaseString<char_t,0,A> const& source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -827,7 +827,7 @@ inline bool_t operator==(const api::String<char_t>& source1, const BaseString<ch
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator==(const BaseString<char_t,0,A>& source1, const char_t* const source2)
+inline bool_t operator==(BaseString<char_t,0,A> const& source1, char_t const* const source2)
 {
     return ( source1.compare(source2) == 0 ) ? true : false;
 }
@@ -840,7 +840,7 @@ inline bool_t operator==(const BaseString<char_t,0,A>& source1, const char_t* co
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator==(const char_t* const source1, const BaseString<char_t,0,A>& source2)
+inline bool_t operator==(char_t const* const source1, BaseString<char_t,0,A> const& source2)
 {
     return ( source2.compare(source1) == 0 ) ? true : false;
 }
@@ -853,7 +853,7 @@ inline bool_t operator==(const char_t* const source1, const BaseString<char_t,0,
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const BaseString<char_t,0,A>& source2)
+inline bool_t operator!=(BaseString<char_t,0,A> const& source1, BaseString<char_t,0,A> const& source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -866,7 +866,7 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const BaseString
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
+inline bool_t operator!=(BaseString<char_t,0,A> const& source1, api::String<char_t> const& source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -879,7 +879,7 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const api::Strin
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<char_t,0,A>& source2)
+inline bool_t operator!=(api::String<char_t> const& source1, BaseString<char_t,0,A> const& source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -892,7 +892,7 @@ inline bool_t operator!=(const api::String<char_t>& source1, const BaseString<ch
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const char_t* const source2)
+inline bool_t operator!=(BaseString<char_t,0,A> const& source1, char_t const* const source2)
 {
     return ( source1.compare(source2) != 0 ) ? true : false;
 }
@@ -905,7 +905,7 @@ inline bool_t operator!=(const BaseString<char_t,0,A>& source1, const char_t* co
  * @return True if strings are equal.
  */
 template <class A>
-inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,0,A>& source2)
+inline bool_t operator!=(char_t const* const source1, BaseString<char_t,0,A> const& source2)
 {
     return ( source2.compare(source1) != 0 ) ? true : false;
 }
@@ -918,7 +918,7 @@ inline bool_t operator!=(const char_t* const source1, const BaseString<char_t,0,
  * @return True if strings are equal.
  */
 template <class A>
-inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, const BaseString<char_t,0,A>& source2)
+inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, BaseString<char_t,0,A> const& source2)
 {
     BaseString<char_t,0,A> string(source1);
     string += source2;
@@ -933,7 +933,7 @@ inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, c
  * @return True if strings are equal.
  */
 template <class A>
-inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, const api::String<char_t>& source2)
+inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, api::String<char_t> const& source2)
 {
     BaseString<char_t,0,A> string(source1);
     string += source2;
@@ -948,7 +948,7 @@ inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, c
  * @return True if strings are equal.
  */
 template <class A>
-inline BaseString<char_t,0,A> operator+(const api::String<char_t>& source1, const BaseString<char_t,0,A>& source2)
+inline BaseString<char_t,0,A> operator+(api::String<char_t> const& source1, BaseString<char_t,0,A> const& source2)
 {
     BaseString<char_t,0,A> string(source1);
     string += source2;
@@ -963,7 +963,7 @@ inline BaseString<char_t,0,A> operator+(const api::String<char_t>& source1, cons
  * @return True if strings are equal.
  */
 template <class A>
-inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, const char_t* const source2)
+inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, char_t const* const source2)
 {
     BaseString<char_t,0,A> string(source1);
     string += source2;
@@ -978,7 +978,7 @@ inline BaseString<char_t,0,A> operator+(const BaseString<char_t,0,A>& source1, c
  * @return True if strings are equal.
  */
 template <class A>
-inline BaseString<char_t,0,A> operator+(const char_t* const source1, const BaseString<char_t,0,A>& source2)
+inline BaseString<char_t,0,A> operator+(char_t const* const source1, BaseString<char_t,0,A> const& source2)
 {
     BaseString<char_t,0,A> string(source1);
     string += source2;

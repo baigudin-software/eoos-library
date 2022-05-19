@@ -51,7 +51,7 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    AbstractBuffer(int32_t length, const T& illegal) 
+    AbstractBuffer(int32_t length, T const& illegal) 
         : NonCopyable<A>()
         , api::Collection<T>()
         , api::IllegalValue<T>()
@@ -99,9 +99,9 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
+     * @copydoc eoos::api::IllegalValue::setIllegal(T const&)
      */
-    virtual void setIllegal(const T& value)
+    virtual void setIllegal(T const& value)
     {
         illegal_ = value;
     }
@@ -109,7 +109,7 @@ public:
     /**
      * @copydoc eoos::api::IllegalValue::isIllegal()
      */
-    virtual bool_t isIllegal(const T& value) const
+    virtual bool_t isIllegal(T const& value) const
     {
         return illegal_ == value;
     }
@@ -119,7 +119,7 @@ public:
      *
      * @param value A filling value.
      */
-    void fill(const T& value)
+    void fill(T const& value)
     {
         fill(value, length_);
     }
@@ -130,7 +130,7 @@ public:
      * @param value  Filling value.
      * @param length Count of filling elements.
      */
-    void fill(const T& value, const int32_t length)
+    void fill(T const& value, int32_t const length)
     {
         fill(value, 0, length);
     }
@@ -142,9 +142,9 @@ public:
      * @param index Begin index.
      * @param count Count of filling elements.
      */
-    void fill(const T& value, const int32_t index, const int32_t count)
+    void fill(T const& value, int32_t const index, int32_t const count)
     {
-        const bool_t hasIndex( index < length_ );
+        bool_t const hasIndex( index < length_ );
         if( Self::isConstructed() && hasIndex )
         {
             T* const buf( getBuffer() );
@@ -196,7 +196,7 @@ protected:
      *
      * @param buf Reference to source buffer.
      */
-    void copy(const AbstractBuffer& buf)
+    void copy(AbstractBuffer const& buf)
     {
         if( Self::isConstructed() )
         {

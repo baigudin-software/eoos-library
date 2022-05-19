@@ -45,7 +45,7 @@ public:
      *
      * @param value A data value.
      */
-    Align(const T& value) 
+    Align(T const& value) 
         : ObjectAllocator<A>() {
         assignment(value);
     }
@@ -55,7 +55,7 @@ public:
      *
      * @param obj A source object.
      */
-    Align(const Align& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+    Align(Align const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         : ObjectAllocator<A>(obj) {
         copy(obj);
     }
@@ -69,7 +69,7 @@ public:
      * @param value A source data value.
      * @return Reference to this object.
      */
-    Align& operator=(const T& value)
+    Align& operator=(T const& value)
     {
         assignment(value);
         return *this;
@@ -81,7 +81,7 @@ public:
      * @param obj A source object.
      * @return Reference to this object.
      */
-    Align& operator=(const Align& obj)
+    Align& operator=(Align const& obj)
     {
         copy(obj);
         return *this;
@@ -159,7 +159,7 @@ private:
      * @param val A source value.
      * @return True if this object value equals to a passed value.
      */
-    bool_t equal(const T& value) const
+    bool_t equal(T const& value) const
     {
         Align<T,S,A> obj(value);
         return equal(obj);
@@ -171,7 +171,7 @@ private:
      * @param obj A source object.
      * @return True if this object value equals to a passed object value.
      */
-    bool_t equal(const Align& obj) const
+    bool_t equal(Align const& obj) const
     {
         bool_t res( true );
         for(size_t i(0U); i<S; i++)
@@ -190,7 +190,7 @@ private:
      *
      * @param value Source data value.
      */
-    void assignment(const T& value) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    void assignment(T const& value) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         for(size_t i(0U); i<S; i++)
         {
@@ -204,7 +204,7 @@ private:
      *
      * @param obj Reference to source object.
      */
-    void copy(const Align& obj) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    void copy(Align const& obj) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         for(size_t i(0U); i<S; i++)
         {
@@ -244,9 +244,9 @@ private:
  * @return True if objects are equal.
  */
 template <typename T, size_t S = sizeof(T), class A = Allocator>
-inline bool_t operator==(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
+inline bool_t operator==(Align<T,S,A> const& obj1, Align<T,S,A> const& obj2)
 {
-    const bool_t res( obj1.equal(obj2) );
+    bool_t const res( obj1.equal(obj2) );
     return res;
 }
 
@@ -258,9 +258,9 @@ inline bool_t operator==(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
  * @return True if objects are not equal.
  */
 template <typename T, size_t S = sizeof(T), class A = Allocator>
-inline bool_t operator!=(const Align<T,S,A>& obj1, const Align<T,S,A>& obj2)
+inline bool_t operator!=(Align<T,S,A> const& obj1, Align<T,S,A> const& obj2)
 {
-    const bool_t res( obj1.equal(obj2) );
+    bool_t const res( obj1.equal(obj2) );
     return !res;
 }
 

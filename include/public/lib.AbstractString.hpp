@@ -60,7 +60,7 @@ public:
     /**
      * @copydoc eoos::api::String::getLength()
      */
-    virtual const T* getChar() const
+    virtual T const* getChar() const
     {
         return context_.str;
     }
@@ -68,9 +68,9 @@ public:
 protected:
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::copy(const T*)
+     * @copydoc eoos::lib::AbstractBaseString::copy(T const*)
      */
-    virtual bool_t copy(const T* const str)
+    virtual bool_t copy(T const* const str)
     {
         bool_t res;
         if( Parent::isConstructed() && (str != NULLPTR) )
@@ -111,9 +111,9 @@ protected:
     }
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::concatenate(const T*)
+     * @copydoc eoos::lib::AbstractBaseString::concatenate(T const*)
      */
-    virtual bool_t concatenate(const T* const str)
+    virtual bool_t concatenate(T const* const str)
     {
         bool_t res;
         if( Parent::isConstructed() && (str != NULLPTR) )
@@ -164,9 +164,9 @@ protected:
     }
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::compare(const T*)
+     * @copydoc eoos::lib::AbstractBaseString::compare(T const*)
      */
-    virtual int32_t compare(const T* const str) const
+    virtual int32_t compare(T const* const str) const
     {
         int32_t res;
         if( Parent::isConstructed() && (context_.str != NULLPTR) && (str != NULLPTR) )
@@ -206,7 +206,7 @@ private:
      *
      * @param obj A source object.
      */
-    AbstractString(const AbstractString<T,L,A>& obj);
+    AbstractString(AbstractString<T,L,A> const& obj);
 
     /**
      * @brief Direct assignment operator.
@@ -218,7 +218,7 @@ private:
      * @param obj A source object.
      * @return This object.
      */
-    AbstractString<T,L,A>& operator=(const AbstractString<T,L,A>& obj);
+    AbstractString<T,L,A>& operator=(AbstractString<T,L,A> const& obj);
 
     /**
      * @struct Context
@@ -260,7 +260,7 @@ private:
          *
          * @param obj A source object.
          */
-        void mirror(const Context& obj)
+        void mirror(Context const& obj)
         {
             // Don't instigate a copy of object buffer to this buffer,
             // as the source object always is temporary and
@@ -350,7 +350,7 @@ private:
          *
          * @param obj A source object.
          */
-        Context(const Context& context);
+        Context(Context const& context);
 
         /**
          * @brief Assignment operator.
@@ -358,7 +358,7 @@ private:
          * @param obj A source object.
          * @return This object.
          */
-        Context& operator=(const Context& obj);
+        Context& operator=(Context const& obj);
         
         /**
          * @brief Max available number of characters for this string.
@@ -430,7 +430,7 @@ public:
      * that contains characters. By this reason, a returned address will be actual
      * until you do not call no constant function of this class for an object.
      */
-    virtual const T* getChar() const
+    virtual T const* getChar() const
     {
         return context_.str;
     }
@@ -438,9 +438,9 @@ public:
 protected:
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::copy(const T*)
+     * @copydoc eoos::lib::AbstractBaseString::copy(T const*)
      */
-    virtual bool_t copy(const T* const str)
+    virtual bool_t copy(T const* const str)
     {
         bool_t res;
         if( Parent::isConstructed() && (str != NULLPTR) )
@@ -481,9 +481,9 @@ protected:
     }
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::concatenate(const T*)
+     * @copydoc eoos::lib::AbstractBaseString::concatenate(T const*)
      */
-    virtual bool_t concatenate(const T* const str)
+    virtual bool_t concatenate(T const* const str)
     {
         bool_t res;
         if( Parent::isConstructed() && (str != NULLPTR) )
@@ -534,9 +534,9 @@ protected:
     }
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::compare(const T*)
+     * @copydoc eoos::lib::AbstractBaseString::compare(T const*)
      */
-    virtual int32_t compare(const T* const str) const
+    virtual int32_t compare(T const* const str) const
     {
         int32_t res;
         if( Parent::isConstructed() && (context_.str != NULLPTR) && (str != NULLPTR) )
@@ -576,7 +576,7 @@ private:
      *
      * @param obj A source object.
      */
-    AbstractString(const AbstractString<T,0,A>& obj);
+    AbstractString(AbstractString<T,0,A> const& obj);
 
     /**
      * @brief Direct assignment operator.
@@ -588,7 +588,7 @@ private:
      * @param obj A source object.
      * @return This object.
      */
-    AbstractString<T,0,A>& operator=(const AbstractString<T,0,A>& obj);
+    AbstractString<T,0,A>& operator=(AbstractString<T,0,A> const& obj);
 
     /**
      * @struct Context
@@ -630,7 +630,7 @@ private:
          *
          * @param obj A source object.
          */
-        void mirror(const Context& obj)
+        void mirror(Context const& obj)
         {
             // Copy an argument pointer value to this pointer value,
             // as we know that the source object will be destroyed
@@ -769,7 +769,7 @@ private:
          *
          * @param obj A source object.
          */
-        Context(const Context& context);
+        Context(Context const& context);
 
         /**
          * @brief Assignment operator.
@@ -777,7 +777,7 @@ private:
          * @param obj A source object.
          * @return This object.
          */
-        Context& operator=(const Context& obj);
+        Context& operator=(Context const& obj);
         
         /**
          * @brief Max available number of characters for this string.

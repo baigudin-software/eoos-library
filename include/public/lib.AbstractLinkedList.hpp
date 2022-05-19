@@ -60,7 +60,7 @@ public:
      *
      * @param illegal An illegal element.
      */
-    AbstractLinkedList(const T& illegal) 
+    AbstractLinkedList(T const& illegal) 
         : NonCopyable<A>()
         , api::List<T>()
         , api::Queue<T>()
@@ -87,17 +87,17 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::List::add(const T&)
+     * @copydoc eoos::api::List::add(T const&)
      */
-    virtual bool_t add(const T& element)
+    virtual bool_t add(T const& element)
     {
         return Self::isConstructed() ? addNode(getLength(), element) : false;
     }
 
     /**
-     * @copydoc eoos::api::List::add(int32_t,const T&)
+     * @copydoc eoos::api::List::add(int32_t,T const&)
      */
-    virtual bool_t add(int32_t const index, const T& element)
+    virtual bool_t add(int32_t const index, T const& element)
     {
         return Self::isConstructed() ? addNode(index, element) : false;
     }
@@ -111,7 +111,7 @@ public:
         {
             return;
         }
-        const int32_t b( getLength() - 1 );
+        int32_t const b( getLength() - 1 );
         for(int32_t i(b); i>=0; i--)
         {
             if( !removeNode( getNodeByIndex(i) ) )
@@ -148,21 +148,21 @@ public:
     /**
      * @copydoc eoos::api::List::remove(int32_t)
      */
-    virtual bool_t remove(const int32_t index)
+    virtual bool_t remove(int32_t const index)
     {
         return Self::isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
     }
 
     /**
-     * @copydoc eoos::api::List::removeElement(const T&)
+     * @copydoc eoos::api::List::removeElement(T const&)
      */
-    virtual bool_t removeElement(const T& element)
+    virtual bool_t removeElement(T const& element)
     {
         return Self::isConstructed() ? removeNode( getNodeByElement(element) ) : false;
     }
 
     /**
-     * @copydoc eoos::api::Queue::peek(const T&)
+     * @copydoc eoos::api::Queue::peek(T const&)
      */
     virtual T& peek()
     {
@@ -223,9 +223,9 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
+     * @copydoc eoos::api::IllegalValue::setIllegal(T const&)
      */
-    virtual void setIllegal(const T& value)
+    virtual void setIllegal(T const& value)
     {
         if( Self::isConstructed() )
         {
@@ -234,9 +234,9 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::IllegalValue::isIllegal(const T&)
+     * @copydoc eoos::api::IllegalValue::isIllegal(T const&)
      */
-    virtual bool_t isIllegal(const T& value) const
+    virtual bool_t isIllegal(T const& value) const
     {
         if( !Self::isConstructed() )
         {
@@ -246,16 +246,16 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::List::getIndexOf(const T&)
+     * @copydoc eoos::api::List::getIndexOf(T const&)
      */
-    virtual int32_t getIndexOf(const T& element) const
+    virtual int32_t getIndexOf(T const& element) const
     {
         Node* const node( getNodeByElement(element) );
         return (node != NULLPTR) ? node->getIndex() : -1;
     }
 
     /**
-     * @copydoc eoos::api::List::isIndex(const T&)
+     * @copydoc eoos::api::List::isIndex(T const&)
      */
     virtual bool_t isIndex(int32_t const index) const
     {
@@ -292,7 +292,7 @@ public:
         {
             return NULLPTR;
         }
-        const int32_t count( getLength() );
+        int32_t const count( getLength() );
         if(count == 0)
         {
             return NULLPTR;
@@ -328,7 +328,7 @@ protected:
      *
      * @todo Shall re-implemented according MISRA-C++:2008 Rule 6–6–5 as the delete operator is used. 
      */
-    bool_t addNode(const int32_t index, const T& element)
+    bool_t addNode(int32_t const index, T const& element)
     {
         if(isIndexOutOfBounds(index))
         {
@@ -385,7 +385,7 @@ protected:
      * @param index Position in this list.
      * @return Pointer to the node of this list.
      */
-    Node* getNodeByIndex(const int32_t index)
+    Node* getNodeByIndex(int32_t const index)
     {
         if( !isIndex(index) )
         {
@@ -409,9 +409,9 @@ protected:
      * @param element Reference to element.
      * @return Pointer to the node of this list.
      */
-    Node* getNodeByElement(const T& element) const
+    Node* getNodeByElement(T const& element) const
     {
-        const int32_t len( getLength() );
+        int32_t const len( getLength() );
         if(len == 0)
         {
             return NULLPTR;
@@ -463,7 +463,7 @@ protected:
      * @param index Checking position in this list.
      * @return True if index is outed.
      */
-    bool_t isIndexOutOfBounds(const int32_t index) const
+    bool_t isIndexOutOfBounds(int32_t const index) const
     {
         if( index < 0 )
         {

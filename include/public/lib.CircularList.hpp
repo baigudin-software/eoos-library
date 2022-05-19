@@ -40,7 +40,7 @@ public:
      *
      * @param illegal An illegal element.
      */
-    CircularList(const T illegal) 
+    CircularList(T const illegal) 
         : AbstractLinkedList<T,A>(illegal) {
     }
 
@@ -54,7 +54,7 @@ public:
     /**
      * @copydoc eoos::api::List::getListIterator(int32_t)
      */
-    virtual api::ListIterator<T>* getListIterator(const int32_t index)
+    virtual api::ListIterator<T>* getListIterator(int32_t const index)
     {
         if( !Parent::isConstructed() )
         {
@@ -123,9 +123,9 @@ private:
         }
 
         /**
-         * @copydoc eoos::api::ListIterator::add(const T&)
+         * @copydoc eoos::api::ListIterator::add(T const&)
          */
-        virtual bool_t add(const T& element)
+        virtual bool_t add(T const& element)
         {
             if(count_.list != count_.self)
             {
@@ -263,17 +263,17 @@ private:
         }
 
         /**
-         * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
+         * @copydoc eoos::api::IllegalValue::setIllegal(T const&)
          */
-        virtual void setIllegal(const T& value)
+        virtual void setIllegal(T const& value)
         {
             list_.setIllegal(value);
         }
 
         /**
-         * @copydoc eoos::api::IllegalValue::isIllegal(const T&)
+         * @copydoc eoos::api::IllegalValue::isIllegal(T const&)
          */
-        virtual bool_t isIllegal(const T& value) const
+        virtual bool_t isIllegal(T const& value) const
         {
             return list_.isIllegal(value);
         }
@@ -333,7 +333,7 @@ private:
             /**
              * @brief Quantity of chang made by iterating list.
              */
-            const int32_t& list; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
+            int32_t const& list; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
             /**
              * @brief Quantity of chang made by the iterator.

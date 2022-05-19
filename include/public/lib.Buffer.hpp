@@ -46,7 +46,7 @@ public:
      *
      * @param illegal An illegal value.
      */
-    Buffer(const T& illegal) 
+    Buffer(T const& illegal) 
         : AbstractBuffer<T,A>(L, illegal)
         , buf_ (arr_){
     }
@@ -67,7 +67,7 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(const Buffer<T,L,A>& buf)
+    Buffer& operator=(Buffer<T,L,A> const& buf)
     {
         this->copy(buf);
         return *this;
@@ -82,7 +82,7 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(const AbstractBuffer<T,A>& buf)
+    Buffer& operator=(AbstractBuffer<T,A> const& buf)
     {
         this->copy(buf);
         return *this;
@@ -144,7 +144,7 @@ public:
         : AbstractBuffer<T,A>(length)
         , buf_(NULLPTR)
         , isDeleted_(true) {
-        const bool_t isConstructed( construct(length) );
+        bool_t const isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -156,11 +156,11 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Buffer(int32_t const length, const T& illegal) 
+    Buffer(int32_t const length, T const& illegal) 
         : AbstractBuffer<T,A>(length, illegal)
         , buf_(NULLPTR)
         , isDeleted_(true) {
-        const bool_t isConstructed( construct(length) );
+        bool_t const isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -172,11 +172,11 @@ public:
      * @param length Number of elements.
      * @param buf    Pointer to external buffer.
      */
-    Buffer(int32_t const length, T*  const buf) 
+    Buffer(int32_t const length, T* const buf) 
         : AbstractBuffer<T,A>(length)
         , buf_(buf)
         , isDeleted_(false) {
-        const bool_t isConstructed( construct(length) );
+        bool_t const isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -190,11 +190,11 @@ public:
      * @param buf     Pointer to external buffer.
      * @param illegal Illegal value.
      */
-    Buffer(int32_t const length, T* const buf, const T& illegal) 
+    Buffer(int32_t const length, T* const buf, T const& illegal) 
         : AbstractBuffer<T,A>(length, illegal)
         , buf_(buf)
         , isDeleted_(false) {
-        const bool_t isConstructed( construct(length) );
+        bool_t const isConstructed( construct(length) );
         this->setConstructed( isConstructed );
     }
 
@@ -219,7 +219,7 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(const Buffer<T,0,A>& buf)
+    Buffer& operator=(Buffer<T,0,A> const& buf)
     {
         this->copy(buf);
         return *this;
@@ -234,7 +234,7 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(const AbstractBuffer<T,A>& buf)
+    Buffer& operator=(AbstractBuffer<T,A> const& buf)
     {
         this->copy(buf);
         return *this;

@@ -277,14 +277,14 @@ private:
     #if EOOS_CPP_STANDARD < 2011
     
     /**
-     * @copydoc eoos::Object::Object(const Object&)
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    UniquePointer(const UniquePointer&);
+    UniquePointer(UniquePointer const&);
 
     /**
-     * @copydoc eoos::Object::operator=(const Object&)
+     * @copydoc eoos::Object::operator=(Object const&)
      */       
-    UniquePointer& operator=(const UniquePointer&);    
+    UniquePointer& operator=(UniquePointer const&);    
 
     #endif // EOOS_CPP_STANDARD < 2011
 
@@ -303,7 +303,7 @@ private:
  * @return True if objects are equal.
  */
 template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
-inline bool_t operator==(const UniquePointer<T,D,A>& obj1, const UniquePointer<T,D,A>& obj2)
+inline bool_t operator==(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> const& obj2)
 {
     return obj1.get() == obj2.get();
 }
@@ -316,7 +316,7 @@ inline bool_t operator==(const UniquePointer<T,D,A>& obj1, const UniquePointer<T
  * @return True if objects are not equal.
  */
 template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
-inline bool_t operator!=(const UniquePointer<T,D,A>& obj1, const UniquePointer<T,D,A>& obj2)
+inline bool_t operator!=(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> const& obj2)
 {
     return obj1.get() != obj2.get();
 }

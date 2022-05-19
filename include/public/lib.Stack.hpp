@@ -52,7 +52,7 @@ public:
      * @param count   Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Stack(typename api::Stack<T>::Operation type, int32_t count, const T illegal) 
+    Stack(typename api::Stack<T>::Operation type, int32_t count, T const illegal) 
         : NonCopyable<A>()
         , api::Stack<T>()
         , stack_(count, illegal)
@@ -77,7 +77,7 @@ public:
     /**
      * @copydoc eoos::api::Stack::getTos()
      */
-    virtual const T* getTos()
+    virtual T const* getTos()
     {
         if( !isConstructed() )
         {
@@ -149,17 +149,17 @@ public:
     }
 
     /**
-     * @copydoc eoos::api::IllegalValue::setIllegal(const T&)
+     * @copydoc eoos::api::IllegalValue::setIllegal(T const&)
      */
-    virtual void setIllegal(const T& value)
+    virtual void setIllegal(T const& value)
     {
         return stack_.setIllegal(value);
     }
 
     /**
-     * @copydoc eoos::api::IllegalValue::isIllegal(const T&)
+     * @copydoc eoos::api::IllegalValue::isIllegal(T const&)
      */
-    virtual bool_t isIllegal(const T& value) const
+    virtual bool_t isIllegal(T const& value) const
     {
         return stack_.isIllegal(value);
     }

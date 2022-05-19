@@ -102,7 +102,7 @@ public:
     /**
      * @copydoc eoos::api::Toggle::enable(bool_t)
      */
-    virtual void enable(const bool_t status)
+    virtual void enable(bool_t const status)
     {
         if( !isConstructed() )
         {

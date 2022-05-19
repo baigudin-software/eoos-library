@@ -33,7 +33,7 @@ public:
      *
      * @param permits The initial number of permits available.
      */
-    explicit Semaphore(const int32_t permits) 
+    explicit Semaphore(int32_t const permits) 
         : NonCopyable<A>()
         , api::Semaphore()
         , semaphore_(NULLPTR) {
@@ -93,7 +93,7 @@ private:
      * @param permits The initial number of permits available.
      * @return True if object has been constructed successfully.
      */
-    bool_t construct(const int32_t permits)
+    bool_t construct(int32_t const permits)
     {
         bool_t res( isConstructed() );
         if( res == true )

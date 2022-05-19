@@ -72,9 +72,9 @@ public:
     }
 
     /**
-     * @copydoc eoos::Object::Object(const Object&)
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    SharedPointer(const SharedPointer& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+    SharedPointer(SharedPointer const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         : Object<A>(obj)
         , api::SmartPointer<T>()
         , cb_(obj.cb_){
@@ -82,9 +82,9 @@ public:
     }
 
     /**
-     * @copydoc eoos::Object::operator=(const Object&)
+     * @copydoc eoos::Object::operator=(Object const&)
      */       
-    SharedPointer& operator=(const SharedPointer& obj)
+    SharedPointer& operator=(SharedPointer const& obj)
     {
         if( isConstructed() && (this != &obj) )
         {
@@ -455,7 +455,7 @@ private:
  * @return True if objects are equal.
  */
 template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
-inline bool_t operator==(const SharedPointer<T,D,A>& obj1, const SharedPointer<T,D,A>& obj2)
+inline bool_t operator==(SharedPointer<T,D,A> const& obj1, SharedPointer<T,D,A> const& obj2)
 {
     return obj1.get() == obj2.get();
 }
@@ -468,7 +468,7 @@ inline bool_t operator==(const SharedPointer<T,D,A>& obj1, const SharedPointer<T
  * @return True if objects are not equal.
  */
 template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
-inline bool_t operator!=(const SharedPointer<T,D,A>& obj1, const SharedPointer<T,D,A>& obj2)
+inline bool_t operator!=(SharedPointer<T,D,A> const& obj1, SharedPointer<T,D,A> const& obj2)
 {
     return obj1.get() != obj2.get();
 }

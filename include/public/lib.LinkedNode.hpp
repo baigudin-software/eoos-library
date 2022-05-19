@@ -37,7 +37,7 @@ public:
      *
      * @param element An user element of this node.
      */
-    LinkedNode(const T& element) 
+    LinkedNode(T const& element) 
         : NonCopyable<A>()
         , prev_(this)
         , next_(this)

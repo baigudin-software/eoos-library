@@ -34,7 +34,7 @@ public:
         : api::SystemHeap()
         , data_(size)
         , temp_() {
-        const bool_t isConstructed( construct() );
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -54,7 +54,7 @@ public:
         : api::SystemHeap()
         , data_  (size, toggle)
         , temp_ () {
-        const bool_t isConstructed( construct() );
+        bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
 
@@ -85,7 +85,7 @@ public:
     /**
      * @copydoc eoos::api::Heap::allocate(size_t,void*)
      */
-    virtual void* allocate(const size_t size, void* ptr)
+    virtual void* allocate(size_t const size, void* ptr)
     {
         if( !Self::isConstructed() )
         {
@@ -95,7 +95,7 @@ public:
         {
             return ptr;
         }
-        const bool_t is( disable() );
+        bool_t const is( disable() );
         ptr = getFirstBlock()->alloc(size);
         enable(is);
         return ptr;
@@ -114,7 +114,7 @@ public:
         {
             return;
         }
-        const bool_t is( disable() );
+        bool_t const is( disable() );
         heapBlock(ptr)->free();
         enable(is);
     }
@@ -146,7 +146,7 @@ public:
      * @param ptr  Aligned to eight memory address.
      * @return Address of memory or NULLPTR.
      */
-    static void* operator new(size_t, const uintptr_t ptr)
+    static void* operator new(size_t, uintptr_t const ptr)
     {
         void* memory;
         void* address( reinterpret_cast< void* >(ptr) );
@@ -182,7 +182,7 @@ private:
      *
      * @param flag Constructed flag.
      */
-    void setConstructed(const bool_t flag)
+    void setConstructed(bool_t const flag)
     {
         if(data_.key == HEAP_KEY)
         {
@@ -212,7 +212,7 @@ private:
             return false;
         }
         // Test memory
-        const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
+        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
         void*  ptr ( reinterpret_cast<void*>(addr) );
         if( !isMemoryAvailable(ptr, data_.size) )
         {
@@ -243,7 +243,7 @@ private:
      *
      * @param status returned status by disable function.
      */
-    void enable(const bool_t status) const
+    void enable(bool_t const status) const
     {
         if(data_.toggle == NULLPTR)
         {
@@ -263,7 +263,7 @@ private:
      */
     HeapBlock* getFirstBlock() const
     {
-        const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
+        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
         return reinterpret_cast<HeapBlock*>(addr);
     }
 
@@ -274,7 +274,7 @@ private:
      */
     static HeapBlock* heapBlock(void* const data)
     {
-        const uintptr_t addr( reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock) );
+        uintptr_t const addr( reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock) );
         return reinterpret_cast<HeapBlock*>(addr);
     }
 
@@ -287,7 +287,7 @@ private:
      * @param size Size in byte.
      * @return True if test complete.
      */
-    static bool_t isMemoryAvailable(void* const addr, const size_t size)
+    static bool_t isMemoryAvailable(void* const addr, size_t const size)
     {
         size_t mask( static_cast<ucell_t>(-1) );
         ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) );
@@ -378,12 +378,12 @@ private:
     }
     
     /**
-     * @copydoc eoos::Object::Object(const Object&)
+     * @copydoc eoos::Object::Object(Object const&)
      */
     Heap(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
 
     /**
-     * @copydoc eoos::Object::operator=(const Object&)
+     * @copydoc eoos::Object::operator=(Object const&)
      */
     Heap& operator=(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
     
@@ -708,7 +708,7 @@ private:
          */
         void* data()
         {
-            const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) );
+            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) );
             return reinterpret_cast<void*>(addr);
         }
 
@@ -717,19 +717,19 @@ private:
          *
          * @return PSinter to memory.
          */
-        void* next(const size_t size)
+        void* next(size_t const size)
         {
-            const uintptr_t addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size );
+            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size );
             return reinterpret_cast<void*>(addr);
         }
 
         /**
-         * @copydoc eoos::Object::Object(const Object&)
+         * @copydoc eoos::Object::Object(Object const&)
          */
         HeapBlock(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
     
         /**
-         * @copydoc eoos::Object::operator=(const Object&)
+         * @copydoc eoos::Object::operator=(Object const&)
          */
         HeapBlock& operator=(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
         
@@ -873,12 +873,12 @@ private:
     private:
 
         /**
-         * @copydoc eoos::Object::Object(const Object&)
+         * @copydoc eoos::Object::Object(Object const&)
          */
         HeapData(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
     
         /**
-         * @copydoc eoos::Object::operator=(const Object&)
+         * @copydoc eoos::Object::operator=(Object const&)
          */
         HeapData& operator=(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
         

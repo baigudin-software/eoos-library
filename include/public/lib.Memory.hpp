@@ -79,7 +79,7 @@ public:
      * @param str A character string would be measured.
      * @return The length of the passed string.
      */
-    static size_t strlen(const char_t* str)
+    static size_t strlen(char_t const* str)
     {
         if(str == NULLPTR)
         {
@@ -101,14 +101,14 @@ public:
      * @param src A character string to be copied.
      * @return A pointer to the destination string, or NULLPTR if an error has been occurred.
      */
-    static char_t* strcpy(char_t* const dst, const char_t* src)
+    static char_t* strcpy(char_t* const dst, char_t const* src)
     {
         if( (dst == NULLPTR) || (src == NULLPTR) )
         {
             return NULLPTR;
         }
         char_t* d( dst - 1 );             ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-        const char_t* s( src  - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+        char_t const* s( src  - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         return dst;
     }
@@ -121,7 +121,7 @@ public:
      * @param src A character string to be appended.
      * @return A pointer to the destination string, or NULLPTR if an error has been occurred.
      */
-    static char_t* strcat(char_t* const dst, const char_t* src)
+    static char_t* strcat(char_t* const dst, char_t const* src)
     {
         if( (dst == NULLPTR) || (src == NULLPTR) )
         {
@@ -130,7 +130,7 @@ public:
         char_t* d( dst - 1 );             ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( *++d != '\0' ) {}          ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
         d--;                              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-        const char_t* s( src - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15       
+        char_t const* s( src - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15       
         while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         return dst;
     }
@@ -145,7 +145,7 @@ public:
      *         a value greater than 0 if the string 1 is longer than the string 2,
      *         or the minimum possible value if an error has been occurred.
      */
-    static int32_t strcmp(const char_t* str1, const char_t* str2)
+    static int32_t strcmp(char_t const* str1, char_t const* str2)
     {
         if( (str1 == NULLPTR) || (str2 == NULLPTR) )
         {
@@ -274,7 +274,7 @@ public:
      * @return The resulting number.
      */
     template <typename T>
-    static T atoi(const char_t* str, int32_t const base = 10)
+    static T atoi(char_t const* str, int32_t const base = 10)
     {
         bool_t isBase( false );
         switch(base)

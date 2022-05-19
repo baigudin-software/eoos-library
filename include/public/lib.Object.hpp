@@ -47,7 +47,7 @@ public:
     } 
     
     /**
-     * @copydoc eoos::Object::operator=(const Object&)
+     * @copydoc eoos::Object::operator=(Object const&)
      */       
     Object& operator=(Object const& obj)
     {
