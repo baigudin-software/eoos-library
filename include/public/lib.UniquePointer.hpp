@@ -99,7 +99,7 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Justified Rule 10-3-1 and Defected Rule 9-3-3
     {
         return Parent::isConstructed();
     }
@@ -215,11 +215,14 @@ public:
      */
     void swap(UniquePointer& obj)
     {
-        if( isConstructed() && obj.isConstructed() )
+        if( isConstructed() )
         {
-            T* const pointer( pointer_ );
-            pointer_ = obj.pointer_;
-            obj.pointer_ = pointer;
+            if( obj.isConstructed() )
+            {
+                T* const pointer( pointer_ );
+                pointer_ = obj.pointer_;
+                obj.pointer_ = pointer;
+            }
         }
     }
     
@@ -302,7 +305,7 @@ private:
  * @param obj2 Reference to object.
  * @return True if objects are equal.
  */
-template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
+template <typename T, class D, class A>
 inline bool_t operator==(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> const& obj2)
 {
     return obj1.get() == obj2.get();
@@ -315,7 +318,7 @@ inline bool_t operator==(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> 
  * @param obj2 Reference to object.
  * @return True if objects are not equal.
  */
-template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
+template <typename T, class D, class A>
 inline bool_t operator!=(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> const& obj2)
 {
     return obj1.get() != obj2.get();
