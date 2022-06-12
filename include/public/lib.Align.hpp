@@ -6,7 +6,7 @@
 #ifndef LIB_ALIGN_HPP_
 #define LIB_ALIGN_HPP_
 
-#include "ObjectAllocator.hpp"
+#include "lib.ObjectAllocator.hpp"
 
 namespace eoos
 {
