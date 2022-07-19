@@ -53,8 +53,8 @@ public:
     explicit UniquePointer(T* const pointer) 
         : Object<A>()
         , api::SmartPointer<T>()
-        , pointer_ (pointer) {
-        bool_t const isConstructed( construct() );
+        , pointer_ (NULLPTR) {
+        bool_t const isConstructed( construct(pointer) );
         setConstructed(isConstructed);    
     }
 
@@ -263,6 +263,7 @@ private:
                 D::free(pointer);
                 break;
             }
+            pointer_ = pointer;
             res = true;
         } while(false);
         return res;
