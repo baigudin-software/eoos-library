@@ -564,10 +564,21 @@ protected:
 template <class A>
 class BaseString<char_t,0,A> : public AbstractString<char_t,0,A>
 {
-    typedef BaseString<char_t,0,A>         Self;
+    typedef BaseString<char_t,0,A>     Self;
     typedef AbstractString<char_t,0,A> Parent;
 
 public:
+
+    /**
+     * @brief Power of number base.
+     */
+    enum Base
+    {
+        BASE_2 = Memory::BASE_2,
+        BASE_8 = Memory::BASE_8,
+        BASE_10 = Memory::BASE_10,
+        BASE_16 = Memory::BASE_16
+    };    
 
     /**
      * @brief Constructor.
@@ -731,11 +742,11 @@ public:
      * @return True if the conversion has been completed successfully.
      */
     template <typename I>
-    bool_t convert(I const value, int32_t const base = 10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    bool_t convert(I const value, Base const base = BASE_10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         bool_t res;
         char_t temp[ (sizeof(I) * 8U) + 1U ];
-        if( !Memory::itoa<I>(value, temp, base) )
+        if( !Memory::itoa<I>(value, temp, static_cast<Memory::Base>(base)) )
         {
             res = false;
         }
@@ -756,10 +767,10 @@ public:
      * @return The resulting number.
      */
     template <typename I>
-    I cast(int32_t const base = 10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    I cast(Base const base = BASE_10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         char_t const* const str( Parent::getChar() );
-        return Memory::atoi<I>(str, base);
+        return Memory::atoi<I>(str, static_cast<Memory::Base>(base));
     }
 
 protected:
