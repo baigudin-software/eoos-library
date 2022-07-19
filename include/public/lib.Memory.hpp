@@ -372,9 +372,13 @@ private:
      *
      * @param value A value that would be tested.
      * @return True if the value has been negative.
+     *
+     * @note The `volatile` keyword added, as the GCC 7.5.0 compiler doesn't call this function optimizing it for Release build.
+     *       This behavior is cause a bug in `itoa` function with -9223372036854775808 value of int64_t type trying to check module of the value.
+     *       Partial specialization of the template function for int64_t also doesn't help.
      */
     template <typename T>
-    static bool_t isPositive(T const value)
+    static bool_t isPositive(volatile T value)
     {
         return ( (value > 0) || (value == 0) ) ? true : false;
     }
