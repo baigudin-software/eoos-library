@@ -6,7 +6,8 @@
 #ifndef LIB_HEAP_HPP_
 #define LIB_HEAP_HPP_
 
-#include "api.SystemHeap.hpp"
+#include "api.Heap.hpp"
+#include "lib.MutexGuard.hpp"
 
 namespace eoos
 {
@@ -19,41 +20,24 @@ namespace lib
  *
  * Hardware address for system heap memory has to be aligned to eight. 
  */
-class Heap : public api::SystemHeap
+class Heap : public api::Heap
 {
     typedef Heap Self;
+    
+    class NoAllocator;
 
 public:
 
     /**
      * @brief Constructor.
      *
-     * @param size Total heap size.
+     * @param size  Total heap size.
+     * @param mutex A mutex to protect memory allocation.
      */
-    explicit Heap(size_t size) 
-        : api::SystemHeap()
-        , data_(size)
+    Heap(size_t size, api::Mutex& mutex) 
+        : api::Heap()
+        , data_(size, mutex)
         , temp_() {
-        bool_t const isConstructed( construct() );
-        setConstructed( isConstructed );
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * Reference to global interrupt interface pointer is used for
-     * a possibility to change a value of that pointer.
-     * Until that pointer is NULLPTR golobal interrupt is not used.
-     * This gives you a possibility to change using golobal interrupts
-     * on fly.
-     *
-     * @param size   Total heap size.
-     * @param toggle Reference to pointer to global interrupts toggle interface.
-     */
-    Heap(size_t size, api::Toggle*& toggle) 
-        : api::SystemHeap()
-        , data_  (size, toggle)
-        , temp_ () {
         bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
@@ -91,13 +75,11 @@ public:
         {
             return NULLPTR;
         }
-        if( ptr != NULLPTR )
+        if( ptr == NULLPTR )
         {
-            return ptr;
+            MutexGuard<NoAllocator> guard( *data_.mutex );
+            ptr = getFirstBlock()->alloc(size);
         }
-        bool_t const is( disable() );
-        ptr = getFirstBlock()->alloc(size);
-        enable(is);
         return ptr;
     }
 
@@ -114,25 +96,8 @@ public:
         {
             return;
         }
-        bool_t const is( disable() );
+        MutexGuard<NoAllocator> guard( *data_.mutex );
         heapBlock(ptr)->free();
-        enable(is);
-    }
-
-    /**
-     * @copydoc eoos::api::SystemHeap::setToggle(api::Toggle*&)
-     */
-    virtual void setToggle(api::Toggle*& toggle)
-    {
-        data_.toggle = &toggle;
-    }
-
-    /**
-     * @copydoc eoos::api::SystemHeap::resetToggle()
-     */
-    virtual void resetToggle()
-    {
-        data_.toggle = NULLPTR;
     }
 
     /**
@@ -178,9 +143,7 @@ private:
     class HeapBlock;
 
     /**
-     * @brief Sets the object constructed flag.
-     *
-     * @param flag Constructed flag.
+     * @copydoc eoos::lib::Object::setConstructed(bool_t)
      */
     void setConstructed(bool_t const flag)
     {
@@ -221,39 +184,6 @@ private:
         // Alloc first heap block
         data_.block = new ( getFirstBlock() ) HeapBlock(this, data_.size);
         return (data_.block != NULLPTR) ? true : false;
-    }
-
-    /**
-     * @brief Disables a controller.
-     *
-     * @return An enable source bit value of a controller before function was called.
-     */
-    bool_t disable() const
-    {
-        if(data_.toggle == NULLPTR)
-        {
-            return false;
-        }
-        api::Toggle* const toggle( *data_.toggle );
-        return (toggle != NULLPTR) ? toggle->disable() : false;
-    }
-
-    /**
-     * @brief Enables a controller.
-     *
-     * @param status returned status by disable function.
-     */
-    void enable(bool_t const status) const
-    {
-        if(data_.toggle == NULLPTR)
-        {
-            return;
-        }
-        api::Toggle* const toggle( *data_.toggle );
-        if(toggle != NULLPTR)
-        {
-            toggle->enable(status);
-        }
     }
 
     /**
@@ -399,7 +329,32 @@ private:
      */
     Heap& operator=(Heap&&) noexcept = delete;
     
-    #endif // EOOS_CPP_STANDARD >= 2011    
+    #endif // EOOS_CPP_STANDARD >= 2011   
+
+    /**
+     * @class NoAllocator
+     * @brief No allocator for creating MutexGuard on stack.
+     */ 
+    class NoAllocator
+    {
+    
+    public:
+    
+        /**
+         * @copydoc eoos::lib::Allocator::allocate(size_t)
+         */
+        static void* allocate(size_t size)
+        {
+            return NULLPTR;
+        }
+    
+        /**
+         * @copydoc eoos::lib::Allocator::allocate(size_t).
+         */
+        static void free(void* ptr)
+        {
+        }
+    };
 
     /**
      * @struct Aligner<S>
@@ -817,26 +772,13 @@ private:
          * @brief Constructor.
          *
          * @param isize Total heap size.
+         * @param mutex A mutex to protect memory allocation.         
          */
-        explicit HeapData(size_t isize) 
+        HeapData(size_t isize, api::Mutex& imutex)
             : block(NULLPTR)
-            , toggle(NULLPTR)
+            , mutex(&imutex)
             , size(0)
             , key(HEAP_KEY) {
-            size = (isize & ~0x7UL) - sizeof(Heap);
-        }
-
-        /**
-         * @brief Constructor.
-         *
-         * @param isize   Total heap size.
-         * @param itoggle Reference to pointer to global interrupts interface.
-         */
-        HeapData(size_t isize, api::Toggle*& itoggle) 
-            : block(NULLPTR)
-            , toggle(&itoggle)
-            , size(0)
-            , key(HEAP_KEY){
             size = (isize & ~0x7UL) - sizeof(Heap);
         }
 
@@ -851,14 +793,9 @@ private:
         HeapBlock* block; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
-         * @brief Threads switching off key.
-         *
-         * This interface controls a global thread switch off key
-         * by toggle interface. That interface has to disable
-         * a changing thread context. The most useful case is to give
-         * a global interrupts toggle interface.
+         * @brief Thread allocation protection.
          */
-        api::Toggle** toggle; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
+        api::Mutex* mutex;
 
         /**
          * @brief Actual size of heap.
