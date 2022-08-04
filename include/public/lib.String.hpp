@@ -20,7 +20,7 @@ namespace lib
  * The dynamic string for any numbers of characters with a default allocator
  * used to allocate an internal container to contain the characters
  */
-typedef BaseString<char,0> String;
+typedef BaseString<char_t,0> String;
 
 } // namespace lib
 } // namespace eoos

@@ -111,8 +111,8 @@ public:
         {
             return;
         }
-        int32_t const b( getLength() - 1 );
-        for(int32_t i(b); i>=0; i--)
+        size_t const b( getLength() - 1 );
+        for(size_t i(b); i>=0; i--)
         {
             if( !removeNode( getNodeByIndex(i) ) )
             {
@@ -201,9 +201,14 @@ public:
     /**
      * @copydoc eoos::api::Collection::getLength()
      */
-    virtual int32_t getLength() const
+    virtual size_t getLength() const
     {
-        return (last_ == NULLPTR) ? 0 : (last_->getIndex() + 1);
+        size_t length( 0 );
+        if( isConstructed() )
+        {
+            length = (last_ == NULLPTR) ? 0 : (last_->getIndex() + 1);
+        }
+        return length;
     }
 
     /**
@@ -211,7 +216,12 @@ public:
      */
     virtual bool_t isEmpty() const
     {
-        return (last_ == NULLPTR) ? true : false;
+        bool_t res( true );
+        if( isConstructed() )
+        {
+            res =(last_ == NULLPTR) ? true : false;
+        }
+        return res;
     }
 
     /**
@@ -287,12 +297,12 @@ public:
      */
     Buffer<T,0,A>* getAsBuffer()
     {
-        #ifdef EOOS_NO_STRICT_MISRA_RULES
+        #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
         if( !Self::isConstructed() )
         {
             return NULLPTR;
         }
-        int32_t const count( getLength() );
+        size_t const count( getLength() );
         if(count == 0)
         {
             return NULLPTR;
@@ -312,7 +322,7 @@ public:
         return buf;
         #else
         return NULLPTR;
-        #endif
+        #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
     }
 
 protected:
@@ -411,7 +421,7 @@ protected:
      */
     Node* getNodeByElement(T const& element) const
     {
-        int32_t const len( getLength() );
+        size_t const len( getLength() );
         if(len == 0)
         {
             return NULLPTR;

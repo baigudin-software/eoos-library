@@ -17,7 +17,7 @@ namespace lib
  * @class ObjectAllocator<A>
  * @brief Object memory allocator.
  *
- * @param A Heap memory allocator class.
+ * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
 class ObjectAllocator
@@ -25,7 +25,7 @@ class ObjectAllocator
 
 public:
 
-    #ifdef EOOS_NO_STRICT_MISRA_RULES
+    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
     /**
      * @brief Operator new.
@@ -66,19 +66,14 @@ public:
     {
     }
 
-    #endif // EOOS_NO_STRICT_MISRA_RULES
+    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
     
 protected:
 
     /**
-     * @brief Constructor.
-     */
-    ObjectAllocator()
-    {
-    }
-
-    /**
      * @brief Destructor.
+     *
+     * @note It's prohibited to cast to this class to delete any child classes.
      */
     ~ObjectAllocator()
     {

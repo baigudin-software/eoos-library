@@ -6,7 +6,7 @@
 #ifndef LIB_MEMORY_HPP_
 #define LIB_MEMORY_HPP_
 
-#include "Types.hpp"
+#include "lib.Types.hpp"
 
 namespace eoos
 {
@@ -21,17 +21,6 @@ class Memory
 {
 
 public:
-
-    /**
-     * @brief Power of number base.
-     */
-    enum Base
-    {
-        BASE_2 = 2,
-        BASE_8 = 8,
-        BASE_10 = 10,
-        BASE_16 = 16
-    };
 
     /**
      * @brief Copies a block of memory.
@@ -163,7 +152,7 @@ public:
             while(true)
             {
                 int32_t ch1( static_cast<int32_t>(*str1++) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
-		    	int32_t ch2( static_cast<int32_t>(*str2++) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
+                int32_t ch2( static_cast<int32_t>(*str2++) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
                 res = ch1 - ch2;
                 if( (ch1 == 0) || (res != 0) )
                 {
@@ -198,7 +187,7 @@ public:
      * @return True if the conversion has been completed successfully.
      */
     template <typename T>
-    static bool_t itoa(T const val, char_t* str, Base const base = BASE_10)
+    static bool_t itoa(T const val, char_t* str, Number::Base const base = Number::BASE_10)
     {
         const int32_t LENGTH( ( static_cast<int32_t>( sizeof(T) ) * 8) + 1 );
         bool_t res( false );
@@ -214,14 +203,14 @@ public:
                 // Test for available base
                 switch(base)
                 {
-                    case BASE_2:
-                    case BASE_8:
-                    case BASE_16:
+                    case Number::BASE_2:
+                    case Number::BASE_8:
+                    case Number::BASE_16:
                     {
                         isNegative = false;
                         break;
                     }
-                    case BASE_10:
+                    case Number::BASE_10:
                     {
                         isNegative = ( !isPositive(val) ) ? true : false;
                         break;
@@ -252,7 +241,7 @@ public:
                 {
                     char_t ch;
                     T digit( module % static_cast<T>(base) );
-                    if( (base == BASE_16) && (digit > 9) )
+                    if( (base == Number::BASE_16) && (digit > 9) )
                     {
                         ch = 'a';
                         digit -= 10;
@@ -291,15 +280,15 @@ public:
      * @return The resulting number, 0 if an error is occurred.
      */
     template <typename T>
-    static T atoi(char_t const* str, Base const base = BASE_10)
+    static T atoi(char_t const* str, Number::Base const base = Number::BASE_10)
     {
         bool_t isBase( false );
         switch(base)
         {
-            case BASE_2:
-            case BASE_8:
-            case BASE_10:
-            case BASE_16:
+            case Number::BASE_2:
+            case Number::BASE_8:
+            case Number::BASE_10:
+            case Number::BASE_16:
             {
                 isBase = true;
                 break;
@@ -322,7 +311,7 @@ public:
                 index++;
             }
             // Test a character if the number is negative for decimal base
-            if(base == BASE_10)
+            if(base == Number::BASE_10)
             {
                 if( str[index] == '-' )
                 {
@@ -340,7 +329,7 @@ public:
                 }
             }
             // Do fast calculation for no hexadecimal base
-            if(base != BASE_16)
+            if(base != Number::BASE_16)
             {
                 while( isDigit(str[index], base) )
                 {
@@ -419,23 +408,23 @@ private:
      * @param base      A numerical base used to parse the character.
      * @return True if the character is a decimal number.
      */
-    static bool_t isDigit(char_t const character, Base const base = BASE_10)
+    static bool_t isDigit(char_t const character, Number::Base const base = Number::BASE_10)
     {
         bool_t res( false );
         int32_t const ch( static_cast<int32_t>(character) );
         switch(base)
         {
-            case BASE_2:
+            case Number::BASE_2:
             {
                 res = ( (ch >= 0x30) && (ch <= 0x31) ) ? true : false;
                 break;
             }
-            case BASE_8:
+            case Number::BASE_8:
             {
                 res = ( (ch >= 0x30) && (ch <= 0x37) ) ? true : false;
                 break;
             }
-            case BASE_16:
+            case Number::BASE_16:
             {
                 res = ( 
                     ( (ch >= 0x30) && (ch <= 0x39) )
@@ -444,7 +433,7 @@ private:
                 ) ? true : false;
                 break;
             }
-            case BASE_10:
+            case Number::BASE_10:
             {
                 res = ( (ch >= 0x30) && (ch <= 0x39) ) ? true : false;
                 break;

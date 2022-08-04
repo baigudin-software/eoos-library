@@ -35,7 +35,7 @@ public:
      *
      * @param length Count of buffer elements.
      */
-    explicit AbstractBuffer(int32_t length) 
+    explicit AbstractBuffer(size_t length) 
         : NonCopyable<A>()
         , api::Collection<T>()
         , api::IllegalValue<T>()
@@ -51,7 +51,7 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    AbstractBuffer(int32_t length, T const& illegal) 
+    AbstractBuffer(size_t length, T const& illegal) 
         : NonCopyable<A>()
         , api::Collection<T>()
         , api::IllegalValue<T>()
@@ -77,9 +77,14 @@ public:
     /**
      * @copydoc eoos::api::Collection::getLength()
      */
-    virtual int32_t getLength() const
+    virtual size_t getLength() const
     {
-        return length_;
+        size_t length( 0 );
+        if( isConstructed() )
+        {
+            length = length_;
+        }
+        return length;
     }
 
     /**
@@ -87,7 +92,12 @@ public:
      */
     virtual bool_t isEmpty() const
     {
-        return length_ == 0;
+        bool_t res( true );
+        if( isConstructed() )
+        {
+            res = length_ == 0;
+        }
+        return res;
     }
 
     /**
@@ -130,7 +140,7 @@ public:
      * @param value  Filling value.
      * @param length Count of filling elements.
      */
-    void fill(T const& value, int32_t const length)
+    void fill(T const& value, size_t const length)
     {
         fill(value, 0, length);
     }
@@ -148,10 +158,10 @@ public:
         if( Self::isConstructed() && hasIndex )
         {
             T* const buf( getBuffer() );
-            int32_t const length( index + count );
+            size_t const length( index + count );
             // MSVC warning C4003 of Most Vexing Parse case avoided with no nameing the variable 'max'
-            int32_t const maximum( ( length <= length_ ) ? length : length_ );
-            for(int32_t i(index); i<maximum; i++)
+            size_t const maximum( ( length <= length_ ) ? length : length_ );
+            for(size_t i(index); i<maximum; i++)
             {
                 buf[i] = value;
             }
@@ -200,12 +210,12 @@ protected:
     {
         if( Self::isConstructed() )
         {
-            int32_t const size1( getLength() );
-            int32_t const size2( buf.getLength() );
-            int32_t const size( ( size1 < size2 ) ? size1 : size2 );
+            size_t const size1( getLength() );
+            size_t const size2( buf.getLength() );
+            size_t const size( ( size1 < size2 ) ? size1 : size2 );
             T* const buf1( getBuffer() );
             T* const buf2( buf.getBuffer() );
-            for(int32_t i(0); i<size; i++)
+            for(size_t i(0); i<size; i++)
             {
                 buf1[i] = buf2[i];
             }
@@ -217,7 +227,7 @@ private:
     /**
      * @brief Number of elements of this buffer.
      */
-    int32_t length_;
+    size_t length_;
 
     /**
      * @brief Illegal element of this buffer.

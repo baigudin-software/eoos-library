@@ -17,7 +17,7 @@ namespace eoos
 namespace lib
 {
 
-#ifdef EOOS_NO_STRICT_MISRA_RULES
+#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
     
 /**
  * @class SharedPointer<T,D,A>
@@ -112,7 +112,7 @@ public:
      */
     SharedPointer& operator=(SharedPointer&& obj) noexcept
     {
-        if( this != &obj && isConstructed() )
+        if( isConstructed() && (this != &obj) )
         {
             release();            
             cb_ = obj.cb_;
@@ -473,7 +473,7 @@ inline bool_t operator!=(SharedPointer<T,D,A> const& obj1, SharedPointer<T,D,A> 
     return obj1.get() != obj2.get();
 }
 
-#endif // EOOS_NO_STRICT_MISRA_RULES
+#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
 } // namespace lib
 } // namespace eoos

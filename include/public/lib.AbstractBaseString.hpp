@@ -8,6 +8,7 @@
 
 #include "lib.Object.hpp"
 #include "api.String.hpp"
+#include "lib.CharTrait.hpp"
 
 namespace eoos
 {
@@ -15,27 +16,19 @@ namespace lib
 {
 
 /**
- * @class AbstractBaseString<T,A>
+ * @class AbstractBaseString<T,R,A>
  * @brief Abstract base string class.
  *
  * @tparam T A data type of string characters.
+ * @tparam R A character raits.
  * @tparam A A heap memory allocator class.
  */
-template <typename T, class A = Allocator>
+template <typename T, class R, class A = Allocator>
 class AbstractBaseString : public Object<A>, public api::String<T>
 {
-    typedef AbstractBaseString<T,A>  Self;
     typedef Object<A> Parent;
 
 public:
-
-    /**
-     * @brief Constructor.
-     */
-    AbstractBaseString() 
-        : Object<A>()
-        , api::String<T>() {
-    }
 
     /**
      * @brief Destructor.
@@ -58,7 +51,7 @@ public:
     virtual bool_t isEmpty() const
     {
         bool_t res;
-        int32_t const length( getLength() );
+        size_t const length( getLength() );
         if(length == 0)
         {
             res = true;
@@ -76,14 +69,14 @@ public:
     virtual bool_t copy(api::String<T> const& string)
     {
         bool_t res;
-        if( (!Self::isConstructed()) || (!string.isConstructed()) )
+        if( isConstructed() && string.isConstructed() )
         {
-            res = false;
+            T const* const str( string.getChar() );
+            res = copyRaw(str);
         }
         else
         {
-            T const* const str( string.getChar() );
-            res = copy(str);
+            res = false;
         }
         return res;
     }
@@ -94,116 +87,185 @@ public:
     virtual bool_t concatenate(api::String<T> const& string)
     {
         bool_t res;
-        if( (!Self::isConstructed()) || (!string.isConstructed()) )
+        if( isConstructed() && string.isConstructed() )
         {
-            res = false;
+            T const* const str( string.getChar() );
+            res = concatenateRaw(str);            
         }
         else
         {
-            T const* const str( string.getChar() );
-            res = concatenate(str);
+            res = false;            
         }
         return res;
     }
 
     /**
-     * @copydoc eoos::api::String::compare(const api::String<T>&)
+     * @copydoc eoos::api::String::isEqualTo(const api::String<T>&)
      */
-    virtual int32_t compare(api::String<T> const& string) const
+    virtual bool_t isEqualTo(api::String<T> const& string) const
     {
-        int32_t res;
-        if( (!Self::isConstructed()) || (!string.isConstructed()) )
+        bool_t res;
+        if( isConstructed() && string.isConstructed() )
         {
-            res = MINIMUM_POSSIBLE_VALUE_OF_INT32;
+            T const* const str( string.getChar() );
+            res = isEqualToRaw(str);   
         }
         else
         {
-            T const* const str( string.getChar() );
-            res = compare(str);
+            res = false;            
         }
         return res;
     }
     
     /**
-     * @copydoc eoos::api::Collection::getLength()
-     * @note Declared to declare the parent function
+     * @brief Converts an integer number to this string.
+     *
+     * The function converts an integer value into a character string using the base parameter,
+     * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+     *
+     * Mark that only if the base is decimal, a passed number is available to be negative values,
+     * and the resulting string of these values is preceded with a minus sign. In addition,
+     * a hexadecimal number includes lower case characters, and any resulting strings do not contain
+     * any suffixes or prefixes for identifying a numeral system.
+     *
+     * @note You need to use `AbstractBaseString.template convert<I>(value, base);` syntax,
+     * if you have to specify the template argument type explicitly.
+     *
+     * @param value A value that would be converted to this string.
+     * @param base  A numerical base used to represent a value as this string.
+     * @return True if the conversion has been completed successfully.
      */
-    virtual int32_t getLength() const = 0; 
+    template <typename I>
+    bool_t convert(I const value, Number::Base const base = Number::BASE_10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    {
+        return convertToString(value, base);
+    } 
+
+    /**
+     * @brief Assignment by sum operator.
+     *
+     * @param source A source object.
+     * @return Reference to this object.
+     */
+    AbstractBaseString& operator+=(api::String<T> const& source)
+    {
+        static_cast<void>( concatenate(source) );
+        return *this;
+    }
+
+    /**
+     * @brief Assignment by sum operator.
+     *
+     * @param source A source character string.
+     * @return Reference to this object.
+     */
+    AbstractBaseString& operator+=(T const* const source)
+    {
+        static_cast<void>( concatenateRaw(source) );
+        return *this;
+    }
 
 protected:
 
     /**
-     * @brief Returns this string terminated character.
-     *
-     * @return A character which means that this string terminated.
+     * @brief Constructor.
      */
-    virtual T getTerminator() const = 0;
+    AbstractBaseString()
+        : Object<A>()
+        , api::String<T>() {
+    }
 
     /**
-     * @brief Copies a passed string into this string.
-     *
-     * @param str A character string to be copied.
-     * @return True if a passed string has been copied successfully.
+     * @copydoc eoos::Object::Object(Object const&)
      */
-    virtual bool_t copy(T const* str) = 0;
+    AbstractBaseString(AbstractBaseString const& obj)
+        : Object<A>(obj)
+        , api::String<T>() {
+    }
+
 
     /**
-     * @brief Concatenates a passed string to this string.
-     *
-     * @param str A character string to be appended.
-     * @return True if a passed string has been appended successfully.
-     */
-    virtual bool_t concatenate(T const* str) = 0;
+     * @copydoc eoos::Object::operator=(Object const&)
+     */       
+    AbstractBaseString& operator=(AbstractBaseString const& obj)
+    {
+        if( isConstructed() && (this != &obj) )
+        {
+            Parent::operator=(obj);
+        }
+        return *this;
+    }    
+
+    #if EOOS_CPP_STANDARD >= 2011
 
     /**
-     * @brief Compares this string with a passed string lexicographically.
-     *
-     * @param str A character string to be compared.
-     * @return The value 0 if a passed string is equal to this string;
-     *         a value less than 0 if this string is less than a passed string;
-     *         a value greater than 0 if this string is greater than a passed string,
-     *         or the minimum possible value if an error has been occurred.
-     */
-    virtual int32_t compare(T const* str) const = 0;
+     * @copydoc eoos::Object::Object(Object&&)
+     */       
+    AbstractBaseString(AbstractBaseString&& obj) noexcept 
+        : Object<A>( move(obj) )
+        , api::String<T>(){
+    }   
 
     /**
-     * @brief Returns a string length.
+     * @copydoc eoos::Object::operator=(Object&&)
+     */
+    AbstractBaseString& operator=(AbstractBaseString&& obj) noexcept
+    {
+        if( isConstructed() && (this != &obj) )
+        {
+            Parent::operator=( move(obj) );            
+        }        
+        return *this;
+    }        
+
+    #endif // EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @brief Returns a calculated string length.
      *
      * @param str A character string would be measured.
      * @return A length of the passed string.
      */
-    int32_t getLength(T const* str) const
+    static size_t getLengthRaw(T const* str)
     {
-        int32_t len( 0 ); 
-        T const null( getTerminator() );
+        size_t len( 0 ); 
+        T const null( R::getTerminator() );
         while( *str != null )
         {
-            str++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-            len++;
+            ++str; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+            ++len;
         }
         return len;
     }
 
     /**
-     * @brief Copies a string.
+     * @brief Copies a string to a string.
      *
      * @param dst A destination array where the content would be copied.
      * @param src A character string to be copied.
+     * @param cnt Destination character string size.     
      */
-    void copy(T* dst, T const* src) const
+    static void copyRaw3(T* dst, T const* src, size_t cnt)
     {
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            T const null( getTerminator() );
-            dst--; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-            src--; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-            do
+            T const null( R::getTerminator() );
+            while(true)
             {
-                dst++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-                src++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+                if( cnt == 0 )
+                {
+                    *dst = null;
+                    break;
+                }     
                 *dst = *src;
+                --cnt;
+                if( *dst == null )
+                {
+                    break;
+                }
+                ++dst;
+                ++src;
             }
-            while(*dst != null);
         }
     }
 
@@ -212,50 +274,272 @@ protected:
      *
      * @param dst A destination character string where the content would be appended.
      * @param src An appended character string.
+     * @param cnt Destination character string length that cannot be less than dst string length.     
      */
-    void concatenate(T* const dst, T const* const src) const
+    static void concatenateRaw3(T* dst, T const* src, size_t cnt)
     {
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            T const null( getTerminator() );
-            int32_t d( 0 );
-            int32_t s( 0 );
-            while( dst[d] != null )
-            {
-                d++;
-            }
+            T const null( R::getTerminator() );
             while(true)
             {
-                dst[d] = src[s]; 
-                if(dst[d] == null)
+                if(*dst == null)
                 {
                     break;
                 }
-                d++;
-                s++;
+                ++dst;
+                --cnt;
             }
+            copyRaw3(dst, src, cnt);
         }
     }
-
+    
     /**
-     * @brief The minimum possible value of int32_t type.
+     * @brief Compares two strings.
+     *
+     * @param string A string object interface to be compared with.
+     * @return true if strings equal to each other.
      */
-    static const int32_t MINIMUM_POSSIBLE_VALUE_OF_INT32 = 0 - 0x7fffffff - 1 ;
+    static bool_t isEqualRaw2(T const* str1, T const* str2)
+    {
+        bool_t res( false );
+        if( (str1 != NULLPTR) && (str2 != NULLPTR) )
+        {        
+            T const null( R::getTerminator() );
+            while(true)
+            {
+                res = *str1 == *str2;
+                if( (*str1 == null) || (res == false) )
+                {
+                    break;
+                }
+                ++str1;
+                ++str2;
+            }
+        }
+        return res;    
+    }
 
 private:
 
     /**
-     * @brief Constructor.
+     * @brief Copies a passed string into this string.
      *
-     * Creating of the object copy is accessible
-     * by creating the default object and
-     * calling the copy interface function.
-     *
-     * @param obj A source object.
+     * @param str A character string to be copied.
+     * @return True if a passed string has been copied successfully.
      */
-    AbstractBaseString(AbstractBaseString<T,A> const& obj);
+    virtual bool_t copyRaw(T const* str) = 0;
 
+    /**
+     * @brief Concatenates a passed string to this string.
+     *
+     * @param str A character string to be appended.
+     * @return True if a passed string has been appended successfully.
+     */
+    virtual bool_t concatenateRaw(T const* str) = 0;
+
+    /**
+     * @brief Compares this string with a passed string lexicographically.
+     *
+     * @param string A string object interface to be compared with.
+     * @return true if this string equals to a given string.
+     */
+    virtual bool_t isEqualToRaw(T const* str) const = 0;
+    
+    /**
+     * @brief Converts an integer number to a string.
+     *
+     * The function converts an integer value into a character string using the base parameter,
+     * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
+     *
+     * @note See exceptions below:
+     *
+     *       Exception 1: Minimum negative value can be `T_MIN + 1` or greater.
+     *
+     *       Exception 2: Only if the base is decimal, a passed number is available to be negative value,
+     *       and the resulting string of these values is preceded with a minus sign. 
+     *       
+     *       Exception 3: A hexadecimal number includes lower case characters, and any resulting strings 
+     *       do not contain any suffixes or prefixes for identifying a numeral system.
+     *
+     * @todo Rework the implementation to avoid the exceptions.
+     *
+     * @param val  A value that would be converted to a string.
+     * @param base A numerical base used to represent a value as a string.
+     * @return True if the conversion has been completed successfully.
+     */
+    template <typename I>
+    bool_t convertToString(I const val, Number::Base const base)
+    {
+        const int32_t LENGTH( ( static_cast<int32_t>( sizeof(I) ) * 8) + 1 );
+        bool_t res( true );
+        bool_t isNegative( false );
+        int32_t index( LENGTH - 1 );
+        T temp[LENGTH];
+        temp[index--] = R::getTerminator();
+        do
+        {
+            // Test for available base
+            switch(base)
+            {
+                case Number::BASE_2:
+                case Number::BASE_8:
+                case Number::BASE_16:
+                {
+                    isNegative = false;
+                    break;
+                }
+                case Number::BASE_10:
+                {
+                    isNegative = ( !isPositive(val) ) ? true : false;
+                    break;
+                }
+                default:
+                {
+                    res = false;
+                    break;
+                }
+            }
+            // If the base is not available
+            if(res == false)
+            {
+                break;
+            }
+            // Prepare absolute value
+            I module( isNegative ? (0 - val) : val );
+            if( !isPositive(module) )
+            {
+                res = false;
+                break;
+            }
+            // Do the conversion
+            // @todo Revise possibility to declare index of size_t underlying type.
+            //       But in the case index will always more than or equal zero.
+            //       Thus, algorithm shall be re-worked.
+            while(index >= 0)
+            {
+                I digit( module % static_cast<I>(base) );
+                temp[index--] = R::convertDigitToChar(digit);
+                module = module / static_cast<I>(base);
+                if(module == 0)
+                {
+                    break;
+                }
+            }
+            // Add minus
+            if( isNegative && (index >= 0) )
+            {
+                temp[index--] = R::getMinusSign();
+            }
+            res = true;
+        }
+        while(false);
+        if(res == true)
+        {
+            res = copyRaw(&temp[++index]);
+        }
+        return res;
+    }
+    
+    /**
+     * @brief Tests if a value is signed or unsigned.
+     *
+     * @param value A value that would be tested.
+     * @return True if the value has been negative.
+     *
+     * @note The `volatile` keyword added, as the GCC 7.5.0 compiler doesn't call this function optimizing it for Release build.
+     *       This behavior is cause a bug in `itoa` function with -9223372036854775808 value of int64_t type trying to check module of the value.
+     *       Partial specialization of the template function for int64_t also doesn't help.
+     */
+    template <typename I>
+    static bool_t isPositive(volatile I value)
+    {
+        return ( (value > 0) || (value == 0) ) ? true : false;
+    }
+        
+    template <typename T0, class R0> friend bool_t operator==(api::String<T0> const&, T0 const* const);
+    template <typename T0, class R0> friend bool_t operator==(T0 const* const, api::String<T0> const&);
+    template <typename T0, class R0> friend bool_t operator!=(api::String<T0> const&, T0 const* const);
+    template <typename T0, class R0> friend bool_t operator!=(T0 const* const, api::String<T0> const&);
 };
+
+/**
+ * @brief Compares for equality of two strings.
+ *
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
+ */
+template <typename T>
+inline bool_t operator==(api::String<T> const& source1, api::String<T> const& source2)
+{
+    return source1.isEqualTo(source2);
+}
+
+/**
+ * @brief Compares for equality of two strings.
+ *
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are equal.
+ */
+template < typename T, class R = CharTrait<T> >
+inline bool_t operator==(api::String<T> const& source1, T const* const source2)
+{
+    return AbstractBaseString<T,R>::isEqualRaw2(source1.getChar(), source2);
+}
+
+/**
+ * @brief Compares for equality of two strings.
+ *
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are equal.
+ */
+template < typename T, class R = CharTrait<T> >
+inline bool_t operator==(T const* const source1, api::String<T> const& source2)
+{
+    return AbstractBaseString<T,R>::isEqualRaw2(source1, source2.getChar());
+}
+
+/**
+ * @brief Compares for inequality of two strings.
+ *
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are not equal.
+ */
+template <typename T>
+inline bool_t operator!=(api::String<T> const& source1, api::String<T> const& source2)
+{
+    return !source1.isEqualTo(source2);
+}
+
+/**
+ * @brief Compares for inequality of two strings.
+ *
+ * @param source1 A source object 1.
+ * @param source2 A source character string 2.
+ * @return True if strings are not  equal.
+ */
+template < typename T, class R = CharTrait<T> >
+inline bool_t operator!=(api::String<T> const& source1, T const* const source2)
+{
+    return !AbstractBaseString<T,R>::isEqualRaw2(source1.getChar(), source2);
+}
+
+/**
+ * @brief Compares for inequality of two strings.
+ *
+ * @param source1 A source character string 1.
+ * @param source2 A source source object 2.
+ * @return True if strings are not equal.
+ */
+template < typename T, class R = CharTrait<T> >
+inline bool_t operator!=(T const* const source1, api::String<T> const& source2)
+{
+    return !AbstractBaseString<T,R>::isEqualRaw2(source1, source2.getChar());
+}
 
 } // namespace lib
 } // namespace eoos

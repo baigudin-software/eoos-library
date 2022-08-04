@@ -116,10 +116,10 @@ private:
 
 };
 
-#ifdef EOOS_NO_STRICT_MISRA_RULES
+#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
 /**
- * @class Buffer<T,A>
+ * @class Buffer<T,0,A>
  * @brief Buffer class dynamic.
  *
  * This is a partial specialization of the template allocates necessary 
@@ -303,7 +303,7 @@ private:
 
 };
 
-#endif // EOOS_NO_STRICT_MISRA_RULES
+#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
 } // namespace lib
 } // namespace eoos

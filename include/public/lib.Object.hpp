@@ -71,7 +71,7 @@ public:
     /**
      * @brief Move constructor.
      *
-     * @param obj Right reference to a source object.     
+     * @param obj Right reference to a source object.
      */       
     Object(Object&& obj) noexcept :
         isConstructed_(obj.isConstructed_){
@@ -84,7 +84,7 @@ public:
      * @param obj Right reference to a source object.
      * @return Reference to this object.
      */
-    Object& operator=(Object&& obj) noexcept
+    Object& operator=(Object&& obj) & noexcept
     {
         if( this != &obj && isConstructed() )
         {

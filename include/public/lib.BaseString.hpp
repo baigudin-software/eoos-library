@@ -6,8 +6,7 @@
 #ifndef LIB_BASESTRING_HPP_
 #define LIB_BASESTRING_HPP_
 
-#include "lib.AbstractString.hpp"
-#include "lib.Memory.hpp"
+#include "lib.AbstractBaseString.hpp"
 
 namespace eoos
 {
@@ -15,26 +14,41 @@ namespace lib
 {
     
 /**
- * @class BaseString<T,L,A>
+ * @class BaseString<T,L,R,A>
  * @brief Static base string class.
  *
  * Primary template implements the static string class.
  *
  * @tparam T A data type of string characters.
  * @tparam L A maximum number of string characters, or 0 for dynamic allocation.
+ * @tparam R A character raits.
  * @tparam A A heap memory allocator class.
  */
-template <typename T, int32_t L, class A = Allocator>
-class BaseString : public AbstractString<T,L,A>
+template <typename T, int32_t L, class R = CharTrait<T>, class A = Allocator>
+class BaseString : public AbstractBaseString<T,R,A>
 {
-    typedef BaseString<T,L,A>         Self;
-    typedef AbstractString<T,L,A> Parent;
+    typedef AbstractBaseString<T,R,A> Parent;
+    
+public:
 
     /**
      * @brief Constructor.
      */
     BaseString() 
-        : AbstractString<T,L,A>() {
+        : AbstractBaseString<T,R,A>() {
+        bool_t const isConstructed( construct() );
+        setConstructed( isConstructed );
+    }
+    
+    /**
+     * @brief Constructor.
+     *
+     * @param source A source object interface.
+     */
+    BaseString(api::String<T> const& source) 
+        : AbstractBaseString<T,R,A>() {
+        bool_t const isConstructed( construct( source.getChar() ) );
+        setConstructed( isConstructed );            
     }
 
     /**
@@ -43,8 +57,25 @@ class BaseString : public AbstractString<T,L,A>
      * @param source A source character string.
      */
     BaseString(T const* const source) 
-        : AbstractString<T,L,A>() {
-        Parent::copy(source);
+        : AbstractBaseString<T,R,A>() {
+        bool_t const isConstructed( construct( source ) );
+        setConstructed( isConstructed );            
+    }
+    
+    /**
+     * @brief Constructor.
+     *
+     * @param value A source numerical value.
+     * @param base  A numerical base used to represent a value as this string.     
+     */
+    explicit BaseString(int32_t const value, Number::Base const base = Number::BASE_10) 
+        : AbstractBaseString<T,R,A>() {    
+        bool_t isConstructed( construct() );
+        if( isConstructed )
+        {
+            isConstructed = convert(value, base);
+        }
+        setConstructed( isConstructed );
     }
 
     /**
@@ -53,467 +84,169 @@ class BaseString : public AbstractString<T,L,A>
     virtual ~BaseString()
     {
     }
-
-protected:
+    
+    /**
+     * @copydoc eoos::Object::Object(Object const&)
+     */
+    BaseString(BaseString const& obj)
+        : AbstractBaseString<T,R,A>(obj) {
+        bool_t const isConstructed( construct( obj.getChar() ) );
+        setConstructed( isConstructed );
+    }
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
-     */
-    virtual T getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+     * @copydoc eoos::Object::operator=(Object const&)
+     */       
+    BaseString& operator=(BaseString const& obj)
     {
-        return T::TERMINATING_CHARACTER;
-    }
-
-};
-
-/**
- * @class BaseString <L,A>
- * @brief Static char base string class.
- *
- * Char type partial specialization of the static string class.
- *
- * @tparam L A maximum number of string characters, or 0 for dynamic allocation.
- * @tparam A A heap memory allocator class.
- */
-template <int32_t L, class A>
-class BaseString<char_t,L,A> : public AbstractString<char_t,L,A>
-{
-    typedef BaseString<char_t,L,A>     Self;
-    typedef AbstractString<char_t,L,A> Parent;
-
-public:
-
-    /**
-     * @brief Constructor.
-     */
-    BaseString() 
-        : AbstractString<char_t,L,A>() {
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param source A source object.
-     */
-    BaseString(BaseString<char_t,L,A> const& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-        : AbstractString<char_t,L,A>() {
-        Parent::copy(source);
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param source A source object interface.
-     */
-    BaseString(api::String<char_t> const& source) 
-        : AbstractString<char_t,L,A>() {
-        Parent::copy(source);
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param source A source character string.
-     */
-    BaseString(char_t const* const source) 
-        : AbstractString<char_t,L,A>() {
-        Parent::copy(source);
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param value A source numerical value.
-     * @param base  A numerical base used to represent a value as a string.
-     */
-    explicit BaseString(int32_t const value) 
-        : AbstractString<char_t,L,A>() {
-        static_cast<void>( Self::convert<int32_t>(value, 10) );
-    }
-
-    /**
-     * @brief Casts to int32_t type.
-     *
-     * @return A numerical value.
-     */
-    operator int32_t() const
-    {
-        return Self::cast<int32_t>(10);
-    }
-
-    /**
-     * @brief Direct assignment operator.
-     *
-     * @param source A source object.
-     * @return This object.
-     */
-    BaseString<char_t,L,A>& operator=(BaseString<char_t,L,A> const& source)
-    {
-        Parent::copy(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param source A source object interface.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,L,A>& operator=(api::String<char_t> const& source)
-    {
-        Parent::copy(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param source A source character string.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,L,A>& operator=(char_t const* const source)
-    {
-        Parent::copy(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param source A source object.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,L,A>& operator+=(BaseString<char_t,L,A> const& source)
-    {
-        Parent::concatenate(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param source A source object interface.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,L,A>& operator+=(api::String<char_t> const& source)
-    {
-        Parent::concatenate(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param source A source character string.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,L,A>& operator+=(char_t const* const source)
-    {
-        Parent::concatenate(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param value A source numerical value.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,L,A>& operator+=(int32_t const value)
-    {
-        BaseString const string(value);
-        Parent::concatenate(string);
-        return *this;
-    }
-
-    /**
-     * @brief Converts an integer number to this string.
-     *
-     * The function converts an integer value into a character string using the base parameter,
-     * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
-     *
-     * Mark that only if the base is decimal, a passed number is available to be negative values,
-     * and the resulting string of these values is preceded with a minus sign. In addition,
-     * a hexadecimal number includes lower case characters, and any resulting strings do not contain
-     * any suffixes or prefixes for identifying a numeral system.
-     *
-     * @note You need to use "string.template convert<I>(value, base);" syntax,
-     * if you have to specify the template argument type explicitly.
-     *
-     * @param val  A value that would be converted to this string.
-     * @param base A numerical base used to represent a value as this string.
-     * @return True if the conversion has been completed successfully.
-     */
-    template <typename I>
-    bool_t convert(I const value, int32_t const base = 10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
-    {
-        bool_t res;
-        char_t temp[ (sizeof(I) * 8U) + 1U ];
-        if( !Memory::itoa<I>(value, temp, base) )
+        if( isConstructed() && (this != &obj) )
         {
-            res = false;
+            copyRaw3(str_, obj.str_, L);
+            Parent::operator=(obj);            
         }
-        else
+        return *this;
+    }    
+
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(Object&&)
+     */       
+    BaseString(BaseString&& obj) noexcept 
+        : AbstractBaseString<T,R,A>( move(obj) ) {
+        copyRaw3(str_, obj.str_, L);
+    }
+
+    /**
+     * @copydoc eoos::Object::operator=(Object&&)
+     */
+    BaseString& operator=(BaseString&& obj) noexcept
+    {
+        if( isConstructed() && (this != &obj) )
         {
-            res = Parent::copy(temp);
+            copyRaw3(str_, obj.str_, L);
+            Parent::operator=( move(obj) );            
         }
-        return res;
+        return *this;
+    }        
+
+    #endif // EOOS_CPP_STANDARD >= 2011    
+
+    /**
+     * @copydoc eoos::api::Collection::getLength()
+     */
+    virtual size_t getLength() const
+    {
+        size_t length( 0 );
+        if( isConstructed() )
+        {
+            // @todo Rework here not to calculate length, but take it form a class member.
+            length = getLengthRaw(str_);
+        }
+        return length;
     }
 
     /**
-     * @brief Casts this string to an integer number.
-     *
-     * @note You need to use "BaseString.template cast<I>(base);" syntax,
-     * if you have to specify the template argument type explicitly.
-     *
-     * @param base A numerical base used to parse the string.
-     * @return The resulting number.
+     * @copydoc eoos::api::String::getChar()
      */
-    template <typename I>
-    I cast(int32_t const base = 10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    virtual T const* getChar() const
     {
-        return Memory::atoi<I>(Parent::getChar(), base);
-    }
-
-protected:
-
-    /**
-     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
-     */
-    virtual char_t getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
-    {
-        return '\0';
+        T const* str( NULLPTR );
+        if( isConstructed() )
+        {
+            str = str_;
+        }
+        return str;
     }
 
 private:
 
-    template <int32_t L0, class A0> friend bool_t operator==(BaseString<char_t,L0,A0> const&, char_t const*);
-    template <int32_t L0, class A0> friend bool_t operator==(char_t* const, BaseString<char_t,L0,A0> const&);
-    template <int32_t L0, class A0> friend bool_t operator!=(BaseString<char_t,L0,A0> const&, char_t const*);
-    template <int32_t L0, class A0> friend bool_t operator!=(char_t const*, BaseString<char_t,L0,A0> const&);
+    /**
+     * @copydoc eoos::lib::AbstractBaseString::copyRaw(T const*)
+     */
+    virtual bool_t copyRaw(T const* const str)
+    {
+        bool_t res( false );
+        if( isConstructed() && (str != NULLPTR) )
+        {
+            copyRaw3(str_, str, L);
+            res = true;
+        }
+        return res;
+    }
+    
+    /**
+     * @copydoc eoos::lib::AbstractBaseString::concatenate(T const*)
+     */
+    virtual bool_t concatenateRaw(T const* const str)
+    {
+        bool_t res( false );
+        if( isConstructed() && (str != NULLPTR) )
+        {
+            concatenateRaw3(str_, str, L);
+            res = true;
+        }
+        return res;
+
+    }
+    
+    /**
+     * @copydoc eoos::lib::AbstractBaseString::isEqualToRaw(T const*)
+     */
+    virtual bool_t isEqualToRaw(T const* const str) const
+    {
+        bool_t res( false );
+        if( isConstructed() && (str != NULLPTR) )
+        {
+            res = isEqualRaw2(str_, str);
+        }
+        return res;
+
+    }
+    
+    /**
+     * @brief Constructs this object.
+     *
+     * @param str A string to be copied on construction.
+     * @return True if this object has been constructed successfully.
+     */     
+    bool_t construct(T const* const str = NULLPTR)
+    {
+        str_[0] = R::getTerminator();
+        bool_t res( false );
+        do
+        {
+            if( !isConstructed() )
+            {
+                break;
+            }
+            res = ( str == NULLPTR ) ? true : copyRaw(str);            
+        } while(false);
+        return res;
+    }
+    
+
+    /**
+     * @brief The buffer of characters of this string.
+     */
+    T str_[L + 1];    
+
 };
 
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator==(BaseString<char_t,L,A> const& source1, BaseString<char_t,L,A> const& source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
+#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
 /**
- * @brief Compares for equality of two strings.
+ * @class BaseString<T,0,R,A>
+ * @brief Dynamic abstract string class.
  *
- * @param source1 A source object 1.
- * @param source2 A source object interface 2.
- * @return True if strings are equal.
+ * @tparam T Data type of string characters.
+ * @tparam R A character raits. 
+ * @tparam A Heap memory allocator class.
  */
-template <int32_t L, class A>
-inline bool_t operator==(BaseString<char_t,L,A> const& source1, api::String<char_t> const& source2)
+template <typename T, class R, class A>
+class BaseString<T,0,R,A> : public AbstractBaseString<T,R,A>
 {
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object interface 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator==(api::String<char_t> const& source1, BaseString<char_t,L,A> const& source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source character string 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator==(BaseString<char_t,L,A> const& source1, char_t const* const source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source character string 1.
- * @param source2 A source source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator==(char_t const* const source1, BaseString<char_t,L,A> const& source2)
-{
-    return ( source2.compare(source1) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator!=(BaseString<char_t,L,A> const& source1, BaseString<char_t,L,A> const& source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object interface 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator!=(BaseString<char_t,L,A> const& source1, api::String<char_t> const& source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object interface 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator!=(api::String<char_t> const& source1, BaseString<char_t,L,A> const& source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source character string 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator!=(BaseString<char_t,L,A> const& source1, char_t const* const source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source character string 1.
- * @param source2 A source source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline bool_t operator!=(char_t const* const source1, BaseString<char_t,L,A> const& source2)
-{
-    return ( source2.compare(source1) != 0 ) ? true : false;
-}
-
-/**
- * @brief Concatenates two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(BaseString<char_t,L,A> const& source1, BaseString<char_t,L,A> const& source2)
-{
-    BaseString<char_t,L,A> string(source1);
-    string += source2;
-    return string;
-}
-
-/**
- * @brief Concatenates two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object interface 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(BaseString<char_t,L,A> const& source1, api::String<char_t> const& source2)
-{
-    BaseString<char_t,L,A> string(source1);
-    string += source2;
-    return string;
-}
-
-/**
- * @brief Concatenates two strings.
- *
- * @param source1 A source object interface 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(api::String<char_t> const& source1, BaseString<char_t,L,A> const& source2)
-{
-    BaseString<char_t,L,A> string(source1);
-    string += source2;
-    return string;
-}
-
-/**
- * @brief Concatenates two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source character string 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(BaseString<char_t,L,A> const& source1, char_t const* const source2)
-{
-    BaseString<char_t,L,A> string(source1);
-    string += source2;
-    return string;
-}
-
-/**
- * @brief Concatenates two strings.
- *
- * @param source1 A source character string 1.
- * @param source2 A source source object 2.
- * @return True if strings are equal.
- */
-template <int32_t L, class A>
-inline BaseString<char_t,L,A> operator+(char_t const* const source1, BaseString<char_t,L,A> const& source2)
-{
-    BaseString<char_t,L,A> string(source1);
-    string += source2;
-    return string;
-}
-
-#ifdef EOOS_NO_STRICT_MISRA_RULES
-
-/**
- * @class BaseString<T,A>
- * @brief Dynamic base string class.
- *
- * Partial specialization of the template implements the dynamic string class.
- *
- * @tparam T A data type of string characters.
- * @tparam A A heap memory allocator class.
- */
-template <typename T, class A>
-class BaseString<T,0,A> : public AbstractString<T,0,A>
-{
-    typedef BaseString<T,0,A>     Self;
-    typedef AbstractString<T,0,A> Parent;
+    typedef AbstractBaseString<T,R,A> Parent;
 
 public:
 
@@ -521,7 +254,24 @@ public:
      * @brief Constructor.
      */
     BaseString() 
-        : AbstractString<T,0,A>() {
+        : AbstractBaseString<T,R,A>()
+        , len_(0)
+        , str_(NULLPTR){
+        bool_t const isConstructed( construct() );
+        setConstructed( isConstructed );
+    }
+    
+    /**
+     * @brief Constructor.
+     *
+     * @param source A source object interface.
+     */
+    BaseString(api::String<T> const& source) 
+        : AbstractBaseString<T,R,A>()
+        , len_(0)
+        , str_(NULLPTR){
+        bool_t const isConstructed( construct( source.getChar() ) );
+        setConstructed( isConstructed );
     }
 
     /**
@@ -530,396 +280,339 @@ public:
      * @param source A source character string.
      */
     BaseString(T const* const source) 
-        : AbstractString<T,0,A>() {
-        Parent::copy(source);
+        : AbstractBaseString<T,R,A>()
+        , len_(0)
+        , str_(NULLPTR){
+        bool_t const isConstructed( construct( source ) );
+        setConstructed( isConstructed );
     }
+    
+    /**
+     * @brief Constructor.
+     *
+     * @param value A source numerical value.     
+     * @param base  A numerical base used to represent a value as this string.     
+     */
+    explicit BaseString(int32_t const value, Number::Base const base = Number::BASE_10)
+        : AbstractBaseString<T,R,A>()
+        , len_(0)
+        , str_(NULLPTR){
+        bool_t isConstructed( construct() );
+        if( isConstructed )
+        {
+            isConstructed = convert(value, base);
+        }
+        setConstructed( isConstructed );
+    }    
 
     /**
      * @brief Destructor.
      */
     virtual ~BaseString()
     {
+        free();
     }
 
-protected:
+    /**
+     * @copydoc eoos::Object::Object(Object const&)
+     */
+    BaseString(BaseString const& obj)
+        : AbstractBaseString<T,R,A>(obj)
+        , len_(0)
+        , str_(NULLPTR){
+        bool_t const isConstructed( construct( obj.getChar() ) );
+        setConstructed( isConstructed );
+    }
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
-     */
-    virtual T getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+     * @copydoc eoos::Object::operator=(Object const&)
+     */       
+    BaseString& operator=(BaseString const& obj)
     {
-        return T::TERMINATING_CHARACTER;
-    }
-
-};
-
-/**
- * @class BaseString<A>
- * @brief Dynamic base string class.
- * 
- * Char type partial specialization of the dynamic string class.
- *
- * @tparam A A heap memory allocator class.
- */
-template <class A>
-class BaseString<char_t,0,A> : public AbstractString<char_t,0,A>
-{
-    typedef BaseString<char_t,0,A>     Self;
-    typedef AbstractString<char_t,0,A> Parent;
-
-public:
-
-    /**
-     * @brief Power of number base.
-     */
-    enum Base
-    {
-        BASE_2 = Memory::BASE_2,
-        BASE_8 = Memory::BASE_8,
-        BASE_10 = Memory::BASE_10,
-        BASE_16 = Memory::BASE_16
-    };    
-
-    /**
-     * @brief Constructor.
-     */
-    BaseString() 
-        : AbstractString<char_t,0,A>() {
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param source A source object.
-     */
-    BaseString(BaseString<char_t,0,A> const& source) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-        : AbstractString<char_t,0,A>() {
-        Parent::copy(source);
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param source A source object interface.
-     */
-    BaseString(api::String<char_t> const& source) 
-        : AbstractString<char_t,0,A>() {
-        Parent::copy(source);
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param source A source character string.
-     */
-    BaseString(char_t const* const source) 
-        : AbstractString<char_t,0,A>() {
-        Parent::copy(source);
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param value A source numerical value.
-     * @param base  A numerical base used to represent a value as a string.
-     */
-    explicit BaseString(int32_t const value) 
-        : AbstractString<char_t,0,A>() {
-        static_cast<void>( Self::convert<int32_t>(value, 10) );
-    }
-
-    /**
-     * @brief Casts to int32_t type.
-     *
-     * @return A numerical value.
-     */
-    operator int32_t() const
-    {
-        return Self::cast<int32_t>(10);
-    }
-
-    /**
-     * @brief Direct assignment operator.
-     *
-     * @param source A source object.
-     * @return This object.
-     */
-    BaseString<char_t,0,A>& operator=(BaseString<char_t,0,A> const& source)
-    {
-        Parent::copy(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param source A source object interface.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,0,A>& operator=(api::String<char_t> const& source)
-    {
-        Parent::copy(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment operator.
-     *
-     * @param source A source character string.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,0,A>& operator=(char_t const* const source)
-    {
-        Parent::copy(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param source A source object.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,0,A>& operator+=(BaseString<char_t,0,A> const& source)
-    {
-        Parent::concatenate(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param source A source object interface.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,0,A>& operator+=(api::String<char_t> const& source)
-    {
-        Parent::concatenate(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param source A source character string.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,0,A>& operator+=(char_t const* const source)
-    {
-        Parent::concatenate(source);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment by sum operator.
-     *
-     * @param value A source numerical value.
-     * @return Reference to this object.
-     */
-    BaseString<char_t,0,A>& operator+=(int32_t const value)
-    {
-        BaseString string(value);
-        Parent::concatenate(string);
-        return *this;
-    }
-
-    /**
-     * @brief Converts an integer number to this string.
-     *
-     * The function converts an integer value into a character string using the base parameter,
-     * which has to be 2, 8, 10, or 16 based numerals for converting to an appropriate numeral system.
-     *
-     * Mark that only if the base is decimal, a passed number is available to be negative values,
-     * and the resulting string of these values is preceded with a minus sign. In addition,
-     * a hexadecimal number includes lower case characters, and any resulting strings do not contain
-     * any suffixes or prefixes for identifying a numeral system.
-     *
-     * @note You need to use "string.template convert<I>(value, base);" syntax,
-     * if you have to specify the template argument type explicitly.
-     *
-     * @param value A value that would be converted to this string.
-     * @param base  A numerical base used to represent a value as this string.
-     * @return True if the conversion has been completed successfully.
-     */
-    template <typename I>
-    bool_t convert(I const value, Base const base = BASE_10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
-    {
-        bool_t res;
-        char_t temp[ (sizeof(I) * 8U) + 1U ];
-        if( !Memory::itoa<I>(value, temp, static_cast<Memory::Base>(base)) )
+        if( isConstructed() && (this != &obj) )
         {
-            res = false;
+            static_cast<void>( copyRaw( obj.getChar() ) );
+            Parent::operator=(obj);
         }
-        else
+        return *this;
+    }    
+
+    #if EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::Object::Object(Object&&)
+     */       
+    BaseString(BaseString&& obj) noexcept 
+        : AbstractBaseString<T,R,A>( move(obj) )
+        , len_(obj.len_)
+        , str_(obj.str_){
+        obj.clean();
+    }
+
+    /**
+     * @copydoc eoos::Object::operator=(Object&&)
+     */
+    BaseString& operator=(BaseString&& obj) noexcept
+    {
+        if( isConstructed() && (this != &obj) )
         {
-            res = Parent::copy(temp);
+            free();
+            len_ = obj.len_;
+            str_ = obj.str_;
+            obj.clean();
+            Parent::operator=( move(obj) );            
+        }
+        return *this;
+    }        
+
+    #endif // EOOS_CPP_STANDARD >= 2011
+
+    /**
+     * @copydoc eoos::api::Collection::getLength()
+     */
+    virtual size_t getLength() const
+    {
+        size_t length( 0 );
+        if( isConstructed() )
+        {
+            // @todo Rework here not to calculate length, but take it form a class member.
+            length = getLengthRaw(str_);
+        }
+        return length;
+    }
+
+    /**
+     * @copydoc eoos::api::String::getChar()
+     */
+    virtual T const* getChar() const
+    {
+        T const* str( NULLPTR );
+        if( isConstructed() )
+        {
+            str = str_;
+        }
+        return str;
+    }
+
+private:
+
+    /**
+     * @copydoc eoos::lib::AbstractBaseString::copyRaw(T const*)
+     */
+    virtual bool_t copyRaw(T const* const str)
+    {
+        bool_t res( false );
+        if( isConstructed() && (str != NULLPTR) )
+        {
+            size_t const length( getLengthRaw(str) );            
+            bool_t isPrepared( prepareCopy(length) );
+            if( isPrepared )
+            {
+                copyRaw3(str_, str, len_);
+                res = true;
+            }
+        }
+        return res;
+    }
+    
+    /**
+     * @copydoc eoos::lib::AbstractBaseString::concatenate(T const*)
+     */
+    virtual bool_t concatenateRaw(T const* const str)
+    {
+        bool_t res( false );
+        if( isConstructed() && (str != NULLPTR) )
+        {
+            size_t const length( getLength() + getLengthRaw(str) );
+            bool_t isPrepared( prepareConcatenate(length) );
+            if( isPrepared )
+            {
+                concatenateRaw3(str_, str, len_);
+                res = true;
+            }
+        }
+        return res;
+
+    }
+    
+    /**
+     * @copydoc eoos::lib::AbstractBaseString::isEqualToRaw(T const*)
+     */
+    virtual bool_t isEqualToRaw(T const* const str) const
+    {
+        bool_t res( false );
+        if( isConstructed() && (str != NULLPTR) )
+        {
+            res = isEqualRaw2(str_, str);
+        }
+        return res;
+
+    }
+
+    /**
+     * @brief Constructs this object.
+     *
+     * @param str A string to be copied on construction.
+     * @return True if this object has been constructed successfully.
+     */     
+    bool_t construct(T const* const str = NULLPTR)
+    {
+        bool_t res( false );
+        do
+        {
+            if( !isConstructed() )
+            {
+                break;
+            }
+            size_t length( LENGTH_ON_CONSTRUCTION );
+            if( str != NULLPTR )
+            {
+                length = getLengthRaw(str);
+            }
+            bool_t isAllocated( allocate(length) );
+            if( !isAllocated )
+            {
+                break;
+            }
+            res = ( str == NULLPTR ) ? true : copyRaw(str);
+        } while(false);
+        return res;
+    }
+    
+    /**
+     * @brief Prepare this string for a new length to copy.
+     *
+     * @param length A number of string characters.
+     * @return True if the the string is prepared.
+     */
+    bool_t prepareCopy(size_t length)
+    {
+        bool_t res(true);
+        if( !isFit(length) )
+        {
+            free();
+            res = allocate(length);
         }
         return res;
     }
 
     /**
-     * @brief Casts this string to an integer number.
+     * @brief Prepare this string for a new length to copy.
      *
-     * @note You need to use "BaseString.template cast<I>(base);" syntax,
-     * if you have to specify the template argument type explicitly.
-     *
-     * @param base A numerical base used to parse the string.
-     * @return The resulting number.
+     * @param length A number of string characters.
+     * @return True if the the string is prepared.
      */
-    template <typename I>
-    I cast(Base const base = BASE_10) const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    bool_t prepareConcatenate(size_t length)
     {
-        char_t const* const str( Parent::getChar() );
-        return Memory::atoi<I>(str, static_cast<Memory::Base>(base));
+        bool_t res(true);
+        if( !isFit(length) )
+        {
+            // @todo Refactor this implementation to make it be more clear.
+            T* const str( str_ );
+            size_t const len( len_ );            
+            clean();
+            res = allocate(length);
+            if( res )
+            {
+                copyRaw3(str_, str, len);
+            }
+            A::free(str);
+        }
+        return res;
     }
-
-protected:
+    
+    /**
+     * @brief Allocates memory for a string.
+     *
+     * @param length A number of string characters.
+     * @return True if the context has been allocated successfully.
+     */
+    bool_t allocate(int32_t const length)
+    {
+        bool_t res( false );
+        if(str_ == NULLPTR && length != 0)
+        {
+            size_t const size( calculateSize(length) );
+            T* const string( reinterpret_cast<T*>( A::allocate(size) ) );
+            if(string != NULLPTR)
+            {
+                str_ = string;
+                len_ = length;
+                str_[0] = R::getTerminator();                
+                res = true;
+            }
+        }
+        return res;
+    } 
+    
+    /**
+     * @brief Frees this contex.
+     */
+    void free()
+    {
+        if(str_ != NULLPTR)
+        {
+            A::free(str_);
+            str_ = NULLPTR;
+            len_ = 0;
+        }
+    }
+    
+    /**
+     * @brief Cleans this contex.
+     */
+    void clean()
+    {
+        str_ = NULLPTR;
+        len_ = 0;
+    }
+    
+    /**
+     * @brief Returns size in byte for a string length.
+     *
+     * @param len A number of string characters.
+     * @return Size in byte for a passed string.
+     */
+    static size_t calculateSize(size_t len)
+    {
+        return len * sizeof(T) + sizeof(T);
+    }
+    
+    /**
+     * @brief Tests if a passed length fits to allocated available length.
+     *
+     * @param len A number of string characters.
+     * @return True if this length will be fit successfully.
+     */
+    bool_t isFit(size_t len) const ///< SCA MISRA-C++:2008 Justified Rule 2-10-2
+    {
+        return len <= len_;
+    }
+    
+    /**
+     * @brief Lenght of the buffer of characters on construction.
+     *
+     * @note Cannot be zero.
+     */
+    static const size_t LENGTH_ON_CONSTRUCTION = 7;
+    
+    /**
+     * @brief Lenght of the buffer of characters of this string.
+     */
+    size_t len_;
 
     /**
-     * @copydoc eoos::lib::AbstractBaseString::getTerminator() const
+     * @brief The buffer of characters of this string.
+     *
+     * @todo Refactor this to be array on construction, 
+     * and if new assigned string is more than LENGTH_ON_CONSTRUCTION,
+     * allocate a new array dynamically. To implement this approach and
+     * reduce size of the class object, revise using a `union` type.
      */
-    virtual char_t getTerminator() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
-    {
-        return '\0';
-    }
-
-private:
-
-    template <class A0> friend bool_t operator==(BaseString<char_t,0,A0> const&, char_t const*);
-    template <class A0> friend bool_t operator==(char_t const*, BaseString<char_t,0,A0> const&);
-    template <class A0> friend bool_t operator!=(BaseString<char_t,0,A0> const&, char_t const*);
-    template <class A0> friend bool_t operator!=(char_t const*, BaseString<char_t,0,A0> const&);
+    T* str_;
 };
 
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator==(BaseString<char_t,0,A> const& source1, BaseString<char_t,0,A> const& source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object interface 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator==(BaseString<char_t,0,A> const& source1, api::String<char_t> const& source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object interface 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator==(api::String<char_t> const& source1, BaseString<char_t,0,A> const& source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source character string 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator==(BaseString<char_t,0,A> const& source1, char_t const* const source2)
-{
-    return ( source1.compare(source2) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for equality of two strings.
- *
- * @param source1 A source character string 1.
- * @param source2 A source source object 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator==(char_t const* const source1, BaseString<char_t,0,A> const& source2)
-{
-    return ( source2.compare(source1) == 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator!=(BaseString<char_t,0,A> const& source1, BaseString<char_t,0,A> const& source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source object interface 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator!=(BaseString<char_t,0,A> const& source1, api::String<char_t> const& source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object interface 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator!=(api::String<char_t> const& source1, BaseString<char_t,0,A> const& source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source object 1.
- * @param source2 A source character string 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator!=(BaseString<char_t,0,A> const& source1, char_t const* const source2)
-{
-    return ( source1.compare(source2) != 0 ) ? true : false;
-}
-
-/**
- * @brief Compares for inequality of two strings.
- *
- * @param source1 A source character string 1.
- * @param source2 A source source object 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline bool_t operator!=(char_t const* const source1, BaseString<char_t,0,A> const& source2)
-{
-    return ( source2.compare(source1) != 0 ) ? true : false;
-}
+#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
 
 /**
  * @brief Concatenates two strings.
@@ -928,10 +621,10 @@ inline bool_t operator!=(char_t const* const source1, BaseString<char_t,0,A> con
  * @param source2 A source object 2.
  * @return True if strings are equal.
  */
-template <class A>
-inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, BaseString<char_t,0,A> const& source2)
+template <typename T, int32_t L, class R, class A>
+inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, BaseString<T,L,R,A> const& source2)
 {
-    BaseString<char_t,0,A> string(source1);
+    BaseString<T,L,R,A> string(source1);
     string += source2;
     return string;
 }
@@ -940,28 +633,13 @@ inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, B
  * @brief Concatenates two strings.
  *
  * @param source1 A source object 1.
- * @param source2 A source object interface 2.
- * @return True if strings are equal.
- */
-template <class A>
-inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, api::String<char_t> const& source2)
-{
-    BaseString<char_t,0,A> string(source1);
-    string += source2;
-    return string;
-}
-
-/**
- * @brief Concatenates two strings.
- *
- * @param source1 A source object interface 1.
  * @param source2 A source object 2.
  * @return True if strings are equal.
  */
-template <class A>
-inline BaseString<char_t,0,A> operator+(api::String<char_t> const& source1, BaseString<char_t,0,A> const& source2)
+template <typename T, int32_t L, class R, class A>
+inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, api::String<T> const& source2)
 {
-    BaseString<char_t,0,A> string(source1);
+    BaseString<T,L,R,A> string(source1);
     string += source2;
     return string;
 }
@@ -970,13 +648,13 @@ inline BaseString<char_t,0,A> operator+(api::String<char_t> const& source1, Base
  * @brief Concatenates two strings.
  *
  * @param source1 A source object 1.
- * @param source2 A source character string 2.
+ * @param source2 A source object 2.
  * @return True if strings are equal.
  */
-template <class A>
-inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, char_t const* const source2)
+template <typename T, int32_t L, class R, class A>
+inline BaseString<T,L,R,A> operator+(api::String<T> const& source1, BaseString<T,L,R,A> const& source2)
 {
-    BaseString<char_t,0,A> string(source1);
+    BaseString<T,L,R,A> string(source1);
     string += source2;
     return string;
 }
@@ -984,19 +662,32 @@ inline BaseString<char_t,0,A> operator+(BaseString<char_t,0,A> const& source1, c
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 A source character string 1.
- * @param source2 A source source object 2.
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
  * @return True if strings are equal.
  */
-template <class A>
-inline BaseString<char_t,0,A> operator+(char_t const* const source1, BaseString<char_t,0,A> const& source2)
+template <typename T, int32_t L, class R, class A>
+inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, T const* const source2)
 {
-    BaseString<char_t,0,A> string(source1);
+    BaseString<T,L,R,A> string(source1);
     string += source2;
     return string;
 }
 
-#endif // EOOS_NO_STRICT_MISRA_RULES
+/**
+ * @brief Concatenates two strings.
+ *
+ * @param source1 A source object 1.
+ * @param source2 A source object 2.
+ * @return True if strings are equal.
+ */
+template <typename T, int32_t L, class R, class A>
+inline BaseString<T,L,R,A> operator+(T const* const source1, BaseString<T,L,R,A> const& source2)
+{
+    BaseString<T,L,R,A> string(source1);
+    string += source2;
+    return string;
+}
 
 } // namespace lib
 } // namespace eoos

@@ -14,6 +14,25 @@ namespace eoos
 {
 namespace lib
 {
+
+/**
+ * @struct Number
+ * @brief Number properties.
+ */
+struct Number
+{    
+    /**
+     * @enum Base
+     * @brief Radix or base of numbers.
+     */
+    enum Base
+    {
+        BASE_2 = 2,   ///< Binary system.
+        BASE_8 = 8,   ///< Octal system.
+        BASE_10 = 10, ///< Decimal system.
+        BASE_16 = 16  ///< Hexadecimal system.
+    };
+};
     
 #if EOOS_CPP_STANDARD >= 2011
 
