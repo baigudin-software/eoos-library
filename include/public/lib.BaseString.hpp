@@ -21,7 +21,7 @@ namespace lib
  *
  * @tparam T A data type of string characters.
  * @tparam L A maximum number of string characters, or 0 for dynamic allocation.
- * @tparam R A character raits.
+ * @tparam R A character traits.
  * @tparam A A heap memory allocator class.
  */
 template <typename T, int32_t L, class R = CharTrait<T>, class A = Allocator>
@@ -120,7 +120,7 @@ public:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    BaseString& operator=(BaseString&& obj) noexcept
+    BaseString& operator=(BaseString&& obj) & noexcept
     {
         if( isConstructed() && (this != &obj) )
         {
@@ -237,10 +237,12 @@ private:
 
 /**
  * @class BaseString<T,0,R,A>
- * @brief Dynamic abstract string class.
+ * @brief Dynamic base string class.
+ *
+ * Partial specialization of the template implements the dynamic string class.
  *
  * @tparam T Data type of string characters.
- * @tparam R A character raits. 
+ * @tparam R A character traits. 
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class R, class A>
@@ -291,7 +293,7 @@ public:
      * @brief Constructor.
      *
      * @param value A source numerical value.     
-     * @param base  A numerical base used to represent a value as this string.     
+     * @param base  A numerical base used to represent a value as this string.
      */
     explicit BaseString(int32_t const value, Number::Base const base = Number::BASE_10)
         : AbstractBaseString<T,R,A>()
@@ -352,7 +354,7 @@ public:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    BaseString& operator=(BaseString&& obj) noexcept
+    BaseString& operator=(BaseString&& obj) & noexcept
     {
         if( isConstructed() && (this != &obj) )
         {
@@ -619,7 +621,7 @@ private:
  *
  * @param source1 A source object 1.
  * @param source2 A source object 2.
- * @return True if strings are equal.
+ * @return This string object with the concatenated strings.
  */
 template <typename T, int32_t L, class R, class A>
 inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, BaseString<T,L,R,A> const& source2)
@@ -633,8 +635,8 @@ inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, BaseStr
  * @brief Concatenates two strings.
  *
  * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
+ * @param source2 A source object interface 2.
+ * @return This string object with the concatenated strings.
  */
 template <typename T, int32_t L, class R, class A>
 inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, api::String<T> const& source2)
@@ -647,9 +649,9 @@ inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, api::St
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 A source object 1.
+ * @param source1 A source object interface 1.
  * @param source2 A source object 2.
- * @return True if strings are equal.
+ * @return This string object with the concatenated strings.
  */
 template <typename T, int32_t L, class R, class A>
 inline BaseString<T,L,R,A> operator+(api::String<T> const& source1, BaseString<T,L,R,A> const& source2)
@@ -663,8 +665,8 @@ inline BaseString<T,L,R,A> operator+(api::String<T> const& source1, BaseString<T
  * @brief Concatenates two strings.
  *
  * @param source1 A source object 1.
- * @param source2 A source object 2.
- * @return True if strings are equal.
+ * @param source2 A source character string 2.
+ * @return This string object with the concatenated strings.
  */
 template <typename T, int32_t L, class R, class A>
 inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, T const* const source2)
@@ -677,9 +679,9 @@ inline BaseString<T,L,R,A> operator+(BaseString<T,L,R,A> const& source1, T const
 /**
  * @brief Concatenates two strings.
  *
- * @param source1 A source object 1.
+ * @param source1 A source character string 1.
  * @param source2 A source object 2.
- * @return True if strings are equal.
+ * @return This string object with the concatenated strings.
  */
 template <typename T, int32_t L, class R, class A>
 inline BaseString<T,L,R,A> operator+(T const* const source1, BaseString<T,L,R,A> const& source2)

@@ -60,7 +60,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    NonCopyable& operator=(NonCopyable&&) noexcept = delete;
+    NonCopyable& operator=(NonCopyable&&) & noexcept = delete;
 
     #endif // EOOS_CPP_STANDARD >= 2011
 

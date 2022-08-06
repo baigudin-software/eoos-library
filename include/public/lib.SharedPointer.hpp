@@ -110,7 +110,7 @@ public:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    SharedPointer& operator=(SharedPointer&& obj) noexcept
+    SharedPointer& operator=(SharedPointer&& obj) & noexcept
     {
         if( isConstructed() && (this != &obj) )
         {

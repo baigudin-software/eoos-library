@@ -327,7 +327,7 @@ private:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    Heap& operator=(Heap&&) noexcept = delete;
+    Heap& operator=(Heap&&) & noexcept = delete;
     
     #endif // EOOS_CPP_STANDARD >= 2011   
 
@@ -698,7 +698,7 @@ private:
         /**
          * @copydoc eoos::Object::operator=(Object&&)
          */
-        HeapBlock& operator=(HeapBlock&&) noexcept = delete;
+        HeapBlock& operator=(HeapBlock&&) & noexcept = delete;
         
         #endif // EOOS_CPP_STANDARD >= 2011    
 
@@ -829,7 +829,7 @@ private:
         /**
          * @copydoc eoos::Object::operator=(Object&&)
          */
-        HeapData& operator=(HeapData&&) noexcept = delete;
+        HeapData& operator=(HeapData&&) & noexcept = delete;
         
         #endif // EOOS_CPP_STANDARD >= 2011    
 

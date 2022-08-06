@@ -83,7 +83,7 @@ public:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    UniquePointer& operator=(UniquePointer&& obj) noexcept
+    UniquePointer& operator=(UniquePointer&& obj) & noexcept
     {
         if( this != &obj && isConstructed() )
         {

@@ -17,8 +17,7 @@ namespace lib
  * @class String
  * @brief String type for chars with default allocator.
  *
- * The dynamic string for any numbers of characters with a default allocator
- * used to allocate an internal container to contain the characters
+ * The dynamic string for any numbers of characters with the default allocator.
  */
 typedef BaseString<char_t,0> String;
 

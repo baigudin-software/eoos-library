@@ -20,7 +20,7 @@ namespace lib
  * @brief Abstract base string class.
  *
  * @tparam T A data type of string characters.
- * @tparam R A character raits.
+ * @tparam R A character traits.
  * @tparam A A heap memory allocator class.
  */
 template <typename T, class R, class A = Allocator>
@@ -136,7 +136,7 @@ public:
      * @return True if the conversion has been completed successfully.
      */
     template <typename I>
-    bool_t convert(I const value, Number::Base const base = Number::BASE_10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+    bool_t convert(I const value, Number::Base const base = Number::BASE_10)
     {
         return convertToString(value, base);
     } 
@@ -144,7 +144,7 @@ public:
     /**
      * @brief Assignment by sum operator.
      *
-     * @param source A source object.
+     * @param source A source object interface.
      * @return Reference to this object.
      */
     AbstractBaseString& operator+=(api::String<T> const& source)
@@ -178,7 +178,7 @@ protected:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    AbstractBaseString(AbstractBaseString const& obj)
+    AbstractBaseString(AbstractBaseString const& obj) noexcept
         : Object<A>(obj)
         , api::String<T>() {
     }
@@ -187,7 +187,7 @@ protected:
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    AbstractBaseString& operator=(AbstractBaseString const& obj)
+    AbstractBaseString& operator=(AbstractBaseString const& obj) & noexcept
     {
         if( isConstructed() && (this != &obj) )
         {
@@ -209,7 +209,7 @@ protected:
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    AbstractBaseString& operator=(AbstractBaseString&& obj) noexcept
+    AbstractBaseString& operator=(AbstractBaseString&& obj) & noexcept
     {
         if( isConstructed() && (this != &obj) )
         {
@@ -466,8 +466,8 @@ private:
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object interface 2.
  * @return True if strings are equal.
  */
 template <typename T>
@@ -479,7 +479,7 @@ inline bool_t operator==(api::String<T> const& source1, api::String<T> const& so
 /**
  * @brief Compares for equality of two strings.
  *
- * @param source1 A source object 1.
+ * @param source1 A source object interface 1.
  * @param source2 A source character string 2.
  * @return True if strings are equal.
  */
@@ -493,7 +493,7 @@ inline bool_t operator==(api::String<T> const& source1, T const* const source2)
  * @brief Compares for equality of two strings.
  *
  * @param source1 A source character string 1.
- * @param source2 A source source object 2.
+ * @param source2 A source object interface 2.
  * @return True if strings are equal.
  */
 template < typename T, class R = CharTrait<T> >
@@ -505,8 +505,8 @@ inline bool_t operator==(T const* const source1, api::String<T> const& source2)
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 A source object 1.
- * @param source2 A source object 2.
+ * @param source1 A source object interface 1.
+ * @param source2 A source object interface 2.
  * @return True if strings are not equal.
  */
 template <typename T>
@@ -518,7 +518,7 @@ inline bool_t operator!=(api::String<T> const& source1, api::String<T> const& so
 /**
  * @brief Compares for inequality of two strings.
  *
- * @param source1 A source object 1.
+ * @param source1 A source object interface 1.
  * @param source2 A source character string 2.
  * @return True if strings are not  equal.
  */
@@ -532,7 +532,7 @@ inline bool_t operator!=(api::String<T> const& source1, T const* const source2)
  * @brief Compares for inequality of two strings.
  *
  * @param source1 A source character string 1.
- * @param source2 A source source object 2.
+ * @param source2 A source object interface 2.
  * @return True if strings are not equal.
  */
 template < typename T, class R = CharTrait<T> >
