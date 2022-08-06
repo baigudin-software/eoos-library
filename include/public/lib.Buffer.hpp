@@ -57,20 +57,18 @@ public:
     virtual ~Buffer()
     {
     }
-
+    
     /**
-     * @brief Assignment operator.
-     *
-     * If the source buffer is greater than this buffer,
-     * only cropped data of that will be copied.
-     *
-     * @param buf Reference to source buffer.
-     * @return Reference to this object.
+     * @copydoc eoos::api::SequenceContainer::getData()
      */
-    Buffer& operator=(Buffer<T,L,A> const& buf)
+    virtual T* getData() const
     {
-        this->copy(buf);
-        return *this;
+        T* buf( NULLPTR );
+        if( isConstructed() )
+        {
+            buf = buf_;
+        }
+        return buf;
     }
 
     /**
@@ -82,25 +80,16 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(AbstractBuffer<T,A> const& buf)
+    Buffer& operator=(api::SequenceContainer<T> const& buf)
     {
-        this->copy(buf);
+        if( isConstructed() && buf.isConstructed() )
+        {        
+            copy(buf);
+        }
         return *this;
     }
 
-protected:
-
-    /**
-     * @brief Returns a pointer to the fist buffer element.
-     *
-     * @return Pointer to buffer, or NULLPTR.
-     */
-    virtual T* getBuffer() const
-    {
-        return buf_;
-    }
-
-private:    
+private:
 
     /**
      * @brief Current array of T elements.
@@ -140,12 +129,12 @@ public:
      *
      * @param length Count of buffer elements.
      */
-    explicit Buffer(int32_t const length) 
+    explicit Buffer(size_t const length) 
         : AbstractBuffer<T,A>(length)
         , buf_(NULLPTR)
         , isDeleted_(true) {
         bool_t const isConstructed( construct(length) );
-        this->setConstructed( isConstructed );
+        setConstructed( isConstructed );
     }
 
     /**
@@ -156,12 +145,12 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Buffer(int32_t const length, T const& illegal) 
+    Buffer(size_t const length, T const& illegal) 
         : AbstractBuffer<T,A>(length, illegal)
         , buf_(NULLPTR)
         , isDeleted_(true) {
         bool_t const isConstructed( construct(length) );
-        this->setConstructed( isConstructed );
+        setConstructed( isConstructed );
     }
 
     /**
@@ -172,12 +161,12 @@ public:
      * @param length Number of elements.
      * @param buf    Pointer to external buffer.
      */
-    Buffer(int32_t const length, T* const buf) 
+    Buffer(size_t const length, T* const buf) 
         : AbstractBuffer<T,A>(length)
         , buf_(buf)
         , isDeleted_(false) {
         bool_t const isConstructed( construct(length) );
-        this->setConstructed( isConstructed );
+        setConstructed( isConstructed );
     }
 
     /**
@@ -190,12 +179,12 @@ public:
      * @param buf     Pointer to external buffer.
      * @param illegal Illegal value.
      */
-    Buffer(int32_t const length, T* const buf, T const& illegal) 
+    Buffer(size_t const length, T* const buf, T const& illegal) 
         : AbstractBuffer<T,A>(length, illegal)
         , buf_(buf)
         , isDeleted_(false) {
         bool_t const isConstructed( construct(length) );
-        this->setConstructed( isConstructed );
+        setConstructed( isConstructed );
     }
 
 
@@ -209,56 +198,36 @@ public:
             A::free(buf_);
         }
     }
-
+    
     /**
-     * @brief Assignment operator.
-     *
-     * If the source buffer is greater than this buffer,
-     * only cropped data of that will be copied.
-     *
-     * @param buf Reference to source buffer.
-     * @return Reference to this object.
+     * @copydoc eoos::api::SequenceContainer::getData()
      */
-    Buffer& operator=(Buffer<T,0,A> const& buf)
+    virtual T* getData() const
     {
-        this->copy(buf);
-        return *this;
-    }
-
-    /**
-     * @brief Assignment operator.
-     *
-     * If the source buffer is greater than this buffer,
-     * only cropped data of that will be copied.
-     *
-     * @param buf Reference to source buffer.
-     * @return Reference to this object.
-     */
-    Buffer& operator=(AbstractBuffer<T,A> const& buf)
-    {
-        this->copy(buf);
-        return *this;
-    }
-
-protected:
-
-    /**
-     * @brief Returns a pointer to the fist buffer element.
-     *
-     * @return Pointer to buffer, or NULLPTR.
-     */
-    virtual T* getBuffer() const
-    {
-        T* buf;
-        if( !Parent::isConstructed() )
-        {
-            buf = NULLPTR;
-        }
-        else
+        T* buf( NULLPTR );
+        if( isConstructed() )
         {
             buf = buf_;
         }
         return buf;
+    }    
+
+    /**
+     * @brief Assignment operator.
+     *
+     * If the source buffer is greater than this buffer,
+     * only cropped data of that will be copied.
+     *
+     * @param buf Reference to source buffer.
+     * @return Reference to this object.
+     */
+    Buffer& operator=(api::SequenceContainer<T> const& buf)
+    {
+        if( isConstructed() && buf.isConstructed() )
+        {        
+            copy(buf);
+        }
+        return *this;
     }
 
 private:
@@ -271,8 +240,8 @@ private:
      */
     bool_t construct(size_t const length)
     {
-        bool_t res;
-        if( Parent::isConstructed() )
+        bool_t res( false );
+        if( isConstructed() && length > 0 )
         {
             if(buf_ == NULLPTR)
             {
@@ -280,10 +249,6 @@ private:
                 buf_ = reinterpret_cast<T*>( addr );
             }
             res = buf_ != NULLPTR;
-        }
-        else
-        {
-            res = false;
         }
         return res;
     }

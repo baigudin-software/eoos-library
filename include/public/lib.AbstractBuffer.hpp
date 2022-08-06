@@ -7,7 +7,7 @@
 #define LIB_ABSTRACTBUFFER_HPP_
 
 #include "lib.NonCopyable.hpp"
-#include "api.Collection.hpp"
+#include "api.SequenceContainer.hpp"
 #include "api.IllegalValue.hpp"
 
 namespace eoos
@@ -21,43 +21,15 @@ namespace lib
  *
  * @tparam T Data type of buffer element.
  * @tparam A Heap memory allocator class.
+ *
+ * @todo Inherit Object instead of NonCopyable. 
  */
 template <typename T, class A = Allocator>
-class AbstractBuffer : public NonCopyable<A>, public api::Collection<T>, public api::IllegalValue<T>
+class AbstractBuffer : public NonCopyable<A>, public api::SequenceContainer<T>, public api::IllegalValue<T>
 {
-    typedef AbstractBuffer<T,A>  Self;
     typedef NonCopyable<A> Parent;
 
 public:
-
-    /**
-     * @brief Constructor.
-     *
-     * @param length Count of buffer elements.
-     */
-    explicit AbstractBuffer(size_t length) 
-        : NonCopyable<A>()
-        , api::Collection<T>()
-        , api::IllegalValue<T>()
-        , length_(length)
-        , illegal_(){
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @note A passed illegal element will be copied to an internal data of the class
-     *
-     * @param length  Count of buffer elements.
-     * @param illegal Illegal value.
-     */
-    AbstractBuffer(size_t length, T const& illegal) 
-        : NonCopyable<A>()
-        , api::Collection<T>()
-        , api::IllegalValue<T>()
-        , length_(length)
-        , illegal_(illegal){
-    }
 
     /**
      * @brief Destructor.
@@ -152,16 +124,16 @@ public:
      * @param index Begin index.
      * @param count Count of filling elements.
      */
-    void fill(T const& value, int32_t const index, int32_t const count)
+    void fill(T const& value, size_t const begin, size_t const count)
     {
-        bool_t const hasIndex( index < length_ );
-        if( Self::isConstructed() && hasIndex )
+        bool_t const hasIndex( begin < length_ );
+        if( isConstructed() && hasIndex )
         {
-            T* const buf( getBuffer() );
-            size_t const length( index + count );
+            T* const buf( getData() );
+            size_t const length( begin + count );
             // MSVC warning C4003 of Most Vexing Parse case avoided with no nameing the variable 'max'
             size_t const maximum( ( length <= length_ ) ? length : length_ );
-            for(size_t i(index); i<maximum; i++)
+            for(size_t i(begin); i<maximum; i++)
             {
                 buf[i] = value;
             }
@@ -174,11 +146,11 @@ public:
      * @param index An element index.
      * @return An element.
      */
-    T& operator[](int32_t const index)
+    T& operator[](size_t const index)
     {
         T* value;
-        T* const buf( getBuffer() );
-        if( (!Self::isConstructed()) || (index >= length_) || (buf == NULLPTR) )
+        T* const buf( getData() );
+        if( (!isConstructed()) || (index >= length_) || (buf == NULLPTR) )
         {
             value = &illegal_;
         }
@@ -192,11 +164,33 @@ public:
 protected:
 
     /**
-     * @brief Returns a pointer to the fist buffer element.
+     * @brief Constructor.
      *
-     * @return Pointer to buffer or NULLPTR.
+     * @param length Count of buffer elements.
      */
-    virtual T* getBuffer() const = 0;
+    explicit AbstractBuffer(size_t length) 
+        : NonCopyable<A>()
+        , api::SequenceContainer<T>()
+        , api::IllegalValue<T>()
+        , length_(length)
+        , illegal_(){
+    }
+
+    /**
+     * @brief Constructor.
+     *
+     * @note A passed illegal element will be copied to an internal data of the class
+     *
+     * @param length  Count of buffer elements.
+     * @param illegal Illegal value.
+     */
+    AbstractBuffer(size_t length, T const& illegal) 
+        : NonCopyable<A>()
+        , api::SequenceContainer<T>()
+        , api::IllegalValue<T>()
+        , length_(length)
+        , illegal_(illegal){
+    }
 
     /**
      * @brief Copies buffer to buffer.
@@ -206,15 +200,15 @@ protected:
      *
      * @param buf Reference to source buffer.
      */
-    void copy(AbstractBuffer const& buf)
+    void copy(api::SequenceContainer<T> const& buf)
     {
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             size_t const size1( getLength() );
             size_t const size2( buf.getLength() );
             size_t const size( ( size1 < size2 ) ? size1 : size2 );
-            T* const buf1( getBuffer() );
-            T* const buf2( buf.getBuffer() );
+            T* const buf1( getData() );
+            T* const buf2( buf.getData() );
             for(size_t i(0); i<size; i++)
             {
                 buf1[i] = buf2[i];
@@ -232,7 +226,7 @@ private:
     /**
      * @brief Illegal element of this buffer.
      */
-    mutable T illegal_;
+    T illegal_;
 
 };
 
