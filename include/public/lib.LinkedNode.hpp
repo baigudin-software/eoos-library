@@ -23,7 +23,6 @@ namespace lib
 template <typename T, class A = Allocator>
 class LinkedNode : public NonCopyable<A>
 {
-    typedef LinkedNode<T,A> Self;
     typedef NonCopyable<A> Parent;
 
 public:
@@ -83,7 +82,7 @@ public:
     }
 
     /**
-     * @brief Inserts a new element after this.
+     * @brief Inserts a new element before this.
      *
      * Function links a node before this and reindexes
      * chain of nodes starts from this node.

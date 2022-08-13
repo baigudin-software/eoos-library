@@ -6,7 +6,7 @@
 #ifndef LIB_LINKEDLIST_HPP_
 #define LIB_LINKEDLIST_HPP_
 
-#include "lib.AbstractLinkedList.hpp"
+#include "lib.AbstractList.hpp"
 
 namespace eoos
 {
@@ -21,10 +21,8 @@ namespace lib
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
-class LinkedList : public AbstractLinkedList<T,A>
+class LinkedList : public AbstractList<T,A>
 {
-    typedef AbstractLinkedList<T,A>  Parent;
-    typedef LinkedNode<T,A>          Node;
 
 public:
 
@@ -32,7 +30,7 @@ public:
      * @brief Constructor.
      */
     LinkedList() 
-        : AbstractLinkedList<T,A>() {
+        : AbstractList<T,A>() {
     }
 
     /**
@@ -45,7 +43,7 @@ public:
      * @param illegal An illegal element.
      */
     LinkedList(T const& illegal) 
-        : AbstractLinkedList<T,A>(illegal) {
+        : AbstractList<T,A>(illegal) {
     }
 
     /**
@@ -58,22 +56,22 @@ public:
     /**
      * @copydoc eoos::api::List::getListIterator(int32_t)
      */
-    virtual api::ListIterator<T>* getListIterator(int32_t const index)
+    virtual api::ListIterator<T>* getListIterator(int32_t const index=0)
     {
-        if( !Parent::isConstructed() )
+        Iterator<T,A>* it( NULLPTR );
+        if( isConstructed() )
         {
-            return NULLPTR;
-        }
-        Iterator* const iterator( new Iterator(index, *this) );
-        if( iterator != NULLPTR )
-        {
-            if( iterator->isConstructed() )
+            it = new Iterator<T,A>(index, *this);
+            if( it != NULLPTR )
             {
-                return iterator;
+                if( !it->isConstructed() )
+                {
+                    delete it;
+                    it = NULLPTR;
+                }
             }
         }
-        delete iterator;
-        return NULLPTR;
+        return it;        
     }
 
 private:
@@ -85,12 +83,16 @@ private:
      * @note This class is implemented in private zone of the list class.
      * For this reason, for fast iteration some tests are skipped.
      * You have to use this class only if it has been constructed.
+     *
+     * @tparam TT Data type of container element.
+     * @tparam AA Heap memory allocator class.
      */
-    class Iterator : public NonCopyable<A>, public api::ListIterator<T>
+    template <typename TT, class AA>
+    class Iterator : public NonCopyable<AA>, public api::ListIterator<TT>
     {
-        typedef Iterator Self;
-        typedef NonCopyable<A> Parent;
-        typedef LinkedList<T,A> List;
+        typedef NonCopyable<AA> Parent;
+        typedef LinkedList<TT,AA> List;
+        typedef LinkedNode<TT,AA> Node;
 
     public:
 
@@ -101,8 +103,8 @@ private:
          * @param list  Reference to self list.
          */
         Iterator(int32_t const index, List& list) 
-            : NonCopyable<A>()
-            , api::ListIterator<T>()
+            : NonCopyable<AA>()
+            , api::ListIterator<TT>()
             , list_(list)
             , count_(list.getReferenceToCount())
             , last_(list.getReferenceToLast())
@@ -129,9 +131,9 @@ private:
         /**
          * @copydoc eoos::api::ListIterator::add(T const&)
          */
-        virtual bool_t add(T const& element)
+        virtual bool_t add(TT const& element)
         {
-            if(count_.list != count_.self)
+            if( isModifiedByList() )
             {
                 return false;
             }
@@ -149,8 +151,7 @@ private:
          */
         virtual bool_t remove()
         {
-            Node* curs;
-            if(count_.list != count_.self)
+            if( isModifiedByList() )
             {
                 return false;
             }
@@ -158,31 +159,32 @@ private:
             {
                 return false;
             }
-            if(curs_->getIndex() != rindex_)
+            Node* curs( curs_ );
+            if( curs_ != NULLPTR )
             {
-                curs = curs_;
+                if(curs_->getIndex() == rindex_)
+                {
+                    curs = (curs_ == last_) ? NULLPTR : curs_->getNext();                
+                }
             }
-            else
+            bool_t res( list_.remove(rindex_) );
+            if(res == true)
             {
-                curs = (curs_ != last_) ? curs_->getNext() : NULLPTR;
+                count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
+                rindex_ = ILLEGAL_INDEX;
+                curs_ = curs;
             }
-            if(list_.remove(rindex_) == false)
-            {
-                return false;
-            }
-            count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
-            rindex_ = ILLEGAL_INDEX;
-            curs_ = curs;
-            return true;
+            return res;
         }
 
         /**
          * @copydoc eoos::api::ListIterator::getPrevious()
          */
-        virtual T& getPrevious()
+        virtual TT& getPrevious()
         {
             if( !hasPrevious() )
             {
+                rindex_ = ILLEGAL_INDEX;
                 return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
             curs_ = (curs_ == NULLPTR) ? last_ : curs_->getPrevious();
@@ -195,6 +197,10 @@ private:
          */
         virtual int32_t getPreviousIndex() const
         {
+            if( isModifiedByList() )
+            {
+                return ERROR_INDEX;
+            }                        
             if( !hasPrevious() )
             {
                 return -1;
@@ -207,13 +213,17 @@ private:
          */
         virtual bool_t hasPrevious() const
         {
-            if(count_.list != count_.self)
+            if( isModifiedByList() )
             {
                 return false;
             }
             if(last_ == NULLPTR)
             {
                 return false;
+            }
+            if(curs_ == NULLPTR)
+            {
+                return true;
             }
             if(curs_->getPrevious() == last_)
             {
@@ -225,14 +235,15 @@ private:
         /**
          * @copydoc eoos::api::Iterator::getNext()
          */
-        virtual T& getNext()
+        virtual TT& getNext()
         {
             if( !hasNext() )
             {
+                rindex_ = ILLEGAL_INDEX;
                 return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
             Node* const node( curs_ );
-            curs_ = (curs_ != last_) ? curs_->getNext() : NULLPTR;
+            curs_ = (curs_ == last_) ? NULLPTR : curs_->getNext();
             rindex_ = node->getIndex();
             return node->getElement();
         }
@@ -242,6 +253,10 @@ private:
          */
         virtual int32_t getNextIndex() const
         {
+            if( isModifiedByList() )
+            {
+                return ERROR_INDEX;
+            }            
             return hasNext() ? curs_->getIndex() : list_.getLength();
         }
 
@@ -250,7 +265,7 @@ private:
          */
         virtual bool_t hasNext() const
         {
-            if(count_.list != count_.self)
+            if( isModifiedByList() )
             {
                 return false;
             }
@@ -264,7 +279,7 @@ private:
         /**
          * @copydoc eoos::api::IllegalValue::getIllegal()
          */
-        virtual T const& getIllegal() const
+        virtual TT const& getIllegal() const
         {
             return list_.getIllegal();
         }
@@ -272,7 +287,7 @@ private:
         /**
          * @copydoc eoos::api::IllegalValue::setIllegal(T const&)
          */
-        virtual void setIllegal(T const& value)
+        virtual void setIllegal(TT const& value)
         {
             list_.setIllegal(value);
         }
@@ -280,7 +295,7 @@ private:
         /**
          * @copydoc eoos::api::IllegalValue::isIllegal(T const&)
          */
-        virtual bool_t isIllegal(T const& value) const
+        virtual bool_t isIllegal(TT const& value) const
         {
             return list_.isIllegal(value);
         }
@@ -294,7 +309,7 @@ private:
          */
         bool_t construct(int32_t const index)
         {
-            if( !Self::isConstructed() )
+            if( !isConstructed() )
             {
                 return false;
             }
@@ -309,6 +324,16 @@ private:
             curs_ = list_.getNodeByIndex(index);
             return true;
         }
+        
+        /**
+         * @brief Tests if list was modified by list object.
+         *
+         * @param true if modified.
+         */
+        bool_t isModifiedByList() const
+        {        
+            return count_.list != count_.self;
+        }        
 
         /**
          * @struct Counter
@@ -319,7 +344,7 @@ private:
             /**
              * @brief Constructor.
              */
-            Counter(int32_t& count)
+            Counter(uint32_t& count)
                 : list (count)
                 , self (count) {
             }
@@ -334,12 +359,12 @@ private:
             /**
              * @brief Quantity of chang made by iterating list.
              */
-            int32_t const& list; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
+            uint32_t const& list;
 
             /**
              * @brief Quantity of chang made by the iterator.
              */
-            int32_t self; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
+            uint32_t self;
 
         };
 
@@ -366,10 +391,10 @@ private:
         /**
          * @brief Illegal value of the iterator list.
          */
-        T& illegal_;
+        TT& illegal_;
 
         /**
-         * @brief Pointer to current node of this iterator.
+         * @brief Pointer to current node of this iterator that returned as next element.
          */
         Node* curs_;
 

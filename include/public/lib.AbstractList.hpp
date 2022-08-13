@@ -1,10 +1,10 @@
 /**
- * @file      lib.AbstractLinkedList.hpp
+ * @file      lib.AbstractList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
  * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_ABSTRACTLINKEDLIST_HPP_
-#define LIB_ABSTRACTLINKEDLIST_HPP_
+#ifndef LIB_ABSTRACTLIST_HPP_
+#define LIB_ABSTRACTLIST_HPP_
 
 #include "lib.NonCopyable.hpp"
 #include "lib.Buffer.hpp"
@@ -19,63 +19,30 @@ namespace lib
 {
     
 /**
- * @class AbstractLinkedList<T,A>
+ * @class AbstractList<T,A>
  * @brief Abstract class for sequential accessing to data store.
  *
  * @tparam T Data type of container element.
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class A = Allocator>
-class AbstractLinkedList :
+class AbstractList :
     public NonCopyable<A>,
     public api::List<T>,
     public api::Queue<T>,
     public api::Iterable<T>{
 
-    typedef AbstractLinkedList<T,A> Self;
     typedef NonCopyable<A> Parent;
     typedef LinkedNode<T,A> Node;
 
 public:
 
     /**
-     * @brief Constructor.
-     */
-    AbstractLinkedList() 
-        : NonCopyable<A>()
-        , api::List<T>()
-        , api::Queue<T>()
-        , api::Iterable<T>()
-        , illegal_()
-        , last_(NULLPTR)
-        , count_(0) {
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @note A passed element must be copied to an internal data structure of
-     * this class by calling a copy constructor so that the element
-     * might be invalidated after the function called.
-     *
-     * @param illegal An illegal element.
-     */
-    AbstractLinkedList(T const& illegal) 
-        : NonCopyable<A>()
-        , api::List<T>()
-        , api::Queue<T>()
-        , api::Iterable<T>()
-        , illegal_(illegal)
-        , last_(NULLPTR)
-        , count_(0) {
-    }
-
-    /**
      * @brief Destructor.
      */
-    virtual ~AbstractLinkedList()
+    virtual ~AbstractList()
     {
-        Self::clear();
+        clear();
     }
 
     /**
@@ -91,7 +58,7 @@ public:
      */
     virtual bool_t add(T const& element)
     {
-        return Self::isConstructed() ? addNode(getLength(), element) : false;
+        return isConstructed() ? addNode(getLength(), element) : false;
     }
 
     /**
@@ -99,7 +66,7 @@ public:
      */
     virtual bool_t add(int32_t const index, T const& element)
     {
-        return Self::isConstructed() ? addNode(index, element) : false;
+        return isConstructed() ? addNode(index, element) : false;
     }
 
     /**
@@ -107,16 +74,15 @@ public:
      */
     virtual void clear()
     {
-        if( !Self::isConstructed() )
+        if( isConstructed() )
         {
-            return;
-        }
-        size_t const b( getLength() - 1 );
-        for(size_t i(b); i>=0; i--)
-        {
-            if( !removeNode( getNodeByIndex(i) ) )
+            size_t const b( getLength() - 1 );
+            for(size_t i(b); i>=0; i--)
             {
-                break;
+                if( !removeNode( getNodeByIndex(i) ) )
+                {
+                    break;
+                }
             }
         }
     }
@@ -150,7 +116,7 @@ public:
      */
     virtual bool_t remove(int32_t const index)
     {
-        return Self::isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
+        return isConstructed() ? removeNode( getNodeByIndex(index) ) : false;
     }
 
     /**
@@ -158,7 +124,7 @@ public:
      */
     virtual bool_t removeElement(T const& element)
     {
-        return Self::isConstructed() ? removeNode( getNodeByElement(element) ) : false;
+        return isConstructed() ? removeNode( getNodeByElement(element) ) : false;
     }
 
     /**
@@ -190,7 +156,7 @@ public:
      */
     virtual T& get(int32_t index)
     {
-        if( !Self::isConstructed() )
+        if( !isConstructed() )
         {
             return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
         }
@@ -237,7 +203,7 @@ public:
      */
     virtual void setIllegal(T const& value)
     {
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             illegal_ = value;
         }
@@ -248,11 +214,12 @@ public:
      */
     virtual bool_t isIllegal(T const& value) const
     {
-        if( !Self::isConstructed() )
+        bool_t res( false );
+        if( isConstructed() )
         {
-            return false;
+            res = illegal_ == value;
         }
-        return (illegal_ == value) ? true : false;
+        return res;
     }
 
     /**
@@ -261,7 +228,7 @@ public:
     virtual int32_t getIndexOf(T const& element) const
     {
         Node* const node( getNodeByElement(element) );
-        return (node != NULLPTR) ? node->getIndex() : -1;
+        return (node != NULLPTR) ? node->getIndex() : ERROR_INDEX;
     }
 
     /**
@@ -269,17 +236,17 @@ public:
      */
     virtual bool_t isIndex(int32_t const index) const
     {
+        bool_t res( false );
         if( 0 <= index )
         {
             if( index < getLength() )
             {
-                return true;
+                res = true;
             }
         }
-        return false;
+        return res;
     }
     
-
     /**
      * @copydoc eoos::api::Iterable::getIterator()
      */
@@ -288,44 +255,39 @@ public:
         return this->getListIterator(0);
     }    
 
+protected:
+
     /**
-     * @brief Returns an array of all list links to elements.
-     *
-     * You have to call delete operator for returned value after it have used.
-     *
-     * @return Pointer to reference of elements or NULLPTR if list is empty.
+     * @brief Constructor.
      */
-    Buffer<T,0,A>* getAsBuffer()
-    {
-        #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
-        if( !Self::isConstructed() )
-        {
-            return NULLPTR;
-        }
-        size_t const count( getLength() );
-        if(count == 0)
-        {
-            return NULLPTR;
-        }
-        Buffer<T,0,A>* buf( new Buffer<T,0,A>(count, illegal_) );
-        if( (buf == NULLPTR) || (!buf->isConstructed()) )
-        {
-            delete buf;
-            return NULLPTR;
-        }
-        Node* node( last_->getNext() );
-        for(int32_t i(0); i<count; i++)
-        {
-            (*buf)[i] = node->getElement();
-            node = node->getNext();
-        }
-        return buf;
-        #else
-        return NULLPTR;
-        #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    AbstractList() 
+        : NonCopyable<A>()
+        , api::List<T>()
+        , api::Queue<T>()
+        , api::Iterable<T>()
+        , illegal_()
+        , last_(NULLPTR)
+        , count_(0) {
     }
 
-protected:
+    /**
+     * @brief Constructor.
+     *
+     * @note A passed element must be copied to an internal data structure of
+     * this class by calling a copy constructor so that the element
+     * might be invalidated after the function called.
+     *
+     * @param illegal An illegal element.
+     */
+    AbstractList(T const& illegal) 
+        : NonCopyable<A>()
+        , api::List<T>()
+        , api::Queue<T>()
+        , api::Iterable<T>()
+        , illegal_(illegal)
+        , last_(NULLPTR)
+        , count_(0) {
+    }
 
     /**
      * @brief Inserts new element to the specified position in this list.
@@ -421,22 +383,23 @@ protected:
      */
     Node* getNodeByElement(T const& element) const
     {
+        Node* res( NULLPTR );
         size_t const len( getLength() );
-        if(len == 0)
+        if(len != 0)
         {
-            return NULLPTR;
-        }
-        Node* node( last_->getNext() );
-        for(int32_t i(0); i<len; i++)
-        {
-            if(element != node->getElement())
+            Node* node( last_->getNext() );
+            for(int32_t i(0); i<len; i++)
             {
-                node = node->getNext();
-                continue;
+                if(element != node->getElement())
+                {
+                    node = node->getNext();
+                    continue;
+                }
+                res = node;
+                break;
             }
-            return node;
         }
-        return NULLPTR;
+        return res;
     }
 
     /**
@@ -494,7 +457,7 @@ protected:
      *
      * @return Data value.
      */
-    int32_t& getReferenceToCount()
+    uint32_t& getReferenceToCount()
     {
         return count_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
     }
@@ -534,10 +497,10 @@ private:
     /**
      * @brief Number of changes in this list.
      */
-    int32_t count_;
+    uint32_t count_;
 
 };
         
 } // namespace lib
 } // namespace eoos
-#endif // LIB_ABSTRACTLINKEDLIST_HPP_
+#endif // LIB_ABSTRACTLIST_HPP_
