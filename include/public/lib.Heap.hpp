@@ -59,7 +59,7 @@ public:
         {
             return false;
         }
-        if( !getFirstBlock()->isConstructed() )
+        if( !getFirstHeapBlock()->isConstructed() )
         {
             return false;
         }
@@ -71,14 +71,14 @@ public:
      */
     virtual void* allocate(size_t const size, void* ptr)
     {
-        if( !Self::isConstructed() )
+        if( !isConstructed() )
         {
             return NULLPTR;
         }
         if( ptr == NULLPTR )
         {
             MutexGuard<NoAllocator> guard( *data_.mutex );
-            ptr = getFirstBlock()->alloc(size);
+            ptr = getFirstHeapBlock()->alloc(size);
         }
         return ptr;
     }
@@ -88,16 +88,16 @@ public:
      */
     virtual void free(void* ptr)
     {
+        if( !isConstructed() )
+        {
+            return;
+        }        
         if( ptr == NULLPTR )
         {
             return;
         }
-        if( !Self::isConstructed() )
-        {
-            return;
-        }
         MutexGuard<NoAllocator> guard( *data_.mutex );
-        heapBlock(ptr)->free();
+        getHeapBlock(ptr)->free();
     }
 
     /**
@@ -182,7 +182,7 @@ private:
             return false;
         }
         // Alloc first heap block
-        data_.block = new ( getFirstBlock() ) HeapBlock(this, data_.size);
+        data_.block = new ( getFirstHeapBlock() ) HeapBlock(this, data_.size);
         return (data_.block != NULLPTR) ? true : false;
     }
 
@@ -191,7 +191,7 @@ private:
      *
      * @return Pointer to heap block.
      */
-    HeapBlock* getFirstBlock() const
+    HeapBlock* getFirstHeapBlock() const
     {
         uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
         return reinterpret_cast<HeapBlock*>(addr);
@@ -202,12 +202,47 @@ private:
      *
      * @return Pointer to heap block.
      */
-    static HeapBlock* heapBlock(void* const data)
+    static HeapBlock* getHeapBlock(void* const data)
     {
         uintptr_t const addr( reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock) );
         return reinterpret_cast<HeapBlock*>(addr);
     }
 
+    /**
+     * @brief Allocates memory for heap.
+     *
+     * Function initiates a building of heap memory
+     * checks and tests self memory structure data
+     * and leads to call the class constructor.
+     *
+     * @param ptr Aligned to eight memory address.
+     * @return Address of memory or NULLPTR.
+     */
+    static void* create(void* ptr)
+    {
+        // Size of this class has to be multipled to eight
+        if((sizeof(Heap) & 0x7UL) != 0UL)
+        {
+            ptr = NULLPTR;
+        }
+        // Testing memory for self structure data
+        //
+        // @todo copy constructor of the Heap class for
+        // temporary copying the tested memory to that
+        // class. This way would help to restore original
+        // memory data if the test were failed.
+        if( !isMemoryAvailable(ptr, sizeof(Heap)) )
+        {
+            ptr = NULLPTR;
+        }
+        // Memory address has to be aligned to eight
+        if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL )
+        {
+            ptr = NULLPTR;
+        }
+        return ptr;
+    }
+    
     /**
      * @brief Tests memory.
      *
@@ -270,41 +305,6 @@ private:
             }
         }
         return true;
-    }
-
-    /**
-     * @brief Allocates memory for heap.
-     *
-     * Function initiates a building of heap memory
-     * checks and tests self memory structure data
-     * and leads to call the class constructor.
-     *
-     * @param ptr Aligned to eight memory address.
-     * @return Address of memory or NULLPTR.
-     */
-    static void* create(void* ptr)
-    {
-        // Size of this class has to be multipled to eight
-        if((sizeof(Heap) & 0x7UL) != 0UL)
-        {
-            ptr = NULLPTR;
-        }
-        // Testing memory for self structure data
-        //
-        // @todo copy constructor of the Heap class for
-        // temporary copying the tested memory to that
-        // class. This way would help to restore original
-        // memory data if the test were failed.
-        if( !isMemoryAvailable(ptr, sizeof(Heap)) )
-        {
-            ptr = NULLPTR;
-        }
-        // Memory address has to be aligned to eight
-        if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL )
-        {
-            ptr = NULLPTR;
-        }
-        return ptr;
     }
     
     /**
@@ -393,12 +393,12 @@ private:
         /**
          * @brief Aligning data size.
          */
-		static const size_t SIZEOF = S;
+        static const size_t SIZEOF = S;
 
         /**
          * @brief Aligning data size.
          */
-		static const size_t MASK = ~0x7UL;
+        static const size_t MASK = ~0x7UL;
 
         /**
          * @brief Aligning data size.
@@ -489,17 +489,14 @@ private:
             HeapBlock* curr( this );
             while(curr != NULLPTR)
             {
-                if(curr->isUsed())
+                if(curr->isUsed() || (curr->size_ < size) )
                 {
                     curr = curr->next_;
-                    continue;
                 }
-                if(curr->size_ < size)
+                else
                 {
-                    curr = curr->next_;
-                    continue;
+                    break;
                 }
-                break;
             }
             if(curr == NULLPTR)
             {
@@ -600,19 +597,17 @@ private:
          */
         static void* operator new(size_t, void* const ptr)
         {
-            void* memory;
+            void* memory( NULLPTR );
             do
             {
                 // Size of this class must be multipled to eight
                 if((sizeof(HeapBlock) & 0x7UL) != 0UL)
                 {
-                    memory = NULLPTR;
                     break;
                 }
                 // The passed address must be multipled to eight
                 if((reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL)
                 {
-                    memory = NULLPTR;
                     break;
                 }
                 memory = ptr;
@@ -705,7 +700,7 @@ private:
         /**
          * @brief Heap block definition key.
          */
-        static const size_t BLOCK_KEY = 0x20150515UL;
+        static const size_t BLOCK_KEY = 0x20140515UL;
 
         /**
          * @brief Block is used.
@@ -843,7 +838,7 @@ private:
     /**
      * @brief Heap page memory definition key.
      */
-    static const int32_t HEAP_KEY = 0x19811019;
+    static const int32_t HEAP_KEY = 0x19820401;
 
     /**
      * @brief Data of this heap.
