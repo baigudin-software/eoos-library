@@ -27,7 +27,7 @@ struct CharTrait
      * @return A character means a null-terminated string is terminated.
      */
     static T getTerminator();
-    
+
     /**
      * @brief Converts an integer to a character.
      *
@@ -36,7 +36,7 @@ struct CharTrait
      */    
     template <typename I>
     static T convertDigitToChar(I val);
-    
+
     /**
      * @brief Returns minus sign.
      *
@@ -91,7 +91,7 @@ struct CharTrait<char_t>
         }
         return ch;
     }
-    
+
     /**
      * @copydoc eoos::lib::CharTrait<T>::getMinusSign()
      */
@@ -146,7 +146,7 @@ struct CharTrait<wchar_t>
         }
         return ch;
     }
-    
+
     /**
      * @copydoc eoos::lib::CharTrait<T>::getMinusSign()
      */
@@ -203,7 +203,7 @@ struct CharTrait<char16_t>
         }
         return ch;
     }
-    
+
     /**
      * @copydoc eoos::lib::CharTrait<T>::getMinusSign()
      */
@@ -258,7 +258,7 @@ struct CharTrait<char32_t>
         }
         return ch;
     }
-    
+
     /**
      * @copydoc eoos::lib::CharTrait<T>::getMinusSign()
      */
@@ -287,7 +287,7 @@ struct CharTrait<char8_t>
     {
         return u8'\0';
     }
-    
+
     /**
      * @copydoc eoos::lib::CharTrait<T>::convertDigitToChar(I)
      */    
