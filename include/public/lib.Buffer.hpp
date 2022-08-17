@@ -31,6 +31,8 @@ class Buffer : public AbstractBuffer<T,A>
 
 public:
 
+    using Parent::isConstructed;
+
     /**
      * @brief Constructor.
      */
@@ -88,6 +90,11 @@ public:
         }
         return *this;
     }
+    
+protected:
+
+    using Parent::setConstructed;
+    using Parent::copy;
 
 private:
 
@@ -123,6 +130,8 @@ class Buffer<T,0,A> : public AbstractBuffer<T,A>
     typedef AbstractBuffer<T,A> Parent;
 
 public:
+
+    using Parent::isConstructed;
 
     /**
      * @brief Constructor.
@@ -229,6 +238,11 @@ public:
         }
         return *this;
     }
+    
+protected:
+
+    using Parent::setConstructed;    
+    using Parent::copy;
 
 private:
 

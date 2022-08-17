@@ -23,8 +23,11 @@ namespace lib
 template <typename T, class A = Allocator>
 class CircularList : public AbstractList<T,A>
 {
+    typedef AbstractList<T,A> Parent;
 
 public:
+
+    using Parent::isConstructed;
 
     /**
      * @brief Constructor.
@@ -69,6 +72,10 @@ public:
         }
         return it;         
     }
+
+protected:
+
+    using Parent::setConstructed;
 
 private:
     
@@ -198,7 +205,7 @@ private:
         {
             if( isModifiedByList() )
             {
-                return ERROR_INDEX;
+                return api::ListIterator<TT>::ERROR_INDEX;
             }                        
             return hasPrevious() ? curs_->getPrevious()->getIndex() : -1;
         }
@@ -242,7 +249,7 @@ private:
         {
             if( isModifiedByList() )
             {
-                return ERROR_INDEX;
+                return api::ListIterator<TT>::ERROR_INDEX;
             }
             return hasNext() ? curs_->getIndex() : -1;
         }
@@ -310,7 +317,7 @@ private:
             }
             if( !list_.isEmpty() )
             {
-                if( index == list_.getLength() )
+                if( static_cast<size_t>(index) == list_.getLength() )
                 {
                     return false;
                 }

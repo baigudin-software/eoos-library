@@ -31,6 +31,9 @@ class BaseString : public AbstractBaseString<T,R,A>
     
 public:
 
+    using Parent::isConstructed;
+    using Parent::convert;
+
     /**
      * @brief Constructor.
      */
@@ -158,6 +161,14 @@ public:
         }
         return str;
     }
+    
+protected:
+
+    using Parent::setConstructed;
+    using Parent::getLengthRaw;
+    using Parent::copyRaw3;
+    using Parent::concatenateRaw3;
+    using Parent::isEqualRaw2;    
 
 private:
 
@@ -251,6 +262,9 @@ class BaseString<T,0,R,A> : public AbstractBaseString<T,R,A>
     typedef AbstractBaseString<T,R,A> Parent;
 
 public:
+
+    using Parent::isConstructed;
+    using Parent::convert;
 
     /**
      * @brief Constructor.
@@ -395,6 +409,14 @@ public:
         }
         return str;
     }
+
+protected:
+
+    using Parent::setConstructed;
+    using Parent::getLengthRaw;
+    using Parent::copyRaw3;
+    using Parent::concatenateRaw3;
+    using Parent::isEqualRaw2;
 
 private:
 

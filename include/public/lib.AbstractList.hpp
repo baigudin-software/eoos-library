@@ -36,6 +36,8 @@ class AbstractList :
     typedef LinkedNode<T,A> Node;
 
 public:
+        
+    using api::List<T>::getListIterator;
 
     /**
      * @brief Destructor.
@@ -228,7 +230,7 @@ public:
     virtual int32_t getIndexOf(T const& element) const
     {
         Node* const node( getNodeByElement(element) );
-        return (node != NULLPTR) ? node->getIndex() : ERROR_INDEX;
+        return (node != NULLPTR) ? node->getIndex() : api::List<T>::ERROR_INDEX;
     }
 
     /**
@@ -239,7 +241,7 @@ public:
         bool_t res( false );
         if( 0 <= index )
         {
-            if( index < getLength() )
+            if( static_cast<size_t>(index) < getLength() )
             {
                 res = true;
             }
@@ -252,8 +254,8 @@ public:
      */
     virtual api::Iterator<T>* getIterator()
     {
-        return this->getListIterator(0);
-    }    
+        return getListIterator(0);
+    }
 
 protected:
 
@@ -363,7 +365,7 @@ protected:
         {
             return NULLPTR;
         }
-        if( index == (getLength() - 1) )
+        if( static_cast<size_t>(index) == (getLength() - 1) )
         {
             return last_;
         }
@@ -388,7 +390,7 @@ protected:
         if(len != 0)
         {
             Node* node( last_->getNext() );
-            for(int32_t i(0); i<len; i++)
+            for(size_t i(0); i<len; i++)
             {
                 if(element != node->getElement())
                 {
@@ -442,7 +444,7 @@ protected:
         {
             return true;
         }
-        else if( index > getLength() )
+        else if( static_cast<size_t>(index) > getLength() )
         {
             return true;
         }

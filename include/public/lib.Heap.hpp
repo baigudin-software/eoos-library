@@ -111,7 +111,7 @@ public:
      * @param ptr  Aligned to eight memory address.
      * @return Address of memory or NULLPTR.
      */
-    static void* operator new(size_t, uintptr_t const ptr)
+    static void* operator new(size_t, uintptr_t const ptr) EOOS_KEYWORD_NOEXCEPT
     {
         void* memory;
         void* address( reinterpret_cast< void* >(ptr) );

@@ -23,8 +23,11 @@ namespace lib
 template <typename T, class A = Allocator>
 class LinkedList : public AbstractList<T,A>
 {
+    typedef AbstractList<T,A> Parent;
 
 public:
+
+    using Parent::isConstructed;
 
     /**
      * @brief Constructor.
@@ -74,6 +77,10 @@ public:
         return it;        
     }
 
+protected:
+
+    using Parent::setConstructed;
+
 private:
 
     /**
@@ -112,7 +119,7 @@ private:
             , curs_(NULLPTR)
             , rindex_(ILLEGAL_INDEX) {
             bool_t const isConstructed( construct(index) );
-            this->setConstructed( isConstructed );
+            setConstructed( isConstructed );
         }
 
         /**
@@ -199,7 +206,7 @@ private:
         {
             if( isModifiedByList() )
             {
-                return ERROR_INDEX;
+                return api::ListIterator<TT>::ERROR_INDEX;
             }                        
             if( !hasPrevious() )
             {
@@ -255,7 +262,7 @@ private:
         {
             if( isModifiedByList() )
             {
-                return ERROR_INDEX;
+                return api::ListIterator<TT>::ERROR_INDEX;
             }            
             return hasNext() ? curs_->getIndex() : list_.getLength();
         }

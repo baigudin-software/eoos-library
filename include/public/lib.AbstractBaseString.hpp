@@ -30,6 +30,8 @@ class AbstractBaseString : public Object<A>, public api::String<T>
 
 public:
 
+    using api::String<T>::getLength;
+
     /**
      * @brief Destructor.
      */
@@ -163,7 +165,7 @@ public:
     {
         static_cast<void>( concatenateRaw(source) );
         return *this;
-    }
+    }    
 
 protected:
 

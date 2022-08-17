@@ -31,6 +31,10 @@ class AbstractBuffer : public NonCopyable<A>, public api::SequenceContainer<T>, 
 
 public:
 
+public:
+
+    using api::SequenceContainer<T>::getData;
+
     /**
      * @brief Destructor.
      */
