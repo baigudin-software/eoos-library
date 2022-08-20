@@ -49,8 +49,9 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param pointer A pointer to get ownership.
      * @note If the shared object is not able to be constructed, an object passed by the pointer will be deleted.
+     *
+     * @param pointer A pointer to get ownership.
      */
     explicit SharedPointer(T* const pointer) 
         : Object<A>()
@@ -239,7 +240,7 @@ public:
     }
     
     /**
-     * @brief Swap this managed object with an object magaged by given smart object.
+     * @brief Swaps this managed object with an object managed by given smart object.
      *
      * @param obj A smart object to swap managed objects.
      */    

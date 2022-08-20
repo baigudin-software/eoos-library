@@ -181,8 +181,8 @@ public:
     /**
      * @brief Constructor.
      *
-     * NOTE 1: Given external buffer has to exist until this object is alive.
-     * NOTE 2: A passed illegal element will be copied to an internal data of the class.
+     * @note Given external buffer has to exist until this object is alive.
+     * @note A passed illegal element will be copied to an internal data of the class.
      *
      * @param length  Number of elements.
      * @param buf     Pointer to external buffer.

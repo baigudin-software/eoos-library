@@ -34,7 +34,7 @@ class UniquePointer : public Object<A>, public api::SmartPointer<T>
 public:
 
     /**
-     * @brief Constructor an empty unique object.
+     * @brief Constructor of an empty unique object.
      */
     UniquePointer() 
         : Object<A>()
@@ -47,8 +47,9 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param pointer A pointer to get ownership.
      * @note If the unique object is not able to be constructed, an object passed by the pointer will be deleted.
+     *
+     * @param pointer A pointer to get ownership.
      */
     explicit UniquePointer(T* const pointer) 
         : Object<A>()
@@ -209,7 +210,7 @@ public:
     }
     
     /**
-     * @brief Swap this managed object with an object magaged by given smart object.
+     * @brief Swaps this managed object with an object managed by given smart object.
      *
      * @param obj A smart object to swap managed objects.
      */

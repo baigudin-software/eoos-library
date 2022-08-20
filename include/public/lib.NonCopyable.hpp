@@ -15,7 +15,7 @@ namespace lib
 
 /**
  * @class NonCopyable
- * @brief Root class of the operating system for objects which cannot be copied.
+ * @brief Next to root class of the operating system for objects which cannot be copied or moved.
  *
  * @tparam A Heap memory allocator class. 
  */

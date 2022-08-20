@@ -15,6 +15,9 @@ namespace lib
 
 /**
  * @struct CharTrait<T>
+ * @brief Abstract basic character operations.
+ *
+ * Has explicit template specializations for char_t, wchar_t, char16_t, char32_t, char8_t types.
  *
  * @tparam T A data type of string characters.
  */
@@ -33,6 +36,8 @@ struct CharTrait
      *
      * @param val  A value that would be converted to a character.
      * @return Converted character as integer.
+     *
+     * @tparam I An integer data type to be converted.
      */    
     template <typename I>
     static T convertDigitToChar(I val);
@@ -48,8 +53,7 @@ struct CharTrait
 
 /**
  * @struct CharTrait<char_t>
- *
- * Ordinary character literal.
+ * @brief Ordinary character literal.
  */
 template <>
 struct CharTrait<char_t>
@@ -103,8 +107,7 @@ struct CharTrait<char_t>
 
 /**
  * @struct CharTrait<wchar_t>
- *
- * Wide character literal.
+ * @brief Wide character literal.
  */
 template <>
 struct CharTrait<wchar_t>
@@ -160,8 +163,7 @@ struct CharTrait<wchar_t>
 
 /**
  * @struct CharTrait<char16_t>
- *
- * UTF-16 character literal.
+ * @brief UTF-16 character literal.
  */
 template <>
 struct CharTrait<char16_t>
@@ -215,8 +217,7 @@ struct CharTrait<char16_t>
 
 /**
  * @struct CharTrait<char32_t>
- *
- * UTF-32 character literal.
+ * @brief UTF-32 character literal.
  */
 template <>
 struct CharTrait<char32_t>
@@ -274,8 +275,7 @@ struct CharTrait<char32_t>
 
 /**
  * @struct CharTrait<char8_t>
- *
- * UTF-8 character literal.
+ * @brief UTF-8 character literal.
  */
 template <>
 struct CharTrait<char8_t>

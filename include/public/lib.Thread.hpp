@@ -33,7 +33,7 @@ public:
      *
      * @param task A task interface whose start function is invoked when this thread is started.
      */
-    explicit Thread(api::Task& task) 
+    Thread(api::Task& task)
         : NonCopyable<A>()
         , api::Thread()
         , thread_(NULLPTR) {

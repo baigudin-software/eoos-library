@@ -15,7 +15,7 @@ namespace lib
     
 /**
  * @class Align<T,S,A>
- * @brief Alignment of simple types to byte boundary of memory.
+ * @brief Alignment of fundamental types to byte boundary of memory.
  * 
  * MISRA C++ NOTE: Any signed underlying types shall not be used
  * for not violating the 5-0-21 MISRA C++:2008 Rule.
@@ -59,6 +59,11 @@ public:
         : ObjectAllocator<A>(obj) {
         copy(obj);
     }
+    
+    /**
+     * @brief Destructor.
+     */
+    ~Align() {}    
 
     /**
      * @brief Assignment operator.
@@ -234,6 +239,8 @@ private:
      */
     ucell_t val_[S];
 
+    template <typename T0, size_t S0, class A0> friend bool_t operator==(Align<T0,S0,A0> const&, Align<T0,S0,A0> const&);
+    template <typename T0, size_t S0, class A0> friend bool_t operator!=(Align<T0,S0,A0> const&, Align<T0,S0,A0> const&);
 };
 
 /**

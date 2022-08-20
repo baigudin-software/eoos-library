@@ -65,6 +65,7 @@ public:
 protected:
 
     using Parent::setConstructed;
+    using Parent::setTask;
 
 private:
 
@@ -75,7 +76,7 @@ private:
      */
     bool_t construct()
     {
-        return this->setTask(*this);
+        return setTask(*this);
     }
 
 };

@@ -34,7 +34,7 @@ public:
      *
      * @param mutex A mutex for guarding.
      */
-    explicit MutexGuard(api::Mutex& mutex) 
+    MutexGuard(api::Mutex& mutex) 
         : NonCopyable<A>()
         , mutex_ (mutex){
         bool_t const isConstructed( construct() );

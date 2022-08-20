@@ -20,7 +20,7 @@ namespace lib
     
 /**
  * @class AbstractList<T,A>
- * @brief Abstract class for sequential accessing to data store.
+ * @brief Abstract list class.
  *
  * @tparam T Data type of container element.
  * @tparam A Heap memory allocator class.

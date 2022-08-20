@@ -17,7 +17,7 @@ namespace lib
     
 /**
  * @class AbstractBuffer<T,A>
- * @brief Abstract class for some buffers.
+ * @brief Abstract buffer class.
  *
  * @tparam T Data type of buffer element.
  * @tparam A Heap memory allocator class.

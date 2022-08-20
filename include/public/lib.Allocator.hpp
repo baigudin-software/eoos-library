@@ -35,7 +35,7 @@ public:
     }
 
     /**
-     * @brief Frees an allocated memory.
+     * @brief Frees allocated memory.
      *
      * @param ptr Address of allocated memory block or a null pointer.
      */
