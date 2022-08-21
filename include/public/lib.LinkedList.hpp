@@ -306,6 +306,10 @@ private:
         {
             return list_.isIllegal(value);
         }
+        
+    protected:
+
+        using Parent::setConstructed;
 
     private:
 
