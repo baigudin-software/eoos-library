@@ -180,16 +180,15 @@ protected:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    AbstractBaseString(AbstractBaseString const& obj) noexcept
+    AbstractBaseString(AbstractBaseString const& obj)
         : Object<A>(obj)
         , api::String<T>() {
     }
 
-
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    AbstractBaseString& operator=(AbstractBaseString const& obj) & noexcept
+    AbstractBaseString& operator=(AbstractBaseString const& obj)
     {
         if( isConstructed() && (this != &obj) )
         {
