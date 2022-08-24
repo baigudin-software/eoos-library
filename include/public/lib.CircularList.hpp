@@ -359,12 +359,12 @@ private:
             /**
              * @brief Quantity of chang made by iterating list.
              */
-            uint32_t const& list;
+            uint32_t const& list; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
             /**
              * @brief Quantity of chang made by the iterator.
              */
-            uint32_t self;
+            uint32_t self; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         };
 

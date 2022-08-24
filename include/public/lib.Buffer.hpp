@@ -255,12 +255,12 @@ private:
     bool_t construct(size_t const length)
     {
         bool_t res( false );
-        if( isConstructed() && length > 0 )
+        if( isConstructed() && (length > 0U) )
         {
             if(buf_ == NULLPTR)
             {
                 void* const addr( A::allocate(length * (sizeof(T))) );
-                buf_ = reinterpret_cast<T*>( addr );
+                buf_ = reinterpret_cast<T*>( addr ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
             }
             res = buf_ != NULLPTR;
         }

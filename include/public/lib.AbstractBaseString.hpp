@@ -50,11 +50,11 @@ public:
     /**
      * @copydoc eoos::api::Collection::isEmpty()
      */
-    virtual bool_t isEmpty() const
+    virtual bool_t isEmpty() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         bool_t res;
         size_t const length( getLength() );
-        if(length == 0)
+        if(length == 0U)
         {
             res = true;
         }
@@ -138,7 +138,7 @@ public:
      * @return True if the conversion has been completed successfully.
      */
     template <typename I>
-    bool_t convert(I const value, Number::Base const base = Number::BASE_10)
+    bool_t convert(I const value, Number::Base const base = Number::BASE_10) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return convertToString(value, base);
     } 
@@ -229,7 +229,7 @@ protected:
      */
     static size_t getLengthRaw(T const* str)
     {
-        size_t len( 0 ); 
+        size_t len( 0U ); 
         T const null( R::getTerminator() );
         while( *str != null )
         {
@@ -253,7 +253,7 @@ protected:
             T const null( R::getTerminator() );
             while(true)
             {
-                if( cnt == 0 )
+                if( cnt == 0U )
                 {
                     *dst = null;
                     break;
@@ -314,8 +314,8 @@ protected:
                 {
                     break;
                 }
-                ++str1;
-                ++str2;
+                ++str1; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
+                ++str2; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
             }
         }
         return res;    
@@ -377,7 +377,8 @@ private:
         bool_t isNegative( false );
         int32_t index( LENGTH - 1 );
         T temp[LENGTH];
-        temp[index--] = R::getTerminator();
+        temp[index] = R::getTerminator();
+		index -= 1;		
         do
         {
             // Test for available base
@@ -420,7 +421,8 @@ private:
             while(index >= 0)
             {
                 I digit( module % static_cast<I>(base) );
-                temp[index--] = R::convertDigitToChar(digit);
+                temp[index] = R::convertDigitToChar(digit);
+                index -= 1;
                 module = module / static_cast<I>(base);
                 if(module == 0)
                 {
@@ -430,14 +432,16 @@ private:
             // Add minus
             if( isNegative && (index >= 0) )
             {
-                temp[index--] = R::getMinusSign();
+                temp[index] = R::getMinusSign();
+                index -= 1;
             }
             res = true;
         }
         while(false);
         if(res == true)
         {
-            res = copyRaw(&temp[++index]);
+			index += 1;
+            res = copyRaw(&temp[index]);
         }
         return res;
     }

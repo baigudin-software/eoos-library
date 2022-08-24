@@ -263,8 +263,8 @@ private:
             if( isModifiedByList() )
             {
                 return api::ListIterator<TT>::ERROR_INDEX;
-            }            
-            return hasNext() ? curs_->getIndex() : list_.getLength();
+            }      
+            return hasNext() ? curs_->getIndex() : static_cast<int32_t>( list_.getLength() );
         }
 
         /**
@@ -370,12 +370,12 @@ private:
             /**
              * @brief Quantity of chang made by iterating list.
              */
-            uint32_t const& list;
+            uint32_t const& list; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
             /**
              * @brief Quantity of chang made by the iterator.
              */
-            uint32_t self;
+            uint32_t self; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         };
 

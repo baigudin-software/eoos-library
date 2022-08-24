@@ -114,7 +114,7 @@ public:
     static void* operator new(size_t, uintptr_t const ptr) EOOS_KEYWORD_NOEXCEPT
     {
         void* memory;
-        void* address( reinterpret_cast< void* >(ptr) );
+        void* address( reinterpret_cast< void* >(ptr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         if(address == NULLPTR)
         {
             // No class constructor call
@@ -175,8 +175,8 @@ private:
             return false;
         }
         // Test memory
-        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
-        void*  ptr ( reinterpret_cast<void*>(addr) );
+        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
+        void*  ptr ( reinterpret_cast<void*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         if( !isMemoryAvailable(ptr, data_.size) )
         {
             return false;
@@ -193,8 +193,8 @@ private:
      */
     HeapBlock* getFirstHeapBlock() const
     {
-        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) );
-        return reinterpret_cast<HeapBlock*>(addr);
+        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
+        return reinterpret_cast<HeapBlock*>(addr); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
     }
 
     /**
@@ -204,8 +204,8 @@ private:
      */
     static HeapBlock* getHeapBlock(void* const data)
     {
-        uintptr_t const addr( reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock) );
-        return reinterpret_cast<HeapBlock*>(addr);
+        uintptr_t const addr( reinterpret_cast<uintptr_t>(data) - sizeof(HeapBlock) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
+        return reinterpret_cast<HeapBlock*>(addr); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
     }
 
     /**
@@ -236,7 +236,7 @@ private:
             ptr = NULLPTR;
         }
         // Memory address has to be aligned to eight
-        if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL )
+        if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL ) ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
         {
             ptr = NULLPTR;
         }
@@ -255,7 +255,7 @@ private:
     static bool_t isMemoryAvailable(void* const addr, size_t const size)
     {
         size_t mask( static_cast<ucell_t>(-1) );
-        ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) );
+        ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         // Value test
         for( size_t i(0UL); i<size; i++)
         {
@@ -310,12 +310,12 @@ private:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    Heap(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+    Heap(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
 
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */
-    Heap& operator=(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+    Heap& operator=(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
     
     #if EOOS_CPP_STANDARD >= 2011
 
@@ -343,7 +343,7 @@ private:
         /**
          * @copydoc eoos::lib::Allocator::allocate(size_t)
          */
-        static void* allocate(size_t size)
+        static void* allocate(size_t)
         {
             return NULLPTR;
         }
@@ -351,7 +351,7 @@ private:
         /**
          * @copydoc eoos::lib::Allocator::allocate(size_t).
          */
-        static void free(void* ptr)
+        static void free(void*)
         {
         }
     };
@@ -606,7 +606,7 @@ private:
                     break;
                 }
                 // The passed address must be multipled to eight
-                if((reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL)
+                if((reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL) ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
                 {
                     break;
                 }
@@ -658,8 +658,8 @@ private:
          */
         void* data()
         {
-            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) );
-            return reinterpret_cast<void*>(addr);
+            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
+            return reinterpret_cast<void*>(addr); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         }
 
         /**
@@ -669,19 +669,19 @@ private:
          */
         void* next(size_t const size)
         {
-            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size );
-            return reinterpret_cast<void*>(addr);
+            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(HeapBlock) + size ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
+            return reinterpret_cast<void*>(addr); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         }
 
         /**
          * @copydoc eoos::Object::Object(Object const&)
          */
-        HeapBlock(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+        HeapBlock(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
     
         /**
          * @copydoc eoos::Object::operator=(Object const&)
          */
-        HeapBlock& operator=(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+        HeapBlock& operator=(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
         
         #if EOOS_CPP_STANDARD >= 2011
     
@@ -790,7 +790,7 @@ private:
         /**
          * @brief Thread allocation protection.
          */
-        api::Mutex* mutex;
+        api::Mutex* mutex; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Actual size of heap.
@@ -807,12 +807,12 @@ private:
         /**
          * @copydoc eoos::Object::Object(Object const&)
          */
-        HeapData(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+        HeapData(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
     
         /**
          * @copydoc eoos::Object::operator=(Object const&)
          */
-        HeapData& operator=(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+        HeapData& operator=(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
         
         #if EOOS_CPP_STANDARD >= 2011
     

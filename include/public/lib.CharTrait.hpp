@@ -126,26 +126,26 @@ struct CharTrait<wchar_t>
     template <typename I>
     static wchar_t convertDigitToChar(I val)
     {
-        char_t ch( L' ' );
+        wchar_t ch( L' ' ); ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
         switch(val)
         {
-            case 0x00: { ch = L'0'; break;}
-            case 0x01: { ch = L'1'; break;}
-            case 0x02: { ch = L'2'; break;}
-            case 0x03: { ch = L'3'; break;}
-            case 0x04: { ch = L'4'; break;}
-            case 0x05: { ch = L'5'; break;}
-            case 0x06: { ch = L'6'; break;}
-            case 0x07: { ch = L'7'; break;}
-            case 0x08: { ch = L'8'; break;}
-            case 0x09: { ch = L'9'; break;}
-            case 0x0A: { ch = L'a'; break;}
-            case 0x0B: { ch = L'b'; break;}
-            case 0x0C: { ch = L'c'; break;}
-            case 0x0D: { ch = L'd'; break;}
-            case 0x0E: { ch = L'e'; break;}
-            case 0x0F: { ch = L'f'; break;}
-            default:   { ch = L' '; break;}
+            case 0x00: { ch = L'0'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x01: { ch = L'1'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x02: { ch = L'2'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x03: { ch = L'3'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x04: { ch = L'4'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x05: { ch = L'5'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x06: { ch = L'6'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x07: { ch = L'7'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x08: { ch = L'8'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x09: { ch = L'9'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x0A: { ch = L'a'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x0B: { ch = L'b'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x0C: { ch = L'c'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x0D: { ch = L'd'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x0E: { ch = L'e'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            case 0x0F: { ch = L'f'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            default:   { ch = L' '; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
         }
         return ch;
     }
@@ -182,7 +182,7 @@ struct CharTrait<char16_t>
     template <typename I>
     static char16_t convertDigitToChar(I val)
     {
-        char_t ch( u' ' );
+        char16_t ch( u' ' );
         switch(val)
         {
             case 0x00: { ch = u'0'; break;}
@@ -236,7 +236,7 @@ struct CharTrait<char32_t>
     template <typename I>
     static char32_t convertDigitToChar(I val)
     {
-        char_t ch( U' ' );
+        char32_t ch( U' ' );
         switch(val)
         {
             case 0x00: { ch = U'0'; break;}
@@ -294,7 +294,7 @@ struct CharTrait<char8_t>
     template <typename I>
     static char8_t convertDigitToChar(I val)
     {
-        char_t ch( u8' ' );
+        char8_t ch( u8' ' );
         switch(val)
         {
             case 0x00: { ch = u8'0'; break;}

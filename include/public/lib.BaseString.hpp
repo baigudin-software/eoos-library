@@ -91,7 +91,7 @@ public:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    BaseString(BaseString const& obj)
+    BaseString(BaseString const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         : AbstractBaseString<T,R,A>(obj) {
         bool_t const isConstructed( construct( obj.getChar() ) );
         setConstructed( isConstructed );
@@ -140,7 +140,7 @@ public:
      */
     virtual size_t getLength() const
     {
-        size_t length( 0 );
+        size_t length( 0U );
         if( isConstructed() )
         {
             // @todo Rework here not to calculate length, but take it form a class member.
@@ -332,7 +332,7 @@ public:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    BaseString(BaseString const& obj)
+    BaseString(BaseString const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
         : AbstractBaseString<T,R,A>(obj)
         , len_(0)
         , str_(NULLPTR){
@@ -388,7 +388,7 @@ public:
      */
     virtual size_t getLength() const
     {
-        size_t length( 0 );
+        size_t length( 0U );
         if( isConstructed() )
         {
             // @todo Rework here not to calculate length, but take it form a class member.
@@ -551,10 +551,10 @@ private:
      * @param length A number of string characters.
      * @return True if the context has been allocated successfully.
      */
-    bool_t allocate(int32_t const length)
+    bool_t allocate(size_t const length)
     {
         bool_t res( false );
-        if(str_ == NULLPTR && length != 0)
+        if( (str_ == NULLPTR) && (length != 0U) )
         {
             size_t const size( calculateSize(length) );
             T* const string( reinterpret_cast<T*>( A::allocate(size) ) );
@@ -578,7 +578,7 @@ private:
         {
             A::free(str_);
             str_ = NULLPTR;
-            len_ = 0;
+            len_ = 0U;
         }
     }
     
@@ -588,7 +588,7 @@ private:
     void clean()
     {
         str_ = NULLPTR;
-        len_ = 0;
+        len_ = 0U;
     }
     
     /**
@@ -599,7 +599,7 @@ private:
      */
     static size_t calculateSize(size_t len)
     {
-        return len * sizeof(T) + sizeof(T);
+        return (len * sizeof(T)) + sizeof(T);
     }
     
     /**
@@ -618,7 +618,7 @@ private:
      *
      * @note Cannot be zero.
      */
-    static const size_t LENGTH_ON_CONSTRUCTION = 7;
+    static const size_t LENGTH_ON_CONSTRUCTION = 7U;
     
     /**
      * @brief Lenght of the buffer of characters of this string.

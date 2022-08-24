@@ -35,8 +35,8 @@ public:
         void* res( NULLPTR );
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            cell_t const* sp( static_cast<cell_t const*>(src) );
-            cell_t* dp( static_cast<cell_t*>(dst) );
+            cell_t const* sp( static_cast<cell_t const*>(src) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
+            cell_t* dp( static_cast<cell_t*>(dst) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
             while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             {
                 *dp++ = *sp++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
@@ -59,7 +59,7 @@ public:
         void* res( NULLPTR );
         if(dst != NULLPTR)
         {
-            cell_t* dp( static_cast<cell_t*>(dst) );
+            cell_t* dp( static_cast<cell_t*>(dst) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
             cell_t const uc( val );
             while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             {

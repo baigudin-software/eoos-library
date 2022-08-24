@@ -55,7 +55,7 @@ public:
      */
     virtual size_t getLength() const
     {
-        size_t length( 0 );
+        size_t length( 0U );
         if( isConstructed() )
         {
             length = length_;
@@ -71,7 +71,7 @@ public:
         bool_t res( true );
         if( isConstructed() )
         {
-            res = length_ == 0;
+            res = length_ == 0U;
         }
         return res;
     }
@@ -213,7 +213,7 @@ protected:
             size_t const size( ( size1 < size2 ) ? size1 : size2 );
             T* const buf1( getData() );
             T* const buf2( buf.getData() );
-            for(size_t i(0); i<size; i++)
+            for(size_t i(0U); i<size; i++)
             {
                 buf1[i] = buf2[i];
             }

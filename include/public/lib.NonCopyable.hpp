@@ -43,12 +43,12 @@ private:
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    NonCopyable(NonCopyable const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+    NonCopyable(NonCopyable const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
     
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    NonCopyable& operator=(NonCopyable const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2
+    NonCopyable& operator=(NonCopyable const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
 
     #if EOOS_CPP_STANDARD >= 2011
     

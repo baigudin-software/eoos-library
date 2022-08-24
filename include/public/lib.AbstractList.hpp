@@ -44,7 +44,7 @@ public:
      */
     virtual ~AbstractList()
     {
-        clear();
+        AbstractList<T,A>::clear();
     }
 
     /**
@@ -60,7 +60,8 @@ public:
      */
     virtual bool_t add(T const& element)
     {
-        return isConstructed() ? addNode(getLength(), element) : false;
+        size_t const lenght( getLength() );
+        return isConstructed() ? addNode(static_cast<int32_t>(lenght), element) : false;
     }
 
     /**
@@ -78,12 +79,21 @@ public:
     {
         if( isConstructed() )
         {
-            size_t const b( getLength() - 1 );
-            for(size_t i(b); i>=0; i--)
+            size_t const lenght( getLength() );
+            if( lenght != 0U )
             {
-                if( !removeNode( getNodeByIndex(i) ) )
+                int32_t index( static_cast<int32_t>(lenght) - 1 );
+                while(true)
                 {
-                    break;
+                    if( !removeNode( getNodeByIndex(index) ) )
+                    {
+                        break;
+                    }
+                    if(index == 0)
+                    {
+                        break;
+                    }        
+                    index -= 1;
                 }
             }
         }
@@ -102,7 +112,8 @@ public:
      */
     virtual bool_t removeLast()
     {
-        return remove( getLength() - 1 );
+        size_t const length( getLength() );
+        return remove( static_cast<int32_t>(length) - 1 );
     }
 
     /**
@@ -150,7 +161,8 @@ public:
      */
     virtual T& getLast()
     {
-        return get( getLength() - 1 );
+        size_t const length( getLength() );
+        return get( static_cast<int32_t>(length) - 1 );
     }
 
     /**
@@ -171,10 +183,10 @@ public:
      */
     virtual size_t getLength() const
     {
-        size_t length( 0 );
+        size_t length( 0U );
         if( isConstructed() )
         {
-            length = (last_ == NULLPTR) ? 0 : (last_->getIndex() + 1);
+            length = (last_ == NULLPTR) ? 0U : ( static_cast<size_t>(last_->getIndex()) + 1U);
         }
         return length;
     }
@@ -252,7 +264,7 @@ public:
     /**
      * @copydoc eoos::api::Iterable::getIterator()
      */
-    virtual api::Iterator<T>* getIterator()
+    virtual api::Iterator<T>* getIterator() ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
     {
         return getListIterator(0);
     }
@@ -365,7 +377,7 @@ protected:
         {
             return NULLPTR;
         }
-        if( static_cast<size_t>(index) == (getLength() - 1) )
+        if( static_cast<size_t>(index) == (getLength() - 1U) )
         {
             return last_;
         }
@@ -387,10 +399,10 @@ protected:
     {
         Node* res( NULLPTR );
         size_t const len( getLength() );
-        if(len != 0)
+        if(len != 0U)
         {
             Node* node( last_->getNext() );
-            for(size_t i(0); i<len; i++)
+            for(size_t i(0U); i<len; i++)
             {
                 if(element != node->getElement())
                 {
@@ -418,7 +430,7 @@ protected:
         }
         if(node == last_)
         {
-            if(getLength() == 1)
+            if(getLength() == 1U)
             {
                 last_ = NULLPTR;
             }
