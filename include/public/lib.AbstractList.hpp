@@ -404,7 +404,7 @@ protected:
                 }
                 res = node;
                 break;
-            }
+            } ///< UT Justified Line: Compiler dependency
         }
         return res;
     }
@@ -448,11 +448,11 @@ protected:
         if( index < 0 )
         {
             return true;
-        }
+        }   ///< UT Justified Line: Compiler dependency
         else if( static_cast<size_t>(index) > getLength() )
         {
             return true;
-        }
+        }   ///< UT Justified Line: Compiler dependency
         else
         {
             return false;

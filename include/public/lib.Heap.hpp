@@ -166,12 +166,12 @@ private:
             return false;
         }
         // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
-        if((sizeof(Heap) & 0x7UL) != 0UL)
-        {
+        if( (sizeof(Heap) & 0x7UL) != 0UL )
+        {   ///< UT Justified Branch: HW dependency
             return false;
         }
-        if((sizeof(HeapBlock) & 0x7UL) != 0UL)
-        {
+        if( (sizeof(HeapBlock) & 0x7UL) != 0UL )
+        {   ///< UT Justified Branch: HW dependency
             return false;
         }
         // Test memory
@@ -221,8 +221,8 @@ private:
     static void* create(void* ptr)
     {
         // Size of this class has to be multipled to eight
-        if((sizeof(Heap) & 0x7UL) != 0UL)
-        {
+        if( (sizeof(Heap) & 0x7UL) != 0UL )
+        {   ///< UT Justified Branch: HW dependency
             ptr = NULLPTR;
         }
         // Testing memory for self structure data
@@ -597,7 +597,7 @@ private:
             {
                 // Size of this class must be multipled to eight
                 if((sizeof(HeapBlock) & 0x7UL) != 0UL)
-                {
+                {   ///< UT Justified Branch: HW dependency
                     break;
                 }
                 // The passed address must be multipled to eight
@@ -614,7 +614,7 @@ private:
         /**
          * @brief Operator delete.
          */
-        static void operator delete(void*, void*) {}
+        static void operator delete(void*, void*) {}  ///< UT Justified Branch: Language dependency
 
     private:
 

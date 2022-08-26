@@ -63,7 +63,7 @@ public:
      * @brief Operator delete.
      */
     static void operator delete(void*, void*)
-    {
+    {   ///< UT Justified Branch: Language dependency
     }
 
     #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
