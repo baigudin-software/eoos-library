@@ -69,7 +69,7 @@ private:
         do
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             if( !mutex_.isConstructed() )

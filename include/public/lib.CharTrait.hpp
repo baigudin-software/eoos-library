@@ -91,7 +91,7 @@ struct CharTrait<char_t>
             case 0x0D: { ch = 'd'; break;}
             case 0x0E: { ch = 'e'; break;}
             case 0x0F: { ch = 'f'; break;}
-            default:   { ch = ' '; break;}
+            default:   { ch = ' '; break;} ///< UT Justified Branch: SCA dependency
         }
         return ch;
     }
@@ -145,7 +145,7 @@ struct CharTrait<wchar_t>
             case 0x0D: { ch = L'd'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
             case 0x0E: { ch = L'e'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
             case 0x0F: { ch = L'f'; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
-            default:   { ch = L' '; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11
+            default:   { ch = L' '; break;} ///< SCA MISRA-C++:2008 Defected Rule 5-0-11 and UT Justified Branch: SCA dependency
         }
         return ch;
     }
@@ -201,7 +201,7 @@ struct CharTrait<char16_t>
             case 0x0D: { ch = u'd'; break;}
             case 0x0E: { ch = u'e'; break;}
             case 0x0F: { ch = u'f'; break;}
-            default:   { ch = u' '; break;}
+            default:   { ch = u' '; break;} ///< UT Justified Branch: SCA dependency
         }
         return ch;
     }
@@ -255,7 +255,7 @@ struct CharTrait<char32_t>
             case 0x0D: { ch = U'd'; break;}
             case 0x0E: { ch = U'e'; break;}
             case 0x0F: { ch = U'f'; break;}
-            default:   { ch = U' '; break;}
+            default:   { ch = U' '; break;} ///< UT Justified Branch: SCA dependency
         }
         return ch;
     }
@@ -313,7 +313,7 @@ struct CharTrait<char8_t>
             case 0x0D: { ch = u8'd'; break;}
             case 0x0E: { ch = u8'e'; break;}
             case 0x0F: { ch = u8'f'; break;}
-            default:   { ch = u8' '; break;}
+            default:   { ch = u8' '; break;} ///< UT Justified Branch: SCA dependency
         }
         return ch;
     }

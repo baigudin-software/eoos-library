@@ -110,12 +110,12 @@ private:
         do
         {   
             if( !Self::isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             mutex_ = sys::Call::get().createMutex();
             if( !Parent::isConstructed(mutex_) )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 break;
             }
             res = true;

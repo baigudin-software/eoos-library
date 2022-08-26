@@ -260,7 +260,7 @@ private:
         do
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 D::free(pointer);
                 break;
             }

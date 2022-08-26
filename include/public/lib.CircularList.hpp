@@ -304,11 +304,11 @@ private:
         bool_t construct(int32_t index)
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
             if( !list_.isConstructed())
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
             if( list_.isIndexOutOfBounds(index) )

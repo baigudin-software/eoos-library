@@ -144,13 +144,13 @@ private:
             {
                 return false;
             }
-            if(list_.add(getNextIndex(), element) == false)
+            bool_t const res( list_.add(getNextIndex(), element) );			
+            if(res == true)
             {
-                return false;
+                count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
+                rindex_ = ILLEGAL_INDEX;
             }
-            count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
-            rindex_ = ILLEGAL_INDEX;
-            return true;
+            return res;
         }
 
         /**
@@ -321,11 +321,11 @@ private:
         bool_t construct(int32_t const index)
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
             if( !list_.isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
             if( list_.isIndexOutOfBounds(index) )

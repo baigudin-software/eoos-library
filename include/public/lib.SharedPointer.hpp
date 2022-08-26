@@ -272,7 +272,7 @@ private:
         do
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 D::free(pointer);
                 break;
             }
@@ -283,7 +283,7 @@ private:
                 break;
             }
             if( !cb_->isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 D::free(pointer);                
                 delete cb_;
                 cb_ = NULLPTR;
@@ -413,11 +413,11 @@ private:
             do
             {
                 if( !isConstructed() )
-                {
+                {   ///< UT Justified Branch: HW dependency
                     break;
                 }
                 if( !mutex_.isConstructed() )
-                {
+                {   ///< UT Justified Branch: HW dependency
                     break;
                 }
                 res = true;

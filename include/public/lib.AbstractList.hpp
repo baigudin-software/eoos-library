@@ -79,22 +79,16 @@ public:
     {
         if( isConstructed() )
         {
-            size_t const lenght( getLength() );
-            if( lenght != 0U )
+            size_t lenght( getLength() );
+            while(true)
             {
-                int32_t index( static_cast<int32_t>(lenght) - 1 );
-                while(true)
+                if(lenght == 0U)
                 {
-                    if( !removeNode( getNodeByIndex(index) ) )
-                    {
-                        break;
-                    }
-                    if(index == 0)
-                    {
-                        break;
-                    }        
-                    index -= 1;
+                    break;
                 }
+                Node* const node( getNodeByIndex(0) );
+                static_cast<void>( removeNode(node) );
+                lenght -= 1U;
             }
         }
     }
@@ -323,11 +317,10 @@ protected:
         Node* const node( new Node(element) );
         if( node == NULLPTR )
         {
-            delete node;
             return false;
         }
         if( !node->isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             delete node;
             return false;
         }        
@@ -341,7 +334,7 @@ protected:
         {
             Node* const after( getNodeByIndex(index - 1) );
             if(after == NULLPTR)
-            {
+            {   ///< UT Justified Branch: SW dependency
                 delete node;
                 return false;
             }
@@ -355,7 +348,7 @@ protected:
         {
             Node* const before( getNodeByIndex(0) );
             if(before == NULLPTR)
-            {
+            {   ///< UT Justified Branch: SW dependency
                 delete node;
                 return false;
             }

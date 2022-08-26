@@ -45,7 +45,7 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~Heap()
+    virtual ~Heap() ///< UT Justified Branch: Language dependency
     {
         data_.key = 0;
     }
@@ -56,11 +56,11 @@ public:
     virtual bool_t isConstructed() const
     {
         if( data_.key != HEAP_KEY )
-        {
+        {   ///< UT Justified Branch: HW dependency
             return false;
         }
         if( !getFirstHeapBlock()->isConstructed() )
-        {
+        {   ///< UT Justified Branch: HW dependency
             return false;
         }
         return  true;
@@ -131,12 +131,12 @@ public:
     /**
      * @brief Operator delete.
      */
-    static void operator delete(void*, uintptr_t) {}    
+    static void operator delete(void*, uintptr_t) {} ///< UT Justified Branch: Language dependency
 
     /**
      * @brief Operator delete.
      */
-    static void operator delete(void*) {}
+    static void operator delete(void*) {} ///< UT Justified Branch: Language dependency
 
 private:
 
@@ -162,7 +162,7 @@ private:
     {
         // Crop a size to multiple of eight
         if( (sizeof(HeapBlock) + 16UL) > data_.size )
-        {
+        {   ///< UT Justified Branch: HW dependency
             return false;
         }
         // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
@@ -178,7 +178,7 @@ private:
         uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
         void*  ptr ( reinterpret_cast<void*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         if( !isMemoryAvailable(ptr, data_.size) )
-        {
+        {   ///< UT Justified Branch: HW dependency
             return false;
         }
         // Alloc first heap block
@@ -232,12 +232,12 @@ private:
         // class. This way would help to restore original
         // memory data if the test were failed.
         if( !isMemoryAvailable(ptr, sizeof(Heap)) )
-        {
+        {   ///< UT Justified Branch: HW dependency
             ptr = NULLPTR;
         }
         // Memory address has to be aligned to eight
         if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL ) ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
-        {
+        {   ///< UT Justified Branch: HW dependency
             ptr = NULLPTR;
         }
         return ptr;
@@ -264,7 +264,7 @@ private:
         for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != static_cast<ucell_t>(i & mask))
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
         }
@@ -276,7 +276,7 @@ private:
         for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != static_cast<ucell_t>(0x55555555UL & mask))
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
         }
@@ -288,7 +288,7 @@ private:
         for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != static_cast<ucell_t>(0xAAAAAAAAUL & mask))
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
         }
@@ -300,7 +300,7 @@ private:
         for( size_t i(0UL); i<size; i++)
         {
             if(ptr[i] != 0x00U)
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
         }
@@ -351,7 +351,7 @@ private:
         /**
          * @copydoc eoos::lib::Allocator::allocate(size_t).
          */
-        static void free(void*)
+        static void free(void*) ///< UT Justified Branch: Language dependency
         {
         }
     };
@@ -382,11 +382,6 @@ private:
             }
             #endif
         }
-
-        /**
-         * @brief Destructor.
-         */
-       ~Aligner(){}
 
     private:
 
@@ -507,7 +502,7 @@ private:
             {
                 HeapBlock* next( new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size) );
                 if(next == NULLPTR)
-                {
+                {   ///< UT Justified Branch: HW dependency
                     return NULLPTR;
                 }
                 next->next_ = curr->next_;
@@ -529,7 +524,7 @@ private:
         void free()
         {
             if( !canDelete() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return;
             }
             uint32_t sibling( 0UL );
@@ -607,7 +602,7 @@ private:
                 }
                 // The passed address must be multipled to eight
                 if((reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL) ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
-                {
+                {   ///< UT Justified Branch: HW dependency
                     break;
                 }
                 memory = ptr;
@@ -631,11 +626,11 @@ private:
         bool_t canDelete() const
         {
             if( !isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
             if( !heap_->isConstructed() )
-            {
+            {   ///< UT Justified Branch: HW dependency
                 return false;
             }
             return true;
@@ -776,11 +771,6 @@ private:
             , key(HEAP_KEY) {
             size = (isize & ~0x7UL) - sizeof(Heap);
         }
-
-        /**
-         * @brief Destructor.
-         */
-       ~HeapData(){}
 
         /**
          * @brief First memory block of heap page memory.
