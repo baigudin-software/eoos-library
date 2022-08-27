@@ -462,10 +462,10 @@ private:
         return ( (value > 0) || (value == 0) ) ? true : false;
     }
         
-    template <typename T0, class R0> friend bool_t operator==(api::String<T0> const&, T0 const* const);
-    template <typename T0, class R0> friend bool_t operator==(T0 const* const, api::String<T0> const&);
-    template <typename T0, class R0> friend bool_t operator!=(api::String<T0> const&, T0 const* const);
-    template <typename T0, class R0> friend bool_t operator!=(T0 const* const, api::String<T0> const&);
+    template <typename T0> friend bool_t operator==(api::String<T0> const&, T0 const* const);
+    template <typename T0> friend bool_t operator==(T0 const* const, api::String<T0> const&);
+    template <typename T0> friend bool_t operator!=(api::String<T0> const&, T0 const* const);
+    template <typename T0> friend bool_t operator!=(T0 const* const, api::String<T0> const&);
 };
 
 /**
@@ -488,10 +488,10 @@ inline bool_t operator==(api::String<T> const& source1, api::String<T> const& so
  * @param source2 A source character string 2.
  * @return True if strings are equal.
  */
-template < typename T, class R = CharTrait<T> >
+template <typename T>
 inline bool_t operator==(api::String<T> const& source1, T const* const source2)
 {
-    return AbstractBaseString<T,R>::isEqualRaw2(source1.getChar(), source2);
+    return AbstractBaseString< T,CharTrait<T> >::isEqualRaw2(source1.getChar(), source2);
 }
 
 /**
@@ -501,10 +501,10 @@ inline bool_t operator==(api::String<T> const& source1, T const* const source2)
  * @param source2 A source object interface 2.
  * @return True if strings are equal.
  */
-template < typename T, class R = CharTrait<T> >
+template <typename T>
 inline bool_t operator==(T const* const source1, api::String<T> const& source2)
 {
-    return AbstractBaseString<T,R>::isEqualRaw2(source1, source2.getChar());
+    return AbstractBaseString< T,CharTrait<T> >::isEqualRaw2(source1, source2.getChar());
 }
 
 /**
@@ -527,10 +527,10 @@ inline bool_t operator!=(api::String<T> const& source1, api::String<T> const& so
  * @param source2 A source character string 2.
  * @return True if strings are not  equal.
  */
-template < typename T, class R = CharTrait<T> >
+template <typename T>
 inline bool_t operator!=(api::String<T> const& source1, T const* const source2)
 {
-    return !AbstractBaseString<T,R>::isEqualRaw2(source1.getChar(), source2);
+    return !AbstractBaseString< T,CharTrait<T> >::isEqualRaw2(source1.getChar(), source2);
 }
 
 /**
@@ -540,10 +540,10 @@ inline bool_t operator!=(api::String<T> const& source1, T const* const source2)
  * @param source2 A source object interface 2.
  * @return True if strings are not equal.
  */
-template < typename T, class R = CharTrait<T> >
+template <typename T>
 inline bool_t operator!=(T const* const source1, api::String<T> const& source2)
 {
-    return !AbstractBaseString<T,R>::isEqualRaw2(source1, source2.getChar());
+    return !AbstractBaseString< T,CharTrait<T> >::isEqualRaw2(source1, source2.getChar());
 }
 
 } // namespace lib

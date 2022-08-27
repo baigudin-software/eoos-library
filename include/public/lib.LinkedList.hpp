@@ -144,7 +144,8 @@ private:
             {
                 return false;
             }
-            bool_t const res( list_.add(getNextIndex(), element) );			
+            int32_t const index( getNextIndex() );
+            bool_t const res( list_.add(index, element) );			
             if(res == true)
             {
                 count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10

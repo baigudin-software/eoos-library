@@ -163,7 +163,7 @@ public:
      * @copydoc eoos::api::List::get()
      */
     virtual T& get(int32_t index)
-    {
+    {   
         if( !isConstructed() )
         {
             return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
@@ -174,6 +174,8 @@ public:
 
     /**
      * @copydoc eoos::api::Collection::getLength()
+     *
+     * @todo Re-implement to return value of a member variable;
      */
     virtual size_t getLength() const
     {
@@ -370,7 +372,8 @@ protected:
         {
             return NULLPTR;
         }
-        if( static_cast<size_t>(index) == (getLength() - 1U) )
+        size_t lenght( getLength() );
+        if( static_cast<size_t>(index) == (lenght - 1U) )
         {
             return last_;
         }
