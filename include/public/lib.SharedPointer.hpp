@@ -356,6 +356,14 @@ private:
         }
 
         /**
+         * @copydoc eoos::api::Object::isConstructed()
+         */
+        virtual bool_t isConstructed() const
+        {
+            return Parent::isConstructed();
+        }
+
+        /**
          * @brief Destructor.
          */
         virtual ~ControlBlock() {}    
