@@ -200,7 +200,7 @@ private:
         for(size_t i(0U); i<S; i++)
         {
             T const v( value >> (8U * i) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
-            val_[i] = static_cast<cell_t>(v);
+            val_[i] = static_cast<ucell_t>(v);
         }
     }
 

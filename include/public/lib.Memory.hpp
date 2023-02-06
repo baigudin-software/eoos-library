@@ -35,8 +35,8 @@ public:
         void* res( NULLPTR );
         if( (dst != NULLPTR) && (src != NULLPTR) )
         {
-            cell_t const* sp( static_cast<cell_t const*>(src) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
-            cell_t* dp( static_cast<cell_t*>(dst) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
+            ucell_t const* sp( static_cast<ucell_t const*>(src) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
+            ucell_t* dp( static_cast<ucell_t*>(dst) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
             while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             {
                 *dp++ = *sp++; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
@@ -50,17 +50,17 @@ public:
      * @brief Fills a block of memory.
      *
      * @param dst A destination block of memory would be filled.
-     * @param val A value to be set.
+     * @param val A least significant byte of value to be set.
      * @param len A number of bytes to be set to the value.
      * @return A pointer to the destination memory, or NULLPTR if an error has been occurred.
      */
-    static void* memset(void* const dst, cell_t const val, size_t len)
+    static void* memset(void* const dst, int32_t const val, size_t len)
     {
         void* res( NULLPTR );
         if(dst != NULLPTR)
         {
-            cell_t* dp( static_cast<cell_t*>(dst) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
-            cell_t const uc( val );
+            ucell_t* dp( static_cast<ucell_t*>(dst) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
+            ucell_t const uc( static_cast<ucell_t>(val) );
             while(len-- != 0U) ///< SCA MISRA-C++:2008 Justified Rule 5-2-10
             {
                 *dp++ = uc; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
