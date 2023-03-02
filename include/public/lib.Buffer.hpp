@@ -196,7 +196,6 @@ public:
         setConstructed( isConstructed );
     }
 
-
     /**
      * @brief Destructor.
      */
