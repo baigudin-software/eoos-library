@@ -13,7 +13,7 @@ namespace eoos
 namespace lib
 {
 
-#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
 
 /**
  * @class SmartPointerDeleter<T>
@@ -61,7 +61,7 @@ public:
     }
 };
 
-#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 } // namespace lib
 } // namespace eoos

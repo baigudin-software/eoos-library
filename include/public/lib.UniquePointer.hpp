@@ -15,7 +15,7 @@ namespace eoos
 namespace lib
 {
 
-#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
     
 /**
  * @class UniquePointer<T,D,A>
@@ -326,7 +326,7 @@ inline bool_t operator!=(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> 
     return obj1.get() != obj2.get();
 }
 
-#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 } // namespace lib
 } // namespace eoos

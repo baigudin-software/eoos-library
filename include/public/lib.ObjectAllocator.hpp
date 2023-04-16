@@ -25,7 +25,7 @@ class ObjectAllocator
 
 public:
 
-    #ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    #ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
 
     /**
      * @brief Operator new.
@@ -66,7 +66,7 @@ public:
     {   ///< UT Justified Branch: Language dependency
     }
 
-    #endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+    #endif // EOOS_GLOBAL_ENABLE_NO_HEAP
     
 protected:
 

@@ -244,7 +244,7 @@ private:
 
 };
 
-#ifdef EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
 
 /**
  * @class BaseString<T,0,R,A>
@@ -636,7 +636,7 @@ private:
     T* str_;
 };
 
-#endif // EOOS_ENABLE_DYNAMIC_HEAP_MEMORY
+#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 /**
  * @brief Concatenates two strings.
