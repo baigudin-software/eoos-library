@@ -24,7 +24,6 @@ namespace lib
 template <class A = Allocator>
 class Mutex : public NonCopyable<A>, public api::Mutex
 {
-    typedef Mutex<A> Self;
     typedef NonCopyable<A> Parent;
 
 public:
@@ -62,7 +61,7 @@ public:
     virtual bool_t tryLock()
     {
         bool_t res( false );
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             res = mutex_->tryLock();
         }
@@ -75,7 +74,7 @@ public:
     virtual bool_t lock()
     {
         bool_t res( false );
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             res = mutex_->lock();
         }
@@ -87,7 +86,7 @@ public:
      */
     virtual void unlock()
     {
-        if( Self::isConstructed() )
+        if( isConstructed() )
         {
             mutex_->unlock();
         }
@@ -109,7 +108,7 @@ private:
         bool_t res( false );
         do
         {   
-            if( !Self::isConstructed() )
+            if( !isConstructed() )
             {   ///< UT Justified Branch: HW dependency
                 break;
             }
