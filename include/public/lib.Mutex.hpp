@@ -45,7 +45,7 @@ public:
      */
     virtual ~Mutex()
     {
-        delete mutex_;
+        sys::Call::get().getSystemMutex().remove(mutex_);
     }
     
     /**
@@ -113,7 +113,7 @@ private:
             {   ///< UT Justified Branch: HW dependency
                 break;
             }
-            mutex_ = sys::Call::get().createMutex();
+            mutex_ = sys::Call::get().getSystemMutex().create();
             if( !Parent::isConstructed(mutex_) )
             {   ///< UT Justified Branch: HW dependency
                 break;
