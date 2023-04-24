@@ -1,7 +1,7 @@
 /**
  * @file      lib.Semaphore.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2023, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_SEMAPHORE_HPP_
 #define LIB_SEMAPHORE_HPP_
@@ -46,7 +46,11 @@ public:
      */
     virtual ~Semaphore()
     {
-        delete semaphore_;
+        api::System& system = sys::Call::get();
+        if( system.hasSemaphoreManager() )
+        {
+            system.getSemaphoreManager().remove(semaphore_);
+        }
     }
 
     /**
@@ -95,12 +99,25 @@ private:
      */
     bool_t construct(int32_t const permits)
     {
-        bool_t res( isConstructed() );
-        if( res == true )
-        {
-            semaphore_ = sys::Call::get().createSemaphore(permits);
-            res = (semaphore_ != NULLPTR) ? semaphore_->isConstructed() : false;
-        }
+        bool_t res( false );
+        do
+        {   
+            if( !isConstructed() )
+            {   ///< UT Justified Branch: HW dependency
+                break;
+            }
+            api::System& system = sys::Call::get();
+            if( !system.hasSemaphoreManager() )
+            {
+                break;
+            }
+            semaphore_ = system.getSemaphoreManager().create(permits);
+            if( !Parent::isConstructed(semaphore_) )
+            {   ///< UT Justified Branch: HW dependency
+                break;
+            }
+            res = true;
+        } while(false);
         return res;
     }
 

@@ -1,7 +1,7 @@
 /**
  * @file      lib.Stream.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2023, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_STREAM_HPP_
 #define LIB_STREAM_HPP_
@@ -29,7 +29,7 @@ public:
      */
     static api::OutStream<char_t>& cout()
     {
-        return sys::Call::get().getOutStreamChar();
+        return sys::Call::get().getStreamManager().getCout();
     }
 
     /**
@@ -39,7 +39,7 @@ public:
      */
     static api::OutStream<char_t>& cerr()
     {
-        return sys::Call::get().getErrorStreamChar();
+        return sys::Call::get().getStreamManager().getCerr();
     }
 
 };

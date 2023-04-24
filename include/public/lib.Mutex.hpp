@@ -1,7 +1,7 @@
 /**
  * @file      lib.Mutex.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2015-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2015-2023, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_MUTEX_HPP_
 #define LIB_MUTEX_HPP_
@@ -44,7 +44,11 @@ public:
      */
     virtual ~Mutex()
     {
-        sys::Call::get().getSystemMutex().remove(mutex_);
+        api::System& system = sys::Call::get();
+        if( system.hasMutexManager() )
+        {
+            system.getMutexManager().remove(mutex_);
+        }
     }
     
     /**
@@ -112,7 +116,12 @@ private:
             {   ///< UT Justified Branch: HW dependency
                 break;
             }
-            mutex_ = sys::Call::get().getSystemMutex().create();
+            api::System& system = sys::Call::get();
+            if( !system.hasMutexManager() )
+            {
+                break;
+            }
+            mutex_ = system.getMutexManager().create();
             if( !Parent::isConstructed(mutex_) )
             {   ///< UT Justified Branch: HW dependency
                 break;
