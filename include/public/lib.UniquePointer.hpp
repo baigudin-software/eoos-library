@@ -173,7 +173,7 @@ public:
      */
     virtual void reset(T* ptr)
     {
-		if (get() != ptr)
+        if (get() != ptr)
         {
             Self temp(ptr);
             swap(temp);

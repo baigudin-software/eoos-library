@@ -378,7 +378,7 @@ private:
         int32_t index( LENGTH - 1 );
         T temp[LENGTH];
         temp[index] = R::getTerminator();
-		index -= 1;		
+        index -= 1;
         do
         {
             // Test for available base
@@ -440,7 +440,7 @@ private:
         while(false);
         if(res == true)
         {
-			index += 1;
+            index += 1;
             res = copyRaw(&temp[index]);
         }
         return res;
