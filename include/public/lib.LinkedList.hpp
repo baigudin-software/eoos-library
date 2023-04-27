@@ -318,6 +318,7 @@ private:
          * @brief Constructor.
          *
          * @param index Position in this list.
+         * @return True if constructed.
          */
         bool_t construct(int32_t const index)
         {
@@ -340,7 +341,7 @@ private:
         /**
          * @brief Tests if list was modified by list object.
          *
-         * @param true if modified.
+         * @return true if modified.
          */
         bool_t isModifiedByList() const
         {        
