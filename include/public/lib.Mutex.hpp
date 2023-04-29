@@ -60,6 +60,19 @@ public:
     }
     
     /**
+     * @copydoc eoos::api::Resource::getId()
+     */
+    virtual int32_t getId() const
+    {
+        int32_t id( -1 );
+        if( isConstructed() )
+        {
+            id = mutex_->getId();
+        }
+        return id;
+    }
+
+    /**
      * @copydoc eoos::api::Mutex::tryLock()
      */
     virtual bool_t tryLock()
