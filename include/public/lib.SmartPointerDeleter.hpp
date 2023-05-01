@@ -13,8 +13,6 @@ namespace eoos
 namespace lib
 {
 
-#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
-
 /**
  * @class SmartPointerDeleter<T>
  * @brief Deleter of smart pointers allocated with new operator.
@@ -60,8 +58,6 @@ public:
         delete [] ptr;
     }
 };
-
-#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 } // namespace lib
 } // namespace eoos

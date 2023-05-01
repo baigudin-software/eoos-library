@@ -14,9 +14,7 @@ namespace eoos
 {
 namespace lib
 {
-
-#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
-    
+   
 /**
  * @class UniquePointer<T,D,A>
  * @brief Unique pointer.
@@ -325,8 +323,6 @@ inline bool_t operator!=(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> 
 {
     return obj1.get() != obj2.get();
 }
-
-#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 } // namespace lib
 } // namespace eoos

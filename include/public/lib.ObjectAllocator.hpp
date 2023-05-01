@@ -25,8 +25,6 @@ class ObjectAllocator
 
 public:
 
-    #ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
-
     /**
      * @brief Operator new.
      *
@@ -65,8 +63,6 @@ public:
     static void operator delete(void*, void*)
     {   ///< UT Justified Branch: Language dependency
     }
-
-    #endif // EOOS_GLOBAL_ENABLE_NO_HEAP
     
 protected:
 

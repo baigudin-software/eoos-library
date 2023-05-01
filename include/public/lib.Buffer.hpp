@@ -112,8 +112,6 @@ private:
 
 };
 
-#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
-
 /**
  * @class Buffer<T,0,A>
  * @brief Buffer class dynamic.
@@ -280,8 +278,6 @@ private:
     bool_t isDeleted_;
 
 };
-
-#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 } // namespace lib
 } // namespace eoos

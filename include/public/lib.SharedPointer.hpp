@@ -16,8 +16,6 @@ namespace eoos
 {
 namespace lib
 {
-
-#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
     
 /**
  * @class SharedPointer<T,D,A>
@@ -481,8 +479,6 @@ inline bool_t operator!=(SharedPointer<T,D,A> const& obj1, SharedPointer<T,D,A> 
 {
     return obj1.get() != obj2.get();
 }
-
-#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 } // namespace lib
 } // namespace eoos

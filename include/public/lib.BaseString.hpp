@@ -244,8 +244,6 @@ private:
 
 };
 
-#ifndef EOOS_GLOBAL_ENABLE_NO_HEAP
-
 /**
  * @class BaseString<T,0,R,A>
  * @brief Dynamic base string class.
@@ -635,8 +633,6 @@ private:
      */
     T* str_;
 };
-
-#endif // EOOS_GLOBAL_ENABLE_NO_HEAP
 
 /**
  * @brief Concatenates two strings.
