@@ -1,7 +1,7 @@
 /**
  * @file      lib.AbstractList.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2016-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2016-2023, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ABSTRACTLIST_HPP_
 #define LIB_ABSTRACTLIST_HPP_
@@ -497,7 +497,7 @@ private:
     /**
      * @brief Illegal element of this list.
      */
-    mutable T illegal_;
+    T illegal_;
 
     /**
      * @brief Last node of this list.
