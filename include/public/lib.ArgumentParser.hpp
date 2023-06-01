@@ -10,6 +10,8 @@
 #include "lib.LinkedList.hpp"
 #include "lib.BaseString.hpp"
 
+#include <iostream>
+
 namespace eoos
 {
 namespace lib
@@ -38,7 +40,8 @@ public:
      */
     ArgumentParser(int32_t argc, T* argv[])
         : NonCopyable<A>()
-        , args_ () {
+        , args_ ()
+        , ptrs_ (NULLPTR) {
         bool_t const isConstructed( construct(argc, argv) );
         setConstructed( isConstructed );
     }
@@ -65,9 +68,9 @@ public:
      * 
      * @todo Declare constant function to satisfy MISRA-C++:2008 Rule 9–3–1
      */
-    api::List< BaseString<T,L> >& getArguments()
+    api::List< api::String<T>* >& getArguments()
     {
-        return args_;
+        return ptrs_;
     }
 
 protected:
@@ -121,10 +124,12 @@ private:
             {
                 if( argv[i] != NULLPTR )
                 {
-                    BaseString<T,L> arg(argv[i]);
-                    if( args_.add(arg) == true )
+                    if( args_.add(argv[i]) == true )
                     {
-                        continue;
+                        if( ptrs_.add( &args_.getLast() ) == true )
+                        {
+                            continue;
+                        }
                     }
                 }
                 res = false;
@@ -148,7 +153,12 @@ private:
     /**
      * List to contain program arguments 
      */
-    LinkedList< BaseString<T,L> > args_;
+    LinkedList<BaseString<T,L,CharTrait<T>,A>,A> args_;
+
+    /**
+     * List to contain pointers to program arguments 
+     */
+    LinkedList<api::String<T>*> ptrs_;
 
 };
 
