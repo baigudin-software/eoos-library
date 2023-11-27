@@ -1,7 +1,7 @@
 /**
  * @file      lib.NonCopyable.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2023, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_NONCOPYABLE_HPP_
 #define LIB_NONCOPYABLE_HPP_
@@ -22,7 +22,6 @@ namespace lib
 template <class A = Allocator>
 class NonCopyable : public Object<A>
 {
-    typedef lib::Object<A> Parent;
 
 public:
 
@@ -66,6 +65,6 @@ private:
 
 };
 
-} // namespace sys
+} // namespace lib
 } // namespace eoos
-#endif // SYS_NONCOPYABLE_HPP_
+#endif // LIB_NONCOPYABLE_HPP_

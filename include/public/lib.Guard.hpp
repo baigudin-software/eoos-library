@@ -1,13 +1,13 @@
 /**
- * @file      lib.MutexGuard.hpp
+ * @file      lib.Guard.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2023, Sergey Baigudin, Baigudin Software
  */
-#ifndef LIB_MUTEXGUARD_HPP_
-#define LIB_MUTEXGUARD_HPP_
+#ifndef LIB_GUARD_HPP_
+#define LIB_GUARD_HPP_
 
 #include "lib.NonCopyable.hpp"
-#include "lib.Mutex.hpp"
+#include "api.Guard.hpp"
 
 namespace eoos
 {
@@ -15,13 +15,13 @@ namespace lib
 {
     
 /**
- * @class MutexGuard<A>
- * @brief Guard of mutex.
+ * @class Guard<A>
+ * @brief Guard of RAII implementation.
  *
  * @tparam A heap memory allocator class.
  */    
 template <class A = Allocator>
-class MutexGuard : public NonCopyable<A>
+class Guard : public NonCopyable<A>
 {
     typedef NonCopyable<A> Parent;            
 
@@ -32,11 +32,11 @@ public:
     /**
      * @brief Constructor.
      *
-     * @param mutex A mutex for guarding.
+     * @param guard A guard for guarding.
      */
-    MutexGuard(api::Mutex& mutex) 
+    Guard(api::Guard& guard) 
         : NonCopyable<A>()
-        , mutex_ (mutex){
+        , guard_( guard ){
         bool_t const isConstructed( construct() );
         setConstructed( isConstructed );                    
     }
@@ -44,11 +44,11 @@ public:
     /**        
      * @brief Destructor.
      */
-    virtual ~MutexGuard()
+    virtual ~Guard()
     {
         if( isConstructed() )
         {
-            mutex_.unlock();
+            static_cast<void>( guard_.unlock() );
         }
     }
     
@@ -72,21 +72,21 @@ private:
             {   ///< UT Justified Branch: HW dependency
                 break;
             }
-            if( !mutex_.isConstructed() )
+            if( !guard_.isConstructed() )
             {
                 break;
             }
-            res = mutex_.lock();
+            res = guard_.lock();
         } while(false);
         return res;
     }
-
+    
     /**
-     * @brief Mutex resource identifier.
+     * @brief Guard resource identifier.
      */
-    api::Mutex& mutex_;
+    api::Guard& guard_;
 };
 
 } // namespace lib
 } // namespace eoos
-#endif // LIB_MUTEXGUARD_HPP_
+#endif // LIB_GUARD_HPP_

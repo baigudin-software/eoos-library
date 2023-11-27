@@ -46,10 +46,9 @@ public:
      */
     virtual ~Semaphore()
     {
-        api::System& system = sys::Call::get();
-        if( system.hasSemaphoreManager() )
+        if( semaphore_ != NULLPTR )
         {
-            system.getSemaphoreManager().remove(semaphore_);
+            delete semaphore_;
         }
     }
 
@@ -77,12 +76,14 @@ public:
     /**
      * @copydoc eoos::api::Semaphore::release()
      */
-    virtual void release()
+    virtual bool_t release()
     {
+        bool_t res( false );        
         if( isConstructed() )
         {
-            semaphore_->release();
+            res = semaphore_->release();
         }
+        return res;
     }
 
 protected:
@@ -106,12 +107,7 @@ private:
             {   ///< UT Justified Branch: HW dependency
                 break;
             }
-            api::System& system = sys::Call::get();
-            if( !system.hasSemaphoreManager() )
-            {
-                break;
-            }
-            semaphore_ = system.getSemaphoreManager().create(permits);
+            semaphore_ = sys::Call::get().getSemaphoreManager().create(permits);
             if( !Parent::isConstructed(semaphore_) )
             {   ///< UT Justified Branch: HW dependency
                 break;

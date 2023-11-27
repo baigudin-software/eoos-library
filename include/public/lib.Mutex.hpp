@@ -44,10 +44,9 @@ public:
      */
     virtual ~Mutex()
     {
-        api::System& system = sys::Call::get();
-        if( system.hasMutexManager() )
+        if( mutex_ != NULLPTR )
         {
-            system.getMutexManager().remove(mutex_);
+            delete mutex_;
         }
     }
     
@@ -88,12 +87,14 @@ public:
     /**
      * @copydoc eoos::api::Mutex::unlock()
      */
-    virtual void unlock()
+    virtual bool_t unlock()
     {
+        bool_t res( false );
         if( isConstructed() )
         {
-            mutex_->unlock();
+            res = mutex_->unlock();
         }
+        return res;
     }
 
 protected:
@@ -116,12 +117,7 @@ private:
             {   ///< UT Justified Branch: HW dependency
                 break;
             }
-            api::System& system = sys::Call::get();
-            if( !system.hasMutexManager() )
-            {
-                break;
-            }
-            mutex_ = system.getMutexManager().create();
+            mutex_ = sys::Call::get().getMutexManager().create();
             if( !Parent::isConstructed(mutex_) )
             {   ///< UT Justified Branch: HW dependency
                 break;

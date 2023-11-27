@@ -7,7 +7,7 @@
 #define LIB_HEAP_HPP_
 
 #include "api.Heap.hpp"
-#include "lib.MutexGuard.hpp"
+#include "lib.Guard.hpp"
 
 namespace eoos
 {
@@ -77,7 +77,7 @@ public:
         }
         if( ptr == NULLPTR )
         {
-            MutexGuard<NoAllocator> guard( *data_.mutex );
+            Guard<NoAllocator> guard( *data_.mutex );
             ptr = getFirstHeapBlock()->alloc(size);
         }
         return ptr;
@@ -96,7 +96,7 @@ public:
         {
             return;
         }
-        MutexGuard<NoAllocator> guard( *data_.mutex );
+        Guard<NoAllocator> guard( *data_.mutex );
         getHeapBlock(ptr)->free();
     }
 
@@ -333,7 +333,7 @@ private:
 
     /**
      * @class NoAllocator
-     * @brief No allocator for creating MutexGuard on stack.
+     * @brief No allocator for creating Guard on stack.
      */ 
     class NoAllocator
     {

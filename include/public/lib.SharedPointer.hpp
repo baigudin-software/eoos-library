@@ -9,7 +9,8 @@
 #include "lib.Object.hpp"
 #include "api.SmartPointer.hpp"
 #include "lib.SmartPointerDeleter.hpp"
-#include "lib.MutexGuard.hpp"
+#include "lib.Guard.hpp"
+#include "lib.Mutex.hpp"
 #include "lib.NonCopyable.hpp"
 
 namespace eoos
@@ -371,7 +372,7 @@ private:
          */
         void increase()
         {
-            MutexGuard<AA> const guard(mutex_);
+            Guard<AA> const guard(mutex_);
             static_cast<void>(guard);            
             ++counter_;
         }
@@ -383,7 +384,7 @@ private:
          */        
         int32_t decrease()
         {
-            MutexGuard<AA> const guard(mutex_);
+            Guard<AA> const guard(mutex_);
             static_cast<void>(guard);            
             return --counter_;
         }
