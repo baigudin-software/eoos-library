@@ -118,9 +118,9 @@ public:
     /**
      * @copydoc eoos::api::Scheduler::yield()
      */
-    static void yield()
+    static bool_t yield()
     {
-        getScheduler().yield();
+        return getScheduler().yield();
     }
 
 protected:

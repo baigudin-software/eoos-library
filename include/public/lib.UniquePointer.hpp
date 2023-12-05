@@ -255,16 +255,15 @@ private:
     bool_t construct(T* const pointer = NULLPTR)
     {
         bool_t res( false );
-        do
+        if( isConstructed() )
         {
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                D::free(pointer);
-                break;
-            }
             pointer_ = pointer;
             res = true;
-        } while(false);
+        }
+        else
+        {   ///< UT Justified Branch: HW dependency
+            D::free(pointer);
+        }
         return res;
     }
     

@@ -8,6 +8,7 @@
 
 #include "api.Heap.hpp"
 #include "lib.Guard.hpp"
+#include "lib.NoAllocator.hpp"
 
 namespace eoos
 {
@@ -23,8 +24,6 @@ namespace lib
 class Heap : public api::Heap
 {
     typedef Heap Self;
-    
-    class NoAllocator;
 
 public:
 
@@ -36,8 +35,8 @@ public:
      */
     Heap(size_t size, api::Mutex& mutex) 
         : api::Heap()
-        , data_(size, mutex)
-        , temp_() {
+        , data_( size, mutex )
+        , aligner_() {
         bool_t const isConstructed( construct() );
         setConstructed( isConstructed );
     }
@@ -45,7 +44,7 @@ public:
     /**
      * @brief Destructor.
      */
-    virtual ~Heap() ///< UT Justified Branch: Language dependency
+    virtual ~Heap()
     {
         data_.key = 0;
     }
@@ -55,15 +54,15 @@ public:
      */
     virtual bool_t isConstructed() const
     {
-        if( data_.key != HEAP_KEY )
-        {   ///< UT Justified Branch: HW dependency
-            return false;
+        bool_t res( false );
+        if( data_.key == HEAP_KEY )
+        {
+            if( getFirstHeapBlock()->isConstructed() )
+            {
+                res = true;
+            }
         }
-        if( !getFirstHeapBlock()->isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            return false;
-        }
-        return  true;
+        return res;
     }
 
     /**
@@ -71,16 +70,17 @@ public:
      */
     virtual void* allocate(size_t const size, void* ptr)
     {
-        if( !isConstructed() )
+        void* addr( NULLPTR );
+        if( isConstructed() )
         {
-            return NULLPTR;
+            if( ptr == NULLPTR )
+            {
+                Guard<NoAllocator> guard( *data_.mutex );
+                ptr = getFirstHeapBlock()->alloc(size);
+            }
+            addr = ptr;
         }
-        if( ptr == NULLPTR )
-        {
-            Guard<NoAllocator> guard( *data_.mutex );
-            ptr = getFirstHeapBlock()->alloc(size);
-        }
-        return ptr;
+        return addr;
     }
 
     /**
@@ -88,16 +88,14 @@ public:
      */
     virtual void free(void* ptr)
     {
-        if( !isConstructed() )
+        if( isConstructed() )
         {
-            return;
-        }        
-        if( ptr == NULLPTR )
-        {
-            return;
+            if( ptr != NULLPTR )
+            {
+                Guard<NoAllocator> guard( *data_.mutex );
+                getHeapBlock(ptr)->free();
+            }
         }
-        Guard<NoAllocator> guard( *data_.mutex );
-        getHeapBlock(ptr)->free();
     }
 
     /**
@@ -131,12 +129,12 @@ public:
     /**
      * @brief Operator delete.
      */
-    static void operator delete(void*, uintptr_t) {} ///< UT Justified Branch: Language dependency
+    static void operator delete(void*, uintptr_t) {}
 
     /**
      * @brief Operator delete.
      */
-    static void operator delete(void*) {} ///< UT Justified Branch: Language dependency
+    static void operator delete(void*) {}
 
 private:
 
@@ -160,30 +158,25 @@ private:
      */
     bool_t construct()
     {
-        // Crop a size to multiple of eight
-        if( (sizeof(HeapBlock) + 16UL) > data_.size )
-        {   ///< UT Justified Branch: HW dependency
-            return false;
+        bool_t res( true );
+        
+        if( // Crop a size to multiple of eight 
+            ( (sizeof(HeapBlock) + 16UL) <= data_.size )
+            // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
+         && ( (sizeof(Heap) & 0x7UL) == 0UL )
+         && ( (sizeof(HeapBlock) & 0x7UL) == 0UL ) )
+        {
+            // Test memory
+            uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
+            void* ptr ( reinterpret_cast<void*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
+            if( isMemoryAvailable(ptr, data_.size) )
+            {
+                // Alloc first heap block
+                data_.block = new ( getFirstHeapBlock() ) HeapBlock(this, data_.size);
+                res = (data_.block != NULLPTR) ? true : false;
+            }
         }
-        // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
-        if( (sizeof(Heap) & 0x7UL) != 0UL )
-        {   ///< UT Justified Branch: HW dependency
-            return false;
-        }
-        if( (sizeof(HeapBlock) & 0x7UL) != 0UL )
-        {   ///< UT Justified Branch: HW dependency
-            return false;
-        }
-        // Test memory
-        uintptr_t const addr( reinterpret_cast<uintptr_t>(this) + sizeof(Heap) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
-        void*  ptr ( reinterpret_cast<void*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
-        if( !isMemoryAvailable(ptr, data_.size) )
-        {   ///< UT Justified Branch: HW dependency
-            return false;
-        }
-        // Alloc first heap block
-        data_.block = new ( getFirstHeapBlock() ) HeapBlock(this, data_.size);
-        return (data_.block != NULLPTR) ? true : false;
+        return res;
     }
 
     /**
@@ -220,24 +213,18 @@ private:
      */
     static void* create(void* ptr)
     {
-        // Size of this class has to be multipled to eight
-        if( (sizeof(Heap) & 0x7UL) != 0UL )
-        {   ///< UT Justified Branch: HW dependency
-            ptr = NULLPTR;
-        }
-        // Testing memory for self structure data
-        //
-        // @todo copy constructor of the Heap class for
-        // temporary copying the tested memory to that
-        // class. This way would help to restore original
-        // memory data if the test were failed.
-        if( !isMemoryAvailable(ptr, sizeof(Heap)) )
-        {   ///< UT Justified Branch: HW dependency
-            ptr = NULLPTR;
-        }
-        // Memory address has to be aligned to eight
-        if( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL ) ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
-        {   ///< UT Justified Branch: HW dependency
+        if( // Size of this class has to be multipled to eight
+            ( (sizeof(Heap) & 0x7UL) != 0UL )
+            // Testing memory for self structure data
+            //
+            // @todo copy constructor of the Heap class for
+            // temporary copying the tested memory to that
+            // class. This way would help to restore original
+            // memory data if the test were failed.
+         || ( !isMemoryAvailable(ptr, sizeof(Heap)) )
+            // Memory address has to be aligned to eight
+         || ( (reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL ) )
+        {
             ptr = NULLPTR;
         }
         return ptr;
@@ -254,59 +241,133 @@ private:
      */
     static bool_t isMemoryAvailable(void* const addr, size_t const size)
     {
-        size_t mask( static_cast<ucell_t>(-1) );
+        bool_t res( true );
+        res &= testForValue(addr, size);
+        res &= testFor0x55(addr, size);
+        res &= testFor0xAA(addr, size);
+        res &= testForZero(addr, size);
+        return res;
+    }
+
+    /**
+     * @brief Tests memory for value.
+     * 
+     * @todo normal type casts should be done.
+     *
+     * @param addr Memory address pointer.
+     * @param size Size in byte.
+     * @return True if test complete.
+     */
+    static bool_t testForValue(void* const addr, size_t const size)
+    {
+        size_t const mask( static_cast<ucell_t>(-1) );
         ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         // Value test
         for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = static_cast<ucell_t>(i & mask);
         }
+        size_t passed(0UL);
         for( size_t i(0UL); i<size; i++)
         {
-            if(ptr[i] != static_cast<ucell_t>(i & mask))
-            {   ///< UT Justified Branch: HW dependency
-                return false;
+            if(ptr[i] == static_cast<ucell_t>(i & mask))
+            {
+                passed++;
+                continue;
             }
         }
+        return passed == size;
+    }
+
+    /**
+     * @brief Tests memory for 0x55.
+     *
+     * @todo normal type casts should be done.
+     *
+     * @param addr Memory address pointer.
+     * @param size Size in byte.
+     * @return True if test complete.
+     */
+    static bool_t testFor0x55(void* const addr, size_t const size)
+    {
+        size_t const mask( static_cast<ucell_t>(-1) );
+        ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         // 0x55 test
         for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = static_cast<ucell_t>(0x55555555UL & mask);
         }
+        size_t passed(0UL);
         for( size_t i(0UL); i<size; i++)
         {
-            if(ptr[i] != static_cast<ucell_t>(0x55555555UL & mask))
-            {   ///< UT Justified Branch: HW dependency
-                return false;
+            if(ptr[i] == static_cast<ucell_t>(0x55555555UL & mask))
+            {
+                passed++;
+                continue;
             }
         }
-        // 0xAA test
+        return passed == size;
+    }
+
+    /**
+     * @brief Tests memory for 0xAA.
+     *
+     * @todo normal type casts should be done.
+     *
+     * @param addr Memory address pointer.
+     * @param size Size in byte.
+     * @return True if test complete.
+     */
+    static bool_t testFor0xAA(void* const addr, size_t const size)
+    {
+        size_t const mask( static_cast<ucell_t>(-1) );
+        ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = static_cast<ucell_t>(0xAAAAAAAAUL & mask);
         }
+        size_t passed(0UL);
         for( size_t i(0UL); i<size; i++)
         {
-            if(ptr[i] != static_cast<ucell_t>(0xAAAAAAAAUL & mask))
-            {   ///< UT Justified Branch: HW dependency
-                return false;
+            if(ptr[i] == static_cast<ucell_t>(0xAAAAAAAAUL & mask))
+            {
+                passed++;
+                continue;
             }
         }
+        return passed == size;
+    }
+
+    /**
+     * @brief Tests memory for zero.
+     *
+     * @todo normal type casts should be done.
+     *
+     * @param addr Memory address pointer.
+     * @param size Size in byte.
+     * @return True if test complete.
+     */
+    static bool_t testForZero(void* const addr, size_t const size)
+    {
+        ucell_t* ptr( reinterpret_cast<ucell_t*>(addr) ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
         // Zero test
         for( size_t i(0UL); i<size; i++)
         {
             ptr[i] = 0x00U;
         }
+        size_t passed(0UL);
         for( size_t i(0UL); i<size; i++)
         {
-            if(ptr[i] != 0x00U)
-            {   ///< UT Justified Branch: HW dependency
-                return false;
+            if(ptr[i] == 0x00U)
+            {
+                passed++;
+                continue;
             }
         }
-        return true;
+        return passed == size;
     }
-    
+
+
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
@@ -330,31 +391,6 @@ private:
     Heap& operator=(Heap&&) & noexcept = delete;
     
     #endif // EOOS_CPP_STANDARD >= 2011   
-
-    /**
-     * @class NoAllocator
-     * @brief No allocator for creating Guard on stack.
-     */ 
-    class NoAllocator
-    {
-    
-    public:
-    
-        /**
-         * @copydoc eoos::lib::Allocator::allocate(size_t)
-         */
-        static void* allocate(size_t)
-        {
-            return NULLPTR;
-        }
-    
-        /**
-         * @copydoc eoos::lib::Allocator::allocate(size_t).
-         */
-        static void free(void*) ///< UT Justified Branch: Language dependency
-        {
-        }
-    };
 
     /**
      * @struct Aligner<S>
@@ -472,50 +508,55 @@ private:
          */
         void* alloc(size_t size)
         {
-            if(size == 0UL)
+            void* addr( NULLPTR );
+            if(size != 0UL)
             {
-                return NULLPTR;
-            }
-            // Align a size to 8 byte boudary
-            if((size & 0x7UL) != 0UL)
-            {
-                size = (size & ~0x7UL) + 0x8UL;
-            }
-            HeapBlock* curr( this );
-            while(curr != NULLPTR)
-            {
-                if(curr->isUsed() || (curr->size_ < size) )
+                // Align a size to 8 byte boudary
+                if((size & 0x7UL) != 0UL)
                 {
-                    curr = curr->next_;
+                    size = (size & ~0x7UL) + 0x8UL;
                 }
-                else
+                HeapBlock* curr( this );
+                while(curr != NULLPTR)
                 {
-                    break;
+                    if(curr->isUsed() || (curr->size_ < size) )
+                    {
+                        curr = curr->next_;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-            }
-            if(curr == NULLPTR)
-            {
-                return NULLPTR;
-            }
-            // Has required memory size for data and a new heap block
-            if( curr->size_ >= (size + sizeof(HeapBlock)) )
-            {
-                HeapBlock* next( new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size) );
-                if(next == NULLPTR)
-                {   ///< UT Justified Branch: HW dependency
-                    return NULLPTR;
-                }
-                next->next_ = curr->next_;
-                next->prev_ = curr;
-                if(next->next_ != NULLPTR)
+                if(curr != NULLPTR)
                 {
-                    next->next_->prev_ = next;
+                    // Has required memory size for data and a new heap block
+                    if( curr->size_ >= (size + sizeof(HeapBlock)) )
+                    {
+                        HeapBlock* next( new ( curr->next(size) ) HeapBlock(heap_, curr->size_ - size) );
+                        if(next != NULLPTR)
+                        {
+                            next->next_ = curr->next_;
+                            next->prev_ = curr;
+                            if(next->next_ != NULLPTR)
+                            {
+                                next->next_->prev_ = next;
+                            }
+                            curr->next_ = next;
+                            curr->size_ = size;
+                            curr->attr_ |= ATTR_USED;
+                            addr = curr->data();
+                        }
+                    }
+                    // Has required memory size for data only
+                    else
+                    {
+                        curr->attr_ |= ATTR_USED;
+                        addr = curr->data();
+                    }
                 }
-                curr->next_ = next;
-                curr->size_ = size;
             }
-            curr->attr_ |= ATTR_USED;
-            return curr->data();
+            return addr;
         }
 
         /**
@@ -523,62 +564,61 @@ private:
          */
         void free()
         {
-            if( !canDelete() )
-            {   ///< UT Justified Branch: HW dependency
-                return;
-            }
-            uint32_t sibling( 0UL );
-            if( prev_ != NULLPTR )
+            if( canDelete() )
             {
-                if( !prev_->isUsed() )
+                uint32_t sibling( 0UL );
+                if( prev_ != NULLPTR )
                 {
-                    sibling |= PREV_FREE;
-                }
-            }
-            if( next_ != NULLPTR )
-            {
-                if( !next_->isUsed() )
-                {
-                    sibling |= NEXT_FREE;
-                }
-            }
-            switch(sibling)
-            {
-                case PREV_FREE | NEXT_FREE:
-                {
-                    prev_->size_ += ( 2UL * sizeof(HeapBlock) ) + size_ + next_->size_;
-                    prev_->next_ = next_->next_;
-                    if(prev_->next_ != NULLPTR)
+                    if( !prev_->isUsed() )
                     {
-                        prev_->next_->prev_ = prev_;
+                        sibling |= PREV_FREE;
                     }
-                    break;
                 }
-                case PREV_FREE:
+                if( next_ != NULLPTR )
                 {
-                    prev_->size_ += sizeof(HeapBlock) + size_;
-                    prev_->next_ = next_;
-                    if(next_ != NULLPTR)
+                    if( !next_->isUsed() )
                     {
-                        next_->prev_ = prev_;
+                        sibling |= NEXT_FREE;
                     }
-                    break;
                 }
-                case NEXT_FREE:
+                switch(sibling)
                 {
-                    size_ += sizeof(HeapBlock) + next_->size_;
-                    next_ = next_->next_;
-                    if(next_ != NULLPTR)
+                    case PREV_FREE | NEXT_FREE:
                     {
-                        next_->prev_ = this;
+                        prev_->size_ += ( 2UL * sizeof(HeapBlock) ) + size_ + next_->size_;
+                        prev_->next_ = next_->next_;
+                        if(prev_->next_ != NULLPTR)
+                        {
+                            prev_->next_->prev_ = prev_;
+                        }
+                        break;
                     }
-                    attr_ &= MASK_UNUSED;
-                    break;
-                }
-                default:
-                {
-                    attr_ &= MASK_UNUSED;
-                    break;
+                    case PREV_FREE:
+                    {
+                        prev_->size_ += sizeof(HeapBlock) + size_;
+                        prev_->next_ = next_;
+                        if(next_ != NULLPTR)
+                        {
+                            next_->prev_ = prev_;
+                        }
+                        break;
+                    }
+                    case NEXT_FREE:
+                    {
+                        size_ += sizeof(HeapBlock) + next_->size_;
+                        next_ = next_->next_;
+                        if(next_ != NULLPTR)
+                        {
+                            next_->prev_ = this;
+                        }
+                        attr_ &= MASK_UNUSED;
+                        break;
+                    }
+                    default:
+                    {
+                        attr_ &= MASK_UNUSED;
+                        break;
+                    }
                 }
             }
         }
@@ -592,23 +632,9 @@ private:
          */
         static void* operator new(size_t, void* const ptr)
         {
-            void* memory( NULLPTR );
-            do
-            {
-                // Size of this class must be multipled to eight
-                if((sizeof(HeapBlock) & 0x7UL) != 0UL)
-                {   ///< UT Justified Branch: HW dependency
-                    break;
-                }
-                // The passed address must be multipled to eight
-                if((reinterpret_cast<uintptr_t>(ptr) & 0x7UL) != 0UL) ///< SCA MISRA-C++:2008 Justified Rule 5-2-9
-                {   ///< UT Justified Branch: HW dependency
-                    break;
-                }
-                memory = ptr;
-            }
-            while(false);
-            return memory;
+            // @note To speedup allocation and in term of the class is private for Heap class,
+            // do no checks the class size and passed address is be multipled to eight.
+            return ptr;
         }
         
         /**
@@ -625,15 +651,12 @@ private:
          */
         bool_t canDelete() const
         {
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                return false;
+            bool_t res( false );
+            if( isConstructed() && heap_->isConstructed() )
+            {
+                res = true;
             }
-            if( !heap_->isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                return false;
-            }
-            return true;
+            return res;
         }
 
         /**
@@ -838,7 +861,7 @@ private:
     /**
      * @brief Aligning data.
      */
-    Aligner<SIZEOF_HEAP> temp_;
+    Aligner<SIZEOF_HEAP> aligner_;
 
 };
 

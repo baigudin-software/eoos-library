@@ -89,22 +89,16 @@ private:
     bool_t construct(int32_t argc, T* argv[])
     {
         bool_t res( false );
-        do
-        {   
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                break;
-            }
-            if( !args_.isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                break;   
-            }
-            if( !addArgs(argc, argv) )
-            {
-                break;
-            }
+        if( ( !isConstructed() )
+         || ( !args_.isConstructed() )
+         || ( !addArgs(argc, argv) ) ) 
+        {
+            res = false;
+        }
+        else
+        {
             res = true;
-        } while(false);
+        }
         return res;
     }
 

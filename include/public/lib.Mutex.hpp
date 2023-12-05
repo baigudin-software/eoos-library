@@ -111,19 +111,14 @@ private:
     bool_t construct()
     {
         bool_t res( false );
-        do
-        {   
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                break;
-            }
+        if( isConstructed() )
+        {
             mutex_ = sys::Call::get().getMutexManager().create();
-            if( !Parent::isConstructed(mutex_) )
-            {   ///< UT Justified Branch: HW dependency
-                break;
+            if( Parent::isConstructed(mutex_) )
+            {   
+                res = true;
             }
-            res = true;
-        } while(false);
+        }
         return res;
     }
 

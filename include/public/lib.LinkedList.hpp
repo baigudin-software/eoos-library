@@ -140,16 +140,16 @@ private:
          */
         virtual bool_t add(TT const& element)
         {
-            if( isModifiedByList() )
+            bool_t res( false );
+            if( !isModifiedByList() )
             {
-                return false;
-            }
-            int32_t const index( getNextIndex() );
-            bool_t const res( list_.add(index, element) );
-            if(res == true)
-            {
-                count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
-                rindex_ = ILLEGAL_INDEX;
+                int32_t const index( getNextIndex() );
+                res = list_.add(index, element);
+                if(res == true)
+                {
+                    count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
+                    rindex_ = ILLEGAL_INDEX;
+                }
             }
             return res;
         }
@@ -159,28 +159,24 @@ private:
          */
         virtual bool_t remove()
         {
-            if( isModifiedByList() )
+            bool_t res( false );
+            if( !isModifiedByList() && (rindex_ != ILLEGAL_INDEX) )
             {
-                return false;
-            }
-            if(rindex_ == ILLEGAL_INDEX)
-            {
-                return false;
-            }
-            Node* curs( curs_ );
-            if( curs_ != NULLPTR )
-            {
-                if(curs_->getIndex() == rindex_)
+                Node* curs( curs_ );
+                if( curs_ != NULLPTR )
                 {
-                    curs = (curs_ == last_) ? NULLPTR : curs_->getNext();                
+                    if(curs_->getIndex() == rindex_)
+                    {
+                        curs = (curs_ == last_) ? NULLPTR : curs_->getNext();                
+                    }
                 }
-            }
-            bool_t res( list_.remove(rindex_) );
-            if(res == true)
-            {
-                count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
-                rindex_ = ILLEGAL_INDEX;
-                curs_ = curs;
+                res = list_.remove(rindex_);
+                if(res == true)
+                {
+                    count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
+                    rindex_ = ILLEGAL_INDEX;
+                    curs_ = curs;
+                }
             }
             return res;
         }
@@ -190,14 +186,19 @@ private:
          */
         virtual TT& getPrevious()
         {
-            if( !hasPrevious() )
+            bool_t res( false );
+            if( hasPrevious() )
+            {
+                curs_ = (curs_ == NULLPTR) ? last_ : curs_->getPrevious();
+                rindex_ = curs_->getIndex();
+                res = true;
+            }
+            else
             {
                 rindex_ = ILLEGAL_INDEX;
-                return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
+                res = false;
             }
-            curs_ = (curs_ == NULLPTR) ? last_ : curs_->getPrevious();
-            rindex_ = curs_->getIndex();
-            return curs_->getElement();
+            return (res == true ) ? curs_->getElement() : illegal_;            
         }
 
         /**
@@ -205,15 +206,19 @@ private:
          */
         virtual int32_t getPreviousIndex() const
         {
-            if( isModifiedByList() )
+            int32_t index( api::ListIterator<TT>::ERROR_INDEX );
+            if( !isModifiedByList() )
             {
-                return api::ListIterator<TT>::ERROR_INDEX;
-            }                        
-            if( !hasPrevious() )
-            {
-                return -1;
+                if( !hasPrevious() )
+                {
+                    index = -1;
+                }
+                else
+                {
+                    index = (curs_ == NULLPTR) ? last_->getIndex() : curs_->getPrevious()->getIndex();
+                }
             }
-            return (curs_ == NULLPTR) ? last_->getIndex() : curs_->getPrevious()->getIndex();
+            return index;
         }
 
         /**
@@ -221,23 +226,28 @@ private:
          */
         virtual bool_t hasPrevious() const
         {
+            bool_t res( false );
             if( isModifiedByList() )
             {
-                return false;
+                res = false;
             }
-            if(last_ == NULLPTR)
+            else if(last_ == NULLPTR)
             {
-                return false;
+                res = false;
             }
-            if(curs_ == NULLPTR)
+            else if(curs_ == NULLPTR)
             {
-                return true;
+                res = true;
             }
-            if(curs_->getPrevious() == last_)
+            else if(curs_->getPrevious() == last_)
             {
-                return false;
+                res = false;
             }
-            return true;
+            else
+            {
+                res = true;
+            }
+            return res;
         }
 
         /**
@@ -245,15 +255,19 @@ private:
          */
         virtual TT& getNext()
         {
-            if( !hasNext() )
+            TT* element( &illegal_ );
+            if( hasNext() )
+            {
+                Node* const node( curs_ );
+                curs_ = (curs_ == last_) ? NULLPTR : curs_->getNext();
+                rindex_ = node->getIndex();
+                element = &node->getElement();
+            }
+            else
             {
                 rindex_ = ILLEGAL_INDEX;
-                return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
             }
-            Node* const node( curs_ );
-            curs_ = (curs_ == last_) ? NULLPTR : curs_->getNext();
-            rindex_ = node->getIndex();
-            return node->getElement();
+            return *element;
         }
 
         /**
@@ -261,11 +275,12 @@ private:
          */
         virtual int32_t getNextIndex() const
         {
-            if( isModifiedByList() )
+            int32_t index( api::ListIterator<TT>::ERROR_INDEX );
+            if( !isModifiedByList() )
             {
-                return api::ListIterator<TT>::ERROR_INDEX;
+                index = hasNext() ? curs_->getIndex() : static_cast<int32_t>( list_.getLength() );
             }      
-            return hasNext() ? curs_->getIndex() : static_cast<int32_t>( list_.getLength() );
+            return index;
         }
 
         /**
@@ -273,15 +288,15 @@ private:
          */
         virtual bool_t hasNext() const
         {
-            if( isModifiedByList() )
+            bool_t res( false );
+            if( !isModifiedByList() )
             {
-                return false;
+                if(curs_ != NULLPTR)
+                {
+                    res = true;
+                }
             }
-            if(curs_ == NULLPTR)
-            {
-                return false;
-            }
-            return true;
+            return res;
         }
 
         /**
@@ -322,20 +337,16 @@ private:
          */
         bool_t construct(int32_t const index)
         {
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                return false;
-            }
-            if( !list_.isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                return false;
-            }
-            if( list_.isIndexOutOfBounds(index) )
+            bool_t res( false );
+            if( isConstructed() && list_.isConstructed() )
             {
-                return false;
+                if( !list_.isIndexOutOfBounds(index) )
+                {
+                    curs_ = list_.getNodeByIndex(index);
+                    res = true;
+                }
             }
-            curs_ = list_.getNodeByIndex(index);
-            return true;
+            return res;
         }
         
         /**

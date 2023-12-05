@@ -7,8 +7,8 @@
 #define LIB_ABSTRACTLIST_HPP_
 
 #include "lib.NonCopyable.hpp"
-#include "lib.Buffer.hpp"
 #include "lib.LinkedNode.hpp"
+#include "lib.UniquePointer.hpp"
 #include "api.List.hpp"
 #include "api.Queue.hpp"
 #include "api.Iterable.hpp"
@@ -164,12 +164,16 @@ public:
      */
     virtual T& get(int32_t index)
     {   
-        if( !isConstructed() )
+        T* element( &illegal_ );
+        if( isConstructed() )
         {
-            return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
+            Node* const node( getNodeByIndex(index) );
+            if(node != NULLPTR)
+            {
+                element = &node->getElement();
+            }
         }
-        Node* const node( getNodeByIndex(index) );
-        return (node != NULLPTR) ? node->getElement() : illegal_;
+        return *element;
     }
 
     /**
@@ -307,57 +311,53 @@ protected:
      * @param index   Position in this list.
      * @param element Inserting element.
      * @return True if element is inserted.
-     *
-     * @todo Shall re-implemented according MISRA-C++:2008 Rule 6–6–5 as the delete operator is used. 
      */
     bool_t addNode(int32_t const index, T const& element)
     {
-        if(isIndexOutOfBounds(index))
+        bool_t res( false );
+        if( !isIndexOutOfBounds(index) )
         {
-            return false;
-        }
-        Node* const node( new Node(element) );
-        if( node == NULLPTR )
-        {
-            return false;
-        }
-        if( !node->isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            delete node;
-            return false;
-        }        
-        if(last_ == NULLPTR)
-        {
-            last_ = node;
-            count_++;
-            return true;
-        }
-        if(index > 0)
-        {
-            Node* const after( getNodeByIndex(index - 1) );
-            if(after == NULLPTR)
-            {   ///< UT Justified Branch: SW dependency
-                delete node;
-                return false;
-            }
-            after->insertAfter(node);
-            if(after == last_)
+            UniquePointer<Node,SmartPointerDeleter<Node>,A> node( new Node(element) );
+            if( !node.isNull() && node->isConstructed() )
             {
-                last_ = node;
+                if(last_ == NULLPTR)
+                {
+                    last_ = node.get();
+                    res = true;
+                }
+                else
+                {
+                    if(index > 0)
+                    {
+                        Node* const after( getNodeByIndex(index - 1) );
+                        if(after != NULLPTR)
+                        {
+                            after->insertAfter(node.get());
+                            if(after == last_)
+                            {
+                                last_ = node.get();
+                            }
+                            res = true;
+                        }
+                    }
+                    else
+                    {
+                        Node* const before( getNodeByIndex(0) );
+                        if(before != NULLPTR)
+                        {                        
+                            before->insertBefore(node.get());
+                            res = true;
+                        }
+                    }
+                }
+            }
+            if( res == true )
+            {
+                static_cast<void>( node.release() );
+                count_++;
             }
         }
-        else
-        {
-            Node* const before( getNodeByIndex(0) );
-            if(before == NULLPTR)
-            {   ///< UT Justified Branch: SW dependency
-                delete node;
-                return false;
-            }
-            before->insertBefore(node);
-        }
-        count_++;
-        return true;
+        return res;
     }
 
     /**
@@ -368,19 +368,22 @@ protected:
      */
     Node* getNodeByIndex(int32_t const index)
     {
-        if( !isIndex(index) )
+        Node* node( NULLPTR );
+        if( isIndex(index) )
         {
-            return NULLPTR;
-        }
-        size_t lenght( getLength() );
-        if( static_cast<size_t>(index) == (lenght - 1U) )
-        {
-            return last_;
-        }
-        Node* node( last_->getNext() );
-        for(int32_t i(0); i<index; i++)
-        {
-            node = node->getNext();
+            size_t lenght( getLength() );
+            if( static_cast<size_t>(index) == (lenght - 1U) )
+            {
+                node = last_;
+            }
+            else
+            {
+                node = last_->getNext();
+                for(int32_t i(0); i<index; i++)
+                {
+                    node = node->getNext();
+                }
+            }
         }
         return node;
     }
@@ -420,24 +423,25 @@ protected:
      */
     bool_t removeNode(Node* const node)
     {
-        if(node == NULLPTR)
+        bool_t res( false );
+        if(node != NULLPTR)
         {
-            return false;
-        }
-        if(node == last_)
-        {
-            if(getLength() == 1U)
+            if(node == last_)
             {
-                last_ = NULLPTR;
+                if(getLength() == 1U)
+                {
+                    last_ = NULLPTR;
+                }
+                else
+                {
+                    last_ = last_->getPrevious();
+                }
             }
-            else
-            {
-                last_ = last_->getPrevious();
-            }
+            delete node;
+            count_++;
+            res = true;
         }
-        delete node;
-        count_++;
-        return true;
+        return res;
     }
 
     /**
@@ -448,18 +452,20 @@ protected:
      */
     bool_t isIndexOutOfBounds(int32_t const index) const
     {
+        bool_t res( false ); 
         if( index < 0 )
         {
-            return true;
+            res = true;
         }   ///< UT Justified Line: Compiler dependency
         else if( static_cast<size_t>(index) > getLength() )
         {
-            return true;
+            res = true;
         }   ///< UT Justified Line: Compiler dependency
         else
         {
-            return false;
+            res = false;
         }
+        return res;
     }
 
     /**

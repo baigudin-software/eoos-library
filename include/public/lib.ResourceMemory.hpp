@@ -114,30 +114,31 @@ bool_t ResourceMemory<T,N>::isConstructed() const
 template <typename T, int32_t N>
 void* ResourceMemory<T,N>::allocate(size_t size, void* ptr)
 {
+    void* addr( NULLPTR );
     if( isConstructed() )
     {
         lib::Guard<NoAllocator> const guard( guard_ );
-        if( size != sizeof(T) )
+        if( size == sizeof(T) )
         {
-            return NULLPTR;
-        }
-        for(int32_t i(0); i<N; i++)
-        {
-            if( isAllocated_[i] == true )
+            for(int32_t i(0); i<N; i++)
             {
-                continue;
+                if( isAllocated_[i] == true )
+                {
+                    continue;
+                }
+                uint64_t* const memory( memory_[i] );
+                uintptr_t const address( reinterpret_cast<uintptr_t>(memory) );
+                if( ( address & 0x7 ) != 0 )
+                {
+                    break;
+                }
+                isAllocated_[i] = true;
+                addr = memory;
+                break;
             }
-            uint64_t* const memory( memory_[i] );
-            uintptr_t const address( reinterpret_cast<uintptr_t>(memory) );
-            if( ( address & 0x7 ) != 0 )
-            {
-                return NULLPTR;
-            }
-            isAllocated_[i] = true;
-            return memory;
         }
     }
-    return NULLPTR;
+    return addr;
 }
 
 template <typename T, int32_t N>
@@ -151,7 +152,7 @@ void ResourceMemory<T,N>::free(void* ptr)
             if( memory_[i] == ptr )
             {
                 isAllocated_[i] = false;
-                return;
+                break;
             }
         }
     }

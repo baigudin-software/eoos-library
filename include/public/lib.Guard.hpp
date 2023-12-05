@@ -66,18 +66,10 @@ private:
     bool_t construct()
     {
         bool_t res( false );
-        do
+        if( isConstructed() )
         {
-            if( !isConstructed() )
-            {   ///< UT Justified Branch: HW dependency
-                break;
-            }
-            if( !guard_.isConstructed() )
-            {
-                break;
-            }
             res = guard_.lock();
-        } while(false);
+        }
         return res;
     }
     
