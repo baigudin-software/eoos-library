@@ -275,7 +275,7 @@ private:
                 passed++;
                 continue;
             }
-        }
+        } ///< UT Justified Line: Compiler dependency
         return passed == size;
     }
 
@@ -305,7 +305,7 @@ private:
                 passed++;
                 continue;
             }
-        }
+        } ///< UT Justified Line: Compiler dependency
         return passed == size;
     }
 
@@ -334,7 +334,7 @@ private:
                 passed++;
                 continue;
             }
-        }
+        } ///< UT Justified Line: Compiler dependency
         return passed == size;
     }
 
@@ -363,7 +363,7 @@ private:
                 passed++;
                 continue;
             }
-        }
+        } ///< UT Justified Line: Compiler dependency
         return passed == size;
     }
 

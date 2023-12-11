@@ -128,7 +128,7 @@ private:
                 }
                 res = false;
                 break;
-            }
+            } ///< UT Justified Line: Compiler dependency
             if( res == true )
             {
                 if( argv[argc] != NULLPTR )
