@@ -57,6 +57,9 @@ public:
 
     /**
      * @copydoc eoos::api::List::add(T const&)
+     *
+     * @todo This function implements the pure virtual functions of api::List<T> and api::Queue<T> interfaces,
+     *       that might be incorrect, thus this has to be deeply analyzed.
      */
     virtual bool_t add(T const& element)
     {

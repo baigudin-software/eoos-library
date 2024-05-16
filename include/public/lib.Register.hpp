@@ -107,6 +107,28 @@ public:
     }
 
     /**
+     * @brief Sets a bit value.
+     *
+     * @param digit Digit of a setting bit.
+     */
+    void setBit(uint32_t digit)
+    {
+        typename R::Value mask( 0x00000001 << digit );
+        copy_.value |= mask;        
+    }
+
+    /**
+     * @brief Cleans a bit value.
+     *
+     * @param digit Digit of a cleaning bit.
+     */
+    void clearBit(uint32_t digit)
+    {
+        typename R::Value mask( 0x00000001 << digit );
+        copy_.value &= ~mask;        
+    }    
+    
+    /**
      * @brief Saves the work copy to the register.
      */
     void commit()
