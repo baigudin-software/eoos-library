@@ -389,14 +389,10 @@ template <typename T, int32_t L, class A>
 bool_t Fifo<T,L,A>::construct()
 {
     bool_t res( false );
-    do 
+    if( isConstructed() )
     {
-        if( !isConstructed() )
-        {
-            break;
-        }
         res = true;
-    } while(false);
+    }
     return res;    
 }
 
