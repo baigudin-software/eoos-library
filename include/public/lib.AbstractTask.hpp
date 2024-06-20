@@ -1,7 +1,7 @@
 /**
  * @file      lib.AbstractTask.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ABSTRACTTASK_HPP_
 #define LIB_ABSTRACTTASK_HPP_
@@ -30,15 +30,12 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractTask() 
-        : NonCopyable<A>()
-        , api::Task() {
-    }
+    AbstractTask();
 
     /**
      * @brief Destructor.
      */
-    virtual ~AbstractTask() {}
+    virtual ~AbstractTask();
 
     /**
      * @copydoc eoos::api::Task::start()
@@ -48,20 +45,37 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
-    {
-        return Parent::isConstructed();
-    }
+    virtual bool_t isConstructed() const;
 
     /**
      * @copydoc eoos::api::Task::getStackSize()
      */
-    virtual size_t getStackSize() const
-    {
-        return 0U;
-    }
+    virtual size_t getStackSize() const;
 
 };
+
+template <class A>
+AbstractTask<A>::AbstractTask() 
+    : NonCopyable<A>()
+    , api::Task() {
+}
+
+template <class A>
+AbstractTask<A>::~AbstractTask() 
+{
+}
+
+template <class A>
+bool_t AbstractTask<A>::isConstructed() const
+{
+    return Parent::isConstructed();
+}
+
+template <class A>
+size_t AbstractTask<A>::getStackSize() const
+{
+    return 0U;
+}
 
 } // namespace lib
 } // namespace eoos

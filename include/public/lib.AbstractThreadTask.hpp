@@ -1,7 +1,7 @@
 /**
  * @file      lib.AbstractThreadTask.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ABSTRACTTHREADTASK_HPP_
 #define LIB_ABSTRACTTHREADTASK_HPP_
@@ -29,17 +29,12 @@ public:
     /**
      * @brief Constructor.
      */
-    AbstractThreadTask() 
-        : Thread<A>()
-        , api::Task() {
-        bool_t const isConstructed( construct() );
-        setConstructed( isConstructed );        
-    }
+    AbstractThreadTask();
 
     /**
      * @brief Destructor.
      */
-    virtual ~AbstractThreadTask() {}
+    virtual ~AbstractThreadTask();
 
     /**
      * @copydoc eoos::api::Task::start()
@@ -49,18 +44,12 @@ public:
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
-    {
-        return Parent::isConstructed();
-    }
+    virtual bool_t isConstructed() const;
 
     /**
      * @copydoc eoos::api::Task::getStackSize()
      */
-    virtual size_t getStackSize() const
-    {
-        return 0U;
-    }
+    virtual size_t getStackSize() const;
 
 protected:
 
@@ -74,12 +63,40 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct()
-    {
-        return setTask(*this);
-    }
+    bool_t construct();
 
 };
+
+template <class A>
+AbstractThreadTask<A>::AbstractThreadTask() 
+    : Thread<A>()
+    , api::Task() {
+    bool_t const isConstructed( construct() );
+    setConstructed( isConstructed );        
+}
+
+template <class A>
+AbstractThreadTask<A>::~AbstractThreadTask()
+{
+}
+
+template <class A>
+bool_t AbstractThreadTask<A>::isConstructed() const
+{
+    return Parent::isConstructed();
+}
+
+template <class A>
+size_t AbstractThreadTask<A>::getStackSize() const
+{
+    return 0U;
+}
+
+template <class A>
+bool_t AbstractThreadTask<A>::construct()
+{
+    return setTask(*this);
+}
 
 } // namespace lib
 } // namespace eoos
