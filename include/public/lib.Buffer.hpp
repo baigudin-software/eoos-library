@@ -1,7 +1,7 @@
 /**
  * @file      lib.Buffer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_BUFFER_HPP_
 #define LIB_BUFFER_HPP_
@@ -36,10 +36,7 @@ public:
     /**
      * @brief Constructor.
      */
-    Buffer() 
-        : AbstractBuffer<T,A>(L)
-        , buf_(arr_){
-    }
+    Buffer();
 
     /**
      * @brief Constructor.
@@ -48,30 +45,17 @@ public:
      *
      * @param illegal An illegal value.
      */
-    Buffer(T const& illegal) 
-        : AbstractBuffer<T,A>(L, illegal)
-        , buf_ (arr_){
-    }
+    Buffer(T const& illegal);
 
     /**
      * @brief Destructor.
      */
-    virtual ~Buffer()
-    {
-    }
+    virtual ~Buffer();
     
     /**
      * @copydoc eoos::api::SequenceContainer::getData()
      */
-    virtual T* getData() const
-    {
-        T* buf( NULLPTR );
-        if( isConstructed() )
-        {
-            buf = buf_;
-        }
-        return buf;
-    }
+    virtual T* getData() const;
 
     /**
      * @brief Assignment operator.
@@ -82,14 +66,7 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(api::SequenceContainer<T> const& buf)
-    {
-        if( isConstructed() && buf.isConstructed() )
-        {        
-            copy(buf);
-        }
-        return *this;
-    }
+    Buffer& operator=(api::SequenceContainer<T> const& buf);
     
 protected:
 
@@ -136,13 +113,7 @@ public:
      *
      * @param length Count of buffer elements.
      */
-    explicit Buffer(size_t const length) 
-        : AbstractBuffer<T,A>(length)
-        , buf_(NULLPTR)
-        , isDeleted_(true) {
-        bool_t const isConstructed( construct(length) );
-        setConstructed( isConstructed );
-    }
+    explicit Buffer(size_t const length);
 
     /**
      * @brief Constructor.
@@ -152,13 +123,7 @@ public:
      * @param length  Count of buffer elements.
      * @param illegal Illegal value.
      */
-    Buffer(size_t const length, T const& illegal) 
-        : AbstractBuffer<T,A>(length, illegal)
-        , buf_(NULLPTR)
-        , isDeleted_(true) {
-        bool_t const isConstructed( construct(length) );
-        setConstructed( isConstructed );
-    }
+    Buffer(size_t const length, T const& illegal);
 
     /**
      * @brief Constructor.
@@ -168,13 +133,7 @@ public:
      * @param length Number of elements.
      * @param buf    Pointer to external buffer.
      */
-    Buffer(size_t const length, T* const buf) 
-        : AbstractBuffer<T,A>(length)
-        , buf_(buf)
-        , isDeleted_(false) {
-        bool_t const isConstructed( construct(length) );
-        setConstructed( isConstructed );
-    }
+    Buffer(size_t const length, T* const buf);
 
     /**
      * @brief Constructor.
@@ -186,37 +145,17 @@ public:
      * @param buf     Pointer to external buffer.
      * @param illegal Illegal value.
      */
-    Buffer(size_t const length, T* const buf, T const& illegal) 
-        : AbstractBuffer<T,A>(length, illegal)
-        , buf_(buf)
-        , isDeleted_(false) {
-        bool_t const isConstructed( construct(length) );
-        setConstructed( isConstructed );
-    }
+    Buffer(size_t const length, T* const buf, T const& illegal);
 
     /**
      * @brief Destructor.
      */
-    virtual ~Buffer()
-    {
-        if( isDeleted_ == true )
-        {
-            A::free(buf_);
-        }
-    }
+    virtual ~Buffer();
     
     /**
      * @copydoc eoos::api::SequenceContainer::getData()
      */
-    virtual T* getData() const
-    {
-        T* buf( NULLPTR );
-        if( isConstructed() )
-        {
-            buf = buf_;
-        }
-        return buf;
-    }    
+    virtual T* getData() const;
 
     /**
      * @brief Assignment operator.
@@ -227,14 +166,7 @@ public:
      * @param buf Reference to source buffer.
      * @return Reference to this object.
      */
-    Buffer& operator=(api::SequenceContainer<T> const& buf)
-    {
-        if( isConstructed() && buf.isConstructed() )
-        {        
-            copy(buf);
-        }
-        return *this;
-    }
+    Buffer& operator=(api::SequenceContainer<T> const& buf);
     
 protected:
 
@@ -249,20 +181,7 @@ private:
      * @param length Count of buffer elements.
      * @return Boolean result.
      */
-    bool_t construct(size_t const length)
-    {
-        bool_t res( false );
-        if( isConstructed() && (length > 0U) )
-        {
-            if(buf_ == NULLPTR)
-            {
-                void* const addr( A::allocate(length * (sizeof(T))) );
-                buf_ = reinterpret_cast<T*>( addr ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
-            }
-            res = buf_ != NULLPTR;
-        }
-        return res;
-    }
+    bool_t construct(size_t const length);
 
     /**
      * @brief Pointer to external given or self created array.
@@ -278,6 +197,126 @@ private:
     bool_t isDeleted_;
 
 };
+
+template <typename T, int32_t L, class A>
+Buffer<T,L,A>::Buffer() 
+    : AbstractBuffer<T,A>(L)
+    , buf_(arr_){
+}
+
+template <typename T, int32_t L, class A>
+Buffer<T,L,A>::Buffer(T const& illegal) 
+    : AbstractBuffer<T,A>(L, illegal)
+    , buf_ (arr_){
+}
+
+template <typename T, int32_t L, class A>
+Buffer<T,L,A>::~Buffer()
+{
+}
+
+template <typename T, int32_t L, class A>
+T* Buffer<T,L,A>::getData() const
+{
+    T* buf( NULLPTR );
+    if( isConstructed() )
+    {
+        buf = buf_;
+    }
+    return buf;
+}
+
+template <typename T, int32_t L, class A>
+Buffer<T,L,A>& Buffer<T,L,A>::operator=(api::SequenceContainer<T> const& buf)
+{
+    if( isConstructed() && buf.isConstructed() )
+    {        
+        copy(buf);
+    }
+    return *this;
+}
+
+template <typename T, class A>
+Buffer<T,0,A>::Buffer(size_t const length) 
+    : AbstractBuffer<T,A>(length)
+    , buf_(NULLPTR)
+    , isDeleted_(true) {
+    bool_t const isConstructed( construct(length) );
+    setConstructed( isConstructed );
+}
+
+template <typename T, class A>
+Buffer<T,0,A>::Buffer(size_t const length, T const& illegal) 
+    : AbstractBuffer<T,A>(length, illegal)
+    , buf_(NULLPTR)
+    , isDeleted_(true) {
+    bool_t const isConstructed( construct(length) );
+    setConstructed( isConstructed );
+}
+
+template <typename T, class A>
+Buffer<T,0,A>::Buffer(size_t const length, T* const buf) 
+    : AbstractBuffer<T,A>(length)
+    , buf_(buf)
+    , isDeleted_(false) {
+    bool_t const isConstructed( construct(length) );
+    setConstructed( isConstructed );
+}
+
+template <typename T, class A>
+Buffer<T,0,A>::Buffer(size_t const length, T* const buf, T const& illegal) 
+    : AbstractBuffer<T,A>(length, illegal)
+    , buf_(buf)
+    , isDeleted_(false) {
+    bool_t const isConstructed( construct(length) );
+    setConstructed( isConstructed );
+}
+
+template <typename T, class A>
+Buffer<T,0,A>::~Buffer()
+{
+    if( isDeleted_ == true )
+    {
+        A::free(buf_);
+    }
+}
+
+template <typename T, class A>
+T* Buffer<T,0,A>::getData() const
+{
+    T* buf( NULLPTR );
+    if( isConstructed() )
+    {
+        buf = buf_;
+    }
+    return buf;
+}    
+
+template <typename T, class A>
+Buffer<T,0,A>& Buffer<T,0,A>::operator=(api::SequenceContainer<T> const& buf)
+{
+    if( isConstructed() && buf.isConstructed() )
+    {        
+        copy(buf);
+    }
+    return *this;
+}
+
+template <typename T, class A>
+bool_t Buffer<T,0,A>::construct(size_t const length)
+{
+    bool_t res( false );
+    if( isConstructed() && (length > 0U) )
+    {
+        if(buf_ == NULLPTR)
+        {
+            void* const addr( A::allocate(length * (sizeof(T))) );
+            buf_ = reinterpret_cast<T*>( addr ); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
+        }
+        res = buf_ != NULLPTR;
+    }
+    return res;
+}
 
 } // namespace lib
 } // namespace eoos

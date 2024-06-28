@@ -1,7 +1,7 @@
 /**
  * @file      lib.SmartPointerDeleter.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_SMARTPOINTERDELETER_HPP_
 #define LIB_SMARTPOINTERDELETER_HPP_
@@ -30,10 +30,8 @@ public:
      *
      * @param ptr Address of allocated the owning object.
      */
-    static void free(T* const ptr)
-    {
-        delete ptr;
-    }
+    static void free(T* const ptr);
+
 };
 
 /**
@@ -53,11 +51,21 @@ public:
      *
      * @param ptr Address of allocated the owning objects.
      */
-    static void free(T* const ptr)
-    {
-        delete [] ptr;
-    }
+    static void free(T* const ptr);
+
 };
+
+template <typename T>
+void SmartPointerDeleter<T>::free(T* const ptr)
+{
+    delete ptr;
+}
+
+template <typename T>
+void SmartPointerDeleterArray<T>::free(T* const ptr)
+{
+    delete [] ptr;
+}
 
 } // namespace lib
 } // namespace eoos

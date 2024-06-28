@@ -1,7 +1,7 @@
 /**
  * @file      lib.NonCopyable.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022-2023, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_NONCOPYABLE_HPP_
 #define LIB_NONCOPYABLE_HPP_
@@ -14,7 +14,7 @@ namespace lib
 {
 
 /**
- * @class NonCopyable
+ * @class NonCopyable<A>
  * @brief Next to root class of the operating system for objects which cannot be copied or moved.
  *
  * @tparam A Heap memory allocator class. 
@@ -28,14 +28,12 @@ public:
     /**
      * @brief Constructor.
      */
-    NonCopyable() 
-        : Object<A>() {
-    }
+    NonCopyable();
 
     /**
      * @brief Destructor.
      */
-    virtual ~NonCopyable() {}
+    virtual ~NonCopyable();
     
 private:
     
@@ -64,6 +62,16 @@ private:
     #endif // EOOS_CPP_STANDARD >= 2011
 
 };
+
+template <class A>
+NonCopyable<A>::NonCopyable()
+    : Object<A>() {
+}
+
+template <class A>
+NonCopyable<A>::~NonCopyable()
+{
+}
 
 } // namespace lib
 } // namespace eoos

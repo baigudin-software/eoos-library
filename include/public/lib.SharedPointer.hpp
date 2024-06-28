@@ -1,7 +1,7 @@
 /**
  * @file      lib.SharedPointer.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2020-2022, Sergey Baigudin, Baigudin Software
+ * @copyright 2020-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_SHAREDPOINTER_HPP_
 #define LIB_SHAREDPOINTER_HPP_
@@ -37,13 +37,7 @@ public:
     /**
      * @brief Constructor an empty shared object.
      */
-    SharedPointer() 
-        : Object<A>()
-        , api::SmartPointer<T>()
-        , cb_(NULLPTR) {
-        bool_t const isConstructed( construct() );
-        setConstructed(isConstructed);    
-    }
+    SharedPointer();
 
     /**
      * @brief Constructor.
@@ -52,114 +46,62 @@ public:
      *
      * @param pointer A pointer to get ownership.
      */
-    explicit SharedPointer(T* const pointer) 
-        : Object<A>()
-        , api::SmartPointer<T>()
-        , cb_(NULLPTR) {
-        bool_t const isConstructed( construct(pointer) );
-        setConstructed(isConstructed);    
-    }
+    explicit SharedPointer(T* const pointer);
 
     /**
      * @brief Destructor.
      */
-    virtual ~SharedPointer()
-    {
-        if( isConstructed() )
-        {
-            release();
-        }
-    }
+    virtual ~SharedPointer();
 
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
-    SharedPointer(SharedPointer const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
-        : Object<A>(obj)
-        , api::SmartPointer<T>()
-        , cb_(obj.cb_){
-        acquire();
-    }
+    SharedPointer(SharedPointer const& obj);
 
     /**
      * @copydoc eoos::Object::operator=(Object const&)
      */       
-    SharedPointer& operator=(SharedPointer const& obj)
-    {
-        if( isConstructed() && (this != &obj) )
-        {
-            release();
-            cb_ = obj.cb_;
-            acquire();            
-            Parent::operator=(obj);            
-        }
-        return *this;
-    }    
+    SharedPointer& operator=(SharedPointer const& obj);
 
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
      */       
-    SharedPointer(SharedPointer&& obj) noexcept 
-        : Object<A>( move(obj) )
-        , api::SmartPointer<T>()        
-        , cb_(obj.cb_) {
-    }   
+    SharedPointer(SharedPointer&& obj) noexcept;
 
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
-    SharedPointer& operator=(SharedPointer&& obj) & noexcept
-    {
-        if( isConstructed() && (this != &obj) )
-        {
-            release();            
-            cb_ = obj.cb_;
-            Parent::operator=( move(obj) );            
-        }        
-        return *this;
-    }        
+    SharedPointer& operator=(SharedPointer&& obj) & noexcept;
 
     #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
-    {
-        return Parent::isConstructed();
-    }
+    virtual bool_t isConstructed() const;
 
     /**
      * @brief Casts to boolean data type comparing if the stored pointer does not equal to null.
      *
      * @return Comparation the stored pointer does not equal to null.
      */    
-    operator bool_t() const 
-    {
-        return get() != NULLPTR;
-    }
+    operator bool_t() const;
 
     /**
      * @brief Returns the result of dereferencing the stored pointer.
      *
      * @return The dereferenced stored pointer.
      */
-    T& operator*() const
-    {
-        return *get();
-    }
+    T& operator*() const;
 
     /**
      * @brief Returns the stored pointer.
      *
      * @return The stored pointer or NULLPTR if no pointer stored.
      */
-    T* operator->() const
-    {
-        return get();
-    }
+    T* operator->() const;
 
     /**
      * @brief Returns an element of the stored array.
@@ -167,91 +109,44 @@ public:
      * @param index An element index.
      * @return An element.
      */    
-    T& operator[](uint32_t const index) const
-    {
-        T* const pointer( get() );
-        return pointer[index];
-    }
+    T& operator[](uint32_t const index) const;
     
     /**
      * @copydoc eoos::api::SmartPointer::get()
      */
-    virtual T* get() const
-    {
-        T* pointer( NULLPTR );
-        if( isConstructed() )
-        {
-            pointer = cb_->getPointer();
-        }
-        return pointer;
-    }
+    virtual T* get() const;
 
     /**
      * @copydoc eoos::api::SmartPointer::reset()
      */   
-    virtual void reset()
-    {
-        reset(NULLPTR);
-    }
+    virtual void reset();
 
     /**
      * @copydoc eoos::api::SmartPointer::reset(T*)
      */
-    virtual void reset(T* ptr)
-    {
-        if (get() != ptr)
-        {
-            Self temp(ptr);
-            swap(temp);
-        }
-    }
+    virtual void reset(T* ptr);
 
     /**
      * @copydoc eoos::api::SmartPointer::getCount()
      */
-    virtual int32_t getCount() const
-    {
-        int32_t counter( 0 );
-        if( isConstructed() )
-        {
-            if( cb_->getPointer() != NULLPTR )
-            {
-                counter = cb_->getCounter();
-            }
-        }
-        return counter;
-    }
+    virtual int32_t getCount() const;
     
     /**
      * @copydoc eoos::api::SmartPointer::isNull()
      */       
-    virtual bool_t isNull() const
-    {
-        return get() == NULLPTR;        
-    }
+    virtual bool_t isNull() const;
     
     /**
      * @copydoc eoos::api::SmartPointer::isUnique()
      */   
-    virtual bool_t isUnique() const
-    {
-        return getCount() == 1;
-    }
+    virtual bool_t isUnique() const;
     
     /**
      * @brief Swaps this managed object with an object managed by given smart object.
      *
      * @param obj A smart object to swap managed objects.
      */    
-    void swap(SharedPointer& obj)
-    {
-        if( isConstructed() && obj.isConstructed() )
-        {
-            ControlBlock<T,D,A>* const cb( cb_ );
-            cb_ = obj.cb_;
-            obj.cb_ = cb;
-        }
-    }    
+    void swap(SharedPointer& obj);
     
 protected:
 
@@ -265,64 +160,24 @@ private:
      * @param pointer A pointer to get ownership.
      * @return True if this object has been constructed successfully.
      */
-    bool_t construct(T* const pointer = NULLPTR)
-    {
-        bool_t res( false );
-        if( isConstructed() )
-        {
-            cb_ = new ControlBlock<T,D,A>(pointer);
-            if( Parent::isConstructed(cb_) )
-            {
-                res = true;
-            }
-        }
-        if( res != true )
-        {
-            deleteControlBlock(pointer);
-        }
-        return res;
-    }
+    bool_t construct(T* const pointer = NULLPTR);
 
     /**
      * @brief Releases the managed object by control block.
      */       
-    void release()
-    {
-        if( cb_ != NULLPTR )
-        {
-            int32_t const counter( cb_->decrease() );
-            if(counter == 0)
-            {
-                deleteControlBlock(cb_->getPointer());
-            }
-        }
-    }  
+    void release();
 
     /**
      * @brief Acquires a managed object by control block.
      */
-    void acquire()
-    {
-        if( cb_ != NULLPTR )
-        {
-            cb_->increase();
-        }
-    }
+    void acquire();
 
     /**
      * @brief Deletes the control block.
      *
      * @param pointer A pointer to get ownership.
      */
-    void deleteControlBlock(T* const pointer)
-    {
-        D::free(pointer);
-        if( cb_ != NULLPTR )
-        {
-            delete cb_;
-            cb_ = NULLPTR;
-        }
-    }
+    void deleteControlBlock(T* const pointer);
 
     /**
      * @class ControlBlock<TT,DD,AA>
@@ -348,87 +203,50 @@ private:
          *
          * @param pointer A pointer to get ownership.
          */
-        explicit ControlBlock(T* const pointer) 
-            : NonCopyable<AA>()
-            , pointer_(pointer)
-            , counter_(1)
-            , mutex_() {
-            bool_t const isConstructed( construct() );
-            setConstructed(isConstructed);
-        }
+        explicit ControlBlock(T* const pointer);
 
         /**
          * @copydoc eoos::api::Object::isConstructed()
          */
-        virtual bool_t isConstructed() const
-        {
-            return Parent::isConstructed();
-        }
+        virtual bool_t isConstructed() const;
 
         /**
          * @brief Destructor.
          */
-        virtual ~ControlBlock() {}    
+        virtual ~ControlBlock();
 
         /**
          * @brief Increases the counter on one.
          */
-        void increase()
-        {
-            Guard<AA> const guard(mutex_);
-            static_cast<void>(guard);            
-            ++counter_;
-        }
+        void increase();
 
         /**
          * @brief Decreases the counter on one.
          *
          * @return A value of the counter after decreasing.
          */        
-        int32_t decrease()
-        {
-            Guard<AA> const guard(mutex_);
-            static_cast<void>(guard);            
-            return --counter_;
-        }
+        int32_t decrease();
 
         /**
          * @brief Returns the counter.
          *
          * @return A value of the counter.
          */        
-        int32_t getCounter() const
-        {    
-            return counter_;
-        }
+        int32_t getCounter() const;
 
         /**
          * @brief Returns the managed raw pointer.
          *
          * @return The managed raw pointer.
          */        
-        TT* getPointer() const
-        {
-            return pointer_;
-        }    
+        TT* getPointer() const;
 
     private:
     
         /**
          * @brief Constructs this object.
          */     
-        bool_t construct()
-        {
-            bool_t res( false );
-            if( isConstructed() )
-            {
-                if( mutex_.isConstructed() )
-                {
-                    res = true;
-                }
-            }
-            return res;
-        }
+        bool_t construct();
         
         /**
          * @brief An owned pointer.
@@ -477,6 +295,295 @@ template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
 inline bool_t operator!=(SharedPointer<T,D,A> const& obj1, SharedPointer<T,D,A> const& obj2)
 {
     return obj1.get() != obj2.get();
+}
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>::SharedPointer() 
+    : Object<A>()
+    , api::SmartPointer<T>()
+    , cb_(NULLPTR) {
+    bool_t const isConstructed( construct() );
+    setConstructed(isConstructed);    
+}
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>::SharedPointer(T* const pointer) 
+    : Object<A>()
+    , api::SmartPointer<T>()
+    , cb_(NULLPTR) {
+    bool_t const isConstructed( construct(pointer) );
+    setConstructed(isConstructed);    
+}
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>::~SharedPointer()
+{
+    if( isConstructed() )
+    {
+        release();
+    }
+}
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>::SharedPointer(SharedPointer const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-8-1
+    : Object<A>(obj)
+    , api::SmartPointer<T>()
+    , cb_(obj.cb_){
+    acquire();
+}
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>& SharedPointer<T,D,A>::operator=(SharedPointer const& obj)
+{
+    if( isConstructed() && (this != &obj) )
+    {
+        release();
+        cb_ = obj.cb_;
+        acquire();            
+        Parent::operator=(obj);            
+    }
+    return *this;
+}    
+
+#if EOOS_CPP_STANDARD >= 2011
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>::SharedPointer(SharedPointer&& obj) noexcept 
+    : Object<A>( move(obj) )
+    , api::SmartPointer<T>()        
+    , cb_(obj.cb_) {
+}   
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>& SharedPointer<T,D,A>::operator=(SharedPointer&& obj) & noexcept
+{
+    if( isConstructed() && (this != &obj) )
+    {
+        release();            
+        cb_ = obj.cb_;
+        Parent::operator=( move(obj) );            
+    }        
+    return *this;
+}        
+
+#endif // EOOS_CPP_STANDARD >= 2011
+
+template <typename T, class D, class A>
+bool_t SharedPointer<T,D,A>::isConstructed() const ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
+{
+    return Parent::isConstructed();
+}
+
+template <typename T, class D, class A>
+SharedPointer<T,D,A>::operator bool_t() const 
+{
+    return get() != NULLPTR;
+}
+
+template <typename T, class D, class A>
+T& SharedPointer<T,D,A>::operator*() const
+{
+    return *get();
+}
+
+template <typename T, class D, class A>
+T* SharedPointer<T,D,A>::operator->() const
+{
+    return get();
+}
+
+template <typename T, class D, class A>
+T& SharedPointer<T,D,A>::operator[](uint32_t const index) const
+{
+    T* const pointer( get() );
+    return pointer[index];
+}
+
+template <typename T, class D, class A>
+T* SharedPointer<T,D,A>::get() const
+{
+    T* pointer( NULLPTR );
+    if( isConstructed() )
+    {
+        pointer = cb_->getPointer();
+    }
+    return pointer;
+}
+
+template <typename T, class D, class A>
+void SharedPointer<T,D,A>::reset()
+{
+    reset(NULLPTR);
+}
+
+template <typename T, class D, class A>
+void SharedPointer<T,D,A>::reset(T* ptr)
+{
+    if (get() != ptr)
+    {
+        Self temp(ptr);
+        swap(temp);
+    }
+}
+
+template <typename T, class D, class A>
+int32_t SharedPointer<T,D,A>::getCount() const
+{
+    int32_t counter( 0 );
+    if( isConstructed() )
+    {
+        if( cb_->getPointer() != NULLPTR )
+        {
+            counter = cb_->getCounter();
+        }
+    }
+    return counter;
+}
+
+template <typename T, class D, class A>
+bool_t SharedPointer<T,D,A>::isNull() const
+{
+    return get() == NULLPTR;        
+}
+
+template <typename T, class D, class A>
+bool_t SharedPointer<T,D,A>::isUnique() const
+{
+    return getCount() == 1;
+}
+
+template <typename T, class D, class A>
+void SharedPointer<T,D,A>::swap(SharedPointer& obj)
+{
+    if( isConstructed() && obj.isConstructed() )
+    {
+        ControlBlock<T,D,A>* const cb( cb_ );
+        cb_ = obj.cb_;
+        obj.cb_ = cb;
+    }
+}    
+
+template <typename T, class D, class A>
+bool_t SharedPointer<T,D,A>::construct(T* const pointer)
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        cb_ = new ControlBlock<T,D,A>(pointer);
+        if( Parent::isConstructed(cb_) )
+        {
+            res = true;
+        }
+    }
+    if( res != true )
+    {
+        deleteControlBlock(pointer);
+    }
+    return res;
+}
+
+template <typename T, class D, class A>
+void SharedPointer<T,D,A>::release()
+{
+    if( cb_ != NULLPTR )
+    {
+        int32_t const counter( cb_->decrease() );
+        if(counter == 0)
+        {
+            deleteControlBlock(cb_->getPointer());
+        }
+    }
+}  
+
+template <typename T, class D, class A>
+void SharedPointer<T,D,A>::acquire()
+{
+    if( cb_ != NULLPTR )
+    {
+        cb_->increase();
+    }
+}
+
+template <typename T, class D, class A>
+void SharedPointer<T,D,A>::deleteControlBlock(T* const pointer)
+{
+    D::free(pointer);
+    if( cb_ != NULLPTR )
+    {
+        delete cb_;
+        cb_ = NULLPTR;
+    }
+}
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA> 
+SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::ControlBlock(T* const pointer) 
+    : NonCopyable<AA>()
+    , pointer_(pointer)
+    , counter_(1)
+    , mutex_() {
+    bool_t const isConstructed( construct() );
+    setConstructed(isConstructed);
+}
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+bool_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::isConstructed() const
+{
+    return Parent::isConstructed();
+}
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::~ControlBlock() 
+{
+}    
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+void SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::increase()
+{
+    Guard<AA> const guard(mutex_);
+    static_cast<void>(guard);            
+    ++counter_;
+}
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+int32_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::decrease()
+{
+    Guard<AA> const guard(mutex_);
+    static_cast<void>(guard);            
+    return --counter_;
+}
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+int32_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::getCounter() const
+{    
+    return counter_;
+}
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+TT* SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::getPointer() const
+{
+    return pointer_;
+}    
+
+template <typename T, class D, class A>
+template <typename TT, class DD, class AA>
+bool_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::construct()
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        if( mutex_.isConstructed() )
+        {
+            res = true;
+        }
+    }
+    return res;
 }
 
 } // namespace lib

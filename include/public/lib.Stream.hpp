@@ -1,7 +1,7 @@
 /**
  * @file      lib.Stream.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2022-2023, Sergey Baigudin, Baigudin Software
+ * @copyright 2022-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_STREAM_HPP_
 #define LIB_STREAM_HPP_
@@ -37,20 +37,14 @@ public:
      *
      * @return The system output character stream.
      */
-    static api::OutStream<char_t>& cout()
-    {
-        return sys::Call::get().getStreamManager().getCout();
-    }
+    static api::OutStream<char_t>& cout();
 
     /**
      * @brief Returns system error output character stream.
      *
      * @return The system error output character stream.
      */
-    static api::OutStream<char_t>& cerr()
-    {
-        return sys::Call::get().getStreamManager().getCerr();
-    }
+    static api::OutStream<char_t>& cerr();
 
     /**
      * @brief Sets a new output character stream.
@@ -59,57 +53,71 @@ public:
      * @param stream A new stream to set.
      * @return True if the output character stream is set.
      */
-    static bool_t set(Type type, api::OutStream<char_t>& stream)
-    {
-        bool_t res( false );
-        switch(type)
-        {
-            case TYPE_COUT:
-            {
-                res = sys::Call::get().getStreamManager().setCout(stream);
-                break;
-            }
-            case TYPE_CERR:
-            {
-                res = sys::Call::get().getStreamManager().setCerr(stream);
-                break;
-            }
-            default:
-            {
-                res = false;
-                break;
-            }
-        }
-        return res;
-    }
+    static bool_t set(Type type, api::OutStream<char_t>& stream);
 
     /**
      * @brief Resets the output character stream to default.
      * 
      * @param type Stream type.
      */
-    static void reset(Type type)
-    {
-        switch(type)
-        {
-            case TYPE_COUT:
-            {
-                sys::Call::get().getStreamManager().resetCout();
-                break;
-            }
-            case TYPE_CERR:
-            {
-                sys::Call::get().getStreamManager().resetCerr();
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-    }
+    static void reset(Type type);
 
 };
+
+inline api::OutStream<char_t>& Stream::cout()
+{
+    return sys::Call::get().getStreamManager().getCout();
+}
+
+inline api::OutStream<char_t>& Stream::cerr()
+{
+    return sys::Call::get().getStreamManager().getCerr();
+}
+
+inline bool_t Stream::set(Type type, api::OutStream<char_t>& stream)
+{
+    bool_t res( false );
+    switch(type)
+    {
+        case TYPE_COUT:
+        {
+            res = sys::Call::get().getStreamManager().setCout(stream);
+            break;
+        }
+        case TYPE_CERR:
+        {
+            res = sys::Call::get().getStreamManager().setCerr(stream);
+            break;
+        }
+        default:
+        {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
+inline void Stream::reset(Type type)
+{
+    switch(type)
+    {
+        case TYPE_COUT:
+        {
+            sys::Call::get().getStreamManager().resetCout();
+            break;
+        }
+        case TYPE_CERR:
+        {
+            sys::Call::get().getStreamManager().resetCerr();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+}
 
 } // namespace lib
 } // namespace eoos

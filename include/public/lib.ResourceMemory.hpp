@@ -1,7 +1,7 @@
 /**
  * @file      lib.ResourceMemory.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2023, Sergey Baigudin, Baigudin Software
+ * @copyright 2023-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_RESOURCEMEMORY_HPP_
 #define LIB_RESOURCEMEMORY_HPP_
@@ -89,6 +89,54 @@ private:
      */
     uint64_t memory_[N][(sizeof(T) >> 3) + 1]; 
     
+};
+
+/**
+ * @class ResourceMemory<T,0>
+ * @brief Heap resource memory allocator.
+ *
+ * Partial specialization of the template implements the heap allocation of resource.
+ * 
+ * @tparam T Resource type
+ */
+template <typename T>
+class ResourceMemory<T,0> : public NonCopyable<Allocator>, public api::Heap
+{
+    typedef NonCopyable<Allocator> Parent;
+
+public:
+
+    /**
+     * @brief Constructor.
+     *
+     * @param guard Atomic access to any resources.
+     */
+    ResourceMemory(api::Guard& guard);
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~ResourceMemory();
+
+    /**
+     * @copydoc eoos::api::Object::isConstructed()
+     */
+    virtual bool_t isConstructed() const;
+
+    /**
+     * @copydoc eoos::api::Heap::allocate(size_t,void*)
+     */
+    virtual void* allocate(size_t size, void* ptr);
+
+    /**
+     * @copydoc eoos::api::Heap::free(void*)
+     */
+    virtual void free(void* ptr);
+
+protected:
+
+    using Parent::setConstructed;
+
 };
 
 template <typename T, int32_t N>
@@ -180,54 +228,6 @@ bool_t ResourceMemory<T,N>::construct()
     } while(false);    
     return res;
 }
-
-/**
- * @class ResourceMemory<T,0>
- * @brief Heap resource memory allocator.
- *
- * Partial specialization of the template implements the heap allocation of resource.
- * 
- * @tparam T Resource type
- */
-template <typename T>
-class ResourceMemory<T,0> : public NonCopyable<Allocator>, public api::Heap
-{
-    typedef NonCopyable<Allocator> Parent;
-
-public:
-
-    /**
-     * @brief Constructor.
-     *
-     * @param guard Atomic access to any resources.
-     */
-    ResourceMemory(api::Guard& guard);
-
-    /**
-     * @brief Destructor.
-     */
-    virtual ~ResourceMemory();
-
-    /**
-     * @copydoc eoos::api::Object::isConstructed()
-     */
-    virtual bool_t isConstructed() const;
-
-    /**
-     * @copydoc eoos::api::Heap::allocate(size_t,void*)
-     */
-    virtual void* allocate(size_t size, void* ptr);
-
-    /**
-     * @copydoc eoos::api::Heap::free(void*)
-     */
-    virtual void free(void* ptr);
-
-protected:
-
-    using Parent::setConstructed;
-
-};
 
 template <typename T>
 ResourceMemory<T,0>::ResourceMemory(api::Guard&)

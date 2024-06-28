@@ -1,7 +1,7 @@
 /**
  * @file      lib.ArgumentParser.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2023, Sergey Baigudin, Baigudin Software
+ * @copyright 2023-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_ARGUMENTPARSER_HPP_
 #define LIB_ARGUMENTPARSER_HPP_
@@ -18,7 +18,7 @@ namespace lib
 {
 
 /**
- * @class ArgumentParser<A>
+ * @class ArgumentParser<T,L,A>
  * @brief Program argument parser class.
  *
  * @tparam T A data type of argument string characters.
@@ -38,28 +38,17 @@ public:
      * @param argc The number of arguments passed to the program.
      * @param argv An array of c-string of arguments where the last one - argc + 1 is null.
      */
-    ArgumentParser(int32_t argc, T* argv[])
-        : NonCopyable<A>()
-        , args_ ()
-        , ptrs_ (NULLPTR) {
-        bool_t const isConstructed( construct(argc, argv) );
-        setConstructed( isConstructed );
-    }
+    ArgumentParser(int32_t argc, T* argv[]);
 
     /**
      * @brief Destructor.
      */
-    virtual ~ArgumentParser()
-    {
-    }
+    virtual ~ArgumentParser();
     
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
-    {
-        return Parent::isConstructed();
-    }
+    virtual bool_t isConstructed() const;
     
     /**
      * @brief Returns list of arguments.
@@ -68,10 +57,7 @@ public:
      * 
      * @todo Declare constant function to satisfy MISRA-C++:2008 Rule 9–3–1
      */
-    api::List< api::String<T>* >& getArguments()
-    {
-        return ptrs_;
-    }
+    api::List< api::String<T>* >& getArguments();
 
 protected:
 
@@ -86,21 +72,7 @@ private:
      * @param argv An array of c-string of arguments where the last one - argc + 1 is null.
      * @return True if object has been constructed successfully.
      */
-    bool_t construct(int32_t argc, T* argv[])
-    {
-        bool_t res( false );
-        if( ( !isConstructed() )
-         || ( !args_.isConstructed() )
-         || ( !addArgs(argc, argv) ) ) 
-        {
-            res = false;
-        }
-        else
-        {
-            res = true;
-        }
-        return res;
-    }
+    bool_t construct(int32_t argc, T* argv[]);
 
     /**
      * @brief Adds arguments to the list.
@@ -109,40 +81,7 @@ private:
      * @param argv An array of c-string of arguments where the last one - argc + 1 is null.
      * @return True if arguments are added successfully.
      */
-    bool_t addArgs(int32_t argc, T* argv[])
-    {
-        bool_t res( true );
-        if( (argc >= 0) && (argv != NULLPTR) )
-        {
-            for(int32_t i(0); i<argc; i++)
-            {
-                if( argv[i] != NULLPTR )
-                {
-                    if( args_.add(argv[i]) == true )
-                    {
-                        if( ptrs_.add( &args_.getLast() ) == true )
-                        {
-                            continue;
-                        }
-                    }
-                }
-                res = false;
-                break;
-            } ///< UT Justified Line: Compiler dependency
-            if( res == true )
-            {
-                if( argv[argc] != NULLPTR )
-                {
-                    res = false;
-                }
-            }
-        }
-        else
-        {
-            res = false;
-        }
-        return res;
-    }   
+    bool_t addArgs(int32_t argc, T* argv[]);
 
     /**
      * List to contain program arguments 
@@ -155,6 +94,85 @@ private:
     LinkedList<api::String<T>*> ptrs_;
 
 };
+
+template <typename T, int32_t L, class A>
+ArgumentParser<T,L,A>::ArgumentParser(int32_t argc, T* argv[])
+    : NonCopyable<A>()
+    , args_ ()
+    , ptrs_ (NULLPTR) {
+    bool_t const isConstructed( construct(argc, argv) );
+    setConstructed( isConstructed );
+}
+
+template <typename T, int32_t L, class A>
+ArgumentParser<T,L,A>::~ArgumentParser()
+{
+}
+
+template <typename T, int32_t L, class A>
+bool_t ArgumentParser<T,L,A>::isConstructed() const
+{
+    return Parent::isConstructed();
+}
+
+template <typename T, int32_t L, class A>
+api::List< api::String<T>* >& ArgumentParser<T,L,A>::getArguments()
+{
+    return ptrs_;
+}
+
+template <typename T, int32_t L, class A>
+bool_t ArgumentParser<T,L,A>::construct(int32_t argc, T* argv[])
+{
+    bool_t res( false );
+    if( ( !isConstructed() )
+     || ( !args_.isConstructed() )
+     || ( !addArgs(argc, argv) ) ) 
+    {
+        res = false;
+    }
+    else
+    {
+        res = true;
+    }
+    return res;
+}
+
+template <typename T, int32_t L, class A>
+bool_t ArgumentParser<T,L,A>::addArgs(int32_t argc, T* argv[])
+{
+    bool_t res( true );
+    if( (argc >= 0) && (argv != NULLPTR) )
+    {
+        for(int32_t i(0); i<argc; i++)
+        {
+            if( argv[i] != NULLPTR )
+            {
+                if( args_.add(argv[i]) == true )
+                {
+                    if( ptrs_.add( &args_.getLast() ) == true )
+                    {
+                        continue;
+                    }
+                }
+            }
+            res = false;
+            break;
+        } ///< UT Justified Line: Compiler dependency
+        if( res == true )
+        {
+            if( argv[argc] != NULLPTR )
+            {
+                res = false;
+            }
+        }
+    }
+    else
+    {
+        res = false;
+    }
+    return res;
+} 
 
 } // namespace lib
 } // namespace eoos

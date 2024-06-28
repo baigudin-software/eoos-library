@@ -56,96 +56,66 @@ public:
     /**
      * @brief Constructor.
      */
-    Register(R& reg)
-        : origin_( reg )
-        , copy_( reg.value ){
-    }
+    Register(R& reg);
 
     /**
      * @brief Register.
      */
-    ~Register() {}    
+    ~Register(); 
 
     /**
      * @brief Returns bit-field of the register.
      *
      * @return Bit-field structure of the register.
      */
-    typename R::Bit& bit()
-    {
-       return copy_.bit;
-    }
+    typename R::Bit& bit();
 
     /**
      * @brief Returns bit-field of the register.
      *
      * @return Bit-field structure of the register.
      */
-    const typename R::Bit& bit() const
-    {
-       return copy_.bit;
-    }
+    const typename R::Bit& bit() const;
 
     /**
      * @brief Returns value of the register.
      *
      * @return Value of the register.
      */
-    typename R::Value& value()
-    {
-       return copy_.value; 
-    }
+    typename R::Value& value();
 
     /**
      * @brief Returns value of the register.
      *
      * @return Value of the register.
      */
-    const typename R::Value& value() const
-    {
-       return copy_.value; 
-    }
+    const typename R::Value& value() const;
 
     /**
      * @brief Sets a bit value.
      *
      * @param digit Digit of a setting bit.
      */
-    void setBit(uint32_t digit)
-    {
-        typename R::Value mask( 0x00000001 << digit );
-        copy_.value |= mask;        
-    }
+    void setBit(uint32_t digit);
 
     /**
      * @brief Cleans a bit value.
      *
      * @param digit Digit of a cleaning bit.
      */
-    void clearBit(uint32_t digit)
-    {
-        typename R::Value mask( 0x00000001 << digit );
-        copy_.value &= ~mask;        
-    }    
+    void clearBit(uint32_t digit);
     
     /**
      * @brief Saves the work copy to the register.
      */
-    void commit()
-    {
-        origin_.value = copy_.value;
-    }
+    void commit();
 
     /**
      * @brief Saves the register to the work copy.
      *
      * @return This register object.
      */
-    Register<R>& fetch()
-    {
-        copy_.value = origin_.value;
-        return *this;
-    }
+    Register<R>& fetch();
     
 private:
 
@@ -160,6 +130,68 @@ private:
     R copy_;
 
 };
+
+template <class R>
+Register<R>::Register(R& reg)
+    : origin_( reg )
+    , copy_( reg.value ){
+}
+
+template <class R>
+Register<R>::~Register() 
+{
+}    
+
+template <class R>
+typename R::Bit& Register<R>::bit()
+{
+   return copy_.bit;
+}
+
+template <class R>
+const typename R::Bit& Register<R>::bit() const
+{
+   return copy_.bit;
+}
+
+template <class R>
+typename R::Value& Register<R>::value()
+{
+   return copy_.value; 
+}
+
+template <class R>
+const typename R::Value& Register<R>::value() const
+{
+   return copy_.value; 
+}
+
+template <class R>
+void Register<R>::setBit(uint32_t digit)
+{
+    typename R::Value mask( 0x00000001 << digit );
+    copy_.value |= mask;        
+}
+
+template <class R>
+void Register<R>::clearBit(uint32_t digit)
+{
+    typename R::Value mask( 0x00000001 << digit );
+    copy_.value &= ~mask;        
+}    
+
+template <class R>
+void Register<R>::commit()
+{
+    origin_.value = copy_.value;
+}
+
+template <class R>
+Register<R>& Register<R>::fetch()
+{
+    copy_.value = origin_.value;
+    return *this;
+}
 
 } // namespace lib
 } // namespace eoos

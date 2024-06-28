@@ -1,7 +1,7 @@
 /**
  * @file      lib.Mutex.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2015-2023, Sergey Baigudin, Baigudin Software
+ * @copyright 2015-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_MUTEX_HPP_
 #define LIB_MUTEX_HPP_
@@ -31,71 +31,32 @@ public:
     /**
      * @brief Constructor.
      */
-    Mutex() 
-        : NonCopyable<A>()
-        , api::Mutex()
-        , mutex_ (NULLPTR){
-        bool_t const isConstructed( construct() );
-        setConstructed( isConstructed );
-    }
+    Mutex();
 
     /**
      * @brief Destructor.
      */
-    virtual ~Mutex()
-    {
-        if( mutex_ != NULLPTR )
-        {
-            delete mutex_;
-        }
-    }
+    virtual ~Mutex();
     
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
-    virtual bool_t isConstructed() const
-    {
-        return Parent::isConstructed();
-    }
+    virtual bool_t isConstructed() const;
     
     /**
      * @copydoc eoos::api::Mutex::tryLock()
      */
-    virtual bool_t tryLock()
-    {
-        bool_t res( false );
-        if( isConstructed() )
-        {
-            res = mutex_->tryLock();
-        }
-        return res;        
-    }        
+    virtual bool_t tryLock();
 
     /**
      * @copydoc eoos::api::Mutex::lock()
      */
-    virtual bool_t lock()
-    {
-        bool_t res( false );
-        if( isConstructed() )
-        {
-            res = mutex_->lock();
-        }
-        return res;
-    }
+    virtual bool_t lock();
 
     /**
      * @copydoc eoos::api::Mutex::unlock()
      */
-    virtual bool_t unlock()
-    {
-        bool_t res( false );
-        if( isConstructed() )
-        {
-            res = mutex_->unlock();
-        }
-        return res;
-    }
+    virtual bool_t unlock();
 
 protected:
 
@@ -108,19 +69,7 @@ private:
      *
      * @return True if object has been constructed successfully.
      */
-    bool_t construct()
-    {
-        bool_t res( false );
-        if( isConstructed() )
-        {
-            mutex_ = sys::Call::get().getMutexManager().create();
-            if( Parent::isConstructed(mutex_) )
-            {   
-                res = true;
-            }
-        }
-        return res;
-    }
+    bool_t construct();
 
     /**
      * @brief System mutex interface.
@@ -128,6 +77,78 @@ private:
     api::Mutex* mutex_;
 
 };
+
+template <class A>
+Mutex<A>::Mutex() 
+    : NonCopyable<A>()
+    , api::Mutex()
+    , mutex_ (NULLPTR){
+    bool_t const isConstructed( construct() );
+    setConstructed( isConstructed );
+}
+
+template <class A>
+Mutex<A>::~Mutex()
+{
+    if( mutex_ != NULLPTR )
+    {
+        delete mutex_;
+    }
+}
+
+template <class A>
+bool_t Mutex<A>::isConstructed() const
+{
+    return Parent::isConstructed();
+}
+
+template <class A>
+bool_t Mutex<A>::tryLock()
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        res = mutex_->tryLock();
+    }
+    return res;        
+}        
+
+template <class A>
+bool_t Mutex<A>::lock()
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        res = mutex_->lock();
+    }
+    return res;
+}
+
+template <class A>
+bool_t Mutex<A>::unlock()
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        res = mutex_->unlock();
+    }
+    return res;
+}
+
+template <class A>
+bool_t Mutex<A>::construct()
+{
+    bool_t res( false );
+    if( isConstructed() )
+    {
+        mutex_ = sys::Call::get().getMutexManager().create();
+        if( Parent::isConstructed(mutex_) )
+        {   
+            res = true;
+        }
+    }
+    return res;
+}
 
 } // namespace lib
 } // namespace eoos

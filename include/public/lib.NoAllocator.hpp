@@ -1,7 +1,7 @@
 /**
  * @file      lib.NoAllocator.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2023, Sergey Baigudin, Baigudin Software
+ * @copyright 2023-2024, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_NOALLOCATOR_HPP_
 #define LIB_NOALLOCATOR_HPP_
@@ -27,19 +27,23 @@ public:
      *
      * @return The null pointer.
      */
-    static void* allocate(size_t)
-    {
-        return NULLPTR;
-    }
+    static void* allocate(size_t);
 
     /**
      * @brief Frees allocated memory.
      */
-    static void free(void*)
-    {
-    }
+    static void free(void*);
 
 };
+
+inline void* NoAllocator::allocate(size_t)
+{
+    return NULLPTR;
+}
+
+inline void NoAllocator::free(void*)
+{
+}
 
 } // namespace lib
 } // namespace eoos
