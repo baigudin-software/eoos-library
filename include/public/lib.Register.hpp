@@ -41,8 +41,8 @@ namespace lib
  *         Value ttcm  : 1;
  *         Value       : 7;
  *         Value reset : 1;
- *         Value dbf   : 1;
  *         Value       : 15;
+ *         Value dbf   : 1;
  *     } bit;
  * };
  * ```
