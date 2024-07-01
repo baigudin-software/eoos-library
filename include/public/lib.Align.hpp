@@ -312,9 +312,9 @@ void Align<T,S,A>::copy(Align const& obj) ///< SCA MISRA-C++:2008 Defected Rule 
 template <typename T, size_t S, class A>
 T Align<T,S,A>::typecast() const
 {
-    int32_t const max( static_cast<int32_t>(S) - 1 );
+    int32_t const maximum( static_cast<int32_t>(S) - 1 );
     T r( static_cast<T>(0) );
-    for(int32_t i(max); i>=0; i--)
+    for(int32_t i(maximum); i>=0; i--)
     {
         r = r << 8U;                     ///< SCA MISRA-C++:2008 Justified Rule 5-0-21
         r = r | static_cast<T>(val_[i]); ///< SCA MISRA-C++:2008 Justified Rule 5-0-21

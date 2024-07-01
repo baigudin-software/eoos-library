@@ -549,14 +549,10 @@ bool_t BaseString<T,L,R,A>::construct(T const* const str)
 {
     str_[0] = R::getTerminator();
     bool_t res( false );
-    do
+    if( isConstructed() )
     {
-        if( !isConstructed() )
-        {
-            break;
-        }
-        res = ( str == NULLPTR ) ? true : copyRaw(str);            
-    } while(false);
+        res = ( str == NULLPTR ) ? true : copyRaw(str);
+    }
     return res;
 }
 
@@ -724,24 +720,19 @@ template <typename T, class R, class A>
 bool_t BaseString<T,0,R,A>::construct(T const* const str)
 {
     bool_t res( false );
-    do
+    if( isConstructed() )
     {
-        if( !isConstructed() )
-        {
-            break;
-        }
         size_t length( LENGTH_ON_CONSTRUCTION );
         if( str != NULLPTR )
         {
             length = getLengthRaw(str);
         }
         bool_t isAllocated( allocate(length) );
-        if( !isAllocated )
+        if( isAllocated )
         {
-            break;
+            res = ( str == NULLPTR ) ? true : copyRaw(str);
         }
-        res = ( str == NULLPTR ) ? true : copyRaw(str);
-    } while(false);
+    }
     return res;
 }
 

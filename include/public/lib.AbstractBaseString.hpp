@@ -597,8 +597,7 @@ bool_t AbstractBaseString<T,R,A>::convertToString(I const val, Number::Base cons
             index -= 1;
         }
         res = true;
-    }
-    while(false);
+    } while(false);
     if(res == true)
     {
         index += 1;

@@ -330,8 +330,7 @@ bool_t Memory::itoa(T const val, char_t* str, Number::Base const base)
                 temp[index--] = '-'; ///< SCA MISRA-C++:2008 Justified Rule 5-0-11 and Rule 5-2-10
             }
             res = true;
-        }
-        while(false);
+        } while(false);
         // Copy the temp string to the destination string
         // @todo Replace this with strncpy
         strcpy(str, &temp[++index]); ///< SCA MISRA-C++:2008 Justified Rule 5-2-10

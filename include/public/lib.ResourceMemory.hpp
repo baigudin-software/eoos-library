@@ -162,6 +162,7 @@ bool_t ResourceMemory<T,N>::isConstructed() const
 template <typename T, int32_t N>
 void* ResourceMemory<T,N>::allocate(size_t size, void* ptr)
 {
+    static_cast<void>(ptr); // Avoid MISRA-C++:2008 Rule 0–1–3 and AUTOSAR C++14 Rule A0-1-4
     void* addr( NULLPTR );
     if( isConstructed() )
     {
@@ -170,19 +171,17 @@ void* ResourceMemory<T,N>::allocate(size_t size, void* ptr)
         {
             for(int32_t i(0); i<N; i++)
             {
-                if( isAllocated_[i] == true )
+                if( isAllocated_[i] == false )
                 {
-                    continue;
+                    uint64_t* const memory( memory_[i] );
+                    uintptr_t const address( reinterpret_cast<uintptr_t>(memory) );
+                    if( ( address & 0x7 ) == 0 )
+                    {
+                        isAllocated_[i] = true;
+                        addr = memory;
+                        break;
+                    }
                 }
-                uint64_t* const memory( memory_[i] );
-                uintptr_t const address( reinterpret_cast<uintptr_t>(memory) );
-                if( ( address & 0x7 ) != 0 )
-                {
-                    break;
-                }
-                isAllocated_[i] = true;
-                addr = memory;
-                break;
             }
         }
     }
@@ -192,12 +191,12 @@ void* ResourceMemory<T,N>::allocate(size_t size, void* ptr)
 template <typename T, int32_t N>
 void ResourceMemory<T,N>::free(void* ptr)
 {
-    if( isConstructed() )
+    if( isConstructed() && ptr != NULLPTR )
     {
         lib::Guard<NoAllocator> const guard( guard_ );
         for(int32_t i(0); i<N; i++)
         {
-            if( memory_[i] == ptr )
+            if( (memory_[i] == ptr) && (isAllocated_[i] == true) )
             {
                 isAllocated_[i] = false;
                 break;
@@ -210,22 +209,15 @@ template <typename T, int32_t N>
 bool_t ResourceMemory<T,N>::construct()
 {
     bool_t res( false );
-    do 
-    {
-        if( !isConstructed() )
-        {   ///< UT Justified Branch: HW dependency
-            break;
-        }
-        if( !guard_.isConstructed() )
-        {
-            break;
-        }
+    if( ( isConstructed() )
+     && ( guard_.isConstructed() ) ) 
+    {    
         for(int32_t i(0); i<N; i++)
         {
             isAllocated_[i] = false;
         }
         res = true;
-    } while(false);    
+    }
     return res;
 }
 
