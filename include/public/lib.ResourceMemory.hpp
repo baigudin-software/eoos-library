@@ -73,22 +73,22 @@ private:
     bool_t construct();
 
     /**
-     * @brief Resource allocation guard.
-     */
-    api::Guard& guard_;
-
-    /**
-     * @brief Resource memory pool. 
-     */
-    bool_t isAllocated_[N]; 
-
-    /**
      * @brief Resource memory pool.
      * 
      * @note Memory is double array of uint64_t type to be align 8.  
      */
-    uint64_t memory_[N][(sizeof(T) >> 3) + 1]; 
-    
+    uint64_t memory_[N][(sizeof(T) >> 3) + 1];
+
+    /**
+     * @brief Resource memory pool. 
+     */
+    bool_t isAllocated_[N];
+
+    /**
+     * @brief Resource allocation guard.
+     */
+    api::Guard& guard_;
+
 };
 
 /**
@@ -191,7 +191,7 @@ void* ResourceMemory<T,N>::allocate(size_t size, void* ptr)
 template <typename T, int32_t N>
 void ResourceMemory<T,N>::free(void* ptr)
 {
-    if( isConstructed() && ptr != NULLPTR )
+    if( isConstructed() && (ptr != NULLPTR) )
     {
         lib::Guard<NoAllocator> const guard( guard_ );
         for(int32_t i(0); i<N; i++)
