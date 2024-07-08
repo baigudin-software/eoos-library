@@ -385,7 +385,7 @@ void UniquePointer<T,D,A>::releasePointer()
 {
     D::free(pointer_);
     pointer_ = NULLPTR;
-}       
+}
 
 } // namespace lib
 } // namespace eoos

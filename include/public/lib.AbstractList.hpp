@@ -586,11 +586,11 @@ bool_t AbstractList<T,A>::isIndexOutOfBounds(int32_t const index) const
     if( index < 0 )
     {
         res = true;
-    }   ///< UT Justified Line: Compiler dependency
+    }
     else if( static_cast<size_t>(index) > getLength() )
     {
         res = true;
-    }   ///< UT Justified Line: Compiler dependency
+    }
     else
     {
         res = false;
