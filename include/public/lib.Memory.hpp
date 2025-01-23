@@ -75,7 +75,7 @@ public:
      * @param str2 Character string to be compared.
      * @return The value 0 if the string 1 is equal to the string 2;
      *         a value less than 0 if the first not match character of string 1 has lower value than in string 2;
-     *         a value greater than 0 if the first not match character of string 1 has greater value than in string 2;     
+     *         a value greater than 0 if the first not match character of string 1 has greater value than in string 2;
      *         or the minimum possible value if an error has been occurred.
      */
     static int32_t strcmp(char_t const* str1, char_t const* str2);
@@ -91,9 +91,9 @@ public:
      *       Exception 1: Minimum negative value can be `T_MIN + 1` or greater.
      *
      *       Exception 2: Only if the base is decimal, a passed number is available to be negative value,
-     *       and the resulting string of these values is preceded with a minus sign. 
-     *       
-     *       Exception 3: A hexadecimal number includes lower case characters, and any resulting strings 
+     *       and the resulting string of these values is preceded with a minus sign.
+     *
+     *       Exception 3: A hexadecimal number includes lower case characters, and any resulting strings
      *       do not contain any suffixes or prefixes for identifying a numeral system.
      *
      * @todo Rework the implementation to avoid the exceptions.
@@ -156,7 +156,7 @@ private:
      * @param addend      A resulting addend.
      */
     static void detectMathOperands(char_t const character, char_t& subtrahend, int32_t& addend);
-    
+
 };
 
 inline void* Memory::memcpy(void* const dst, void const* const src, size_t len)
@@ -193,7 +193,7 @@ inline void* Memory::memset(void* const dst, int32_t const val, size_t len)
 
 inline size_t Memory::strlen(char_t const* str)
 {
-    size_t len( 0U );        
+    size_t len( 0U );
     if(str != NULLPTR)
     {
         while( *str != '\0' )
@@ -214,7 +214,7 @@ inline char_t* Memory::strcpy(char_t* const dst, char_t const* src)
         char_t const* s( src  - 1 );      ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         res = dst;
-        
+
     }
     return res;
 }
@@ -223,11 +223,11 @@ inline char_t* Memory::strcat(char_t* const dst, char_t const* src)
 {
     char_t* res( NULLPTR );
     if( (dst != NULLPTR) && (src != NULLPTR) )
-    {       
+    {
         char_t* d( dst - 1 );             ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( *++d != '\0' ) {}          ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
         d--;                              ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
-        char_t const* s( src - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15       
+        char_t const* s( src - 1 );       ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         while( (*++d = *++s) != '\0' ) {} ///< SCA MISRA-C++:2008 Justified Rule 5-0-15, Rule 5-2-10 and Rule 6-2-1
         res = dst;
     }
@@ -238,7 +238,7 @@ inline int32_t Memory::strcmp(char_t const* str1, char_t const* str2)
 {
     int32_t res( static_cast<int32_t>( 0x80000000U ) );
     if( (str1 != NULLPTR) && (str2 != NULLPTR) )
-    {        
+    {
         while(true)
         {
             int32_t ch1( static_cast<int32_t>(*str1++) ); ///< SCA MISRA-C++:2008 Justified Rule 5-0-15 and Rule 5-2-10
@@ -263,7 +263,7 @@ bool_t Memory::itoa(T const val, char_t* str, Number::Base const base)
         char_t temp[LENGTH];
         bool_t isNegative;
         int32_t index( LENGTH - 1 );
-        res = true;            
+        res = true;
         temp[index--] = '\0'; ///< SCA MISRA-C++:2008 Justified Rule 5-0-11 and Rule 5-2-10
         do
         {
@@ -358,7 +358,7 @@ T Memory::atoi(char_t const* str, Number::Base const base)
             break;
         }
     }
-    T result( 0 );        
+    T result( 0 );
     if( isBase )
     {
         T const multiplier( static_cast<T>(base) );
@@ -460,7 +460,7 @@ inline bool_t Memory::isDigit(char_t const character, Number::Base const base)
         }
         case Number::BASE_16:
         {
-            res = ( 
+            res = (
                 ( (ch >= 0x30) && (ch <= 0x39) )
              || ( (ch >= 0x41) && (ch <= 0x46) )
              || ( (ch >= 0x61) && (ch <= 0x66) )

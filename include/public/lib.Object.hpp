@@ -13,7 +13,7 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class Object<A>
  * @brief Root class of the class hierarchy.
@@ -35,20 +35,20 @@ public:
      * @brief Destructor.
      */
     virtual ~Object();
-    
+
     /**
      * @brief Copy constructor.
      *
      * @param obj Reference to a source object.
      */
     Object(Object const& obj);
-    
+
     /**
      * @brief Copy assignment operator.
      *
      * @param obj Reference to a source object.
      * @return Reference to this object.
-     */       
+     */
     Object& operator=(Object const& obj);
 
     #if EOOS_CPP_STANDARD >= 2011
@@ -57,9 +57,9 @@ public:
      * @brief Move constructor.
      *
      * @param obj Right reference to a source object.
-     */       
+     */
     Object(Object&& obj) noexcept;
-    
+
     /**
      * @brief Move assignment operator.
      *
@@ -67,14 +67,14 @@ public:
      * @return Reference to this object.
      */
     Object& operator=(Object&& obj) & noexcept;
-    
+
     #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const;
-    
+
     /**
      * @brief Tests if an object has been constructed.
      *
@@ -125,7 +125,7 @@ Object<A>& Object<A>::operator=(Object const& obj)
         isConstructed_ = obj.isConstructed_;
     }
     return *this;
-}    
+}
 
 #if EOOS_CPP_STANDARD >= 2011
 
@@ -133,7 +133,7 @@ template <class A>
 Object<A>::Object(Object&& obj) noexcept :
     isConstructed_(obj.isConstructed_){
     obj.setConstructed(false);
-}   
+}
 
 template <class A>
 Object<A>& Object<A>::operator=(Object&& obj) & noexcept
@@ -144,7 +144,7 @@ Object<A>& Object<A>::operator=(Object&& obj) & noexcept
         obj.setConstructed(false);
     }
     return *this;
-}        
+}
 
 #endif // EOOS_CPP_STANDARD >= 2011
 
@@ -173,7 +173,7 @@ void Object<A>::setConstructed(bool_t const flag)
         isConstructed_ = flag;
     }
 }
-  
+
 } // namespace lib
 } // namespace eoos
 

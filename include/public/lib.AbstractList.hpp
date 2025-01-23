@@ -17,7 +17,7 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class AbstractList<T,A>
  * @brief Abstract list class.
@@ -36,7 +36,7 @@ class AbstractList :
     typedef LinkedNode<T,A> Node;
 
 public:
-        
+
     using api::List<T>::getListIterator;
 
     /**
@@ -148,7 +148,7 @@ public:
      * @copydoc eoos::api::List::isIndex(T const&)
      */
     virtual bool_t isIndex(int32_t const index) const;
-    
+
     /**
      * @copydoc eoos::api::Iterable::getIterator()
      */
@@ -351,7 +351,7 @@ T& AbstractList<T,A>::getLast()
 
 template <typename T, class A>
 T& AbstractList<T,A>::get(int32_t index)
-{   
+{
     T* element( &illegal_ );
     if( isConstructed() )
     {
@@ -440,7 +440,7 @@ api::Iterator<T>* AbstractList<T,A>::getIterator() ///< SCA MISRA-C++:2008 Defec
 }
 
 template <typename T, class A>
-AbstractList<T,A>::AbstractList() 
+AbstractList<T,A>::AbstractList()
     : NonCopyable<A>()
     , api::List<T>()
     , api::Queue<T>()
@@ -451,7 +451,7 @@ AbstractList<T,A>::AbstractList()
 }
 
 template <typename T, class A>
-AbstractList<T,A>::AbstractList(T const& illegal) 
+AbstractList<T,A>::AbstractList(T const& illegal)
     : NonCopyable<A>()
     , api::List<T>()
     , api::Queue<T>()
@@ -494,7 +494,7 @@ bool_t AbstractList<T,A>::addNode(int32_t const index, T const& element)
                 {
                     Node* const before( getNodeByIndex(0) );
                     if(before != NULLPTR)
-                    {                        
+                    {
                         before->insertBefore(node.get());
                         res = true;
                     }
@@ -582,7 +582,7 @@ bool_t AbstractList<T,A>::removeNode(Node* const node)
 template <typename T, class A>
 bool_t AbstractList<T,A>::isIndexOutOfBounds(int32_t const index) const
 {
-    bool_t res( false ); 
+    bool_t res( false );
     if( index < 0 )
     {
         res = true;
@@ -615,7 +615,7 @@ T& AbstractList<T,A>::getReferenceToIllegal()
 {
     return illegal_; ///< SCA MISRA-C++:2008 Justified Rule 9-3-2
 }
-        
+
 } // namespace lib
 } // namespace eoos
 #endif // LIB_ABSTRACTLIST_HPP_

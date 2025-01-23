@@ -17,9 +17,9 @@ namespace lib
  * @class AbstractThreadTask<A>
  * @brief Abstract thread with a task.
  *
- * @tparam A Heap memory allocator class. 
+ * @tparam A Heap memory allocator class.
  */
-template <class A = Allocator>   
+template <class A = Allocator>
 class AbstractThreadTask : public Thread<A>, public api::Task
 {
     typedef Thread<A> Parent;
@@ -38,7 +38,7 @@ public:
 
     /**
      * @copydoc eoos::api::Task::start()
-     */        
+     */
     virtual void start() = 0;
 
     /**
@@ -68,11 +68,11 @@ private:
 };
 
 template <class A>
-AbstractThreadTask<A>::AbstractThreadTask() 
+AbstractThreadTask<A>::AbstractThreadTask()
     : Thread<A>()
     , api::Task() {
     bool_t const isConstructed( construct() );
-    setConstructed( isConstructed );        
+    setConstructed( isConstructed );
 }
 
 template <class A>

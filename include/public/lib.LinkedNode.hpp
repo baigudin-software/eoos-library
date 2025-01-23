@@ -144,7 +144,7 @@ private:
 };
 
 template <typename T, class A>
-LinkedNode<T,A>::LinkedNode(T const& element) 
+LinkedNode<T,A>::LinkedNode(T const& element)
     : NonCopyable<A>()
     , prev_(this)
     , next_(this)

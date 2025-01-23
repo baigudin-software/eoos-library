@@ -23,7 +23,7 @@ namespace lib
  *
  * @tparam T A data type of argument string characters.
  * @tparam L A maximum number of argument string, or 0 for dynamic argument length.
- * @tparam A Heap memory allocator class. 
+ * @tparam A Heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
 class ArgumentParser : public NonCopyable<A>
@@ -34,7 +34,7 @@ public:
 
     /**
      * @brief Constructor.
-     * 
+     *
      * @param argc The number of arguments passed to the program.
      * @param argv An array of c-string of arguments where the last one - argc + 1 is null.
      */
@@ -44,17 +44,17 @@ public:
      * @brief Destructor.
      */
     virtual ~ArgumentParser();
-    
+
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const;
-    
+
     /**
      * @brief Returns list of arguments.
-     * 
+     *
      * @return List of arguments.
-     * 
+     *
      * @todo Declare constant function to satisfy MISRA-C++:2008 Rule 9–3–1
      */
     api::List< api::String<T>* >& getArguments();
@@ -84,12 +84,12 @@ private:
     bool_t addArgs(int32_t argc, T* argv[]);
 
     /**
-     * List to contain program arguments 
+     * List to contain program arguments
      */
     LinkedList<BaseString<T,L,CharTrait<T>,A>,A> args_;
 
     /**
-     * List to contain pointers to program arguments 
+     * List to contain pointers to program arguments
      */
     LinkedList<api::String<T>*> ptrs_;
 
@@ -127,7 +127,7 @@ bool_t ArgumentParser<T,L,A>::construct(int32_t argc, T* argv[])
     bool_t res( false );
     if( ( !isConstructed() )
      || ( !args_.isConstructed() )
-     || ( !addArgs(argc, argv) ) ) 
+     || ( !addArgs(argc, argv) ) )
     {
         res = false;
     }
@@ -172,7 +172,7 @@ bool_t ArgumentParser<T,L,A>::addArgs(int32_t argc, T* argv[])
         res = false;
     }
     return res;
-} 
+}
 
 } // namespace lib
 } // namespace eoos

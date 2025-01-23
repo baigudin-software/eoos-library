@@ -12,7 +12,7 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class CircularList<T,A>
  * @brief Circular doubly linked list.
@@ -56,7 +56,7 @@ protected:
     using Parent::setConstructed;
 
 private:
-    
+
     /**
      * @class Iterator<TT,AA>
      * @brief The list iterator.
@@ -73,7 +73,7 @@ private:
     {
         typedef NonCopyable<AA> Parent;
         typedef CircularList<TT,AA>  List;
-        typedef LinkedNode<TT,AA> Node;        
+        typedef LinkedNode<TT,AA> Node;
 
     public:
 
@@ -158,14 +158,14 @@ private:
          * @param index position in this list.
          */
         bool_t construct(int32_t index);
-        
+
         /**
          * @brief Tests if list was modified by list object.
          *
          * @param true if modified.
          */
         bool_t isModifiedByList() const;
-        
+
         /**
          * @brief List changing counter.
          */
@@ -232,12 +232,12 @@ private:
 };
 
 template <typename T, class A>
-CircularList<T,A>::CircularList() 
+CircularList<T,A>::CircularList()
     : AbstractList<T,A>() {
 }
 
 template <typename T, class A>
-CircularList<T,A>::CircularList(T const illegal) 
+CircularList<T,A>::CircularList(T const illegal)
     : AbstractList<T,A>(illegal) {
 }
 
@@ -262,12 +262,12 @@ api::ListIterator<T>* CircularList<T,A>::getListIterator(int32_t const index)
             }
         }
     }
-    return it;         
+    return it;
 }
 
 template <typename T, class A>
 template <typename TT, class AA>
-CircularList<T,A>::Iterator<TT,AA>::Iterator(int32_t const index, List& list) 
+CircularList<T,A>::Iterator<TT,AA>::Iterator(int32_t const index, List& list)
     : NonCopyable<AA>()
     , api::ListIterator<TT>()
     , list_    (list)
@@ -301,7 +301,7 @@ bool_t CircularList<T,A>::Iterator<TT,AA>::add(TT const& element)
     if( !isModifiedByList() )
     {
         bool_t const wasEmpty( list_.isEmpty() );
-        int32_t const index = ( wasEmpty ) ? 0 : curs_->getIndex(); 
+        int32_t const index = ( wasEmpty ) ? 0 : curs_->getIndex();
         res = list_.add(index, element);
         if( res == true )
         {
@@ -312,7 +312,7 @@ bool_t CircularList<T,A>::Iterator<TT,AA>::add(TT const& element)
                 curs_ = last_;
             }
         }
-    }            
+    }
     return res;
 }
 
@@ -323,12 +323,12 @@ bool_t CircularList<T,A>::Iterator<TT,AA>::remove()
     bool_t res( false );
     if( !isModifiedByList() && (rindex_ != ILLEGAL_INDEX) )
     {
-        Node* curs( curs_ );            
+        Node* curs( curs_ );
         if(curs_->getIndex() == rindex_)
         {
             curs = curs_->getNext();
         }
-        res = list_.remove(rindex_);            
+        res = list_.remove(rindex_);
         if(res == true)
         {
             count_.self++; ///< SCA MISRA-C++:2008 Defected Rule 5-2-10
@@ -348,7 +348,7 @@ TT& CircularList<T,A>::Iterator<TT,AA>::getPrevious()
     {
         curs_ = curs_->getPrevious();
         rindex_ = curs_->getIndex();
-        res = true;                
+        res = true;
     }
     else
     {
@@ -366,7 +366,7 @@ int32_t CircularList<T,A>::Iterator<TT,AA>::getPreviousIndex() const
     if( !isModifiedByList() )
     {
         index = hasPrevious() ? curs_->getPrevious()->getIndex() : -1;
-    }                        
+    }
     return index;
 }
 
@@ -460,7 +460,7 @@ bool_t CircularList<T,A>::Iterator<TT,AA>::construct(int32_t index)
     if( isConstructed() && list_.isConstructed() )
     {
         if( !list_.isIndexOutOfBounds(index) )
-        { 
+        {
             if( !list_.isEmpty() )
             {
                 if( static_cast<size_t>(index) != list_.getLength() )
@@ -481,7 +481,7 @@ bool_t CircularList<T,A>::Iterator<TT,AA>::construct(int32_t index)
 template <typename T, class A>
 template <typename TT, class AA>
 bool_t CircularList<T,A>::Iterator<TT,AA>::isModifiedByList() const
-{        
+{
     return count_.list != count_.self;
 }
 

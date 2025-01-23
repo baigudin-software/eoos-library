@@ -15,13 +15,13 @@ namespace eoos
 {
 namespace lib
 {
- 
+
 /**
  * @class ResourceMemory<T,N>
  * @brief Pool resource memory allocator.
  *
- * Primary template implements the pool allocation of resource. 
- * 
+ * Primary template implements the pool allocation of resource.
+ *
  * @tparam T Resource type
  * @tparam N Number of resources
  */
@@ -74,13 +74,13 @@ private:
 
     /**
      * @brief Resource memory pool.
-     * 
-     * @note Memory is double array of uint64_t type to be align 8.  
+     *
+     * @note Memory is double array of uint64_t type to be align 8.
      */
     uint64_t memory_[N][(sizeof(T) >> 3) + 1];
 
     /**
-     * @brief Resource memory pool. 
+     * @brief Resource memory pool.
      */
     bool_t isAllocated_[N];
 
@@ -96,7 +96,7 @@ private:
  * @brief Heap resource memory allocator.
  *
  * Partial specialization of the template implements the heap allocation of resource.
- * 
+ *
  * @tparam T Resource type
  */
 template <typename T>
@@ -210,8 +210,8 @@ bool_t ResourceMemory<T,N>::construct()
 {
     bool_t res( false );
     if( ( isConstructed() )
-     && ( guard_.isConstructed() ) ) 
-    {    
+     && ( guard_.isConstructed() ) )
+    {
         for(int32_t i(0); i<N; i++)
         {
             isAllocated_[i] = false;

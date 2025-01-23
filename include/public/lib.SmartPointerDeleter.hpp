@@ -17,12 +17,12 @@ namespace lib
  * @class SmartPointerDeleter<T>
  * @brief Deleter of smart pointers allocated with new operator.
  *
- * @tparam T Data type of an owning object. 
+ * @tparam T Data type of an owning object.
  */
 template <typename T>
 class SmartPointerDeleter
 {
-    
+
 public:
 
     /**
@@ -38,12 +38,12 @@ public:
  * @class SmartPointerDeleterArray<T>
  * @brief Deleter of smart pointers allocated with new [] operator.
  *
- * @tparam T Data type of an owning object. 
+ * @tparam T Data type of an owning object.
  */
 template <typename T>
 class SmartPointerDeleterArray
 {
-    
+
 public:
 
     /**

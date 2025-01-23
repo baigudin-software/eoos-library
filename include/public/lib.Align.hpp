@@ -12,11 +12,11 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class Align<T,S,A>
  * @brief Alignment of fundamental types to byte boundary of memory.
- * 
+ *
  * MISRA C++ NOTE: Any signed underlying types shall not be used
  * for not violating the 5-0-21 MISRA C++:2008 Rule.
  *
@@ -51,7 +51,7 @@ public:
      * @param obj A source object.
      */
     Align(Align const& obj);
-    
+
     /**
      * @brief Destructor.
      */
@@ -156,7 +156,7 @@ private:
      * @brief Array of data bytes.
      */
     ucell_t val_[S];
-    
+
     template <typename T0, size_t S0, class A0> friend bool_t operator==(Align<T0,S0,A0> const&, Align<T0,S0,A0> const&);
     template <typename T0, size_t S0, class A0> friend bool_t operator!=(Align<T0,S0,A0> const&, Align<T0,S0,A0> const&);
 
@@ -168,7 +168,7 @@ private:
  * @param obj1 Reference to object.
  * @param obj2 Reference to object.
  * @return True if objects are equal.
- */ 
+ */
 template <typename T, size_t S, class A>
 inline bool_t operator==(Align<T,S,A> const& obj1, Align<T,S,A> const& obj2)
 {
@@ -182,7 +182,7 @@ inline bool_t operator==(Align<T,S,A> const& obj1, Align<T,S,A> const& obj2)
  * @param obj1 Reference to object.
  * @param obj2 Reference to object.
  * @return True if objects are not equal.
- */    
+ */
 template <typename T, size_t S, class A>
 inline bool_t operator!=(Align<T,S,A> const& obj1, Align<T,S,A> const& obj2)
 {
@@ -191,12 +191,12 @@ inline bool_t operator!=(Align<T,S,A> const& obj1, Align<T,S,A> const& obj2)
 }
 
 template <typename T, size_t S, class A>
-Align<T,S,A>::Align() 
+Align<T,S,A>::Align()
     : ObjectAllocator<A>() {
 }
 
 template <typename T, size_t S, class A>
-Align<T,S,A>::Align(T const& value) 
+Align<T,S,A>::Align(T const& value)
     : ObjectAllocator<A>() {
     assignment(value);
 }
@@ -210,7 +210,7 @@ Align<T,S,A>::Align(Align const& obj) ///< SCA MISRA-C++:2008 Justified Rule 12-
 template <typename T, size_t S, class A>
 Align<T,S,A>::~Align()
 {
-}    
+}
 
 template <typename T, size_t S, class A>
 Align<T,S,A>& Align<T,S,A>::operator=(T const& value)

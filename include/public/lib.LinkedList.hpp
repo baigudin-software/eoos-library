@@ -153,7 +153,7 @@ private:
          * @copydoc eoos::api::IllegalValue::isIllegal(T const&)
          */
         virtual bool_t isIllegal(TT const& value) const;
-        
+
     protected:
 
         using Parent::setConstructed;
@@ -167,7 +167,7 @@ private:
          * @return True if constructed.
          */
         bool_t construct(int32_t const index);
-        
+
         /**
          * @brief Tests if list was modified by list object.
          *
@@ -242,12 +242,12 @@ private:
 };
 
 template <typename T, class A>
-LinkedList<T,A>::LinkedList() 
+LinkedList<T,A>::LinkedList()
     : AbstractList<T,A>() {
 }
 
 template <typename T, class A>
-LinkedList<T,A>::LinkedList(T const& illegal) 
+LinkedList<T,A>::LinkedList(T const& illegal)
     : AbstractList<T,A>(illegal) {
 }
 
@@ -272,12 +272,12 @@ api::ListIterator<T>* LinkedList<T,A>::getListIterator(int32_t const index)
             }
         }
     }
-    return it;        
+    return it;
 }
 
 template <typename T, class A>
 template <typename TT, class AA>
-LinkedList<T,A>::Iterator<TT,AA>::Iterator(int32_t const index, List& list) 
+LinkedList<T,A>::Iterator<TT,AA>::Iterator(int32_t const index, List& list)
     : NonCopyable<AA>()
     , api::ListIterator<TT>()
     , list_(list)
@@ -333,7 +333,7 @@ bool_t LinkedList<T,A>::Iterator<TT,AA>::remove()
         {
             if(curs_->getIndex() == rindex_)
             {
-                curs = (curs_ == last_) ? NULLPTR : curs_->getNext();                
+                curs = (curs_ == last_) ? NULLPTR : curs_->getNext();
             }
         }
         res = list_.remove(rindex_);
@@ -363,7 +363,7 @@ TT& LinkedList<T,A>::Iterator<TT,AA>::getPrevious()
         rindex_ = ILLEGAL_INDEX;
         res = false;
     }
-    return (res == true ) ? curs_->getElement() : illegal_;            
+    return (res == true ) ? curs_->getElement() : illegal_;
 }
 
 template <typename T, class A>
@@ -440,7 +440,7 @@ int32_t LinkedList<T,A>::Iterator<TT,AA>::getNextIndex() const
     if( !isModifiedByList() )
     {
         index = hasNext() ? curs_->getIndex() : static_cast<int32_t>( list_.getLength() );
-    }      
+    }
     return index;
 }
 
@@ -499,9 +499,9 @@ bool_t LinkedList<T,A>::Iterator<TT,AA>::construct(int32_t const index)
 template <typename T, class A>
 template <typename TT, class AA>
 bool_t LinkedList<T,A>::Iterator<TT,AA>::isModifiedByList() const
-{        
+{
     return count_.list != count_.self;
-}        
+}
 
 template <typename T, class A>
 template <typename TT, class AA>

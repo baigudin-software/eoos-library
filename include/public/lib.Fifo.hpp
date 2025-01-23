@@ -13,13 +13,13 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class Fifo<T,L,A>
  * @brief Abstract list class.
  *
  * @tparam T Data type of container element.
- * @tparam L Maximum number of FIFO elements. 
+ * @tparam L Maximum number of FIFO elements.
  * @tparam A Heap memory allocator class.
  */
 template <typename T, int32_t L, class A = Allocator>
@@ -34,7 +34,7 @@ public:
      *
      * [Default mode]
      * FIFO is not locked on overrun. Once the FIFO is full the next incoming
-     * message will overwrite the previous one.          
+     * message will overwrite the previous one.
      */
     Fifo();
 
@@ -46,12 +46,12 @@ public:
      * message will overwrite the previous one.
      *
      * FIFO is locked against overrun. Once the FIFO is full the next incoming
-     * message will be discarded.     
+     * message will be discarded.
      *
      * @param isLocked FIFO locked mode flag.
-     */    
+     */
     Fifo(bool_t isLocked);
-    
+
     /**
      * @brief Constructor.
      *
@@ -60,11 +60,11 @@ public:
      * message will overwrite the previous one.
      *
      * FIFO is locked against overrun. Once the FIFO is full the next incoming
-     * message will be discarded.     
+     * message will be discarded.
      *
      * @param isLocked FIFO locked mode flag.
-     * @param illegal An illegal value.     
-     */    
+     * @param illegal An illegal value.
+     */
     Fifo(bool_t isLocked, T const& illegal);
 
     /**
@@ -101,7 +101,7 @@ public:
      * @copydoc eoos::api::Collection::isEmpty()
      */
     virtual bool_t isEmpty() const;
-    
+
     /**
      * @copydoc eoos::api::IllegalValue::getIllegal()
      */
@@ -115,15 +115,15 @@ public:
     /**
      * @copydoc eoos::api::IllegalValue::isIllegal(T const&)
      */
-    virtual bool_t isIllegal(T const& value) const;    
-    
+    virtual bool_t isIllegal(T const& value) const;
+
     /**
      * @brief Tests if this FIFO is full.
      *
      * @return True if this FIFO is full.
      */
     bool_t isFull() const;
-    
+
     /**
      * @brief Tests if this FIFO is overrun.
      *
@@ -140,10 +140,10 @@ public:
 
 protected:
 
-    using Parent::setConstructed;    
+    using Parent::setConstructed;
 
 private:
-    
+
     /**
      * @brief Constructs this object.
      *
@@ -158,43 +158,43 @@ private:
 
     /**
      * @brief Illegal value.
-     */    
+     */
     T illegal_;
-        
+
     /**
      * @brief FIFO locked mode.
-     */    
+     */
     bool_t isLocked_;
 
     /**
      * @brief Head element index.
-     */    
+     */
     int32_t head_;
-    
+
     /**
      * @brief Tail element index is fist free.
-     */    
+     */
     int32_t tail_;
 
     /**
      * @brief FIFO message pending.
      *
      * Indicate how many messages are pending in the FIFO.
-     */    
+     */
     int32_t length_;
 
     /**
      * @brief FIFO overrun.
      *
      * Set when a new message has been added while the FIFO was full.
-     */    
+     */
     bool_t isOverrun_;
 
     /**
      * @brief FIFO full.
-     * 
+     *
      * Set when L messages are stored in the FIFO.
-     */    
+     */
     bool_t isFull_;
 };
 
@@ -210,7 +210,7 @@ Fifo<T,L,A>::Fifo()
     , isOverrun_( false )
     , isFull_( false ){
     bool_t const isConstructed( construct() );
-    setConstructed( isConstructed );        
+    setConstructed( isConstructed );
 }
 
 template <typename T, int32_t L, class A>
@@ -225,7 +225,7 @@ Fifo<T,L,A>::Fifo(bool_t isLocked)
     , isOverrun_( false )
     , isFull_( false ){
     bool_t const isConstructed( construct() );
-    setConstructed( isConstructed );        
+    setConstructed( isConstructed );
 }
 
 template <typename T, int32_t L, class A>
@@ -240,7 +240,7 @@ Fifo<T,L,A>::Fifo(bool_t isLocked, T const& illegal)
     , isOverrun_( false )
     , isFull_( false ){
     bool_t const isConstructed( construct() );
-    setConstructed( isConstructed );        
+    setConstructed( isConstructed );
 }
 
 template <typename T, int32_t L, class A>
@@ -270,7 +270,7 @@ bool_t Fifo<T,L,A>::add(T const& element)
             }
             if( tail_ == head_ )
             {
-                isFull_ = true; 
+                isFull_ = true;
             }
             length_ += 1;
             res = true;
@@ -285,7 +285,7 @@ bool_t Fifo<T,L,A>::add(T const& element)
                     last = L - 1;
                 }
                 elements_[last] = element;
-                res = true;                
+                res = true;
             }
             isOverrun_ = true;
         }
@@ -307,7 +307,7 @@ bool_t Fifo<T,L,A>::remove()
                 head_ = 0;
             }
             isFull_ = false;
-            isOverrun_ = false;            
+            isOverrun_ = false;
             length_ -= 1;
             res = true;
         }
@@ -319,7 +319,7 @@ template <typename T, int32_t L, class A>
 T& Fifo<T,L,A>::peek()
 {
     T* element = &illegal_;
-    if( isConstructed() ) 
+    if( isConstructed() )
     {
         if( length_ != 0 )
         {
@@ -346,7 +346,7 @@ bool_t Fifo<T,L,A>::isFull() const
 {
     return isFull_;
 }
-    
+
 template <typename T, int32_t L, class A>
 bool_t Fifo<T,L,A>::isOverrun() const
 {
@@ -393,7 +393,7 @@ bool_t Fifo<T,L,A>::construct()
     {
         res = true;
     }
-    return res;    
+    return res;
 }
 
 } // namespace lib

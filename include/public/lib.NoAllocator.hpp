@@ -12,11 +12,11 @@ namespace eoos
 {
 namespace lib
 {
- 
+
 /**
  * @class NoAllocator
  * @brief No memory allocator.
- */ 
+ */
 class NoAllocator
 {
 

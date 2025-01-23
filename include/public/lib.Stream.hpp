@@ -12,7 +12,7 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class Stream
  * @brief Stream class.
@@ -24,7 +24,7 @@ public:
 
     /**
      * @enum Type
-     * @brief Stream type. 
+     * @brief Stream type.
      */
     enum Type
     {
@@ -57,7 +57,7 @@ public:
 
     /**
      * @brief Resets the output character stream to default.
-     * 
+     *
      * @param type Stream type.
      */
     static void reset(Type type);

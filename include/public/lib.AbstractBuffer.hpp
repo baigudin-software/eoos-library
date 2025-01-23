@@ -14,7 +14,7 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class AbstractBuffer<T,A>
  * @brief Abstract buffer class.
@@ -22,7 +22,7 @@ namespace lib
  * @tparam T Data type of buffer element.
  * @tparam A Heap memory allocator class.
  *
- * @todo Inherit Object instead of NonCopyable. 
+ * @todo Inherit Object instead of NonCopyable.
  */
 template <typename T, class A = Allocator>
 class AbstractBuffer : public NonCopyable<A>, public api::SequenceContainer<T>, public api::IllegalValue<T>
@@ -240,7 +240,7 @@ T& AbstractBuffer<T,A>::operator[](size_t const index)
 }
 
 template <typename T, class A>
-AbstractBuffer<T,A>::AbstractBuffer(size_t length) 
+AbstractBuffer<T,A>::AbstractBuffer(size_t length)
     : NonCopyable<A>()
     , api::SequenceContainer<T>()
     , api::IllegalValue<T>()
@@ -249,7 +249,7 @@ AbstractBuffer<T,A>::AbstractBuffer(size_t length)
 }
 
 template <typename T, class A>
-AbstractBuffer<T,A>::AbstractBuffer(size_t length, T const& illegal) 
+AbstractBuffer<T,A>::AbstractBuffer(size_t length, T const& illegal)
     : NonCopyable<A>()
     , api::SequenceContainer<T>()
     , api::IllegalValue<T>()

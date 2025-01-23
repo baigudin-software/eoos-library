@@ -19,7 +19,7 @@ namespace lib
  * @class Semaphore<A>
  * @brief Semaphore class.
  *
- * @tparam A Heap memory allocator class. 
+ * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
 class Semaphore : public NonCopyable<A>, public api::Semaphore
@@ -77,7 +77,7 @@ private:
 };
 
 template <class A>
-Semaphore<A>::Semaphore(int32_t const permits) 
+Semaphore<A>::Semaphore(int32_t const permits)
     : NonCopyable<A>()
     , api::Semaphore()
     , semaphore_(NULLPTR) {
@@ -114,7 +114,7 @@ bool_t Semaphore<A>::acquire()
 template <class A>
 bool_t Semaphore<A>::release()
 {
-    bool_t res( false );        
+    bool_t res( false );
     if( isConstructed() )
     {
         res = semaphore_->release();

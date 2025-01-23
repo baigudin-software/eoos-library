@@ -38,7 +38,7 @@ struct CharTrait
      * @return Converted character as integer.
      *
      * @tparam I An integer data type to be converted.
-     */    
+     */
     template <typename I>
     static T convertDigitToChar(I val);
 
@@ -65,7 +65,7 @@ struct CharTrait<char_t>
 
     /**
      * @copydoc eoos::lib::CharTrait<T>::convertDigitToChar(I)
-     */    
+     */
     template <typename I>
     static char_t convertDigitToChar(I val);
 
@@ -90,7 +90,7 @@ struct CharTrait<wchar_t>
 
     /**
      * @copydoc eoos::lib::CharTrait<T>::convertDigitToChar(I)
-     */    
+     */
     template <typename I>
     static wchar_t convertDigitToChar(I val);
 
@@ -117,10 +117,10 @@ struct CharTrait<char16_t>
 
     /**
      * @copydoc eoos::lib::CharTrait<T>::convertDigitToChar(I)
-     */    
+     */
     template <typename I>
     static char16_t convertDigitToChar(I val);
-    
+
     /**
      * @copydoc eoos::lib::CharTrait<T>::getMinusSign()
      */
@@ -142,7 +142,7 @@ struct CharTrait<char32_t>
 
     /**
      * @copydoc eoos::lib::CharTrait<T>::convertDigitToChar(I)
-     */    
+     */
     template <typename I>
     static char32_t convertDigitToChar(I val);
 
@@ -171,7 +171,7 @@ struct CharTrait<char8_t>
 
     /**
      * @copydoc eoos::lib::CharTrait<T>::convertDigitToChar(I)
-     */    
+     */
     template <typename I>
     static char8_t convertDigitToChar(I val);
 
@@ -256,7 +256,7 @@ wchar_t CharTrait<wchar_t>::convertDigitToChar(I val)
 inline wchar_t CharTrait<wchar_t>::getMinusSign()
 {
     return L'-';
-}  
+}
 
 #if EOOS_CPP_STANDARD >= 2011
 
@@ -295,7 +295,7 @@ char16_t CharTrait<char16_t>::convertDigitToChar(I val)
 inline char16_t CharTrait<char16_t>::getMinusSign()
 {
     return u'-';
-}    
+}
 
 inline char32_t CharTrait<char32_t>::getTerminator()
 {
@@ -332,7 +332,7 @@ char32_t CharTrait<char32_t>::convertDigitToChar(I val)
 inline char32_t CharTrait<char32_t>::getMinusSign()
 {
     return U'-';
-}    
+}
 
 #endif // EOOS_CPP_STANDARD >= 2011
 
@@ -373,7 +373,7 @@ char8_t CharTrait<char8_t>::convertDigitToChar(I val)
 inline char8_t CharTrait<char8_t>::getMinusSign()
 {
     return u8'-';
-}    
+}
 
 #endif // EOOS_CPP_STANDARD >= 2020
 

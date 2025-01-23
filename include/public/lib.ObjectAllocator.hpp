@@ -47,12 +47,12 @@ public:
      * @return The given pointer.
      */
     static void* operator new(size_t, void* const ptr) EOOS_KEYWORD_NOEXCEPT;
-    
+
     /**
      * @brief Operator delete.
      */
     static void operator delete(void*, void*);
-    
+
 protected:
 
     /**
@@ -65,7 +65,7 @@ protected:
 };
 
 template <class A>
-void* ObjectAllocator<A>::operator new(size_t const size) EOOS_KEYWORD_NOEXCEPT 
+void* ObjectAllocator<A>::operator new(size_t const size) EOOS_KEYWORD_NOEXCEPT
 {
     return A::allocate(size);
 }

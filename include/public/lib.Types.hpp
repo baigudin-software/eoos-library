@@ -20,7 +20,7 @@ namespace lib
  * @brief Number properties.
  */
 struct Number
-{    
+{
     /**
      * @enum Base
      * @brief Radix or base of numbers.
@@ -33,7 +33,7 @@ struct Number
         BASE_16 = 16  ///< Hexadecimal system.
     };
 };
-    
+
 #if EOOS_CPP_STANDARD >= 2011
 
 /**

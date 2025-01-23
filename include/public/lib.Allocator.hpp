@@ -13,11 +13,11 @@ namespace eoos
 {
 namespace lib
 {
- 
+
 /**
  * @class Allocator
  * @brief Memory allocator.
- */ 
+ */
 class Allocator
 {
 
@@ -47,7 +47,7 @@ inline void* Allocator::allocate(size_t size)
 
 inline void Allocator::free(void* ptr)
 {
-    return sys::Call::get().getHeap().free(ptr);    
+    return sys::Call::get().getHeap().free(ptr);
 }
 
 } // namespace lib

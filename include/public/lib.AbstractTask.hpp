@@ -18,7 +18,7 @@ namespace lib
  * @class AbstractTask<A>
  * @brief Abstract task for the thread class.
  *
- * @tparam A Heap memory allocator class. 
+ * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
 class AbstractTask : public NonCopyable<A>, public api::Task
@@ -39,7 +39,7 @@ public:
 
     /**
      * @copydoc eoos::api::Task::start()
-     */        
+     */
     virtual void start() = 0;
 
     /**
@@ -55,13 +55,13 @@ public:
 };
 
 template <class A>
-AbstractTask<A>::AbstractTask() 
+AbstractTask<A>::AbstractTask()
     : NonCopyable<A>()
     , api::Task() {
 }
 
 template <class A>
-AbstractTask<A>::~AbstractTask() 
+AbstractTask<A>::~AbstractTask()
 {
 }
 

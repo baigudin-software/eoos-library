@@ -14,13 +14,13 @@ namespace eoos
 {
 namespace lib
 {
-   
+
 /**
  * @class UniquePointer<T,D,A>
  * @brief Unique pointer.
  *
  * @tparam T Data type of an owning object.
- * @tparam D Deleter type for an owning object. 
+ * @tparam D Deleter type for an owning object.
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
@@ -54,7 +54,7 @@ public:
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
-     */       
+     */
     UniquePointer(UniquePointer&& obj) noexcept;
 
     /**
@@ -73,7 +73,7 @@ public:
      * @brief Casts to boolean data type comparing if the stored pointer does not equal to null.
      *
      * @return Comparation the stored pointer does not equal to null.
-     */    
+     */
     operator bool_t() const;
 
     /**
@@ -95,7 +95,7 @@ public:
      *
      * @param index An element index.
      * @return An element.
-     */    
+     */
     T& operator[](uint32_t const index) const;
 
     /**
@@ -105,7 +105,7 @@ public:
 
     /**
      * @copydoc eoos::api::SmartPointer::reset()
-     */   
+     */
     virtual void reset();
 
     /**
@@ -117,34 +117,34 @@ public:
      * @copydoc eoos::api::SmartPointer::getCount()
      */
     virtual int32_t getCount() const;
-    
+
     /**
      * @copydoc eoos::api::SmartPointer::isNull()
-     */       
+     */
     virtual bool_t isNull() const;
-    
+
     /**
      * @copydoc eoos::api::SmartPointer::isUnique()
-     */   
+     */
     virtual bool_t isUnique() const;
-    
+
     /**
      * @brief Swaps this managed object with an object managed by given smart object.
      *
      * @param obj A smart object to swap managed objects.
      */
     void swap(UniquePointer& obj);
-    
+
     /**
      * @brief Releases ownership of the managed object.
      *
      * @return Released raw pointer.
-     */    
+     */
     T* release();
-    
+
 protected:
 
-    using Parent::setConstructed;     
+    using Parent::setConstructed;
 
 private:
 
@@ -153,16 +153,16 @@ private:
      *
      * @param pointer A pointer to get ownership.
      * @return True if this object has been constructed successfully.
-     */     
+     */
     bool_t construct(T* const pointer = NULLPTR);
-    
+
     /**
      * @brief Releases the managed object by control block.
-     */       
+     */
     void releasePointer();
-    
+
     #if EOOS_CPP_STANDARD < 2011
-    
+
     /**
      * @copydoc eoos::Object::Object(Object const&)
      */
@@ -170,8 +170,8 @@ private:
 
     /**
      * @copydoc eoos::Object::operator=(Object const&)
-     */       
-    UniquePointer& operator=(UniquePointer const&);    
+     */
+    UniquePointer& operator=(UniquePointer const&);
 
     #endif // EOOS_CPP_STANDARD < 2011
 
@@ -209,21 +209,21 @@ inline bool_t operator!=(UniquePointer<T,D,A> const& obj1, UniquePointer<T,D,A> 
 }
 
 template <typename T, class D, class A>
-UniquePointer<T,D,A>::UniquePointer() 
+UniquePointer<T,D,A>::UniquePointer()
     : Object<A>()
     , api::SmartPointer<T>()
     , pointer_ (NULLPTR) {
     bool_t const isConstructed( construct() );
-    setConstructed(isConstructed);    
+    setConstructed(isConstructed);
 }
 
 template <typename T, class D, class A>
-UniquePointer<T,D,A>::UniquePointer(T* const pointer) 
+UniquePointer<T,D,A>::UniquePointer(T* const pointer)
     : Object<A>()
     , api::SmartPointer<T>()
     , pointer_ (NULLPTR) {
     bool_t const isConstructed( construct(pointer) );
-    setConstructed(isConstructed);    
+    setConstructed(isConstructed);
 }
 
 template <typename T, class D, class A>
@@ -238,11 +238,11 @@ UniquePointer<T,D,A>::~UniquePointer()
 #if EOOS_CPP_STANDARD >= 2011
 
 template <typename T, class D, class A>
-UniquePointer<T,D,A>::UniquePointer(UniquePointer&& obj) noexcept 
+UniquePointer<T,D,A>::UniquePointer(UniquePointer&& obj) noexcept
     : Object<A>( move(obj) )
     , api::SmartPointer<T>()
     , pointer_ (obj.pointer_) {
-}   
+}
 
 template <typename T, class D, class A>
 UniquePointer<T,D,A>& UniquePointer<T,D,A>::operator=(UniquePointer&& obj) & noexcept
@@ -251,10 +251,10 @@ UniquePointer<T,D,A>& UniquePointer<T,D,A>::operator=(UniquePointer&& obj) & noe
     {
         releasePointer();
         pointer_ = obj.pointer_;
-        Parent::operator=( move(obj) );            
-    }        
+        Parent::operator=( move(obj) );
+    }
     return *this;
-}        
+}
 
 #endif // EOOS_CPP_STANDARD >= 2011
 
@@ -265,7 +265,7 @@ bool_t UniquePointer<T,D,A>::isConstructed() const ///< SCA MISRA-C++:2008 Justi
 }
 
 template <typename T, class D, class A>
-UniquePointer<T,D,A>::operator bool_t() const 
+UniquePointer<T,D,A>::operator bool_t() const
 {
     return get() != NULLPTR;
 }
@@ -330,7 +330,7 @@ int32_t UniquePointer<T,D,A>::getCount() const
 template <typename T, class D, class A>
 bool_t UniquePointer<T,D,A>::isNull() const
 {
-    return get() == NULLPTR;        
+    return get() == NULLPTR;
 }
 
 template <typename T, class D, class A>

@@ -61,7 +61,7 @@ public:
      * @copydoc eoos::api::String::isEqualTo(const api::String<T>&)
      */
     virtual bool_t isEqualTo(api::String<T> const& string) const;
-    
+
     /**
      * @brief Converts an integer number to this string.
      *
@@ -113,14 +113,14 @@ protected:
 
     /**
      * @copydoc eoos::Object::operator=(Object const&)
-     */       
+     */
     AbstractBaseString& operator=(AbstractBaseString const& obj);
 
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
-     */       
+     */
     AbstractBaseString(AbstractBaseString&& obj) noexcept;
 
     /**
@@ -143,7 +143,7 @@ protected:
      *
      * @param dst A destination array where the content would be copied.
      * @param src A character string to be copied.
-     * @param cnt Destination character string size.     
+     * @param cnt Destination character string size.
      */
     static void copyRaw3(T* dst, T const* src, size_t cnt);
 
@@ -152,10 +152,10 @@ protected:
      *
      * @param dst A destination character string where the content would be appended.
      * @param src An appended character string.
-     * @param cnt Destination character string length that cannot be less than dst string length.     
+     * @param cnt Destination character string length that cannot be less than dst string length.
      */
     static void concatenateRaw3(T* dst, T const* src, size_t cnt);
-    
+
     /**
      * @brief Compares two strings.
      *
@@ -189,7 +189,7 @@ private:
      * @return true if this string equals to a given string.
      */
     virtual bool_t isEqualToRaw(T const* str) const = 0;
-    
+
     /**
      * @brief Converts an integer number to a string.
      *
@@ -201,9 +201,9 @@ private:
      *       Exception 1: Minimum negative value can be `T_MIN + 1` or greater.
      *
      *       Exception 2: Only if the base is decimal, a passed number is available to be negative value,
-     *       and the resulting string of these values is preceded with a minus sign. 
-     *       
-     *       Exception 3: A hexadecimal number includes lower case characters, and any resulting strings 
+     *       and the resulting string of these values is preceded with a minus sign.
+     *
+     *       Exception 3: A hexadecimal number includes lower case characters, and any resulting strings
      *       do not contain any suffixes or prefixes for identifying a numeral system.
      *
      * @todo Rework the implementation to avoid the exceptions.
@@ -227,7 +227,7 @@ private:
      */
     template <typename I>
     static bool_t isPositive(volatile I value);
-        
+
     template <typename T0> friend bool_t operator==(api::String<T0> const&, T0 const* const);
     template <typename T0> friend bool_t operator==(T0 const* const, api::String<T0> const&);
     template <typename T0> friend bool_t operator!=(api::String<T0> const&, T0 const* const);
@@ -363,11 +363,11 @@ bool_t AbstractBaseString<T,R,A>::concatenate(api::String<T> const& string)
     if( isConstructed() && string.isConstructed() )
     {
         T const* const str( string.getChar() );
-        res = concatenateRaw(str);            
+        res = concatenateRaw(str);
     }
     else
     {
-        res = false;            
+        res = false;
     }
     return res;
 }
@@ -379,11 +379,11 @@ bool_t AbstractBaseString<T,R,A>::isEqualTo(api::String<T> const& string) const
     if( isConstructed() && string.isConstructed() )
     {
         T const* const str( string.getChar() );
-        res = isEqualToRaw(str);   
+        res = isEqualToRaw(str);
     }
     else
     {
-        res = false;            
+        res = false;
     }
     return res;
 }
@@ -393,7 +393,7 @@ template <typename I>
 bool_t AbstractBaseString<T,R,A>::convert(I const value, Number::Base const base) ///< SCA MISRA-C++:2008 Defected Rule 9-3-3
 {
     return convertToString(value, base);
-} 
+}
 
 template <typename T, class R, class A>
 AbstractBaseString<T,R,A>& AbstractBaseString<T,R,A>::operator+=(api::String<T> const& source)
@@ -407,7 +407,7 @@ AbstractBaseString<T,R,A>& AbstractBaseString<T,R,A>::operator+=(T const* const 
 {
     static_cast<void>( concatenateRaw(source) );
     return *this;
-}    
+}
 
 template <typename T, class R, class A>
 AbstractBaseString<T,R,A>::AbstractBaseString()
@@ -429,32 +429,32 @@ AbstractBaseString<T,R,A>& AbstractBaseString<T,R,A>::operator=(AbstractBaseStri
         Parent::operator=(obj);
     }
     return *this;
-}    
+}
 
 #if EOOS_CPP_STANDARD >= 2011
 
 template <typename T, class R, class A>
-AbstractBaseString<T,R,A>::AbstractBaseString(AbstractBaseString&& obj) noexcept 
+AbstractBaseString<T,R,A>::AbstractBaseString(AbstractBaseString&& obj) noexcept
     : Object<A>( move(obj) )
     , api::String<T>(){
-}   
+}
 
 template <typename T, class R, class A>
 AbstractBaseString<T,R,A>& AbstractBaseString<T,R,A>::operator=(AbstractBaseString&& obj) & noexcept
 {
     if( isConstructed() && (this != &obj) )
     {
-        Parent::operator=( move(obj) );            
-    }        
+        Parent::operator=( move(obj) );
+    }
     return *this;
-}        
+}
 
 #endif // EOOS_CPP_STANDARD >= 2011
 
 template <typename T, class R, class A>
 size_t AbstractBaseString<T,R,A>::getLengthRaw(T const* str)
 {
-    size_t len( 0U ); 
+    size_t len( 0U );
     T const null( R::getTerminator() );
     while( *str != null )
     {
@@ -476,7 +476,7 @@ void AbstractBaseString<T,R,A>::copyRaw3(T* dst, T const* src, size_t cnt)
             {
                 *dst = null;
                 break;
-            }     
+            }
             *dst = *src;
             --cnt;
             if( *dst == null )
@@ -513,7 +513,7 @@ bool_t AbstractBaseString<T,R,A>::isEqualRaw2(T const* str1, T const* str2)
 {
     bool_t res( false );
     if( (str1 != NULLPTR) && (str2 != NULLPTR) )
-    {        
+    {
         T const null( R::getTerminator() );
         while(true)
         {
@@ -526,7 +526,7 @@ bool_t AbstractBaseString<T,R,A>::isEqualRaw2(T const* str1, T const* str2)
             ++str2; ///< SCA MISRA-C++:2008 Justified Rule 5-0-15
         }
     }
-    return res;    
+    return res;
 }
 
 template <typename T, class R, class A>

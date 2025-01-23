@@ -17,13 +17,13 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class SharedPointer<T,D,A>
  * @brief Shared pointer.
  *
  * @tparam T Data type of an owning object.
- * @tparam D Deleter type for an owning object. 
+ * @tparam D Deleter type for an owning object.
  * @tparam A Heap memory allocator class.
  */
 template <typename T, class D = SmartPointerDeleter<T>, class A = Allocator>
@@ -60,14 +60,14 @@ public:
 
     /**
      * @copydoc eoos::Object::operator=(Object const&)
-     */       
+     */
     SharedPointer& operator=(SharedPointer const& obj);
 
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
-     */       
+     */
     SharedPointer(SharedPointer&& obj) noexcept;
 
     /**
@@ -86,7 +86,7 @@ public:
      * @brief Casts to boolean data type comparing if the stored pointer does not equal to null.
      *
      * @return Comparation the stored pointer does not equal to null.
-     */    
+     */
     operator bool_t() const;
 
     /**
@@ -108,9 +108,9 @@ public:
      *
      * @param index An element index.
      * @return An element.
-     */    
+     */
     T& operator[](uint32_t const index) const;
-    
+
     /**
      * @copydoc eoos::api::SmartPointer::get()
      */
@@ -118,7 +118,7 @@ public:
 
     /**
      * @copydoc eoos::api::SmartPointer::reset()
-     */   
+     */
     virtual void reset();
 
     /**
@@ -130,27 +130,27 @@ public:
      * @copydoc eoos::api::SmartPointer::getCount()
      */
     virtual int32_t getCount() const;
-    
+
     /**
      * @copydoc eoos::api::SmartPointer::isNull()
-     */       
+     */
     virtual bool_t isNull() const;
-    
+
     /**
      * @copydoc eoos::api::SmartPointer::isUnique()
-     */   
+     */
     virtual bool_t isUnique() const;
-    
+
     /**
      * @brief Swaps this managed object with an object managed by given smart object.
      *
      * @param obj A smart object to swap managed objects.
-     */    
+     */
     void swap(SharedPointer& obj);
-    
+
 protected:
 
-    using Parent::setConstructed;     
+    using Parent::setConstructed;
 
 private:
 
@@ -164,7 +164,7 @@ private:
 
     /**
      * @brief Releases the managed object by control block.
-     */       
+     */
     void release();
 
     /**
@@ -184,17 +184,17 @@ private:
      * @brief Primary template implementation of shared pointer control block class.
      *
      * @tparam TT Data type of owning the object.
-     * @tparam DD Deleter type for owning the object.  
+     * @tparam DD Deleter type for owning the object.
      * @tparam AA Heap memory allocator class.
      *
      * @note This class is implemented as an auxiliry class for SharedPointer
      * and is tested for construction before usage. Therefore, some checks
-     * are skipped in public interface to speedup performence. 
+     * are skipped in public interface to speedup performence.
      */
-    template <typename TT, class DD, class AA> 
+    template <typename TT, class DD, class AA>
     class ControlBlock : public NonCopyable<AA>
     {
-        typedef NonCopyable<AA> Parent;    
+        typedef NonCopyable<AA> Parent;
 
     public:
 
@@ -224,43 +224,43 @@ private:
          * @brief Decreases the counter on one.
          *
          * @return A value of the counter after decreasing.
-         */        
+         */
         int32_t decrease();
 
         /**
          * @brief Returns the counter.
          *
          * @return A value of the counter.
-         */        
+         */
         int32_t getCounter() const;
 
         /**
          * @brief Returns the managed raw pointer.
          *
          * @return The managed raw pointer.
-         */        
+         */
         TT* getPointer() const;
 
     private:
-    
+
         /**
          * @brief Constructs this object.
-         */     
+         */
         bool_t construct();
-        
+
         /**
          * @brief An owned pointer.
          */
         TT* pointer_;
-        
+
         /**
          * @brief Counter of copies of the shared objects.
          */
         int32_t counter_;
-    
+
         /**
          * @brief Mutex to protect the counter.
-         */    
+         */
         Mutex<AA> mutex_;
     };
 
@@ -298,21 +298,21 @@ inline bool_t operator!=(SharedPointer<T,D,A> const& obj1, SharedPointer<T,D,A> 
 }
 
 template <typename T, class D, class A>
-SharedPointer<T,D,A>::SharedPointer() 
+SharedPointer<T,D,A>::SharedPointer()
     : Object<A>()
     , api::SmartPointer<T>()
     , cb_(NULLPTR) {
     bool_t const isConstructed( construct() );
-    setConstructed(isConstructed);    
+    setConstructed(isConstructed);
 }
 
 template <typename T, class D, class A>
-SharedPointer<T,D,A>::SharedPointer(T* const pointer) 
+SharedPointer<T,D,A>::SharedPointer(T* const pointer)
     : Object<A>()
     , api::SmartPointer<T>()
     , cb_(NULLPTR) {
     bool_t const isConstructed( construct(pointer) );
-    setConstructed(isConstructed);    
+    setConstructed(isConstructed);
 }
 
 template <typename T, class D, class A>
@@ -339,32 +339,32 @@ SharedPointer<T,D,A>& SharedPointer<T,D,A>::operator=(SharedPointer const& obj)
     {
         release();
         cb_ = obj.cb_;
-        acquire();            
-        Parent::operator=(obj);            
+        acquire();
+        Parent::operator=(obj);
     }
     return *this;
-}    
+}
 
 #if EOOS_CPP_STANDARD >= 2011
 
 template <typename T, class D, class A>
-SharedPointer<T,D,A>::SharedPointer(SharedPointer&& obj) noexcept 
+SharedPointer<T,D,A>::SharedPointer(SharedPointer&& obj) noexcept
     : Object<A>( move(obj) )
-    , api::SmartPointer<T>()        
+    , api::SmartPointer<T>()
     , cb_(obj.cb_) {
-}   
+}
 
 template <typename T, class D, class A>
 SharedPointer<T,D,A>& SharedPointer<T,D,A>::operator=(SharedPointer&& obj) & noexcept
 {
     if( isConstructed() && (this != &obj) )
     {
-        release();            
+        release();
         cb_ = obj.cb_;
-        Parent::operator=( move(obj) );            
-    }        
+        Parent::operator=( move(obj) );
+    }
     return *this;
-}        
+}
 
 #endif // EOOS_CPP_STANDARD >= 2011
 
@@ -375,7 +375,7 @@ bool_t SharedPointer<T,D,A>::isConstructed() const ///< SCA MISRA-C++:2008 Defec
 }
 
 template <typename T, class D, class A>
-SharedPointer<T,D,A>::operator bool_t() const 
+SharedPointer<T,D,A>::operator bool_t() const
 {
     return get() != NULLPTR;
 }
@@ -443,7 +443,7 @@ int32_t SharedPointer<T,D,A>::getCount() const
 template <typename T, class D, class A>
 bool_t SharedPointer<T,D,A>::isNull() const
 {
-    return get() == NULLPTR;        
+    return get() == NULLPTR;
 }
 
 template <typename T, class D, class A>
@@ -461,7 +461,7 @@ void SharedPointer<T,D,A>::swap(SharedPointer& obj)
         cb_ = obj.cb_;
         obj.cb_ = cb;
     }
-}    
+}
 
 template <typename T, class D, class A>
 bool_t SharedPointer<T,D,A>::construct(T* const pointer)
@@ -493,7 +493,7 @@ void SharedPointer<T,D,A>::release()
             deleteControlBlock(cb_->getPointer());
         }
     }
-}  
+}
 
 template <typename T, class D, class A>
 void SharedPointer<T,D,A>::acquire()
@@ -516,8 +516,8 @@ void SharedPointer<T,D,A>::deleteControlBlock(T* const pointer)
 }
 
 template <typename T, class D, class A>
-template <typename TT, class DD, class AA> 
-SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::ControlBlock(T* const pointer) 
+template <typename TT, class DD, class AA>
+SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::ControlBlock(T* const pointer)
     : NonCopyable<AA>()
     , pointer_(pointer)
     , counter_(1)
@@ -535,16 +535,16 @@ bool_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::isConstructed() const
 
 template <typename T, class D, class A>
 template <typename TT, class DD, class AA>
-SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::~ControlBlock() 
+SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::~ControlBlock()
 {
-}    
+}
 
 template <typename T, class D, class A>
 template <typename TT, class DD, class AA>
 void SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::increase()
 {
     Guard<AA> const guard(mutex_);
-    static_cast<void>(guard);            
+    static_cast<void>(guard);
     ++counter_;
 }
 
@@ -553,14 +553,14 @@ template <typename TT, class DD, class AA>
 int32_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::decrease()
 {
     Guard<AA> const guard(mutex_);
-    static_cast<void>(guard);            
+    static_cast<void>(guard);
     return --counter_;
 }
 
 template <typename T, class D, class A>
 template <typename TT, class DD, class AA>
 int32_t SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::getCounter() const
-{    
+{
     return counter_;
 }
 
@@ -569,7 +569,7 @@ template <typename TT, class DD, class AA>
 TT* SharedPointer<T,D,A>::ControlBlock<TT,DD,AA>::getPointer() const
 {
     return pointer_;
-}    
+}
 
 template <typename T, class D, class A>
 template <typename TT, class DD, class AA>

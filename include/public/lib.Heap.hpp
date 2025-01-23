@@ -14,12 +14,12 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class Heap
  * @brief Heap memory.
  *
- * Hardware address for system heap memory has to be aligned to eight. 
+ * Hardware address for system heap memory has to be aligned to eight.
  */
 class Heap : public api::Heap
 {
@@ -67,7 +67,7 @@ public:
      * @return Address of memory or NULLPTR.
      */
     static void* operator new(size_t, uintptr_t const ptr) EOOS_KEYWORD_NOEXCEPT;
-    
+
     /**
      * @brief Operator delete.
      */
@@ -119,7 +119,7 @@ private:
      * @return Address of memory or NULLPTR.
      */
     static void* create(void* ptr);
-    
+
     /**
      * @brief Tests memory.
      *
@@ -133,7 +133,7 @@ private:
 
     /**
      * @brief Tests memory for value.
-     * 
+     *
      * @todo normal type casts should be done.
      *
      * @param addr Memory address pointer.
@@ -184,20 +184,20 @@ private:
      * @copydoc eoos::Object::operator=(Object const&)
      */
     Heap& operator=(Heap const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
-    
+
     #if EOOS_CPP_STANDARD >= 2011
 
     /**
      * @copydoc eoos::Object::Object(Object&&)
-     */       
-    Heap(Heap&&) noexcept = delete; 
-    
+     */
+    Heap(Heap&&) noexcept = delete;
+
     /**
      * @copydoc eoos::Object::operator=(Object&&)
      */
     Heap& operator=(Heap&&) & noexcept = delete;
-    
-    #endif // EOOS_CPP_STANDARD >= 2011   
+
+    #endif // EOOS_CPP_STANDARD >= 2011
 
     /**
      * @struct Aligner<S>
@@ -256,9 +256,9 @@ private:
      */
     class VirtualTable : public api::Heap
     {
-        
+
     private:
-    
+
         uint64_t temp;
     };
 
@@ -280,7 +280,7 @@ private:
          * @param size Size of byte given to this new block.
          */
         HeapBlock(api::Heap* heap, size_t size);
-        
+
         /**
          * @brief Destructor.
          */
@@ -314,7 +314,7 @@ private:
          * @return Address of memory.
          */
         static void* operator new(size_t, void* const ptr);
-        
+
         /**
          * @brief Operator delete.
          */
@@ -354,25 +354,25 @@ private:
          * @copydoc eoos::Object::Object(Object const&)
          */
         HeapBlock(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
-    
+
         /**
          * @copydoc eoos::Object::operator=(Object const&)
          */
         HeapBlock& operator=(HeapBlock const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
-        
+
         #if EOOS_CPP_STANDARD >= 2011
-    
+
         /**
          * @copydoc eoos::Object::Object(Object&&)
-         */       
-        HeapBlock(HeapBlock&&) noexcept = delete; 
-        
+         */
+        HeapBlock(HeapBlock&&) noexcept = delete;
+
         /**
          * @copydoc eoos::Object::operator=(Object&&)
          */
         HeapBlock& operator=(HeapBlock&&) & noexcept = delete;
-        
-        #endif // EOOS_CPP_STANDARD >= 2011    
+
+        #endif // EOOS_CPP_STANDARD >= 2011
 
         /**
          * @brief Heap block definition key.
@@ -444,7 +444,7 @@ private:
          * @brief Constructor.
          *
          * @param isize Total heap size.
-         * @param mutex A mutex to protect memory allocation.         
+         * @param mutex A mutex to protect memory allocation.
          */
         HeapData(size_t isize, api::Mutex& imutex);
 
@@ -474,25 +474,25 @@ private:
          * @copydoc eoos::Object::Object(Object const&)
          */
         HeapData(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
-    
+
         /**
          * @copydoc eoos::Object::operator=(Object const&)
          */
         HeapData& operator=(HeapData const&); ///< SCA MISRA-C++:2008 Justified Rule 3-2-2 and Rule 3-2-4
-        
+
         #if EOOS_CPP_STANDARD >= 2011
-    
+
         /**
          * @copydoc eoos::Object::Object(Object&&)
-         */       
-        HeapData(HeapData&&) noexcept = delete; 
-        
+         */
+        HeapData(HeapData&&) noexcept = delete;
+
         /**
          * @copydoc eoos::Object::operator=(Object&&)
          */
         HeapData& operator=(HeapData&&) & noexcept = delete;
-        
-        #endif // EOOS_CPP_STANDARD >= 2011    
+
+        #endif // EOOS_CPP_STANDARD >= 2011
 
     };
 
@@ -518,10 +518,10 @@ private:
 
 };
 
-/// @todo Evaluate necessarity to define all these and such functions 
+/// @todo Evaluate necessarity to define all these and such functions
 ///       of non template classes in .cpp files for the library.
 
-inline Heap::Heap(size_t size, api::Mutex& mutex) 
+inline Heap::Heap(size_t size, api::Mutex& mutex)
     : api::Heap()
     , data_( size, mutex )
     , aligner_() {
@@ -591,7 +591,7 @@ inline void* Heap::operator new(size_t, uintptr_t const ptr) EOOS_KEYWORD_NOEXCE
     return memory;
 }
 
-inline void Heap::operator delete(void*, uintptr_t) 
+inline void Heap::operator delete(void*, uintptr_t)
 {
 }
 
@@ -610,8 +610,8 @@ inline void Heap::setConstructed(bool_t const flag)
 inline bool_t Heap::construct()
 {
     bool_t res( true );
-    
-    if( // Crop a size to multiple of eight 
+
+    if( // Crop a size to multiple of eight
         ( (sizeof(HeapBlock) + 16UL) <= data_.size )
         // Test Heap and HeapBlock structures sizes witch has to be multipled to eight
      && ( (sizeof(Heap) & 0x7UL) == 0UL )
@@ -757,14 +757,14 @@ template <size_t S>
 Heap::Aligner<S>::Aligner()
 {
     #ifdef EOOS_DEBUG
-    for(size_t i(0U); i<SIZE; i++) 
+    for(size_t i(0U); i<SIZE; i++)
     {
         val_[i] = 0x0AUL;
     }
     #endif
 }
 
-inline Heap::HeapBlock::HeapBlock(api::Heap* heap, size_t size) 
+inline Heap::HeapBlock::HeapBlock(api::Heap* heap, size_t size)
     : heap_(heap)
     , prev_(NULLPTR)
     , next_(NULLPTR)

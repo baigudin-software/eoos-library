@@ -19,7 +19,7 @@ namespace lib
  * @class Mutex<A>
  * @brief Mutex class.
  *
- * @tparam A Heap memory allocator class. 
+ * @tparam A Heap memory allocator class.
  */
 template <class A = Allocator>
 class Mutex : public NonCopyable<A>, public api::Mutex
@@ -37,12 +37,12 @@ public:
      * @brief Destructor.
      */
     virtual ~Mutex();
-    
+
     /**
      * @copydoc eoos::api::Object::isConstructed()
      */
     virtual bool_t isConstructed() const;
-    
+
     /**
      * @copydoc eoos::api::Mutex::tryLock()
      */
@@ -79,7 +79,7 @@ private:
 };
 
 template <class A>
-Mutex<A>::Mutex() 
+Mutex<A>::Mutex()
     : NonCopyable<A>()
     , api::Mutex()
     , mutex_ (NULLPTR){
@@ -110,8 +110,8 @@ bool_t Mutex<A>::tryLock()
     {
         res = mutex_->tryLock();
     }
-    return res;        
-}        
+    return res;
+}
 
 template <class A>
 bool_t Mutex<A>::lock()
@@ -143,7 +143,7 @@ bool_t Mutex<A>::construct()
     {
         mutex_ = sys::Call::get().getMutexManager().create();
         if( Parent::isConstructed(mutex_) )
-        {   
+        {
             res = true;
         }
     }

@@ -12,7 +12,7 @@ namespace eoos
 {
 namespace lib
 {
-    
+
 /**
  * @class Buffer<T,L,A>
  * @brief Buffer class static.
@@ -51,7 +51,7 @@ public:
      * @brief Destructor.
      */
     virtual ~Buffer();
-    
+
     /**
      * @copydoc eoos::api::SequenceContainer::getData()
      */
@@ -67,7 +67,7 @@ public:
      * @return Reference to this object.
      */
     Buffer& operator=(api::SequenceContainer<T> const& buf);
-    
+
 protected:
 
     using Parent::setConstructed;
@@ -93,7 +93,7 @@ private:
  * @class Buffer<T,0,A>
  * @brief Buffer class dynamic.
  *
- * This is a partial specialization of the template allocates necessary 
+ * This is a partial specialization of the template allocates necessary
  * memory size for containing the buffer in a heap memory.
  *
  * @tparam T Data type of buffer element.
@@ -151,7 +151,7 @@ public:
      * @brief Destructor.
      */
     virtual ~Buffer();
-    
+
     /**
      * @copydoc eoos::api::SequenceContainer::getData()
      */
@@ -167,10 +167,10 @@ public:
      * @return Reference to this object.
      */
     Buffer& operator=(api::SequenceContainer<T> const& buf);
-    
+
 protected:
 
-    using Parent::setConstructed;    
+    using Parent::setConstructed;
     using Parent::copy;
 
 private:
@@ -199,13 +199,13 @@ private:
 };
 
 template <typename T, int32_t L, class A>
-Buffer<T,L,A>::Buffer() 
+Buffer<T,L,A>::Buffer()
     : AbstractBuffer<T,A>(L)
     , buf_(arr_){
 }
 
 template <typename T, int32_t L, class A>
-Buffer<T,L,A>::Buffer(T const& illegal) 
+Buffer<T,L,A>::Buffer(T const& illegal)
     : AbstractBuffer<T,A>(L, illegal)
     , buf_ (arr_){
 }
@@ -230,14 +230,14 @@ template <typename T, int32_t L, class A>
 Buffer<T,L,A>& Buffer<T,L,A>::operator=(api::SequenceContainer<T> const& buf)
 {
     if( isConstructed() && buf.isConstructed() )
-    {        
+    {
         copy(buf);
     }
     return *this;
 }
 
 template <typename T, class A>
-Buffer<T,0,A>::Buffer(size_t const length) 
+Buffer<T,0,A>::Buffer(size_t const length)
     : AbstractBuffer<T,A>(length)
     , buf_(NULLPTR)
     , isDeleted_(true) {
@@ -246,7 +246,7 @@ Buffer<T,0,A>::Buffer(size_t const length)
 }
 
 template <typename T, class A>
-Buffer<T,0,A>::Buffer(size_t const length, T const& illegal) 
+Buffer<T,0,A>::Buffer(size_t const length, T const& illegal)
     : AbstractBuffer<T,A>(length, illegal)
     , buf_(NULLPTR)
     , isDeleted_(true) {
@@ -255,7 +255,7 @@ Buffer<T,0,A>::Buffer(size_t const length, T const& illegal)
 }
 
 template <typename T, class A>
-Buffer<T,0,A>::Buffer(size_t const length, T* const buf) 
+Buffer<T,0,A>::Buffer(size_t const length, T* const buf)
     : AbstractBuffer<T,A>(length)
     , buf_(buf)
     , isDeleted_(false) {
@@ -264,7 +264,7 @@ Buffer<T,0,A>::Buffer(size_t const length, T* const buf)
 }
 
 template <typename T, class A>
-Buffer<T,0,A>::Buffer(size_t const length, T* const buf, T const& illegal) 
+Buffer<T,0,A>::Buffer(size_t const length, T* const buf, T const& illegal)
     : AbstractBuffer<T,A>(length, illegal)
     , buf_(buf)
     , isDeleted_(false) {
@@ -290,13 +290,13 @@ T* Buffer<T,0,A>::getData() const
         buf = buf_;
     }
     return buf;
-}    
+}
 
 template <typename T, class A>
 Buffer<T,0,A>& Buffer<T,0,A>::operator=(api::SequenceContainer<T> const& buf)
 {
     if( isConstructed() && buf.isConstructed() )
-    {        
+    {
         copy(buf);
     }
     return *this;
