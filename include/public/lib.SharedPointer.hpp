@@ -241,6 +241,10 @@ private:
          */
         TT* getPointer() const;
 
+    protected:
+
+        using Parent::setConstructed;
+
     private:
 
         /**

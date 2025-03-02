@@ -257,7 +257,7 @@ private:
     class VirtualTable : public api::Heap
     {
 
-    private:
+    protected:
 
         uint64_t temp;
     };

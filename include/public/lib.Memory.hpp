@@ -256,7 +256,15 @@ inline int32_t Memory::strcmp(char_t const* str1, char_t const* str2)
 template <typename T>
 bool_t Memory::itoa(T const val, char_t* str, Number::Base const base)
 {
-    const int32_t LENGTH( ( static_cast<int32_t>( sizeof(T) ) * 8) + 1 );
+    // @todo
+    // For all the compilers for `uint8_t val = 255` value passed to
+    // the function `Memory::itoa(val, str, Number::BASE_2);` with
+    // adding `+1` for the LENGTH the test passes.
+    // For aarch64 cross-compiler Clang 17.0.6 the test is not passed.
+    // Therefore, we add `+2` for the LENGTH to pass the test.
+    // But this behavior must be debugged and fixed to change `+2` to `+1`,
+    // or justify if this does not need.
+    const int32_t LENGTH( ( static_cast<int32_t>( sizeof(T) ) * 8) + 2 );
     bool_t res( false );
     if(str != NULLPTR)
     {
@@ -416,7 +424,7 @@ T Memory::atoi(char_t const* str, Number::Base const base)
 template <typename T>
 bool_t Memory::isPositive(volatile T value)
 {
-    return ( (value > 0) || (value == 0) ) ? true : false;
+    return ( value >= 0 ) ? true : false;
 }
 
 inline bool_t Memory::isSpace(char_t const character)

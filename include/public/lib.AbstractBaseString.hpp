@@ -610,7 +610,7 @@ template <typename T, class R, class A>
 template <typename I>
 bool_t AbstractBaseString<T,R,A>::isPositive(volatile I value)
 {
-    return ( (value > 0) || (value == 0) ) ? true : false;
+    return ( value >=0 ) ? true : false;
 }
 
 } // namespace lib
