@@ -16,7 +16,7 @@ namespace lib
 
 /**
  * @class Fifo<T,L,A>
- * @brief Abstract list class.
+ * @brief FIFO class.
  *
  * @tparam T Data type of container element.
  * @tparam L Maximum number of FIFO elements.
