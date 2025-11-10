@@ -31,9 +31,9 @@ public:
      * @brief Constructor.
      *
      * @param size  Total heap size.
-     * @param mutex A mutex to protect memory allocation.
+     * @param guard A guard to protect memory allocation.
      */
-    Heap(size_t size, api::Mutex& mutex);
+    Heap(size_t size, api::Guard& guard);
 
     /**
      * @brief Destructor.
@@ -444,9 +444,9 @@ private:
          * @brief Constructor.
          *
          * @param isize Total heap size.
-         * @param mutex A mutex to protect memory allocation.
+         * @param guard A guard to protect memory allocation.
          */
-        HeapData(size_t isize, api::Mutex& imutex);
+        HeapData(size_t isize, api::Guard& iguard);
 
         /**
          * @brief First memory block of heap page memory.
@@ -456,7 +456,7 @@ private:
         /**
          * @brief Thread allocation protection.
          */
-        api::Mutex* mutex; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
+        api::Guard* guard; ///< SCA MISRA-C++:2008 Justified Rule 11-0-1
 
         /**
          * @brief Actual size of heap.
@@ -521,9 +521,9 @@ private:
 /// @todo Evaluate necessarity to define all these and such functions
 ///       of non template classes in .cpp files for the library.
 
-inline Heap::Heap(size_t size, api::Mutex& mutex)
+inline Heap::Heap(size_t size, api::Guard& guard)
     : api::Heap()
-    , data_( size, mutex )
+    , data_( size, guard )
     , aligner_() {
     bool_t const isConstructed( construct() );
     setConstructed( isConstructed );
@@ -554,7 +554,7 @@ inline void* Heap::allocate(size_t const size, void* ptr)
     {
         if( ptr == NULLPTR )
         {
-            Guard<NoAllocator> guard( *data_.mutex );
+            Guard<NoAllocator> guard( *data_.guard );
             ptr = getFirstHeapBlock()->alloc(size);
         }
         addr = ptr;
@@ -568,7 +568,7 @@ inline void Heap::free(void* ptr)
     {
         if( ptr != NULLPTR )
         {
-            Guard<NoAllocator> guard( *data_.mutex );
+            Guard<NoAllocator> guard( *data_.guard );
             getHeapBlock(ptr)->free();
         }
     }
@@ -934,9 +934,9 @@ inline void* Heap::HeapBlock::next(size_t const size)
     return reinterpret_cast<void*>(addr); ///< SCA MISRA-C++:2008 Justified Rule 5-2-8
 }
 
-inline Heap::HeapData::HeapData(size_t isize, api::Mutex& imutex)
+inline Heap::HeapData::HeapData(size_t isize, api::Guard& iguard)
     : block(NULLPTR)
-    , mutex(&imutex)
+    , guard(&iguard)
     , size(0)
     , key(HEAP_KEY) {
     size = (isize & ~0x7UL) - sizeof(Heap);

@@ -1,12 +1,12 @@
 /**
  * @file      ObjectAllocator.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2021-2024, Sergey Baigudin, Baigudin Software
+ * @copyright 2021-2025, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_OBJECTALLOCATOR_HPP_
 #define LIB_OBJECTALLOCATOR_HPP_
 
-#include "lib.Allocator.hpp"
+#include "lib.Types.hpp"
 
 namespace eoos
 {
@@ -19,7 +19,7 @@ namespace lib
  *
  * @tparam A Heap memory allocator class.
  */
-template <class A = Allocator>
+template <class A>
 class ObjectAllocator
 {
 

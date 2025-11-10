@@ -1,13 +1,14 @@
 /**
  * @file      Object.hpp
  * @author    Sergey Baigudin, sergey@baigudin.software
- * @copyright 2014-2024, Sergey Baigudin, Baigudin Software
+ * @copyright 2014-2025, Sergey Baigudin, Baigudin Software
  */
 #ifndef LIB_OBJECT_HPP_
 #define LIB_OBJECT_HPP_
 
-#include "api.Object.hpp"
+#include "lib.Allocator.hpp"
 #include "lib.ObjectAllocator.hpp"
+#include "api.Object.hpp"
 
 namespace eoos
 {
