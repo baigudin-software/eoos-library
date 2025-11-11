@@ -41,7 +41,18 @@ public:
      */
     virtual ~Guard();
 
+protected:
+
+    using Parent::setConstructed;
+
 private:
+
+    /**
+     * @brief Constructs this object.
+     *
+     * @return True if this object has been constructed successfully.
+     */
+    bool_t construct();
 
     /**
      * @brief Guard resource identifier.
@@ -60,10 +71,8 @@ Guard<A>::Guard(api::Guard& guard)
     : NonCopyable<A>()
     , guard_( guard )
     , isLocked_( false ){
-    if( isConstructed() )
-    {
-        isLocked_ = guard_.lock();
-    }
+    bool_t const isConstructed( construct() );
+    setConstructed( isConstructed );
 }
 
 template <class A>
@@ -73,6 +82,16 @@ Guard<A>::~Guard()
     {
         static_cast<void>( guard_.unlock() );
     }
+}
+
+template <class A>
+bool_t Guard<A>::construct()
+{
+    if( isConstructed() )
+    {
+        isLocked_ = guard_.lock();
+    }
+    return isLocked_;
 }
 
 } // namespace lib
