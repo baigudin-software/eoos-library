@@ -6,7 +6,7 @@
 #ifndef LIB_CHARTRAIT_HPP_
 #define LIB_CHARTRAIT_HPP_
 
-#include "Types.hpp"
+#include "api.Types.hpp"
 
 namespace eoos
 {

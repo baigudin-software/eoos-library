@@ -8,7 +8,7 @@
 #ifndef LIB_ASSERT_HPP_
 #define LIB_ASSERT_HPP_
 
-#include "Types.hpp"
+#include "api.Types.hpp"
 
 namespace eoos
 {
@@ -21,7 +21,7 @@ namespace lib
 #ifdef EOOS_DEBUG_MODE
 #define EOOS_ASSERT( condition )    \
 {                                   \
-    if( condition == false )        \
+    if( (condition) == false )        \
     {                               \
         while( true ){}             \
     }                               \
