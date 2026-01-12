@@ -10,13 +10,6 @@ project(eoos-lib
     LANGUAGES CXX
 )
 
-include(FindPkgConfig)
-
-if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
-    find_package(eoos-api 0.14.0 REQUIRED)
-    find_package(eoos-sys 0.14.0 REQUIRED)
-endif()
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
