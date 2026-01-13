@@ -221,7 +221,7 @@ Register<R>& Register<R>::setBit(typename R::reg_t digit)
 template <class R>
 Register<R>& Register<R>::clearBit(typename R::reg_t digit)
 {
-    typename R::Value bitmask( 0x00000001 << digit );
+    typename R::reg_t bitmask( 0x00000001 << digit );
     copy_.value &= ~bitmask;
     return *this;
 }

@@ -10,8 +10,6 @@
 #include "lib.LinkedList.hpp"
 #include "lib.BaseString.hpp"
 
-#include <iostream>
-
 namespace eoos
 {
 namespace lib
